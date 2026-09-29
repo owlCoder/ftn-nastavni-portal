@@ -9,7 +9,10 @@ var inventory = new InMemoryInventoryModule();
 inventory.Seed(equipmentId, available: 10);
 
 var repository = new InMemoryReservationRepository();
-var handler = new CreateReservationHandler(repository, inventory);
+var handler = new CreateReservationHandler(
+    repository,
+    inventory,
+    new InMemoryReservationRequestLock());
 IInventoryReadModel inventoryReadModel = inventory;
 
 Console.WriteLine("Equipment Reservation — Console UI");
@@ -86,7 +89,7 @@ static async Task CreateReservationAsync(
 
     Console.WriteLine($"Request ID: {requestId}");
     Console.WriteLine($"Reservation ID: {result.ReservationId}");
-    Console.WriteLine($"Status: {result.Status}");
+    Console.WriteLine($"Status: {result.Outcome}");
     Console.WriteLine($"Error: {result.ErrorCode ?? "-"}");
 
     var available = await inventory.GetAvailableAsync(equipmentId, CancellationToken.None);

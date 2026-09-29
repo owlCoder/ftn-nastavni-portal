@@ -35,28 +35,19 @@ dotnet test EquipmentReservation.sln --configuration Release --no-build`, 'Otvar
 
   page('5.2. Poslovno pravilo ostaje u Domain sloju', [
     text('h2', '5.2. Poslovno pravilo ostaje u Domain sloju'),
-    text('paragraph', 'Klasa <code>InventoryItem</code> ne zna za HTTP, bazu, MCP niti AI. Ona štiti invariant: količina mora biti pozitivna i ne može se rezervisati više jedinica nego što je raspoloživo.'),
-    code('csharp', `public sealed class InventoryItem
+    text('paragraph', 'Domain model <code>Reservation</code> predstavlja stanje rezervacije i ne zna za HTTP, bazu, MCP niti AI. Provera ulaznih vrednosti pripada validatoru, a pravilo raspoložive količine pripada Inventory modulu.'),
+    code('csharp', `public sealed class Reservation
 {
+    public Guid Id { get; }
     public Guid EquipmentId { get; }
-    public int Available { get; private set; }
-
-    public InventoryReservationResult Reserve(int quantity)
-    {
-        if (quantity <= 0)
-            return InventoryReservationResult.Fail("InvalidQuantity");
-
-        if (Available < quantity)
-            return InventoryReservationResult.Fail("InsufficientStock");
-
-        Available -= quantity;
-        return InventoryReservationResult.Ok();
-    }
-}`, 'examples/ers-ai-workflow/src/EquipmentReservation.Domain/InventoryItem.cs'),
+    public int Quantity { get; }
+    public ReservationStatus Status { get; }
+    public string? RejectionReason { get; }
+}`, 'examples/ers-ai-workflow/src/EquipmentReservation.Domain/Reservations/Reservation.cs'),
     list([
-      'SRP: entitet štiti svoje stanje i poslovno pravilo; ne orkestrira ceo use-case.',
+      'SRP: model čuva stanje; validator proverava ulaz; use-case orkestrira; Inventory adapter čuva svoju zalihu.',
       'Kod neuspeha je deo poslovnog ishoda, a ne izuzetak infrastrukture.',
-      'Isto pravilo koristiće API, testovi i budući adapteri bez dupliranja logike.',
+      'Pravila su raspoređena po odgovarajućim granicama bez dupliranja u API sloju.',
     ]),
   ]),
 
@@ -88,50 +79,41 @@ public interface IReservationRepository
     Task AddAsync(
         Reservation reservation,
         CancellationToken cancellationToken);
-}`, 'examples/ers-ai-workflow/src/EquipmentReservation.Application/Abstractions.cs'),
+}`, 'examples/ers-ai-workflow/src/EquipmentReservation.Application/Ports/'),
     callout('note', 'Dependency inversion', 'Use-case zavisi od ugovora koje poseduje Application sloj. Infrastructure bira kako će ti ugovori biti realizovani.'),
   ]),
 
   page('5.4. Use-case orkestrira, ali ne preuzima tuđe odgovornosti', [
     text('h2', '5.4. CreateReservationHandler kao Application use-case'),
     text('paragraph', 'Handler proverava idempotentnost, kreira domen objekat, poziva Inventory kroz port i čuva rezultat kroz repository port. Ne zna koja konkretna klasa čuva podatke i ne menja zalihu direktnim pristupom drugom modulu.'),
-    code('csharp', `public sealed class CreateReservationHandler(
-    IReservationRepository reservations,
-    IInventoryModule inventory)
+    code('csharp', `public async Task<CreateReservationResult> HandleAsync(
+    CreateReservationCommand command,
+    CancellationToken cancellationToken)
 {
-    public async Task<CreateReservationResult> HandleAsync(
-        CreateReservationCommand command,
-        CancellationToken cancellationToken)
-    {
-        var existing = await reservations.FindByRequestIdAsync(
-            command.RequestId,
-            cancellationToken);
+    CreateReservationCommandValidator.ValidateAndThrow(command);
 
-        if (existing is not null)
-            return Map(existing, replayed: true);
+    var existing = await reservations.FindByRequestIdAsync(
+        command.RequestId, cancellationToken);
+    if (existing is not null)
+        return Map(existing, replayed: true);
 
-        var reservation = Reservation.Create(
-            command.RequestId,
-            command.EquipmentId,
-            command.StudentId,
-            command.Quantity);
+    var reservationId = Guid.NewGuid();
+    var inventoryResult = await inventory.ReserveAsync(
+        new ReserveInventoryRequest(
+            command.EquipmentId, command.Quantity, reservationId),
+        cancellationToken);
 
-        var inventoryResult = await inventory.ReserveAsync(
-            new ReserveInventoryRequest(
-                reservation.EquipmentId,
-                reservation.Quantity,
-                reservation.Id),
-            cancellationToken);
+    var reservation = new Reservation(
+        reservationId, command.RequestId, command.EquipmentId,
+        command.StudentId, command.Quantity,
+        inventoryResult.Success
+            ? ReservationStatus.Confirmed
+            : ReservationStatus.Rejected,
+        inventoryResult.ErrorCode);
 
-        if (inventoryResult.Success)
-            reservation.Confirm();
-        else
-            reservation.Reject(inventoryResult.ErrorCode ?? "InventoryRejected");
-
-        await reservations.AddAsync(reservation, cancellationToken);
-        return Map(reservation, replayed: false);
-    }
-}`, 'examples/ers-ai-workflow/src/EquipmentReservation.Application/CreateReservation.cs'),
+    await reservations.AddAsync(reservation, cancellationToken);
+    return Map(reservation, replayed: false);
+}`, 'examples/ers-ai-workflow/src/EquipmentReservation.Application/Reservations/Create/CreateReservationHandler.cs'),
   ]),
 
   page('5.5. Idempotentnost mora biti proverena testom', [
@@ -146,7 +128,8 @@ public async Task CreateReservation_WhenRequestIsRepeated_IsIdempotent()
 
     var handler = new CreateReservationHandler(
         new InMemoryReservationRepository(),
-        inventory);
+        inventory,
+        new InMemoryReservationRequestLock());
 
     var command = new CreateReservationCommand(
         Guid.NewGuid(), equipmentId, Guid.NewGuid(), Quantity: 2);
@@ -154,20 +137,19 @@ public async Task CreateReservation_WhenRequestIsRepeated_IsIdempotent()
     var first = await handler.HandleAsync(command, CancellationToken.None);
     var replay = await handler.HandleAsync(command, CancellationToken.None);
 
-    Assert.Multiple(() =>
-    {
-        Assert.That(replay.ReservationId, Is.EqualTo(first.ReservationId));
-        Assert.That(replay.Replayed, Is.True);
-        Assert.That(inventory.GetAvailable(equipmentId), Is.EqualTo(3));
-    });
-}`, 'examples/ers-ai-workflow/tests/EquipmentReservation.Tests/ReservationTests.cs'),
+    Assert.That(replay.ReservationId, Is.EqualTo(first.ReservationId));
+    Assert.That(replay.Replayed, Is.True);
+    Assert.That(
+        await inventory.GetAvailableAsync(equipmentId, CancellationToken.None),
+        Is.EqualTo(3));
+}`, 'examples/ers-ai-workflow/tests/EquipmentReservation.Tests/Application/CreateReservationHandlerTests.cs'),
     callout('success', 'Izvršiva specifikacija', 'Student treba da pokrene <code>dotnet test EquipmentReservation.sln</code> i tek zatim tvrdi da je integracija ispravna.'),
   ]),
 
   page('5.6. SOLID mapa na stvarnom primeru', [
     text('h2', '5.6. SOLID mapa na stvarnom primeru'),
     table(['Princip', 'Gde se vidi'], [
-      ['SRP', 'InventoryItem čuva pravilo zalihe; handler orkestrira use-case; repository čuva podatke.'],
+      ['SRP', 'Reservation čuva stanje; validator proverava ulaz; handler orkestrira use-case; adapter čuva podatke.'],
       ['OCP', 'Nova Infrastructure implementacija može se dodati bez menjanja handler-a.'],
       ['LSP', 'Svaka IInventoryModule implementacija mora poštovati isti ugovor uspeha/neuspeha.'],
       ['ISP', 'IInventoryModule izlaže samo ReserveAsync koji ovom use-case-u treba.'],

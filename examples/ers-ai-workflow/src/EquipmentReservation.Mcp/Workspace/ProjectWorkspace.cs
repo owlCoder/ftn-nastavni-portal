@@ -5,7 +5,8 @@ namespace EquipmentReservation.Mcp;
 
 public sealed class ProjectWorkspace(string rootPath)
 {
-    private static readonly HashSet<string> AllowedTextExtensions = new(StringComparer.OrdinalIgnoreCase)
+    private static readonly HashSet<string> AllowedTextExtensions = new(
+        StringComparer.OrdinalIgnoreCase)
     {
         ".cs", ".csproj", ".md", ".json", ".props", ".sln"
     };
@@ -17,7 +18,8 @@ public sealed class ProjectWorkspace(string rootPath)
         var fullPath = ResolveSafePath(relativePath);
         var extension = Path.GetExtension(fullPath);
         if (!AllowedTextExtensions.Contains(extension))
-            throw new InvalidOperationException($"File type '{extension}' is not exposed by the MCP server.");
+            throw new InvalidOperationException(
+                $"File type '{extension}' is not exposed by the MCP server.");
 
         if (!File.Exists(fullPath))
             throw new FileNotFoundException("Project file was not found.", relativePath);
@@ -53,7 +55,8 @@ public sealed class ProjectWorkspace(string rootPath)
             CreateNoWindow = true
         };
 
-        foreach (var argument in arguments) startInfo.ArgumentList.Add(argument);
+        foreach (var argument in arguments)
+            startInfo.ArgumentList.Add(argument);
 
         using var process = Process.Start(startInfo)
             ?? throw new InvalidOperationException($"Could not start '{fileName}'.");
@@ -68,11 +71,12 @@ public sealed class ProjectWorkspace(string rootPath)
             Limit(await errorTask));
     }
 
-    public string ToJson(object value) => JsonSerializer.Serialize(value, new JsonSerializerOptions
-    {
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        WriteIndented = true
-    });
+    public string ToJson(object value) =>
+        JsonSerializer.Serialize(value, new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = true
+        });
 
     private string ResolveSafePath(string relativePath)
     {
@@ -83,11 +87,15 @@ public sealed class ProjectWorkspace(string rootPath)
             throw new InvalidOperationException("Only project-relative paths are allowed.");
 
         var combined = Path.GetFullPath(Path.Combine(RootPath, relativePath));
-        var rootWithSeparator = RootPath.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+        var rootWithSeparator =
+            RootPath.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
 
-        var pathComparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+        var pathComparison = OperatingSystem.IsWindows()
+            ? StringComparison.OrdinalIgnoreCase
+            : StringComparison.Ordinal;
         if (!combined.StartsWith(rootWithSeparator, pathComparison))
-            throw new InvalidOperationException("Path traversal outside the project root is blocked.");
+            throw new InvalidOperationException(
+                "Path traversal outside the project root is blocked.");
 
         if (combined.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
             .Any(segment => segment.Equals(".git", StringComparison.OrdinalIgnoreCase)))
@@ -106,26 +114,8 @@ public sealed class ProjectWorkspace(string rootPath)
     private static string Limit(string value)
     {
         const int max = 8_000;
-        return value.Length <= max ? value : value[..max] + "\n... output truncated ...";
+        return value.Length <= max
+            ? value
+            : value[..max] + "\n... output truncated ...";
     }
 }
-
-public sealed record ProcessResult(int ExitCode, string StandardOutput, string StandardError);
-
-internal static class ProjectRootLocator
-{
-    public static string Find(string startPath)
-    {
-        var current = new DirectoryInfo(Path.GetFullPath(startPath));
-        while (current is not null)
-        {
-            if (File.Exists(Path.Combine(current.FullName, "Directory.Build.props")))
-                return current.FullName;
-
-            current = current.Parent;
-        }
-
-        throw new InvalidOperationException("Project root containing Directory.Build.props was not found.");
-    }
-}
-

@@ -56,7 +56,7 @@ public sealed class ProjectResources(ProjectWorkspace workspace)
         MimeType = "text/markdown")]
     public string Readme() =>
         workspace.ReadProjectFile("README.md");
-}`, 'examples/ers-ai-workflow/src/EquipmentReservation.Mcp/ProjectPrimitives.cs'),
+}`, 'examples/ers-ai-workflow/src/EquipmentReservation.Mcp/Resources/ProjectResources.cs'),
     table(['URI', 'Zašto resource'], [
       ['project://instructions', 'Postojeća pravila samo za čitanje; nema potrebe za izvršavanjem operacije.'],
       ['project://readme', 'Dokumentacija projekta koju klijent može učitati kao kontekst.'],

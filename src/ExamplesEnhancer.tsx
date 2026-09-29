@@ -59,7 +59,7 @@ const lessons: LessonExamples[] = [
       { path: 'src/EquipmentReservation.Infrastructure/', note: 'Implementacije portova i infrastrukturni adapteri', kind: 'code' },
       { path: 'src/EquipmentReservation.Api/', note: 'HTTP API kao ulaz u aplikaciju', kind: 'code' },
       { path: 'src/EquipmentReservation.ConsoleUi/', note: 'Jednostavan konzolni interfejs za rad sa primerom', kind: 'code' },
-      { path: 'tests/EquipmentReservation.Tests/ReservationTests.cs', note: 'Testovi poslovnih pravila i idempotentnosti', kind: 'test' },
+      { path: 'tests/EquipmentReservation.Tests/Application/CreateReservationHandlerTests.cs', note: 'Testovi poslovnih pravila i idempotentnosti', kind: 'test' },
     ],
   },
   {
@@ -82,8 +82,9 @@ const lessons: LessonExamples[] = [
     zip: 'vezba-7-mcp.zip',
     entries: [
       { path: 'src/EquipmentReservation.Mcp/Program.cs', note: 'Pokretanje i konfiguracija MCP servera', kind: 'code' },
-      { path: 'src/EquipmentReservation.Mcp/ProjectPrimitives.cs', note: 'MCP resources i tools', kind: 'code' },
-      { path: 'src/EquipmentReservation.Mcp/ProjectWorkspace.cs', note: 'Kontrolisan pristup projektu i dozvoljenim komandama', kind: 'code' },
+      { path: 'src/EquipmentReservation.Mcp/Resources/ProjectResources.cs', note: 'MCP resources', kind: 'code' },
+      { path: 'src/EquipmentReservation.Mcp/Tools/ProjectTools.cs', note: 'MCP tools', kind: 'code' },
+      { path: 'src/EquipmentReservation.Mcp/Workspace/ProjectWorkspace.cs', note: 'Kontrolisan pristup projektu i dozvoljenim komandama', kind: 'code' },
       { path: '.ai/AI_INSTRUCTIONS.md', note: 'Projektna pravila dostupna kroz MCP resource', kind: 'config' },
     ],
   },
@@ -93,23 +94,25 @@ const lessons: LessonExamples[] = [
     summary: 'Zaštitna pravila za AI alate i evaluacioni scenariji za proveru arhitekture, bezbednosti i kvaliteta rezultata.',
     zip: 'vezba-8-guardrails-evals.zip',
     entries: [
-      { path: 'src/EquipmentReservation.Guardrails/Guardrails.cs', note: 'Guardrail pravila i evaluator', kind: 'code' },
+      { path: 'src/EquipmentReservation.Guardrails/Policies/DangerousCommandGuardrail.cs', note: 'Pravilo za opasne komande', kind: 'code' },
+      { path: 'src/EquipmentReservation.Guardrails/Policies/SensitiveFileGuardrail.cs', note: 'Pravilo za osetljive fajlove', kind: 'code' },
+      { path: 'src/EquipmentReservation.Guardrails/Services/GuardrailEvaluator.cs', note: 'Evaluator guardrail politika', kind: 'code' },
       { path: 'src/EquipmentReservation.Guardrails/Program.cs', note: 'Adapter za izvršavanje guardrail provera', kind: 'code' },
       { path: '.claude/settings.json', note: 'Primer povezivanja PreToolUse hook-a', kind: 'config' },
       { path: 'evals/review-architecture.json', note: 'Provera arhitektonske regresije', kind: 'eval' },
       { path: 'evals/prompt-injection.json', note: 'Scenario za prompt injection', kind: 'eval' },
       { path: 'evals/missing-context.json', note: 'Scenario sa nepotpunim kontekstom', kind: 'eval' },
-      { path: 'tests/EquipmentReservation.Tests/ReservationTests.cs', note: 'Automatizovane guardrail provere', kind: 'test' },
+      { path: 'tests/EquipmentReservation.Tests/Guardrails/GuardrailPolicyTests.cs', note: 'Automatizovane guardrail provere', kind: 'test' },
     ],
   },
 ]
 
-const kindLabels: Record<ExampleEntry['kind'], string> = {
-  solution: 'SLN',
-  code: 'kod',
-  config: 'config',
-  test: 'test',
-  eval: 'eval',
+const packageKindLabels: Record<ExampleEntry['kind'], string> = {
+  solution: 'Solution',
+  code: 'Izvorni kod',
+  config: 'Konfiguracija',
+  test: 'Testovi',
+  eval: 'Evaluacije',
 }
 
 function publicAsset(path: string) {
@@ -138,23 +141,34 @@ function ExamplesView() {
   return (
     <main className="examples-shell">
       <section className="examples-hero">
-        <div>
+        <div className="examples-hero-copy">
           <span className="eyebrow">Nastavni primeri</span>
           <h1>Primeri za vežbe</h1>
-          <p>
-            Primeri su organizovani po vežbama i namenjeni su praktičnom radu uz gradivo sa nastave.
-            Svaki primer može da se preuzme zasebno, a primer za vežbe 5–8 dostupan je i kao kompletan paket.
-          </p>
+          <p>Preuzmite gotove .NET projekte i koristite ih uz odgovarajuću vežbu.</p>
+          <div className="examples-summary" aria-label="Sadržaj primera">
+            <span><strong>6</strong> ZIP paketa</span>
+            <span><strong>2–8</strong> vežbe</span>
+            <span><strong>.NET</strong> rešenja</span>
+          </div>
         </div>
+        <a href={zipUrl} download className="examples-hero-download">
+          <span className="examples-hero-download-icon"><DownloadIcon /></span>
+          <span className="examples-hero-download-copy">
+            <small>VEŽBE 5–8</small>
+            <strong>Preuzmi komplet</strong>
+            <em><b>ZIP</b><span>EquipmentReservation</span></em>
+          </span>
+          <span className="examples-hero-download-arrow" aria-hidden="true">→</span>
+        </a>
       </section>
 
       <section className="examples-supplemental">
         <div className="examples-section-heading">
           <div>
-            <span className="eyebrow">Primeri uz ranije vežbe</span>
-            <h2>Dodatni primeri</h2>
+            <span className="eyebrow">Vežbe 2 i 3</span>
+            <h2>Zasebni primeri</h2>
           </div>
-          <p>Svaki primer je pripremljen kao zaseban paket za rad.</p>
+          <p>Preuzmite projekat za vežbu koju pratite.</p>
         </div>
         <div className="supplemental-grid">
           {supplementalExamples.map((example) => (
@@ -178,57 +192,42 @@ function ExamplesView() {
       </section>
 
       <section className="examples-card">
-        <div className="examples-root-row">
-          <span className="examples-folder-icon"><FolderIcon /></span>
+        <div className="examples-project-heading">
           <div>
-            <strong>EquipmentReservation</strong>
-            <span>Primer koji se postepeno nadograđuje kroz vežbe 5–8</span>
+            <span className="eyebrow">Vežbe 5–8</span>
+            <h2>EquipmentReservation</h2>
+            <p>Jedan projekat koji se postepeno nadograđuje kroz četiri vežbe.</p>
           </div>
-          <a href={zipUrl} download className="examples-small-download"><DownloadIcon /> Preuzmi komplet</a>
+          <a href={zipUrl} download className="examples-project-download">
+            <span className="examples-project-download-icon"><DownloadIcon /></span>
+            <span><strong>Preuzmi ceo projekat</strong><small>Vežbe 5–8 · ZIP paket</small></span>
+          </a>
         </div>
 
-        <div className="examples-tree" role="tree" aria-label="Primeri po vežbama">
-          {lessons.map((lesson, index) => {
+        <div className="examples-course-grid" aria-label="Primeri po vežbama">
+          {lessons.map((lesson) => {
             const lessonZipUrl = publicAsset(`/downloads/${lesson.zip}`)
+            const packageKinds = [...new Set(lesson.entries.map((entry) => entry.kind))]
             return (
-              <details className="examples-lesson" key={lesson.number} open={index === 0}>
-                <summary>
-                  <span className="tree-branch" aria-hidden="true" />
-                  <span className="examples-folder-icon small"><FolderIcon /></span>
-                  <span className="lesson-copy">
-                    <strong>Vežba {lesson.number}</strong>
-                    <span>{lesson.title}</span>
-                  </span>
-                  <span className="lesson-count">{lesson.entries.length} stavki</span>
-                </summary>
-                <a className="lesson-download" href={lessonZipUrl} download onClick={(event) => event.stopPropagation()}>
-                  <DownloadIcon />
-                  <span>Preuzmi</span>
-                </a>
-                <div className="lesson-body">
-                  <div className="lesson-body-heading">
-                    <p>{lesson.summary}</p>
-                    <a href={lessonZipUrl} download className="lesson-download-secondary"><DownloadIcon /> Preuzmi vežbu {lesson.number}</a>
-                  </div>
-                  <ul className="example-file-list">
-                    {lesson.entries.map((entry) => (
-                      <li key={`${lesson.number}-${entry.path}`}>
-                        <span className={`example-kind kind-${entry.kind}`}>{kindLabels[entry.kind]}</span>
-                        <code>{entry.path}</code>
-                        <span>{entry.note}</span>
-                      </li>
-                    ))}
-                  </ul>
+              <article className="examples-course-card" key={lesson.number}>
+                <div className="examples-course-card-topline">
+                  <span>Vežba {lesson.number}</span>
+                  <span>ZIP</span>
                 </div>
-              </details>
+                <span className="examples-course-icon"><FolderIcon /></span>
+                <h3>{lesson.title}</h3>
+                <p>{lesson.summary}</p>
+                <div className="examples-course-tags" aria-label="Sadržaj paketa">
+                  {packageKinds.map((kind) => <span key={kind}>{packageKindLabels[kind]}</span>)}
+                </div>
+                <a className="examples-course-download" href={lessonZipUrl} download>
+                  <DownloadIcon />
+                  <span>Preuzmi vežbu {lesson.number}</span>
+                </a>
+              </article>
             )
           })}
         </div>
-      </section>
-
-      <section className="examples-footer-note">
-        <strong>Preuzimanje i rad</strong>
-        <span>Pojedinačni paket sadrži kompletan projekat i kratak vodič za konkretnu vežbu. Kompletan paket objedinjuje materijal za vežbe 5–8.</span>
       </section>
     </main>
   )
@@ -284,8 +283,20 @@ export default function ExamplesEnhancer() {
   useEffect(() => {
     if (!targets) return
     targets.panel.classList.toggle('examples-tab-active', active)
-    if (active) document.title = 'ERS — Primeri'
-    return () => targets.panel.classList.remove('examples-tab-active')
+    targets.nav.classList.toggle('examples-tab-active', active)
+    if (active) {
+      document.title = 'ERS — Primeri'
+    } else if (window.location.hash.startsWith('#ers/prezentacije')) {
+      document.title = 'ERS — Prezentacije'
+    } else if (window.location.hash.startsWith('#ers/kontrolne-tacke')) {
+      document.title = 'ERS — Kontrolne tačke'
+    } else if (window.location.hash.startsWith('#ers/praktikum')) {
+      document.title = 'ERS — Praktikum'
+    }
+    return () => {
+      targets.panel.classList.remove('examples-tab-active')
+      targets.nav.classList.remove('examples-tab-active')
+    }
   }, [active, targets])
 
   const button = useMemo(() => (

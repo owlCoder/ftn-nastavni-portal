@@ -40,6 +40,34 @@ Mcp   Guardrails   .ai/   evals/
 
 Dependency Rule: unutrašnji slojevi ne poznaju spoljne. `Domain` nema zavisnosti; `Application` poznaje samo `Domain`; `Infrastructure` implementira portove koje definiše `Application`; `Api` i `ConsoleUi` sklapaju sistem kao dva različita presentation adaptera. MCP i Guardrails su razvojni alati i ne postaju zavisnosti poslovnog jezgra.
 
+## Organizacija koda
+
+Kod je raspoređen po odgovornostima, a svaki javni tip ima svoj fajl:
+
+```text
+src/
+  EquipmentReservation.Domain/
+    Reservations/              Reservation + ReservationStatus
+  EquipmentReservation.Application/
+    Ports/                     interfejsi i DTO ugovori
+    Reservations/Create/       command, validator, handler i rezultat
+  EquipmentReservation.Infrastructure/
+    Inventory/                 in-memory Inventory adapter
+    Persistence/               reservation repository
+    Concurrency/               idempotency lock
+  EquipmentReservation.Api/
+    Contracts/                 HTTP request modeli
+  EquipmentReservation.Guardrails/
+    Abstractions/ Models/ Policies/ Services/ Parsing/
+  EquipmentReservation.Mcp/
+    Resources/ Tools/ Workspace/
+tests/
+  EquipmentReservation.Tests/
+    Application/ Guardrails/
+```
+
+Domain model čuva stanje. Validacija komande je u Application validatoru, pravilo raspoložive količine je iza `IInventoryModule` ugovora, a konkretna memorijska implementacija je u Infrastructure sloju. API, Console UI, MCP i Guardrails ne ulaze u poslovno jezgro.
+
 ## Vežba 5 — integracija modula, ugovori i podaci
 
 Fokus:
@@ -47,8 +75,12 @@ Fokus:
 - `IInventoryReadModel` je poseban read port za UI/API adaptere;
 - `CreateReservationHandler` orkestrira use-case, ali ne zna konkretnu infrastrukturu;
 - `RequestId` je idempotency key;
-- `InventoryItem` čuva poslovno pravilo da se ne može rezervisati više od raspoloživog;
+- `Reservation` je nepromenljiv model stanja bez poslovnih metoda;
+- `CreateReservationCommandValidator` proverava obavezna polja i opseg ulaza;
+- `CreateReservationHandler` vodi use-case, dok `IInventoryModule` čuva pravilo raspoložive količine iza jasnog ugovora;
 - NUnit test potvrđuje da ponovljen zahtev ne umanjuje zalihu dva puta.
+
+`IReservationRequestLock` štiti isti `RequestId` i kada više poziva stigne istovremeno. In-memory adapter je dovoljan za nastavnu demonstraciju u jednom procesu; produkcioni sistem bi ovu garanciju vezao za transakciju, jedinstveno ograničenje ili distribuirani lock.
 
 ### Console UI
 
@@ -165,8 +197,9 @@ dotnet test EquipmentReservation.sln --configuration Release --no-build
 Iste komande koristi GitHub Actions workflow, tako da `.sln` ostaje izvršiva specifikacija kompletnog nastavnog primera.
 
 Testovi pokrivaju:
-- domensko pravilo zalihe;
-- idempotentnost use-case-a;
+- uspešnu rezervaciju i umanjenje raspoložive količine;
+- odbijanje kada nema dovoljno opreme ili oprema ne postoji;
+- validaciju neispravnog zahteva i idempotentnost use-case-a, uključujući konkurentne pozive;
 - blokiranje destruktivnih komandi;
 - blokiranje pristupa `.env` datoteci.
 
@@ -174,7 +207,7 @@ Testovi pokrivaju:
 
 | Princip | Primer |
 |---|---|
-| SRP | `Reservation`, `CreateReservationHandler`, `InMemoryInventoryModule`, `DangerousCommandGuardrail` imaju odvojene odgovornosti. |
+| SRP | Model `Reservation` čuva stanje, validator proverava ulaz, handler vodi use-case, inventory adapter sprovodi svoj ugovor, a svaki guardrail proverava jednu vrstu rizika. |
 | OCP | Novi guardrail se dodaje kao nova `IToolGuardrail` implementacija. |
 | LSP | Svaka `IInventoryModule` implementacija mora vratiti isti ugovor uspeha/neuspeha. |
 | ISP | Write port `IInventoryModule` i read port `IInventoryReadModel` su odvojeni; adapter dobija samo operacije koje su mu potrebne. |

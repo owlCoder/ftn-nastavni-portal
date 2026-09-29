@@ -40,7 +40,7 @@ public sealed class GuardrailEvaluator(
 
         return GuardrailDecision.Allow();
     }
-}`, 'examples/ers-ai-workflow/src/EquipmentReservation.Guardrails/Guardrails.cs'),
+}`, 'examples/ers-ai-workflow/src/EquipmentReservation.Guardrails/Policies/'),
     callout('info', 'OCP u tooling-u', 'Dodavanje politike za novu zaštićenu putanju ili novu klasu rizičnih operacija ne zahteva promenu evaluator-a.'),
   ]),
 
@@ -132,7 +132,7 @@ public void SensitiveFileGuardrail_BlocksEnvFile()
         new ToolInvocation("Read", null, "/repo/.env"));
 
     Assert.That(result.Allowed, Is.False);
-}`, 'examples/ers-ai-workflow/tests/EquipmentReservation.Tests/ReservationTests.cs'),
+}`, 'examples/ers-ai-workflow/tests/EquipmentReservation.Tests/Guardrails/GuardrailPolicyTests.cs'),
     code('bash', `dotnet test EquipmentReservation.sln --configuration Release`, 'Jedna komanda proverava poslovne i guardrail testove'),
   ]),
 

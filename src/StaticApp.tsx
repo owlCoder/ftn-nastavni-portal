@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactElement } from 'react'
 import type { Block, CourseDocument, DiagramBlock, TextBlock } from './types'
 import { practicum2026 } from './content/canvaPracticum'
-import { presentationDecks, type PresentationDeck } from './content/presentations'
+import type { PresentationDeck } from './content/presentations'
 import { checkpoints, type Checkpoint } from './content/checkpoints'
 import { oibPracticum2026 } from './content/oib/oibPracticum'
 import { oibThematicPresentationDecks } from './content/oib/oibThematicPresentations'
@@ -29,6 +29,28 @@ type TocEntry = {
   label: string
   level: 1 | 2 | 3
 }
+
+type PresentationDownload = {
+  number: string
+  label: string
+  title: string
+  description: string
+  pages: number
+  size: string
+  file: string
+}
+
+const ersPresentationDownloads: PresentationDownload[] = [
+  { number: '00', label: 'Uvodna prezentacija', title: 'Osnovne informacije', description: 'Organizacija nastave, način polaganja, projektne obaveze i važni rokovi.', pages: 14, size: '324 KB', file: '/downloads/ers-prezentacije/00_Osnovne_informacije.pdf' },
+  { number: '01', label: 'Vežba 1', title: 'Zahtevi, backlog i Git', description: 'Od zahteva i backlog stavke do proverljive promene u repozitorijumu.', pages: 20, size: '426 KB', file: '/downloads/ers-prezentacije/01_Zahtevi_backlog_i_Git.pdf' },
+  { number: '02', label: 'Vežba 2', title: 'SOLID i Clean Architecture', description: 'Jasne granice odgovornosti i arhitektura koja čuva poslovno jezgro.', pages: 20, size: '511 KB', file: '/downloads/ers-prezentacije/02_SOLID_i_Clean_Architecture.pdf' },
+  { number: '03', label: 'Vežba 3', title: 'Poslovna logika i use-case', description: 'Modelovanje poslovnih ishoda i organizacija use-case sloja.', pages: 20, size: '514 KB', file: '/downloads/ers-prezentacije/03_Poslovna_logika_i_use_case.pdf' },
+  { number: '04', label: 'Vežba 4', title: 'Testabilni dizajn, NUnit i Moq', description: 'Dizajn pogodan za proveru, test scenariji i kontrolisane zavisnosti.', pages: 20, size: '490 KB', file: '/downloads/ers-prezentacije/04_Testabilni_dizajn_NUnit_i_Moq.pdf' },
+  { number: '05', label: 'Vežba 5', title: 'Integracija modula i ugovori', description: 'Portovi, adapteri, integracioni ugovori i pouzdana razmena podataka.', pages: 20, size: '489 KB', file: '/downloads/ers-prezentacije/05_Integracija_modula_ugovori.pdf' },
+  { number: '06', label: 'Vežba 6', title: 'Kontrolisan AI workflow', description: 'AI rad unutar arhitektonskih granica i proverljivog razvojnog toka.', pages: 20, size: '481 KB', file: '/downloads/ers-prezentacije/06_Kontrolisan_AI_workflow.pdf' },
+  { number: '07', label: 'Vežba 7', title: 'MCP', description: 'Kontrolisan pristup projektnom kontekstu uz jasne granice alata.', pages: 20, size: '497 KB', file: '/downloads/ers-prezentacije/07_MCP.pdf' },
+  { number: '08', label: 'Vežba 8', title: 'Guardrails, evaluacije i QA', description: 'Zaštitne politike, evaluacioni scenariji i završna provera kvaliteta.', pages: 20, size: '581 KB', file: '/downloads/ers-prezentacije/08_Guardrails_evaluacije_i_QA.pdf' },
+]
 
 const calloutIcons = {
   info: 'i',
@@ -595,6 +617,85 @@ function PresentationsView({ presentationDecks }: { presentationDecks: Presentat
   )
 }
 
+function DownloadIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M12 3v11m0 0 4-4m-4 4-4-4M5 17v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function PreviewIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M3.5 12s3-5 8.5-5 8.5 5 8.5 5-3 5-8.5 5-8.5-5-8.5-5Z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
+      <circle cx="12" cy="12" r="2.2" stroke="currentColor" strokeWidth="1.7" />
+    </svg>
+  )
+}
+
+function PresentationDownloadsView({ downloads }: { downloads: PresentationDownload[] }) {
+  const totalPages = downloads.reduce((sum, item) => sum + item.pages, 0)
+
+  return (
+    <main className="presentations-shell presentation-downloads-shell">
+      <section className="download-hero">
+        <div className="download-hero-copy">
+          <span className="eyebrow">Materijali za nastavu</span>
+          <h1>Prezentacije za vežbe</h1>
+          <p>PDF materijali sa vežbi, redom od uvodne prezentacije do Vežbe 8.</p>
+          <div className="download-summary" aria-label="Sadržaj paketa">
+            <span><strong>{downloads.length}</strong> PDF fajlova</span>
+            <span><strong>{totalPages}</strong> slajdova</span>
+          </div>
+        </div>
+        <a className="download-all-button" href={assetUrl('/downloads/ERS_sve_prezentacije.zip')} download>
+          <span className="download-all-icon"><DownloadIcon /></span>
+          <span className="download-all-copy">
+            <small>SVE PREZENTACIJE</small>
+            <strong>Preuzmi komplet</strong>
+            <em><b>ZIP</b><span>9 PDF fajlova</span><span>2,4 MB</span></em>
+          </span>
+          <span className="download-all-arrow" aria-hidden="true">→</span>
+        </a>
+      </section>
+
+      <section className="download-library" aria-labelledby="download-library-title">
+        <div className="download-library-heading">
+          <div>
+            <span className="eyebrow">Pojedinačno preuzimanje</span>
+            <h2 id="download-library-title">Materijali po redosledu vežbi</h2>
+          </div>
+          <p>PDF možete pregledati u pregledaču ili preuzeti.</p>
+        </div>
+
+        <div className="download-card-grid">
+          {downloads.map((item) => (
+            <article className={`download-card ${item.number === '00' ? 'download-card-featured' : ''}`} key={item.number}>
+              <div className="download-card-number" aria-hidden="true">{item.number}</div>
+              <div className="download-card-content">
+                <span className="download-card-label">{item.label}</span>
+                <h3>{item.title}</h3>
+                <div className="download-card-meta"><span>{item.pages} strana</span><span>{item.size}</span></div>
+              </div>
+              <div className="download-card-actions">
+                <a className="download-card-action download-card-preview" href={assetUrl(item.file)} target="_blank" rel="noreferrer" aria-label={`Pregledaj ${item.label}: ${item.title}`}>
+                  <PreviewIcon />
+                  <span>Pregledaj</span>
+                </a>
+                <a className="download-card-action" href={assetUrl(item.file)} download aria-label={`Preuzmi ${item.label}: ${item.title}`}>
+                  <DownloadIcon />
+                  <span>Preuzmi</span>
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    </main>
+  )
+}
+
 type CourseAppProps = {
   onBack: () => void
   hashPrefix: string
@@ -605,17 +706,35 @@ type CourseAppProps = {
   academicYear: string
   titlePrefix: string
   doc: CourseDocument
-  presentationDecks: PresentationDeck[]
+  presentationDecks?: PresentationDeck[]
+  presentationDownloads?: PresentationDownload[]
   checkpoints: Checkpoint[]
 }
 
-function CourseApp({ onBack, hashPrefix, brandInitial, brandAccent, brandShadow, courseName, academicYear, titlePrefix, doc, presentationDecks, checkpoints }: CourseAppProps) {
-  const initial: ActiveKey = window.location.hash.startsWith(`#${hashPrefix}/prezentacije`)
+function CourseApp({ onBack, hashPrefix, brandInitial, brandAccent, brandShadow, courseName, academicYear, titlePrefix, doc, presentationDecks, presentationDownloads, checkpoints }: CourseAppProps) {
+  const activeFromHash = (): ActiveKey | null => window.location.hash.startsWith(`#${hashPrefix}/prezentacije`)
     ? 'prezentacije'
     : window.location.hash.startsWith(`#${hashPrefix}/kontrolne-tacke`)
       ? 'kontrolne-tacke'
-      : 'praktikum'
+      : window.location.hash.startsWith(`#${hashPrefix}/praktikum`)
+        ? 'praktikum'
+        : null
+  const initial: ActiveKey = activeFromHash() ?? 'praktikum'
   const [active, setActive] = useState<ActiveKey>(initial)
+
+  useEffect(() => {
+    const syncActiveTab = () => {
+      const next = activeFromHash()
+      if (next) setActive(next)
+    }
+
+    window.addEventListener('hashchange', syncActiveTab)
+    window.addEventListener('popstate', syncActiveTab)
+    return () => {
+      window.removeEventListener('hashchange', syncActiveTab)
+      window.removeEventListener('popstate', syncActiveTab)
+    }
+  }, [hashPrefix])
 
   useEffect(() => {
     const titles: Record<ActiveKey, string> = {
@@ -637,10 +756,14 @@ function CourseApp({ onBack, hashPrefix, brandInitial, brandAccent, brandShadow,
       <header className="site-header">
         <button className="site-brand" onClick={onBack}>
           <span
-            className="brand-mark"
+            className={`brand-mark brand-mark-${hashPrefix}`}
             style={{ '--brand-accent': brandAccent, '--brand-shadow': brandShadow } as CSSProperties}
           >
-            {brandInitial}
+            {hashPrefix === 'ers' ? (
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="m9 8-4 4 4 4M15 8l4 4-4 4M13.5 5.5l-3 13" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            ) : brandInitial}
           </span>
           <span><strong>{courseName}</strong><small>{academicYear}</small></span>
         </button>
@@ -669,7 +792,11 @@ function CourseApp({ onBack, hashPrefix, brandInitial, brandAccent, brandShadow,
       </header>
       <div className="tab-panel" key={active}>
         {active === 'prezentacije' ? (
-          <PresentationsView presentationDecks={presentationDecks} />
+          presentationDownloads ? (
+            <PresentationDownloadsView downloads={presentationDownloads} />
+          ) : presentationDecks ? (
+            <PresentationsView presentationDecks={presentationDecks} />
+          ) : null
         ) : active === 'kontrolne-tacke' ? (
           <CheckpointsView checkpoints={checkpoints} />
         ) : (
@@ -837,7 +964,7 @@ export default function StaticApp() {
         academicYear="2026/2027"
         titlePrefix="ERS"
         doc={practicum2026}
-        presentationDecks={presentationDecks}
+        presentationDownloads={ersPresentationDownloads}
         checkpoints={checkpoints}
       />
     )

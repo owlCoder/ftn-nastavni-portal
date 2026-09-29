@@ -17,7 +17,7 @@ const lessonBundles = [
       'src/EquipmentReservation.Application/',
       'src/EquipmentReservation.Infrastructure/',
       'src/EquipmentReservation.Api/',
-      'tests/EquipmentReservation.Tests/ReservationTests.cs',
+      'tests/EquipmentReservation.Tests/Application/CreateReservationHandlerTests.cs',
     ],
   },
   {
@@ -40,8 +40,9 @@ const lessonBundles = [
     title: 'MCP: povezivanje agenata sa projektom',
     focus: [
       'src/EquipmentReservation.Mcp/Program.cs',
-      'src/EquipmentReservation.Mcp/ProjectPrimitives.cs',
-      'src/EquipmentReservation.Mcp/ProjectWorkspace.cs',
+      'src/EquipmentReservation.Mcp/Resources/ProjectResources.cs',
+      'src/EquipmentReservation.Mcp/Tools/ProjectTools.cs',
+      'src/EquipmentReservation.Mcp/Workspace/ProjectWorkspace.cs',
       '.ai/AI_INSTRUCTIONS.md',
     ],
   },
@@ -51,13 +52,15 @@ const lessonBundles = [
     archiveRoot: 'ers-vezba-8-guardrails-evals',
     title: 'Hooks, guardrails i evaluacije',
     focus: [
-      'src/EquipmentReservation.Guardrails/Guardrails.cs',
+      'src/EquipmentReservation.Guardrails/Policies/DangerousCommandGuardrail.cs',
+      'src/EquipmentReservation.Guardrails/Policies/SensitiveFileGuardrail.cs',
+      'src/EquipmentReservation.Guardrails/Services/GuardrailEvaluator.cs',
       'src/EquipmentReservation.Guardrails/Program.cs',
       '.claude/settings.json',
       'evals/review-architecture.json',
       'evals/prompt-injection.json',
       'evals/missing-context.json',
-      'tests/EquipmentReservation.Tests/ReservationTests.cs',
+      'tests/EquipmentReservation.Tests/Guardrails/GuardrailPolicyTests.cs',
     ],
   },
 ]

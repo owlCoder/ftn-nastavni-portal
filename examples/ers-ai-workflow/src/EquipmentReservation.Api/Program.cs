@@ -1,3 +1,6 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using EquipmentReservation.Api.Contracts;
 using EquipmentReservation.Application;
 using EquipmentReservation.Infrastructure;
 
@@ -10,7 +13,11 @@ inventory.Seed(defaultEquipmentId, available: 10);
 builder.Services.AddSingleton<IInventoryModule>(inventory);
 builder.Services.AddSingleton<IInventoryReadModel>(inventory);
 builder.Services.AddSingleton<IReservationRepository, InMemoryReservationRepository>();
+builder.Services.AddSingleton<IReservationRequestLock, InMemoryReservationRequestLock>();
 builder.Services.AddScoped<CreateReservationHandler>();
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.Converters.Add(
+        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)));
 
 var app = builder.Build();
 
@@ -53,18 +60,12 @@ app.MapPost("/reservations", async (
 
     var result = await handler.HandleAsync(command, cancellationToken);
 
-    return result.Status switch
+    return result.Outcome switch
     {
-        EquipmentReservation.Domain.ReservationStatus.Confirmed => Results.Ok(result),
-        EquipmentReservation.Domain.ReservationStatus.Rejected => Results.Conflict(result),
-        _ => Results.Accepted(value: result)
+        CreateReservationOutcome.Confirmed => Results.Ok(result),
+        CreateReservationOutcome.Rejected => Results.Conflict(result),
+        _ => throw new InvalidOperationException("Unsupported reservation outcome.")
     };
 });
 
 app.Run();
-
-public sealed record CreateReservationRequest(
-    Guid RequestId,
-    Guid EquipmentId,
-    Guid StudentId,
-    int Quantity);
