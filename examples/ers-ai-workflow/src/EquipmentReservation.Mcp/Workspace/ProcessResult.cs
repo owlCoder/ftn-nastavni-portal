@@ -1,4 +1,4 @@
-namespace EquipmentReservation.Mcp;
+namespace EquipmentReservation.Mcp.Workspace;
 
 public sealed record ProcessResult(
     int ExitCode,

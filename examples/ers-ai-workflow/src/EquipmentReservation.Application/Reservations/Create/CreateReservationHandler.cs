@@ -1,6 +1,8 @@
-using EquipmentReservation.Domain;
+using EquipmentReservation.Application.Ports.Inventory;
+using EquipmentReservation.Application.Ports.Reservations;
+using EquipmentReservation.Domain.Reservations;
 
-namespace EquipmentReservation.Application;
+namespace EquipmentReservation.Application.Reservations.Create;
 
 public sealed class CreateReservationHandler
 {

@@ -1,6 +1,8 @@
-using EquipmentReservation.Application;
-using EquipmentReservation.Domain;
-using EquipmentReservation.Infrastructure;
+using EquipmentReservation.Application.Reservations.Create;
+using EquipmentReservation.Domain.Reservations;
+using EquipmentReservation.Infrastructure.Concurrency;
+using EquipmentReservation.Infrastructure.Inventory;
+using EquipmentReservation.Infrastructure.Persistence;
 using NUnit.Framework;
 
 namespace EquipmentReservation.Tests.Application;
@@ -149,9 +151,4 @@ public sealed class CreateReservationHandlerTests
             Guid.NewGuid(),
             quantity);
 
-    private sealed record TestSystem(
-        CreateReservationHandler Handler,
-        InMemoryInventoryModule Inventory,
-        InMemoryReservationRepository Repository,
-        Guid EquipmentId);
 }

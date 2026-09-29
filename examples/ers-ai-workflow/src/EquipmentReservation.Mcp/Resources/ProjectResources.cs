@@ -1,7 +1,8 @@
 using System.ComponentModel;
+using EquipmentReservation.Mcp.Workspace;
 using ModelContextProtocol.Server;
 
-namespace EquipmentReservation.Mcp;
+namespace EquipmentReservation.Mcp.Resources;
 
 [McpServerResourceType]
 public sealed class ProjectResources(ProjectWorkspace workspace)

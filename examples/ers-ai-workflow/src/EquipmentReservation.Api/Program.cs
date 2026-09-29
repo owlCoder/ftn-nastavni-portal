@@ -1,8 +1,12 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using EquipmentReservation.Api.Contracts;
-using EquipmentReservation.Application;
-using EquipmentReservation.Infrastructure;
+using EquipmentReservation.Application.Ports.Inventory;
+using EquipmentReservation.Application.Ports.Reservations;
+using EquipmentReservation.Application.Reservations.Create;
+using EquipmentReservation.Infrastructure.Concurrency;
+using EquipmentReservation.Infrastructure.Inventory;
+using EquipmentReservation.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,4 +1,5 @@
-using EquipmentReservation.Guardrails;
+using EquipmentReservation.Guardrails.Models;
+using EquipmentReservation.Guardrails.Policies;
 using NUnit.Framework;
 
 namespace EquipmentReservation.Tests.Guardrails;

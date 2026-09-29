@@ -1,4 +1,4 @@
-namespace EquipmentReservation.Infrastructure;
+namespace EquipmentReservation.Infrastructure.Concurrency;
 
 internal sealed class ReservationRequestLockLease(
     InMemoryReservationRequestLock owner,

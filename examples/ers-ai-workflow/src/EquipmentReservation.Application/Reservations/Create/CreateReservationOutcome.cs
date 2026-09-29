@@ -1,4 +1,4 @@
-namespace EquipmentReservation.Application;
+namespace EquipmentReservation.Application.Reservations.Create;
 
 public enum CreateReservationOutcome
 {

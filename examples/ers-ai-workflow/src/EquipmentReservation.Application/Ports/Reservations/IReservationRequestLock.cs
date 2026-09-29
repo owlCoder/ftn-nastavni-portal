@@ -1,4 +1,4 @@
-namespace EquipmentReservation.Application;
+namespace EquipmentReservation.Application.Ports.Reservations;
 
 public interface IReservationRequestLock
 {

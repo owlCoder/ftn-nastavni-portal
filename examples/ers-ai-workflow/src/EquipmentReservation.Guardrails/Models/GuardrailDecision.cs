@@ -1,4 +1,4 @@
-namespace EquipmentReservation.Guardrails;
+namespace EquipmentReservation.Guardrails.Models;
 
 public sealed record GuardrailDecision(bool Allowed, string? Reason)
 {

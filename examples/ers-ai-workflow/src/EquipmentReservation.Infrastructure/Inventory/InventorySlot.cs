@@ -1,4 +1,4 @@
-namespace EquipmentReservation.Infrastructure;
+namespace EquipmentReservation.Infrastructure.Inventory;
 
 internal sealed class InventorySlot(int available)
 {

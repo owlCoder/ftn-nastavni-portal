@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
-using EquipmentReservation.Application;
+using EquipmentReservation.Application.Ports.Reservations;
 
-namespace EquipmentReservation.Infrastructure;
+namespace EquipmentReservation.Infrastructure.Concurrency;
 
 public sealed class InMemoryReservationRequestLock : IReservationRequestLock
 {

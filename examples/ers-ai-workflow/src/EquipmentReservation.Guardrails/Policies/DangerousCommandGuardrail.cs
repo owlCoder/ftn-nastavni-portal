@@ -1,4 +1,7 @@
-namespace EquipmentReservation.Guardrails;
+using EquipmentReservation.Guardrails.Abstractions;
+using EquipmentReservation.Guardrails.Models;
+
+namespace EquipmentReservation.Guardrails.Policies;
 
 public sealed class DangerousCommandGuardrail : IToolGuardrail
 {

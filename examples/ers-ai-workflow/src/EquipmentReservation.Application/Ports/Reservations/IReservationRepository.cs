@@ -1,6 +1,6 @@
-using EquipmentReservation.Domain;
+using EquipmentReservation.Domain.Reservations;
 
-namespace EquipmentReservation.Application;
+namespace EquipmentReservation.Application.Ports.Reservations;
 
 public interface IReservationRepository
 {

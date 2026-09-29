@@ -1,4 +1,4 @@
-namespace EquipmentReservation.Domain;
+namespace EquipmentReservation.Domain.Reservations;
 
 public sealed class Reservation
 {

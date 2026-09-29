@@ -1,4 +1,4 @@
-using EquipmentReservation.Mcp;
+using EquipmentReservation.Mcp.Workspace;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;

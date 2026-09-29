@@ -1,8 +1,8 @@
 using System.Collections.Concurrent;
-using EquipmentReservation.Application;
-using EquipmentReservation.Domain;
+using EquipmentReservation.Application.Ports.Reservations;
+using EquipmentReservation.Domain.Reservations;
 
-namespace EquipmentReservation.Infrastructure;
+namespace EquipmentReservation.Infrastructure.Persistence;
 
 public sealed class InMemoryReservationRepository : IReservationRepository
 {

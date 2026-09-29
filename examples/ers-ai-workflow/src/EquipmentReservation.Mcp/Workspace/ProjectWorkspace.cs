@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Text.Json;
 
-namespace EquipmentReservation.Mcp;
+namespace EquipmentReservation.Mcp.Workspace;
 
 public sealed class ProjectWorkspace(string rootPath)
 {

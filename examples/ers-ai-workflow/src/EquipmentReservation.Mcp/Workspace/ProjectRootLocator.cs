@@ -1,4 +1,4 @@
-namespace EquipmentReservation.Mcp;
+namespace EquipmentReservation.Mcp.Workspace;
 
 internal static class ProjectRootLocator
 {

@@ -1,6 +1,9 @@
 using System.Text;
-using EquipmentReservation.Application;
-using EquipmentReservation.Infrastructure;
+using EquipmentReservation.Application.Ports.Inventory;
+using EquipmentReservation.Application.Reservations.Create;
+using EquipmentReservation.Infrastructure.Concurrency;
+using EquipmentReservation.Infrastructure.Inventory;
+using EquipmentReservation.Infrastructure.Persistence;
 
 Console.OutputEncoding = Encoding.UTF8;
 

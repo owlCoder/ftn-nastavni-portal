@@ -1,6 +1,7 @@
 using System.Text.Json;
+using EquipmentReservation.Guardrails.Models;
 
-namespace EquipmentReservation.Guardrails;
+namespace EquipmentReservation.Guardrails.Parsing;
 
 public static class HookInputParser
 {

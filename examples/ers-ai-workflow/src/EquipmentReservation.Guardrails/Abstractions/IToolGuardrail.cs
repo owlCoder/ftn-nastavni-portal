@@ -1,4 +1,6 @@
-namespace EquipmentReservation.Guardrails;
+using EquipmentReservation.Guardrails.Models;
+
+namespace EquipmentReservation.Guardrails.Abstractions;
 
 public interface IToolGuardrail
 {

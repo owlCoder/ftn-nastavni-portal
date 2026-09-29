@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
-using EquipmentReservation.Application;
+using EquipmentReservation.Application.Ports.Inventory;
 
-namespace EquipmentReservation.Infrastructure;
+namespace EquipmentReservation.Infrastructure.Inventory;
 
 public sealed class InMemoryInventoryModule : IInventoryModule, IInventoryReadModel
 {
