@@ -5,7 +5,7 @@ export const exercise10 = (): DocumentPage[] => [
   page('Vežba 10 — Guardrails i evaluacije u EquipmentReservation primeru', [
     text('h1', 'Vežba 10 — Hooks, guardrails, evaluacije i završni QA'),
     text('paragraph', 'Poslednja oblast zatvara isti <code>EquipmentReservation.sln</code>. AI instrukcija može da kaže „ne čitaj .env“ ili „ne koristi force push“, ali obavezno pravilo treba sprovesti kodom kada je to moguće. Zato solution sadrži poseban <code>EquipmentReservation.Guardrails</code> projekat i NUnit testove njegovih politika.'),
-    image('/course-assets/hooks-evals.svg', 'Determinističke provere oko agentskog toka: pre poziva alata, tokom izvršenja i pre završnog prihvatanja rezultata.', 'Hooks, guardrails i evaluacije'),
+    image('/course-assets/hooks-evals.svg', 'Izvršive provere toka rada AI agenta: pre poziva alata, tokom izvršenja i pre prihvatanja rezultata.', 'Hooks, zaštitne politike i evaluacije'),
     diagram('Heuristika + deterministička zaštita', [
       ['AI instrukcija', 'smernica i kontekst', 'slate'],
       ['PreToolUse', 'tačka izvršenja politike', 'cyan'],
@@ -158,7 +158,7 @@ public void SensitiveFileGuardrail_BlocksEnvFile()
 
   page('10.6. Završni QA koristi isti solution i isti trag dokaza', [
     text('h2', '10.6. Završni QA koristi isti solution i isti trag dokaza'),
-    text('paragraph', 'Završna demonstracija treba da bude reproduktivna: druga osoba otvara <code>EquipmentReservation.sln</code>, gradi ga, pokreće testove, zatim prolazi jedan agentski tok sa MCP kontekstom i guardrail zaštitom. Time je vidljiva veza između klasičnog softverskog inženjerstva i AI razvojnog okruženja.'),
+    text('paragraph', 'Završna demonstracija treba da bude ponovljiva: druga osoba otvara <code>EquipmentReservation.sln</code>, izgrađuje rešenje, pokreće testove i izvršava jedan tok rada AI agenta uz MCP kontekst i zaštitne politike. Postupak povezuje standardne inženjerske provere sa razvojnim okruženjem koje koristi AI alate.'),
     code('bash', `cd examples/ers-ai-workflow
 dotnet restore EquipmentReservation.sln
 dotnet build EquipmentReservation.sln --configuration Release --no-restore
@@ -170,6 +170,6 @@ dotnet test EquipmentReservation.sln --configuration Release --no-build`, 'Zavr�
       'Demonstrirati da guardrail blokira rizičnu operaciju.',
       'Pokazati najmanje jedan negativni eval scenario i objasniti njegovu svrhu.',
     ]),
-    callout('success', 'Završni cilj', 'Student ne demonstrira „AI koji piše kod“, već proverljiv razvojni sistem: jasne granice, mali ugovori, testovi, ograničene dozvole i trag odluka.'),
+    callout('success', 'Ishod vežbe', 'Student demonstrira razvojni postupak zasnovan na definisanim granicama, preciznim ugovorima, testovima, ograničenim dozvolama i dokumentovanim odlukama.'),
   ]),
 ]

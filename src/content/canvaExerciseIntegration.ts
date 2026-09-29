@@ -4,7 +4,7 @@ import { text, list, callout, code, table, diagram, page } from './canvaPracticu
 export const exerciseIntegration = (): DocumentPage[] => [
   page('Vežba 5 — Integracija modula kroz izvršivi EquipmentReservation primer', [
     text('h1', 'Vežba 5 — Integracija modula, ugovori i podaci'),
-    text('paragraph', 'Od ove vežbe do kraja praktikuma koristi se jedan isti izvršivi primer: <b>Equipment Reservation</b>. Kompletan kod se nalazi u <code>examples/ers-ai-workflow/</code>, a glavna ulazna tačka je <code>EquipmentReservation.sln</code>. Student zato ne posmatra izolovane snippet-e, već prati kako se isti sistem nadograđuje kroz integraciju, AI workflow, MCP i guardrails.'),
+    text('paragraph', 'Od ove vežbe do kraja praktikuma koristi se isti izvršivi primer: <b>Equipment Reservation</b>. Izvorni kod nalazi se u direktorijumu <code>examples/ers-ai-workflow/</code>, a rešenje se otvara datotekom <code>EquipmentReservation.sln</code>. Na istom sistemu redom se obrađuju integracija modula, razvoj uz podršku AI alata, MCP i izvršivi zaštitni mehanizmi.'),
     code('bash', `cd examples/ers-ai-workflow
 dotnet restore EquipmentReservation.sln
 dotnet build EquipmentReservation.sln --configuration Release
@@ -20,7 +20,7 @@ dotnet test EquipmentReservation.sln --configuration Release --no-build`, 'Otvar
 
   page('5.1. Struktura solution-a i Dependency Rule', [
     text('h2', '5.1. Struktura solution-a i Dependency Rule'),
-    text('paragraph', 'Solution učitava sedam projekata. Prvih četiri čine aplikaciju, dok su MCP i Guardrails razvojni alati; test projekat proverava i poslovno jezgro i determinističke zaštite. Najvažnije pravilo je smer zavisnosti: unutrašnji slojevi ne poznaju spoljne detalje.'),
+    text('paragraph', 'Rešenje sadrži sedam projekata. Prva četiri čine aplikaciju, MCP i Guardrails pripadaju razvojnim alatima, dok projekat sa testovima proverava poslovno jezgro i izvršive zaštitne politike. Smer zavisnosti ostaje osnovno arhitektonsko pravilo: unutrašnji slojevi ne poznaju spoljne detalje.'),
     table(['Projekat', 'Odgovornost'], [
       ['EquipmentReservation.Domain', 'Entiteti i poslovna pravila; nema projektnih zavisnosti.'],
       ['EquipmentReservation.Application', 'Slučajevi upotrebe i portovi prema drugim modulima/infrastrukturi.'],
@@ -143,7 +143,7 @@ public async Task CreateReservation_WhenRequestIsRepeated_IsIdempotent()
         await inventory.GetAvailableAsync(equipmentId, CancellationToken.None),
         Is.EqualTo(3));
 }`, 'examples/ers-ai-workflow/tests/EquipmentReservation.Tests/Application/CreateReservationHandlerTests.cs'),
-    callout('success', 'Izvršiva specifikacija', 'Student treba da pokrene <code>dotnet test EquipmentReservation.sln</code> i tek zatim tvrdi da je integracija ispravna.'),
+    callout('success', 'Provera integracije', 'Ispravnost integracije potvrđuje se pokretanjem komande <code>dotnet test EquipmentReservation.sln</code> i pregledom rezultata testova.'),
   ]),
 
   page('5.6. SOLID mapa na stvarnom primeru', [

@@ -1,9 +1,10 @@
 /* ERS examples tab: injected as a portal so the existing course app stays reusable for other subjects. */
 .document-switcher > button { order: 10; }
-.document-switcher > button:first-child { order: 1; }
+.document-switcher > .nav-tab-praktikum { order: 1; }
 .document-switcher > .examples-tab-button { order: 2; }
-.document-switcher > button:nth-child(2):not(.examples-tab-button) { order: 3; }
-.document-switcher > button:nth-child(3):not(.examples-tab-button) { order: 4; }
+.document-switcher > .nav-tab-prezentacije { order: 3; }
+.document-switcher > .nav-tab-projekat { order: 4; }
+.document-switcher > .nav-tab-kontrolne { order: 5; }
 
 .document-switcher.examples-tab-active > button.active:not(.examples-tab-button),
 .site-shell:has(.tab-panel.examples-tab-active) .document-switcher > button.active:not(.examples-tab-button) {
@@ -191,7 +192,7 @@
 }
 
 @media (max-width: 720px) {
-  .document-switcher .examples-tab-button span { display: none; }
+  .document-switcher button span { display: none; }
   .examples-shell { width: min(100% - 20px, 1240px); margin-top: 18px; gap: 20px; }
   .examples-hero { padding: 26px 22px; }
   .examples-supplemental { padding: 18px; }

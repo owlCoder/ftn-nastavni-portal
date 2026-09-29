@@ -29,33 +29,46 @@ type SupplementalExample = {
   tags: string[]
 }
 
+type CourseKey = 'ers' | 'oib'
+
 const supplementalExamples: SupplementalExample[] = [
   {
     exercise: 2,
     title: 'Logger–Blogger',
-    description: 'Primer za primenu SOLID principa kroz razdvajanje poslovne logike, logovanja i infrastrukturnih odgovornosti.',
+    description: 'Primena SOLID principa kroz razdvajanje poslovne logike, evidentiranja događaja i infrastrukturnih odgovornosti.',
     zip: 'Logger-Bloger.zip',
     tags: ['SOLID', 'SRP', 'DIP'],
   },
   {
     exercise: 3,
     title: 'ECommerce',
-    description: 'Primer Clean Architecture organizacije sa domenom, aplikacionim slojem, repozitorijumima, komandama i upitima.',
+    description: 'Organizacija domenskog, aplikacionog i infrastrukturnog sloja prema pravilima Clean Architecture.',
     zip: 'E-Commerce.zip',
     tags: ['Clean Architecture', 'Repository', 'Use cases'],
   },
+]
+
+const oibExamples: SupplementalExample[] = [
+  { exercise: 1, title: 'Identitet i RBAC', description: 'Autentikacija aktera i centralizovana provera dozvola zasnovana na ulogama.', zip: 'oib-vezba-01-identitet-rbac.zip', tags: ['RBAC', 'Identitet', 'Politike'] },
+  { exercise: 2, title: 'Resurs i klasifikacija', description: 'Odluka o pristupu na osnovu vlasništva, uloge i klasifikacije podatka.', zip: 'oib-vezba-02-resurs-klasifikacija.zip', tags: ['Autorizacija', 'Resursi', 'Klasifikacija'] },
+  { exercise: 3, title: 'Politike i konfiguracija', description: 'Otkrivanje odstupanja aktivne konfiguracije od referentnog bezbednosnog stanja.', zip: 'oib-vezba-03-politike-konfiguracija.zip', tags: ['Referentno stanje', 'Odstupanje', 'Konfiguracija'] },
+  { exercise: 4, title: 'Modelovanje pretnji', description: 'Povezivanje imovine, tokova podataka i granica poverenja sa scenarijima pretnji.', zip: 'oib-vezba-04-threat-modeling.zip', tags: ['Imovina', 'Granice poverenja', 'Pretnje'] },
+  { exercise: 5, title: 'MFA, sesije i tajne', description: 'Dodatna autentikacija za rizičnu operaciju u okviru aktivne sesije.', zip: 'oib-vezba-05-mfa-sesije-tajne.zip', tags: ['MFA', 'Sesija', 'Dodatna provera'] },
+  { exercise: 6, title: 'Detekcija i incident', description: 'Prepoznavanje sumnjivih prijava i formiranje incidenta na osnovu bezbednosnih signala.', zip: 'oib-vezba-06-detekcija-incident.zip', tags: ['Detekcija', 'Signali', 'Incident'] },
+  { exercise: 7, title: 'ABAC i procena rizika', description: 'Odluka o pristupu zasnovana na atributima i priprema periodičnog pregleda prava.', zip: 'oib-vezba-07-abac-rizik-pregled.zip', tags: ['ABAC', 'Rizik', 'Pregled pristupa'] },
+  { exercise: 8, title: 'Korelacija i efektivnost', description: 'Korelacija događaja i merenje efektivnosti bezbednosne kontrole.', zip: 'oib-vezba-08-korelacija-efektivnost.zip', tags: ['Korelacija', 'Metrike', 'Analiza incidenata'] },
 ]
 
 const lessons: LessonExamples[] = [
   {
     number: 5,
     title: 'Integracija modula, ugovori i podaci',
-    summary: 'Osnova Clean Architecture pristupa: domen, aplikacioni sloj, portovi, adapteri, API i idempotentnost zahteva.',
+    summary: 'Razgraničenje domena, aplikacionog sloja, portova, adaptera i API-ja, uz proveru idempotentnosti zahteva.',
     zip: 'vezba-5-integracija-modula.zip',
     entries: [
-      { path: 'EquipmentReservation.sln', note: 'Glavni solution za otvaranje primera', kind: 'solution' },
+      { path: 'EquipmentReservation.sln', note: 'Glavno rešenje za otvaranje primera', kind: 'solution' },
       { path: 'src/EquipmentReservation.Domain/', note: 'Entiteti i poslovna pravila', kind: 'code' },
-      { path: 'src/EquipmentReservation.Application/', note: 'Use-case logika i portovi', kind: 'code' },
+      { path: 'src/EquipmentReservation.Application/', note: 'Slučajevi upotrebe i portovi', kind: 'code' },
       { path: 'src/EquipmentReservation.Infrastructure/', note: 'Implementacije portova i infrastrukturni adapteri', kind: 'code' },
       { path: 'src/EquipmentReservation.Api/', note: 'HTTP API kao ulaz u aplikaciju', kind: 'code' },
       { path: 'src/EquipmentReservation.ConsoleUi/', note: 'Jednostavan konzolni interfejs za rad sa primerom', kind: 'code' },
@@ -65,7 +78,7 @@ const lessons: LessonExamples[] = [
   {
     number: 6,
     title: 'Kontrolisan razvoj uz AI',
-    summary: 'Projektne instrukcije, evidencija odluka, ponovljive procedure i jasno razdvojene uloge u AI razvojnom toku.',
+    summary: 'Projektna pravila, evidencija odluka, ponovljive procedure i podela odgovornosti pri upotrebi AI alata.',
     zip: 'vezba-6-ai-workflow.zip',
     entries: [
       { path: '.ai/AI_INSTRUCTIONS.md', note: 'Projektna pravila za AI razvoj', kind: 'config' },
@@ -78,37 +91,37 @@ const lessons: LessonExamples[] = [
   {
     number: 7,
     title: 'MCP: povezivanje agenata sa projektom',
-    summary: 'Kontrolisan pristup projektnoj dokumentaciji, strukturi izvornog koda, izmenama i rezultatima testova.',
+    summary: 'Ograničen pristup projektnoj dokumentaciji, strukturi izvornog koda, izmenama i rezultatima testova.',
     zip: 'vezba-7-mcp.zip',
     entries: [
       { path: 'src/EquipmentReservation.Mcp/Program.cs', note: 'Pokretanje i konfiguracija MCP servera', kind: 'code' },
       { path: 'src/EquipmentReservation.Mcp/Resources/ProjectResources.cs', note: 'MCP resources', kind: 'code' },
       { path: 'src/EquipmentReservation.Mcp/Tools/ProjectTools.cs', note: 'MCP tools', kind: 'code' },
       { path: 'src/EquipmentReservation.Mcp/Workspace/ProjectWorkspace.cs', note: 'Kontrolisan pristup projektu i dozvoljenim komandama', kind: 'code' },
-      { path: '.ai/AI_INSTRUCTIONS.md', note: 'Projektna pravila dostupna kroz MCP resource', kind: 'config' },
+      { path: '.ai/AI_INSTRUCTIONS.md', note: 'Projektna pravila dostupna kao MCP resurs', kind: 'config' },
     ],
   },
   {
     number: 8,
     title: 'Hooks, guardrails i evaluacije',
-    summary: 'Zaštitna pravila za AI alate i evaluacioni scenariji za proveru arhitekture, bezbednosti i kvaliteta rezultata.',
+    summary: 'Izvršiva pravila za AI alate i evaluacioni scenariji za proveru arhitekture, bezbednosti i kvaliteta rezultata.',
     zip: 'vezba-8-guardrails-evals.zip',
     entries: [
       { path: 'src/EquipmentReservation.Guardrails/Policies/DangerousCommandGuardrail.cs', note: 'Pravilo za opasne komande', kind: 'code' },
       { path: 'src/EquipmentReservation.Guardrails/Policies/SensitiveFileGuardrail.cs', note: 'Pravilo za osetljive fajlove', kind: 'code' },
-      { path: 'src/EquipmentReservation.Guardrails/Services/GuardrailEvaluator.cs', note: 'Evaluator guardrail politika', kind: 'code' },
-      { path: 'src/EquipmentReservation.Guardrails/Program.cs', note: 'Adapter za izvršavanje guardrail provera', kind: 'code' },
-      { path: '.claude/settings.json', note: 'Primer povezivanja PreToolUse hook-a', kind: 'config' },
+      { path: 'src/EquipmentReservation.Guardrails/Services/GuardrailEvaluator.cs', note: 'Evaluator izvršivih zaštitnih politika', kind: 'code' },
+      { path: 'src/EquipmentReservation.Guardrails/Program.cs', note: 'Adapter za izvršavanje zaštitnih provera', kind: 'code' },
+      { path: '.claude/settings.json', note: 'Primer povezivanja PreToolUse mehanizma', kind: 'config' },
       { path: 'evals/review-architecture.json', note: 'Provera arhitektonske regresije', kind: 'eval' },
       { path: 'evals/prompt-injection.json', note: 'Scenario za prompt injection', kind: 'eval' },
       { path: 'evals/missing-context.json', note: 'Scenario sa nepotpunim kontekstom', kind: 'eval' },
-      { path: 'tests/EquipmentReservation.Tests/Guardrails/GuardrailPolicyTests.cs', note: 'Automatizovane guardrail provere', kind: 'test' },
+      { path: 'tests/EquipmentReservation.Tests/Guardrails/GuardrailPolicyTests.cs', note: 'Automatizovane provere zaštitnih politika', kind: 'test' },
     ],
   },
 ]
 
 const packageKindLabels: Record<ExampleEntry['kind'], string> = {
-  solution: 'Solution',
+  solution: 'Rešenje',
   code: 'Izvorni kod',
   config: 'Konfiguracija',
   test: 'Testovi',
@@ -135,7 +148,7 @@ function FolderIcon() {
   )
 }
 
-function ExamplesView() {
+function ErsExamplesView() {
   const zipUrl = publicAsset('/downloads/ers-ai-vezbe-5-8.zip')
 
   return (
@@ -144,7 +157,7 @@ function ExamplesView() {
         <div className="examples-hero-copy">
           <span className="eyebrow">Nastavni primeri</span>
           <h1>Primeri za vežbe</h1>
-          <p>Preuzmite gotove .NET projekte i koristite ih uz odgovarajuću vežbu.</p>
+          <p>Pripremljeni .NET projekti prate teme obrađene na vežbama i namenjeni su samostalnoj analizi.</p>
           <div className="examples-summary" aria-label="Sadržaj primera">
             <span><strong>6</strong> ZIP paketa</span>
             <span><strong>2–8</strong> vežbe</span>
@@ -196,7 +209,7 @@ function ExamplesView() {
           <div>
             <span className="eyebrow">Vežbe 5–8</span>
             <h2>EquipmentReservation</h2>
-            <p>Jedan projekat koji se postepeno nadograđuje kroz četiri vežbe.</p>
+          <p>Isti projekat se proširuje kroz četiri vežbe, uz očuvanje zajedničke arhitekture i skupa testova.</p>
           </div>
           <a href={zipUrl} download className="examples-project-download">
             <span className="examples-project-download-icon"><DownloadIcon /></span>
@@ -233,24 +246,88 @@ function ExamplesView() {
   )
 }
 
+function OibExamplesView() {
+  const zipUrl = publicAsset('/downloads/oib-svi-primeri.zip')
+
+  return (
+    <main className="examples-shell examples-shell-oib">
+      <section className="examples-hero">
+        <div className="examples-hero-copy">
+          <span className="eyebrow">C# / .NET 8</span>
+          <h1>Primeri iz informacione bezbednosti</h1>
+          <p>Svaku vežbu prati samostalan .NET projekat sa uputstvom za pokretanje i analizom obrađene kontrole.</p>
+          <div className="examples-summary" aria-label="Sadržaj primera">
+            <span><strong>8</strong> ZIP paketa</span>
+            <span><strong>1–8</strong> vežbe</span>
+            <span><strong>.NET 8</strong> konzolni projekti</span>
+          </div>
+        </div>
+        <a href={zipUrl} download className="examples-hero-download">
+          <span className="examples-hero-download-icon"><DownloadIcon /></span>
+          <span className="examples-hero-download-copy">
+            <small>SVI PRIMERI</small>
+            <strong>Preuzmi komplet</strong>
+            <em><b>ZIP</b><span>Vežbe 1–8</span></em>
+          </span>
+          <span className="examples-hero-download-arrow" aria-hidden="true">→</span>
+        </a>
+      </section>
+
+      <section className="examples-card">
+        <div className="examples-project-heading">
+          <div>
+            <span className="eyebrow">Primeri po vežbama</span>
+            <h2>Primeri po temama</h2>
+            <p>Paketi su međusobno nezavisni i sadrže kratko uputstvo za pokretanje.</p>
+          </div>
+        </div>
+        <div className="examples-course-grid" aria-label="OIB primeri po vežbama">
+          {oibExamples.map((example) => (
+            <article className="examples-course-card" key={example.exercise}>
+              <div className="examples-course-card-topline">
+                <span>Vežba {example.exercise}</span>
+                <span>ZIP</span>
+              </div>
+              <span className="examples-course-icon"><FolderIcon /></span>
+              <h3>{example.title}</h3>
+              <p>{example.description}</p>
+              <div className="examples-course-tags">
+                {example.tags.map((tag) => <span key={tag}>{tag}</span>)}
+              </div>
+              <a className="examples-course-download" href={publicAsset(`/downloads/${example.zip}`)} download>
+                <DownloadIcon />
+                <span>Preuzmi vežbu {example.exercise}</span>
+              </a>
+            </article>
+          ))}
+        </div>
+      </section>
+    </main>
+  )
+}
+
 export default function ExamplesEnhancer() {
   const [targets, setTargets] = useState<PortalTargets | null>(null)
-  const [active, setActive] = useState(() => window.location.hash.startsWith('#ers/primeri'))
+  const getCourse = (): CourseKey | null => window.location.hash.startsWith('#ers') ? 'ers' : window.location.hash.startsWith('#oib') ? 'oib' : null
+  const [course, setCourse] = useState<CourseKey | null>(() => getCourse())
+  const [active, setActive] = useState(() => /#(?:ers|oib)\/primeri/.test(window.location.hash))
 
   useEffect(() => {
     const syncTargets = () => {
-      const isErs = window.location.hash.startsWith('#ers')
+      const nextCourse = getCourse()
       const nav = document.querySelector<HTMLElement>('.site-header .document-switcher')
       const panel = document.querySelector<HTMLElement>('.site-shell .tab-panel')
 
-      if (!isErs || !nav || !panel) {
+      if (!nextCourse || !nav || !panel) {
         setTargets(null)
+        setCourse(null)
         setActive(false)
         return
       }
 
+      setCourse(nextCourse)
       setTargets((current) => current?.nav === nav && current.panel === panel ? current : { nav, panel })
-      if (window.location.hash.startsWith('#ers/primeri')) setActive(true)
+      setActive(window.location.hash.startsWith(`#${nextCourse}/primeri`))
     }
 
     syncTargets()
@@ -264,7 +341,9 @@ export default function ExamplesEnhancer() {
     }
 
     const handleLocationChange = () => {
-      setActive(window.location.hash.startsWith('#ers/primeri'))
+      const nextCourse = getCourse()
+      setCourse(nextCourse)
+      setActive(Boolean(nextCourse && window.location.hash.startsWith(`#${nextCourse}/primeri`)))
       syncTargets()
     }
 
@@ -285,27 +364,30 @@ export default function ExamplesEnhancer() {
     targets.panel.classList.toggle('examples-tab-active', active)
     targets.nav.classList.toggle('examples-tab-active', active)
     if (active) {
-      document.title = 'ERS — Primeri'
-    } else if (window.location.hash.startsWith('#ers/prezentacije')) {
-      document.title = 'ERS — Prezentacije'
-    } else if (window.location.hash.startsWith('#ers/kontrolne-tacke')) {
-      document.title = 'ERS — Kontrolne tačke'
-    } else if (window.location.hash.startsWith('#ers/praktikum')) {
-      document.title = 'ERS — Praktikum'
+      targets.nav.querySelectorAll('button.active:not(.examples-tab-button)').forEach((button) => button.classList.remove('active'))
+      document.title = `${course?.toUpperCase()} — Primeri`
+    } else if (course && window.location.hash.startsWith(`#${course}/prezentacije`)) {
+      document.title = `${course.toUpperCase()} — Prezentacije`
+    } else if (course && window.location.hash.startsWith(`#${course}/kontrolne-tacke`)) {
+      document.title = `${course.toUpperCase()} — Kontrolne tačke`
+    } else if (course && window.location.hash.startsWith(`#${course}/praktikum`)) {
+      document.title = `${course.toUpperCase()} — Praktikum`
     }
     return () => {
       targets.panel.classList.remove('examples-tab-active')
       targets.nav.classList.remove('examples-tab-active')
     }
-  }, [active, targets])
+  }, [active, course, targets])
 
   const button = useMemo(() => (
     <button
       className={`examples-tab-button ${active ? 'active' : ''}`}
+      aria-label="Primeri"
       onClick={() => {
+        if (!course) return
         setActive(true)
-        history.replaceState(null, '', '#ers/primeri')
-        document.title = 'ERS — Primeri'
+        history.replaceState(null, '', `#${course}/primeri`)
+        document.title = `${course.toUpperCase()} — Primeri`
         window.scrollTo({ top: 0, behavior: 'smooth' })
       }}
     >
@@ -315,14 +397,14 @@ export default function ExamplesEnhancer() {
       </svg>
       <span>Primeri</span>
     </button>
-  ), [active])
+  ), [active, course])
 
   if (!targets) return null
 
   return (
     <>
       {createPortal(button, targets.nav)}
-      {active && createPortal(<ExamplesView />, targets.panel)}
+      {active && createPortal(course === 'oib' ? <OibExamplesView /> : <ErsExamplesView />, targets.panel)}
     </>
   )
 }

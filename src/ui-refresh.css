@@ -90,16 +90,20 @@
   letter-spacing: .01em;
 }
 
-.brand-mark-ers {
+.brand-mark-ers,
+.brand-mark-oib {
   color: #ffffff;
 }
 
 .brand-mark-ers::before,
-.brand-mark-ers::after {
+.brand-mark-ers::after,
+.brand-mark-oib::before,
+.brand-mark-oib::after {
   display: none;
 }
 
-.brand-mark-ers svg {
+.brand-mark-ers svg,
+.brand-mark-oib svg {
   width: 22px;
   height: 22px;
 }

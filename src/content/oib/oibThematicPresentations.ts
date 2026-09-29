@@ -74,7 +74,7 @@ const topics: Topic[] = [
     development: ['uz svaku operaciju opisati negativan scenario', 'proveru vlasništva držati uz serversku odluku', 'promenu klasifikacije učiniti vidljivom i obrazloženom'],
     question: 'Koji resurs bi korisnik mogao da pogodi promenom identifikatora i kako ga sistem štiti?',
     checkpoint: {
-      code: 'P1', date: '12.10.',
+      code: 'P1', date: '19.10.',
       lead: 'Prva kontrolna tačka (Vežba 1–2) spaja identitet, RBAC, object-authorization i audit u jedan dokaziv lanac.',
       items: [
         'osnovna autentikacija i RBAC rade serverski',
@@ -114,7 +114,7 @@ const topics: Topic[] = [
     development: ['izabrati odluke koje tim mora umeti da rekonstruiše', 'prenositi korelacioni kontekst kroz slojeve', 'proveriti odstupanje od očekivane konfiguracije'],
     question: 'Koju bezbednosnu odluku biste želeli da objasnite za šest meseci i koji trag vam je za to potreban?',
     checkpoint: {
-      code: 'P2', date: '26.10.',
+      code: 'P2', date: '02.11.',
       lead: 'Druga kontrolna tačka (Vežba 2–3) proverava da su politike, klasifikacija i baseline eksplicitni i testabilni.',
       items: [
         'policy katalog podržava verzionisanje',
@@ -154,7 +154,7 @@ const topics: Topic[] = [
     development: ['nacrtati važan tok podataka', 'označiti granice i pretpostavke', 'za nekoliko scenarija povezati zahtev, kontrolu i dokaz'],
     question: 'Gde u vašem sistemu podatak prelazi granicu poverenja i šta se tačno menja u tom trenutku?',
     checkpoint: {
-      code: 'P3', date: '16.11.',
+      code: 'P3', date: '23.11.',
       lead: 'Treća kontrolna tačka (Vežba 4) zaokružuje osnovni nivo sistema i postavlja baznu liniju testova pred sledeću fazu rada.',
       items: [
         'asset inventory beleži kritičnost i vlasnika',
@@ -284,7 +284,7 @@ const topics: Topic[] = [
     development: ['pokazati vezu rizik, kontrola, test i dokaz', 'odgovor većeg uticaja ostaviti pod ljudskim odobrenjem', 'post-incident pregled koristiti za poboljšanje procesa'],
     question: 'Koji dokaz bi pokazao da jedna vaša kontrola više ne radi kako je zamišljeno?',
     checkpoint: {
-      code: 'P4', date: '07.12.',
+      code: 'P4', date: '14.12.',
       lead: 'Poslednja kontrolna tačka (Vežba 5–8) proverava operativni i napredni sloj: MFA, sesije, detekciju, incident, rizik i analitiku.',
       items: [
         'step-up aktivan za najmanje jednu privilegovanu operaciju',

@@ -2,9 +2,9 @@ import type { DocumentPage } from '../types'
 import { text, list, callout, code, table, diagram, page } from './canvaPracticumShared'
 
 export const exerciseAiWorkflow = (): DocumentPage[] => [
-  page('Vežba 6 — Kontrolisan AI workflow nad istim solution-om', [
+  page('Vežba 6 — Razvoj uz podršku AI alata u istom rešenju', [
     text('h1', 'Vežba 6 — Kontrolisan razvoj uz AI: kontekst, instrukcije, procedure i agenti'),
-    text('paragraph', 'AI se uvodi tek nakon što postoji razumljivo i testirano jezgro iz Vežbe 5. I dalje radimo nad <code>examples/ers-ai-workflow/EquipmentReservation.sln</code>. Cilj nije da AI zameni arhitekturu, nego da radi unutar njenih granica i da svaki rezultat ostane proverljiv standardnim razvojnim signalima.'),
+    text('paragraph', 'AI alati uvode se nakon što je u Vežbi 5 uspostavljeno razumljivo i testirano jezgro sistema. Rad se nastavlja u rešenju <code>examples/ers-ai-workflow/EquipmentReservation.sln</code>. AI alat mora poštovati postojeće arhitektonske granice, a rezultat se proverava izgradnjom projekta, testovima i pregledom izmena.'),
     diagram('Kontrolisan tok nad EquipmentReservation solution-om', [
       ['Zadatak', 'jasan cilj i kriterijumi', 'slate'],
       ['Kontekst', 'relevantni projekti i testovi', 'cyan'],
@@ -76,7 +76,7 @@ Ne menjaj kod u ovoj fazi.
 
 ## Ograničenje
 Ne menjaj kod tokom review faze.`, 'Sažeta verzija procedure iz gotovog primera'),
-    callout('info', 'SRP važi i za agentski workflow', 'Review uloga ne treba istovremeno da bude autor izmene koju ocenjuje. Razdvajanje odgovornosti olakšava nezavisnu proveru.'),
+    callout('info', 'Podela odgovornosti', 'Uloga namenjena pregledu ne treba istovremeno da bude autor izmene koju ocenjuje. Razdvajanje uloga omogućava nezavisniju proveru rezultata.'),
   ]),
 
   page('6.4. Specijalizovane uloge i najmanje privilegije', [
@@ -106,7 +106,7 @@ Ne menjaj kod tokom review faze.`, 'Sažeta verzija procedure iz gotovog primera
 
   page('6.5. AI rezultat nije dokaz', [
     text('h2', '6.5. AI rezultat nije dokaz'),
-    text('paragraph', 'Model može reći da promena „izgleda ispravno“, ali završetak zadatka se zasniva na stvarnim signalima. Za ovaj primer minimalni signal je uspešan build solution-a, uspešan NUnit skup i pregled konačnog diff-a.'),
+    text('paragraph', 'Ocena modela nije dokaz ispravnosti promene. Završetak zadatka zahteva uspešnu izgradnju rešenja, prolazak NUnit testova i pregled konačnog skupa izmena.'),
     code('bash', `dotnet build EquipmentReservation.sln --configuration Release
 dotnet test EquipmentReservation.sln --configuration Release --no-build
 git diff -- .`, 'Minimalna nezavisna provera nakon AI izmene'),
@@ -118,15 +118,15 @@ git diff -- .`, 'Minimalna nezavisna provera nakon AI izmene'),
     ]),
   ]),
 
-  page('6.6. Rad na vežbi — jedan stvarni AI razvojni tok', [
-    text('h2', '6.6. Rad na vežbi — jedan stvarni AI razvojni tok'),
+  page('6.6. Rad na vežbi — razvojni tok uz podršku AI alata', [
+    text('h2', '6.6. Rad na vežbi — razvojni tok uz podršku AI alata'),
     callout('task', 'Zadatak', 'Na kopiji <code>EquipmentReservation.sln</code> zadati malu promenu poslovnog pravila. Prvo koristiti architecture-reviewer samo za analizu; zatim implementer-u proslediti usvojen plan. Na kraju pokrenuti solution build/test, pregledati diff i uneti sažet zapis u <code>.ai/AI_USAGE.md</code>.'),
     table(['Dokaz', 'Šta student pokazuje'], [
       ['Plan pre izmene', 'Da je razumeo pogođene slojeve i granice.'],
-      ['Mali diff', 'Da agentski tok nije nekontrolisano proširio obim.'],
+      ['Ograničen skup izmena', 'Da AI agent nije proširio obim zadatka van usvojenog plana.'],
       ['Build + test rezultat', 'Da provera nije zasnovana na tvrdnji modela.'],
       ['AI_USAGE zapis', 'Da tim može rekonstruisati odluku i razlog prihvatanja/odbijanja predloga.'],
     ]),
-    callout('success', 'Ishod vežbe', 'Student ume da uključi AI u razvoj bez promene osnovnih SOLID/Clean Architecture pravila i bez predaje odgovornosti modelu.'),
+    callout('success', 'Ishod vežbe', 'Student ume da koristi AI alat uz očuvanje SOLID principa, arhitektonskih granica i sopstvene odgovornosti za konačan rezultat.'),
   ]),
 ]

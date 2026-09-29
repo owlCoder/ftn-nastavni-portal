@@ -2,34 +2,34 @@ import type { DocumentPage } from '../types'
 import { text, list, callout, code, table, diagram, page } from './canvaPracticumShared'
 
 export const exercise5 = (): DocumentPage[] => [
-  page('Vežba 5 — Poslovna logika i use-case sloj', [
-    text('h1', 'Vežba 5 — Poslovna logika i use-case sloj'),
-    text('paragraph', 'Nakon postavljanja arhitektonskih granica, sledeći korak je da se poslovno ponašanje smesti na odgovarajuće mesto. Use-case predstavlja jednu korisnički smislenu operaciju sistema. On orkestrira domenske objekte i ugovore, ali ne treba da bude vezan za konkretan korisnički interfejs, bazu podataka ili transportni protokol.'),
-    diagram('Tok jednog use-case-a', [
+  page('Vežba 5 — Poslovna logika i aplikacioni sloj', [
+    text('h1', 'Vežba 5 — Poslovna logika i aplikacioni sloj'),
+    text('paragraph', 'Nakon uspostavljanja arhitektonskih granica potrebno je rasporediti odgovornosti između modela, validatora i servisa slučaja upotrebe. Model predstavlja stanje, validator proverava ispravnost ulaznih vrednosti, a aplikacioni servis koordinira poslovna pravila i zavisnosti. Nijedan od ovih elemenata ne treba da zavisi od konkretnog korisničkog interfejsa, baze podataka ili transportnog protokola.'),
+    diagram('Tok jednog slučaja upotrebe', [
       ['Ulaz', 'komanda ili zahtev', 'cyan'],
       ['Validacija', 'osnovna i poslovna pravila', 'blue'],
-      ['Domen', 'promena stanja i invarijante', 'violet'],
+      ['Poslovna pravila', 'odluka i promena stanja', 'violet'],
       ['Čuvanje', 'ugovor repozitorijuma', 'amber'],
       ['Rezultat', 'eksplicitan ishod za klijenta', 'emerald'],
-    ], 'Use-case povezuje poslovni zahtev sa domenskim ponašanjem i jasno definisanim ishodom.'),
+    ], 'Aplikacioni servis povezuje zahtev sa poslovnim pravilima i eksplicitno definisanim ishodom.'),
     callout('info', 'Studija slučaja: ECommerce', 'Primer ECommerce razdvaja Domain, podatke i repozitorijume, Application i implementaciju poslovnih servisa. Upiti i komande pripadaju aplikacionom sloju, dok konkretna baza podataka ili spoljni web servis ostaju infrastrukturni detalji.'),
     callout('success', 'Rešenje za preuzimanje', 'Kompletno rešenje studije slučaja dostupno je kao <a href="./E-Commerce.zip" download>ECommerce ZIP</a>.'),
   ]),
-  page('5.1. Entiteti, invarijante i ponašanje', [
-    text('h2', '5.1. Entitet nije samo DTO'),
-    text('paragraph', 'Ako domenski objekat sadrži samo javne setere, a sva pravila se nalaze u servisima, objekat lako može preći u nevažeće stanje. Enkapsulacija omogućava da se invarijanta čuva na mestu koje poseduje podatke. Use-case i dalje koordinira operaciju, ali ne mora da ponavlja isto pravilo pri svakom pozivu.'),
-    code('csharp', `public sealed class Reservation\n{\n    public Guid Id { get; }\n    public Guid EquipmentId { get; }\n    public DateTime From { get; private set; }\n    public DateTime To { get; private set; }\n    public bool Cancelled { get; private set; }\n\n    private Reservation(Guid id, Guid equipmentId, DateTime from, DateTime to)\n    {\n        Id = id;\n        EquipmentId = equipmentId;\n        From = from;\n        To = to;\n    }\n\n    public static Result<Reservation> Create(\n        Guid id, Guid equipmentId, DateTime from, DateTime to)\n    {\n        if (from >= to)\n            return Result<Reservation>.Fail("InvalidPeriod"); // Nevažeći period je očekivan neuspeh, ne izuzetak.\n\n        return Result<Reservation>.Ok(new Reservation(id, equipmentId, from, to));\n    }\n\n    public Result Cancel(DateTime now)\n    {\n        if (Cancelled)\n            return Result.Fail("AlreadyCancelled");\n        if (From <= now)\n            return Result.Fail("ReservationAlreadyStarted");\n\n        Cancelled = true;\n        return Result.Ok();\n    }\n}`, 'Konstruktor je privatan; factory metod vraća Result umesto da baca izuzetak'),
+  page('5.1. Model, validacija i poslovna pravila', [
+    text('h2', '5.1. Model, validacija i poslovna pravila'),
+    text('paragraph', 'Klasa modela predstavlja podatke i stanje rezervacije. Provera opsega i međusobnog odnosa ulaznih vrednosti pripada posebnom validatoru, dok pravila koja zahtevaju podatke iz repozitorijuma ili drugih modula pripadaju aplikacionom ili domenskom servisu. Ovakva podela sprečava da model istovremeno postane nosilac podataka, validator i servis.'),
+    code('csharp', `public sealed class Reservation\n{\n    public Guid Id { get; }\n    public Guid EquipmentId { get; }\n    public DateTime From { get; }\n    public DateTime To { get; }\n    public bool Cancelled { get; private set; }\n\n    public Reservation(\n        Guid id, Guid equipmentId, DateTime from, DateTime to)\n    {\n        Id = id;\n        EquipmentId = equipmentId;\n        From = from;\n        To = to;\n    }\n\n    public void MarkCancelled() => Cancelled = true;\n}\n\npublic static class ReservationValidator\n{\n    public static Result ValidatePeriod(DateTime from, DateTime to)\n        => from < to\n            ? Result.Ok()\n            : Result.Fail("InvalidPeriod");\n}`, 'Model čuva stanje, a validator proverava ispravnost perioda'),
     list([
-      'Factory metod treba da spreči nastanak očigledno nevalidnog stanja, bez bacanja izuzetka za očekivan neuspeh.',
-      'Konstruktor ostaje privatan i pretpostavlja da su podaci već validni — sva provera se dešava pre njega.',
-      'Metode entiteta treba da imaju poslovno značenje, a ne da budu samo generički seteri.',
-      'Pravilo koje zavisi od više agregata ili spoljnog izvora može pripadati domenskom ili application servisu umesto jednom entitetu.',
+      'Model predstavlja stanje i ne pristupa repozitorijumu, vremenu sistema niti spoljnim servisima.',
+      'Validator proverava format, opseg i međusobni odnos ulaznih vrednosti.',
+      'Aplikacioni ili domenski servis sprovodi pravila koja zahtevaju dodatni kontekst.',
+      'Promena stanja modela izvodi se ograničenom operacijom nakon uspešne validacije i poslovne provere.',
     ]),
   ]),
   page('5.2. Eksplicitni poslovni ishodi', [
     text('h2', '5.2. `Result` i očekivani neuspeh'),
     text('paragraph', 'Očekivani poslovni neuspeh nije isto što i neočekivana greška sistema. Kada korisnik pokuša da rezerviše zauzet termin, sistem radi ispravno ako zahtev odbije i vrati stabilan i razumljiv ishod. Takvo ponašanje treba da bude eksplicitno i testabilno, umesto da se prikrije vrednostima `null`, `false` ili generičkim izuzetkom.'),
-    code('csharp', `public sealed record Result(bool Success, string? Error)\n{\n    public static Result Ok() => new(true, null);\n    public static Result Fail(string error) => new(false, error);\n}\n\npublic sealed record Result<T>(bool Success, T? Value, string? Error)\n{\n    public static Result<T> Ok(T value) => new(true, value, null);\n    public static Result<T> Fail(string error) => new(false, default, error);\n}\n\npublic sealed class ReservationService\n{\n    private readonly IReservationRepository _repository;\n\n    public ReservationService(IReservationRepository repository)\n        => _repository = repository;\n\n    public Result Reserve(ReservationRequest request)\n    {\n        if (_repository.HasOverlap(\n            request.EquipmentId, request.From, request.To))\n        {\n            return Result.Fail("OverlappingReservation");\n        }\n\n        var created = Reservation.Create(\n            Guid.NewGuid(), request.EquipmentId, request.From, request.To);\n        if (!created.Success)\n            return Result.Fail(created.Error!);\n\n        _repository.Add(created.Value!);\n        return Result.Ok();\n    }\n}`, 'Eksplicitan rezultat poslovne operacije u okviru use-case servisa'),
+    code('csharp', `public sealed record Result(bool Success, string? Error)\n{\n    public static Result Ok() => new(true, null);\n    public static Result Fail(string error) => new(false, error);\n}\n\npublic sealed class ReservationService\n{\n    private readonly IReservationRepository _repository;\n\n    public ReservationService(IReservationRepository repository)\n        => _repository = repository;\n\n    public Result Reserve(ReservationRequest request)\n    {\n        var validation = ReservationValidator.ValidatePeriod(\n            request.From, request.To);\n        if (!validation.Success)\n            return validation;\n\n        if (_repository.HasOverlap(\n            request.EquipmentId, request.From, request.To))\n            return Result.Fail("OverlappingReservation");\n\n        var reservation = new Reservation(\n            Guid.NewGuid(), request.EquipmentId,\n            request.From, request.To);\n\n        _repository.Add(reservation);\n        return Result.Ok();\n    }\n}`, 'Eksplicitan rezultat poslovne operacije u aplikacionom servisu'),
     table(['Situacija', 'Preporučeni model'], [
       ['Nevažeći poslovni zahtev', 'Eksplicitan Result i stabilan kod poslovnog neuspeha.'],
       ['Entitet nije pronađen', 'Result sa stabilnim kodom ili domenom definisan NotFound ishod.'],
@@ -37,18 +37,18 @@ export const exercise5 = (): DocumentPage[] => [
       ['Narušena pretpostavka unutar domena', 'Result.Fail sa jasnim kodom — poslovni sloj ostaje predvidljiv i bez izuzetaka.'],
     ]),
   ]),
-  page('5.3. Use-case servis i dependency injection', [
-    text('h2', '5.3. Use-case servis i dependency injection'),
+  page('5.3. Servis slučaja upotrebe i dependency injection', [
+    text('h2', '5.3. Servis slučaja upotrebe i dependency injection'),
     text('paragraph', 'Dependency Injection nije samo mogućnost framework-a. To je način da objekat dobije saradnike spolja, tako da centralna logika ne mora da zna kako se ti saradnici kreiraju. Time se promenljive zavisnosti mogu zameniti u testu ili drugom izvršnom okruženju.'),
-    code('csharp', `public sealed class ReservationService\n{\n    private readonly IReservationRepository _repository;\n    private readonly IClock _clock;\n\n    public ReservationService(\n        IReservationRepository repository,\n        IClock clock)\n    {\n        _repository = repository;\n        _clock = clock;\n    }\n\n    public Result Reserve(ReservationRequest request)\n    {\n        if (request.From <= _clock.UtcNow)\n            return Result.Fail("ReservationMustBeInFuture");\n\n        if (_repository.HasOverlap(\n            request.EquipmentId, request.From, request.To))\n        {\n            return Result.Fail("OverlappingReservation");\n        }\n\n        var created = Reservation.Create(\n            Guid.NewGuid(), request.EquipmentId, request.From, request.To);\n        if (!created.Success)\n            return Result.Fail(created.Error!);\n\n        _repository.Add(created.Value!);\n        return Result.Ok();\n    }\n}`, 'Use-case servis sa ubrizganim zavisnostima'),
+    code('csharp', `public sealed class ReservationService\n{\n    private readonly IReservationRepository _repository;\n    private readonly IClock _clock;\n\n    public ReservationService(\n        IReservationRepository repository,\n        IClock clock)\n    {\n        _repository = repository;\n        _clock = clock;\n    }\n\n    public Result Reserve(ReservationRequest request)\n    {\n        var validation = ReservationValidator.ValidatePeriod(\n            request.From, request.To);\n        if (!validation.Success)\n            return validation;\n\n        if (request.From <= _clock.UtcNow)\n            return Result.Fail("ReservationMustBeInFuture");\n\n        if (_repository.HasOverlap(\n            request.EquipmentId, request.From, request.To))\n            return Result.Fail("OverlappingReservation");\n\n        var reservation = new Reservation(\n            Guid.NewGuid(), request.EquipmentId,\n            request.From, request.To);\n\n        _repository.Add(reservation);\n        return Result.Ok();\n    }\n}`, 'Servis slučaja upotrebe sa ubrizganim zavisnostima'),
     callout('note', 'Testabilnost se projektuje unapred', '`IClock` i `IReservationRepository` nisu uvedeni samo radi testova, već zato što vreme i skladište predstavljaju promenljive spoljne zavisnosti. Testiranje koristi činjenicu da su granice sistema već jasno postavljene.'),
   ]),
   page('5.4. Projektna kontrolna tačka P2', [
     text('h2', '5.4. Projektna kontrolna tačka P2 — funkcionalno jezgro'),
-    text('paragraph', 'Do ove projektne kontrolne tačke projekat treba da ima najmanje jedan koherentan use-case čije je ponašanje moguće objasniti od zahteva do poslovnog rezultata. Nije cilj da svi ekrani budu završeni; važnije je da je centralni tok pravilno modelovan.'),
+    text('paragraph', 'Do ove projektne kontrolne tačke projekat treba da ima najmanje jedan zaokružen slučaj upotrebe čije se ponašanje može obrazložiti od ulaznog zahteva do poslovnog rezultata. Završetak svih ekrana nije uslov; ocenjuje se pravilno modelovan centralni tok.'),
     list([
-      'Implementirati najmanje dva ključna use-case-a sa eksplicitnim ulazima i rezultatima.',
-      'Poslovna pravila ne smeju biti raspoređena po controller-u, konzolnom meniju i repozitorijumu bez jasne granice odgovornosti.',
+      'Implementirati najmanje dva ključna slučaja upotrebe sa eksplicitnim ulazima i rezultatima.',
+      'Poslovna pravila ne smeju biti raspoređena po kontroleru, konzolnom meniju i repozitorijumu bez definisane granice odgovornosti.',
       'Za očekivane neuspehe definisati stabilne kodove ili tipove rezultata.',
       'Spoljne zavisnosti uvoditi kroz ugovore i composition root.',
       'U pull request-u opisati najmanje jednu arhitektonsku odluku koja je promenjena nakon implementacije i obrazložiti razlog promene.',

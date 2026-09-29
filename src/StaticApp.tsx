@@ -4,7 +4,6 @@ import { practicum2026 } from './content/canvaPracticum'
 import type { PresentationDeck } from './content/presentations'
 import { checkpoints, type Checkpoint } from './content/checkpoints'
 import { oibPracticum2026 } from './content/oib/oibPracticum'
-import { oibThematicPresentationDecks } from './content/oib/oibThematicPresentations'
 import { oibCheckpoints } from './content/oib/oibCheckpoints'
 import { odpPracticum2026 } from './content/odp/odpPracticum'
 import { odpThematicPresentationDecks } from './content/odp/odpThematicPresentations'
@@ -15,7 +14,7 @@ import './presentations.css'
 import './checkpoints.css'
 import './subjects.css'
 
-type ActiveKey = 'praktikum' | 'prezentacije' | 'kontrolne-tacke'
+type ActiveKey = 'praktikum' | 'prezentacije' | 'projekat' | 'kontrolne-tacke'
 type ArtifactKind = 'figure' | 'listing' | 'table'
 
 type PreparedBlock = {
@@ -40,17 +39,64 @@ type PresentationDownload = {
   file: string
 }
 
+type PresentationBundle = {
+  file: string
+  size: string
+}
+
+type ProjectDocument = {
+  code: string
+  title: string
+  description: string
+  file: string
+  pages: number
+  size: string
+  highlights: [string, string, string]
+}
+
 const ersPresentationDownloads: PresentationDownload[] = [
-  { number: '00', label: 'Uvodna prezentacija', title: 'Osnovne informacije', description: 'Organizacija nastave, način polaganja, projektne obaveze i važni rokovi.', pages: 14, size: '324 KB', file: '/downloads/ers-prezentacije/00_Osnovne_informacije.pdf' },
-  { number: '01', label: 'Vežba 1', title: 'Zahtevi, backlog i Git', description: 'Od zahteva i backlog stavke do proverljive promene u repozitorijumu.', pages: 20, size: '426 KB', file: '/downloads/ers-prezentacije/01_Zahtevi_backlog_i_Git.pdf' },
-  { number: '02', label: 'Vežba 2', title: 'SOLID i Clean Architecture', description: 'Jasne granice odgovornosti i arhitektura koja čuva poslovno jezgro.', pages: 20, size: '511 KB', file: '/downloads/ers-prezentacije/02_SOLID_i_Clean_Architecture.pdf' },
-  { number: '03', label: 'Vežba 3', title: 'Poslovna logika i use-case', description: 'Modelovanje poslovnih ishoda i organizacija use-case sloja.', pages: 20, size: '514 KB', file: '/downloads/ers-prezentacije/03_Poslovna_logika_i_use_case.pdf' },
-  { number: '04', label: 'Vežba 4', title: 'Testabilni dizajn, NUnit i Moq', description: 'Dizajn pogodan za proveru, test scenariji i kontrolisane zavisnosti.', pages: 20, size: '490 KB', file: '/downloads/ers-prezentacije/04_Testabilni_dizajn_NUnit_i_Moq.pdf' },
-  { number: '05', label: 'Vežba 5', title: 'Integracija modula i ugovori', description: 'Portovi, adapteri, integracioni ugovori i pouzdana razmena podataka.', pages: 20, size: '489 KB', file: '/downloads/ers-prezentacije/05_Integracija_modula_ugovori.pdf' },
-  { number: '06', label: 'Vežba 6', title: 'Kontrolisan AI workflow', description: 'AI rad unutar arhitektonskih granica i proverljivog razvojnog toka.', pages: 20, size: '481 KB', file: '/downloads/ers-prezentacije/06_Kontrolisan_AI_workflow.pdf' },
-  { number: '07', label: 'Vežba 7', title: 'MCP', description: 'Kontrolisan pristup projektnom kontekstu uz jasne granice alata.', pages: 20, size: '497 KB', file: '/downloads/ers-prezentacije/07_MCP.pdf' },
-  { number: '08', label: 'Vežba 8', title: 'Guardrails, evaluacije i QA', description: 'Zaštitne politike, evaluacioni scenariji i završna provera kvaliteta.', pages: 20, size: '581 KB', file: '/downloads/ers-prezentacije/08_Guardrails_evaluacije_i_QA.pdf' },
+  { number: '00', label: 'Uvodna prezentacija', title: 'Osnovne informacije', description: 'Organizacija nastave, način polaganja, projektne obaveze i rokovi.', pages: 14, size: '323 KB', file: '/downloads/ers-prezentacije/00_Osnovne_informacije.pdf' },
+  { number: '01', label: 'Vežba 1', title: 'Zahtevi, backlog i Git', description: 'Formulisanje zahteva, vođenje backloga i sledljiv rad u Git repozitorijumu.', pages: 20, size: '426 KB', file: '/downloads/ers-prezentacije/01_Zahtevi_backlog_i_Git.pdf' },
+  { number: '02', label: 'Vežba 2', title: 'SOLID i Clean Architecture', description: 'Primena SOLID principa i organizacija sistema prema pravilima Clean Architecture.', pages: 20, size: '511 KB', file: '/downloads/ers-prezentacije/02_SOLID_i_Clean_Architecture.pdf' },
+  { number: '03', label: 'Vežba 3', title: 'Poslovna logika i slučajevi upotrebe', description: 'Modelovanje poslovnih pravila i odgovornosti aplikacionog sloja.', pages: 20, size: '514 KB', file: '/downloads/ers-prezentacije/03_Poslovna_logika_i_use_case.pdf' },
+  { number: '04', label: 'Vežba 4', title: 'Testabilni dizajn, NUnit i Moq', description: 'Projektovanje komponenti za izolovano testiranje uz NUnit i Moq.', pages: 20, size: '490 KB', file: '/downloads/ers-prezentacije/04_Testabilni_dizajn_NUnit_i_Moq.pdf' },
+  { number: '05', label: 'Vežba 5', title: 'Integracija modula i ugovori', description: 'Razgraničenje modula, ugovori između komponenti i razmena podataka.', pages: 20, size: '489 KB', file: '/downloads/ers-prezentacije/05_Integracija_modula_ugovori.pdf' },
+  { number: '06', label: 'Vežba 6', title: 'Razvoj uz podršku AI alata', description: 'Upotreba AI alata u okviru definisanih arhitektonskih i razvojnih pravila.', pages: 20, size: '481 KB', file: '/downloads/ers-prezentacije/06_Kontrolisan_AI_workflow.pdf' },
+  { number: '07', label: 'Vežba 7', title: 'Model Context Protocol (MCP)', description: 'Pristup projektnom kontekstu i alatima preko ograničenog MCP interfejsa.', pages: 20, size: '497 KB', file: '/downloads/ers-prezentacije/07_MCP.pdf' },
+  { number: '08', label: 'Vežba 8', title: 'Zaštitni mehanizmi i evaluacija', description: 'Izvršive zaštitne politike, evaluacioni scenariji i kontrola kvaliteta.', pages: 20, size: '581 KB', file: '/downloads/ers-prezentacije/08_Guardrails_evaluacije_i_QA.pdf' },
 ]
+
+const oibPresentationDownloads: PresentationDownload[] = [
+  { number: '00', label: 'Uvodna prezentacija', title: 'Osnovne informacije', description: 'Organizacija nastave, načini polaganja, obaveze i rokovi.', pages: 20, size: '1017 KB', file: '/downloads/oib-prezentacije/00_Osnovne_informacije.pdf' },
+  { number: '01', label: 'Vežba 1', title: 'Identitet, autentikacija i RBAC', description: 'Upravljanje identitetima, autentikacija, uloge i dozvole.', pages: 20, size: '825 KB', file: '/downloads/oib-prezentacije/01_Identitet_autentikacija_i_RBAC.pdf' },
+  { number: '02', label: 'Vežba 2', title: 'Autorizacija nad resursom', description: 'Autorizacija nad konkretnim resursom i klasifikacija podataka.', pages: 20, size: '787 KB', file: '/downloads/oib-prezentacije/02_Autorizacija_nad_resursom_i_klasifikacija_podataka.pdf' },
+  { number: '03', label: 'Vežba 3', title: 'Politike i bezbednosna konfiguracija', description: 'Verzionisanje politika, upravljanje konfiguracijom i evidencija odstupanja.', pages: 20, size: '780 KB', file: '/downloads/oib-prezentacije/03_Politike_konfiguracija_i_vidljivost.pdf' },
+  { number: '04', label: 'Vežba 4', title: 'Imovina i modelovanje pretnji', description: 'Evidencija imovine, granice poverenja, tokovi podataka i pretnje.', pages: 20, size: '740 KB', file: '/downloads/oib-prezentacije/04_Imovina_granice_poverenja_i_threat_modeling.pdf' },
+  { number: '05', label: 'Vežba 5', title: 'MFA, sesije, servisi i tajne', description: 'Dodatna autentikacija, upravljanje sesijama i zaštita tajni.', pages: 20, size: '747 KB', file: '/downloads/oib-prezentacije/05_MFA_sesije_servisi_i_tajne.pdf' },
+  { number: '06', label: 'Vežba 6', title: 'Detekcija i incident', description: 'Bezbednosni signali, detekcija, incidenti i ranjivosti.', pages: 20, size: '739 KB', file: '/downloads/oib-prezentacije/06_Detekcija_incident_i_ranjivosti.pdf' },
+  { number: '07', label: 'Vežba 7', title: 'Atributi, rizik i pregled pristupa', description: 'ABAC politike, procena rizika i periodični pregled prava pristupa.', pages: 20, size: '740 KB', file: '/downloads/oib-prezentacije/07_Atributi_rizik_i_pregled_pristupa.pdf' },
+  { number: '08', label: 'Vežba 8', title: 'Korelacija i efektivnost kontrola', description: 'Korelacija događaja, merenje efektivnosti kontrola i analiza incidenata.', pages: 20, size: '753 KB', file: '/downloads/oib-prezentacije/08_Korelacija_efektivnost_i_ucenje.pdf' },
+]
+
+const ersProjectDocument: ProjectDocument = {
+  code: 'PYXIS',
+  title: 'Informacioni sistem za upravljanje Data centrom',
+  description: 'Projektna specifikacija zajedničkog modularnog sistema za predmet Elementi razvoja softvera.',
+  file: '/downloads/ers-projekat/ERS_Projektna_Specifikacija.pdf',
+  pages: 115,
+  size: '2,1 MB',
+  highlights: ['90 projektnih celina', 'R1, R2 i R3 razvojni nivoi', 'Timovi od 6 do 10 studenata'],
+}
+
+const oibProjectDocument: ProjectDocument = {
+  code: 'SCUTUM',
+  title: 'Platforma za upravljanje informacionom bezbednošću i digitalnim poverenjem',
+  description: 'Projektna specifikacija zajedničkog informacionog sistema za predmet Osnove informacione bezbednosti.',
+  file: '/downloads/oib-projekat/OIB_Projektna_Specifikacija.pdf',
+  pages: 96,
+  size: '2,0 MB',
+  highlights: ['90 projektnih celina', 'R1, R2 i R3 razvojni nivoi', 'Timovi od 6 do 10 studenata'],
+}
 
 const calloutIcons = {
   info: 'i',
@@ -634,7 +680,7 @@ function PreviewIcon() {
   )
 }
 
-function PresentationDownloadsView({ downloads }: { downloads: PresentationDownload[] }) {
+function PresentationDownloadsView({ downloads, bundle }: { downloads: PresentationDownload[]; bundle: PresentationBundle }) {
   const totalPages = downloads.reduce((sum, item) => sum + item.pages, 0)
 
   return (
@@ -643,18 +689,18 @@ function PresentationDownloadsView({ downloads }: { downloads: PresentationDownl
         <div className="download-hero-copy">
           <span className="eyebrow">Materijali za nastavu</span>
           <h1>Prezentacije za vežbe</h1>
-          <p>PDF materijali sa vežbi, redom od uvodne prezentacije do Vežbe 8.</p>
+          <p>Prezentacije sa vežbi u PDF formatu, raspoređene prema redosledu izvođenja nastave.</p>
           <div className="download-summary" aria-label="Sadržaj paketa">
             <span><strong>{downloads.length}</strong> PDF fajlova</span>
             <span><strong>{totalPages}</strong> slajdova</span>
           </div>
         </div>
-        <a className="download-all-button" href={assetUrl('/downloads/ERS_sve_prezentacije.zip')} download>
+        <a className="download-all-button" href={assetUrl(bundle.file)} download>
           <span className="download-all-icon"><DownloadIcon /></span>
           <span className="download-all-copy">
             <small>SVE PREZENTACIJE</small>
             <strong>Preuzmi komplet</strong>
-            <em><b>ZIP</b><span>9 PDF fajlova</span><span>2,4 MB</span></em>
+            <em><b>ZIP</b><span>{downloads.length} PDF fajlova</span><span>{bundle.size}</span></em>
           </span>
           <span className="download-all-arrow" aria-hidden="true">→</span>
         </a>
@@ -664,7 +710,7 @@ function PresentationDownloadsView({ downloads }: { downloads: PresentationDownl
         <div className="download-library-heading">
           <div>
             <span className="eyebrow">Pojedinačno preuzimanje</span>
-            <h2 id="download-library-title">Materijali po redosledu vežbi</h2>
+            <h2 id="download-library-title">Prezentacije po vežbama</h2>
           </div>
           <p>PDF možete pregledati u pregledaču ili preuzeti.</p>
         </div>
@@ -696,6 +742,58 @@ function PresentationDownloadsView({ downloads }: { downloads: PresentationDownl
   )
 }
 
+function ProjectDownloadView({ project }: { project: ProjectDocument }) {
+  return (
+    <main className="presentations-shell project-shell">
+      <section className="project-hero">
+        <div className="project-hero-copy">
+          <span className="eyebrow">Projektna specifikacija</span>
+          <h1>{project.code}</h1>
+          <h2>{project.title}</h2>
+          <p>{project.description}</p>
+          <div className="project-highlights" aria-label="Osnovni podaci o projektu">
+            {project.highlights.map((highlight) => <span key={highlight}>{highlight}</span>)}
+          </div>
+        </div>
+
+        <article className="project-document-card">
+          <div className="project-document-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 3.5h7l4 4V20.5H7v-17Z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
+              <path d="M14 3.5v4h4M9.5 12h6M9.5 15.5h6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <span className="project-document-label">Referentni dokument</span>
+          <h3>Kompletna specifikacija</h3>
+          <p>Dokument sadrži opis projektnih celina, pravila integracije, zahteve za testiranje, način predaje i kriterijume ocenjivanja.</p>
+          <div className="project-document-meta"><span>PDF</span><span>{project.pages} strana</span><span>{project.size}</span></div>
+          <div className="project-document-actions">
+            <a
+              className="project-document-action project-preview-button"
+              href={assetUrl(project.file)}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`Pregledaj projektnu specifikaciju ${project.code}`}
+            >
+              <PreviewIcon />
+              <span>Pregledaj</span>
+            </a>
+            <a
+              className="project-document-action project-download-button"
+              href={assetUrl(project.file)}
+              download
+              aria-label={`Preuzmi projektnu specifikaciju ${project.code}`}
+            >
+              <DownloadIcon />
+              <span>Preuzmi PDF</span>
+            </a>
+          </div>
+        </article>
+      </section>
+    </main>
+  )
+}
+
 type CourseAppProps = {
   onBack: () => void
   hashPrefix: string
@@ -708,17 +806,21 @@ type CourseAppProps = {
   doc: CourseDocument
   presentationDecks?: PresentationDeck[]
   presentationDownloads?: PresentationDownload[]
+  presentationBundle?: PresentationBundle
+  project?: ProjectDocument
   checkpoints: Checkpoint[]
 }
 
-function CourseApp({ onBack, hashPrefix, brandInitial, brandAccent, brandShadow, courseName, academicYear, titlePrefix, doc, presentationDecks, presentationDownloads, checkpoints }: CourseAppProps) {
+function CourseApp({ onBack, hashPrefix, brandInitial, brandAccent, brandShadow, courseName, academicYear, titlePrefix, doc, presentationDecks, presentationDownloads, presentationBundle, project, checkpoints }: CourseAppProps) {
   const activeFromHash = (): ActiveKey | null => window.location.hash.startsWith(`#${hashPrefix}/prezentacije`)
     ? 'prezentacije'
-    : window.location.hash.startsWith(`#${hashPrefix}/kontrolne-tacke`)
-      ? 'kontrolne-tacke'
-      : window.location.hash.startsWith(`#${hashPrefix}/praktikum`)
-        ? 'praktikum'
-        : null
+    : window.location.hash.startsWith(`#${hashPrefix}/projekat`)
+      ? 'projekat'
+      : window.location.hash.startsWith(`#${hashPrefix}/kontrolne-tacke`)
+        ? 'kontrolne-tacke'
+        : window.location.hash.startsWith(`#${hashPrefix}/praktikum`)
+          ? 'praktikum'
+          : null
   const initial: ActiveKey = activeFromHash() ?? 'praktikum'
   const [active, setActive] = useState<ActiveKey>(initial)
 
@@ -740,6 +842,7 @@ function CourseApp({ onBack, hashPrefix, brandInitial, brandAccent, brandShadow,
     const titles: Record<ActiveKey, string> = {
       praktikum: `${titlePrefix} — Praktikum`,
       prezentacije: `${titlePrefix} — Prezentacije`,
+      projekat: `${titlePrefix} — Projekat`,
       'kontrolne-tacke': `${titlePrefix} — Kontrolne tačke`,
     }
     document.title = titles[active]
@@ -763,25 +866,39 @@ function CourseApp({ onBack, hashPrefix, brandInitial, brandAccent, brandShadow,
               <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <path d="m9 8-4 4 4 4M15 8l4 4-4 4M13.5 5.5l-3 13" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
+            ) : hashPrefix === 'oib' ? (
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M12 3.5 19 6v5.3c0 4.3-2.8 7.6-7 9.2-4.2-1.6-7-4.9-7-9.2V6l7-2.5Z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
+                <path d="M9.3 11.4h5.4v4.1H9.3v-4.1Zm1-2a1.7 1.7 0 0 1 3.4 0v2" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             ) : brandInitial}
           </span>
           <span><strong>{courseName}</strong><small>{academicYear}</small></span>
         </button>
         <nav className="document-switcher" aria-label="Dokumenti">
-          <button className={active === 'praktikum' ? 'active' : ''} onClick={() => choose('praktikum')}>
+          <button className={`nav-tab-praktikum ${active === 'praktikum' ? 'active' : ''}`} onClick={() => choose('praktikum')} aria-label="Praktikum">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M4 5.5C4 4.67 4.67 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13ZM20 5.5c0-.83-.67-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
             </svg>
             <span>Praktikum</span>
           </button>
-          <button className={active === 'prezentacije' ? 'active' : ''} onClick={() => choose('prezentacije')}>
+          <button className={`nav-tab-prezentacije ${active === 'prezentacije' ? 'active' : ''}`} onClick={() => choose('prezentacije')} aria-label="Prezentacije">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="3" y="5" width="18" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.6" />
               <path d="M8 21h8M12 17v4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
             </svg>
             <span>Prezentacije</span>
           </button>
-          <button className={active === 'kontrolne-tacke' ? 'active' : ''} onClick={() => choose('kontrolne-tacke')}>
+          {project && (
+            <button className={`nav-tab-projekat ${active === 'projekat' ? 'active' : ''}`} onClick={() => choose('projekat')} aria-label="Projekat">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 3.5h7l4 4V20.5H7v-17Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+                <path d="M14 3.5v4h4M9.5 12h6M9.5 15.5h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span>Projekat</span>
+            </button>
+          )}
+          <button className={`nav-tab-kontrolne ${active === 'kontrolne-tacke' ? 'active' : ''}`} onClick={() => choose('kontrolne-tacke')} aria-label="Kontrolne tačke">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.6" />
               <path d="M9 12.3l1.8 1.8L15.5 9.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
@@ -793,10 +910,12 @@ function CourseApp({ onBack, hashPrefix, brandInitial, brandAccent, brandShadow,
       <div className="tab-panel" key={active}>
         {active === 'prezentacije' ? (
           presentationDownloads ? (
-            <PresentationDownloadsView downloads={presentationDownloads} />
+            <PresentationDownloadsView downloads={presentationDownloads} bundle={presentationBundle ?? { file: '/downloads/ERS_sve_prezentacije.zip', size: '4,2 MB' }} />
           ) : presentationDecks ? (
             <PresentationsView presentationDecks={presentationDecks} />
           ) : null
+        ) : active === 'projekat' && project ? (
+          <ProjectDownloadView project={project} />
         ) : active === 'kontrolne-tacke' ? (
           <CheckpointsView checkpoints={checkpoints} />
         ) : (
@@ -823,7 +942,7 @@ const subjects: Subject[] = [
     name: 'Elementi razvoja softvera',
     semester: 'zimski',
     available: true,
-    blurb: 'Praktikum, prezentacije za vežbe i kontrolne tačke projekta.',
+    blurb: 'Praktikum, prezentacije, nastavni primeri, projektna specifikacija i kontrolne tačke.',
     accent: 'linear-gradient(145deg, #2563eb 0%, #1d4ed8 48%, #3730a3 100%)',
     accentSoft: 'rgba(37,99,235,.14)',
   },
@@ -832,7 +951,7 @@ const subjects: Subject[] = [
     name: 'Osnove informacione bezbednosti',
     semester: 'zimski',
     available: true,
-    blurb: 'Praktikum, prezentacije za vežbe i kontrolne tačke projektnog rada iz informacione bezbednosti.',
+    blurb: 'Praktikum, prezentacije, nastavni primeri, projektna specifikacija i kontrolne tačke.',
     accent: 'linear-gradient(145deg, #dc2626 0%, #b91c1c 48%, #7f1d1d 100%)',
     accentSoft: 'rgba(220,38,38,.14)',
   },
@@ -840,7 +959,7 @@ const subjects: Subject[] = [
     id: 'odp',
     name: 'Osnove distribuiranog programiranja',
     semester: 'letnji',
-    available: true,
+    available: false,
     blurb: 'Praktikum, prezentacije za vežbe i kontrolne tačke projektnog rada iz distribuiranih sistema.',
     accent: 'linear-gradient(145deg, #059669 0%, #047857 48%, #065f46 100%)',
     accentSoft: 'rgba(5,150,105,.14)',
@@ -874,7 +993,13 @@ function SubjectTile({ subject, onOpen }: { subject: Subject; onOpen: () => void
     <div
       className={`subject-tile ${subject.available ? '' : 'disabled'}`}
       style={{ '--tile-accent': subject.accent, '--tile-accent-soft': subject.accentSoft } as CSSProperties}
+      onPointerMove={(event) => {
+        const bounds = event.currentTarget.getBoundingClientRect()
+        event.currentTarget.style.setProperty('--tile-pointer-x', `${event.clientX - bounds.left}px`)
+        event.currentTarget.style.setProperty('--tile-pointer-y', `${event.clientY - bounds.top}px`)
+      }}
     >
+      <span className="subject-tile-pointer-glow" aria-hidden="true" />
       <span className="subject-tile-mark">{subjectIcons[subject.id]}</span>
       <span className="subject-tile-copy">
         <strong>{subject.name}</strong>
@@ -892,6 +1017,8 @@ function SubjectTile({ subject, onOpen }: { subject: Subject; onOpen: () => void
 }
 
 function SubjectSelector({ onOpenSubject }: { onOpenSubject: (id: string) => void }) {
+  const shellRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
     document.title = 'FTN — Izbor predmeta'
   }, [])
@@ -900,10 +1027,67 @@ function SubjectSelector({ onOpenSubject }: { onOpenSubject: (id: string) => voi
   const summer = subjects.filter((subject) => subject.semester === 'letnji')
 
   return (
-    <div className="subjects-shell">
+    <div
+      className="subjects-shell"
+      ref={shellRef}
+      onPointerMove={(event) => {
+        const shell = shellRef.current
+        if (!shell) return
+        const bounds = shell.getBoundingClientRect()
+        shell.style.setProperty('--subjects-pointer-x', `${event.clientX - bounds.left}px`)
+        shell.style.setProperty('--subjects-pointer-y', `${event.clientY - bounds.top - 64}px`)
+      }}
+    >
+      <span className="subjects-pointer-glow" aria-hidden="true" />
+      <div className="subjects-ambient" aria-hidden="true">
+        <span className="subjects-orb subjects-orb-blue" />
+        <span className="subjects-orb subjects-orb-red" />
+        <span className="subjects-orb subjects-orb-green" />
+
+        <svg className="subjects-ambient-graphic subjects-network-graphic" viewBox="0 0 360 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path className="subjects-flow-line" d="M54 67 145 32l78 56 87-24M54 67l39 96 130-75 49 104M93 163l109 45 70-16" stroke="currentColor" strokeWidth="1.4" strokeDasharray="5 7" />
+          <circle cx="54" cy="67" r="9" />
+          <circle cx="145" cy="32" r="6" />
+          <circle cx="223" cy="88" r="11" />
+          <circle cx="310" cy="64" r="6" />
+          <circle cx="93" cy="163" r="8" />
+          <circle cx="202" cy="208" r="6" />
+          <circle cx="272" cy="192" r="10" />
+        </svg>
+
+        <svg className="subjects-ambient-graphic subjects-code-graphic" viewBox="0 0 300 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="31" y="35" width="238" height="150" rx="22" />
+          <path d="m104 91-27 19 27 19M196 91l27 19-27 19M166 73l-32 74" stroke="currentColor" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx="57" cy="59" r="4" fill="currentColor" stroke="none" />
+          <circle cx="72" cy="59" r="4" fill="currentColor" stroke="none" />
+          <circle cx="87" cy="59" r="4" fill="currentColor" stroke="none" />
+        </svg>
+
+        <svg className="subjects-ambient-graphic subjects-orbit-graphic" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="120" cy="120" r="74" />
+          <circle cx="120" cy="120" r="43" strokeDasharray="4 8" />
+          <path className="subjects-orbit-path" d="M42 120c0-43.1 34.9-78 78-78s78 34.9 78 78-34.9 78-78 78-78-34.9-78-78Z" strokeDasharray="7 12" />
+          <circle className="subjects-orbit-node" cx="186" cy="79" r="8" fill="currentColor" stroke="none" />
+          <circle cx="120" cy="120" r="10" fill="currentColor" stroke="none" />
+        </svg>
+
+        <span className="subjects-data-chip subjects-data-chip-one">{`{ }`}</span>
+        <span className="subjects-data-chip subjects-data-chip-two">01</span>
+        <span className="subjects-data-chip subjects-data-chip-three">✓</span>
+        <span className="subjects-data-chip subjects-data-chip-four">&lt;/&gt;</span>
+      </div>
+
       <header className="subjects-header">
-        <span className="brand-mark">F</span>
-        <div><strong>Materijali za predmete</strong><small>Fakultet tehničkih nauka · Novi Sad</small></div>
+        <div className="subjects-header-brand">
+          <span className="brand-mark subjects-home-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 3.5 20 8v8l-8 4.5L4 16V8l8-4.5Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+              <circle cx="12" cy="12" r="2.3" fill="currentColor" />
+              <path d="M12 5.8v3.8M6.2 9.2l3.5 2M17.8 9.2l-3.5 2M12 14.4v3.8" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" />
+            </svg>
+          </span>
+          <div><strong>Materijali za predmete</strong><small>Fakultet tehničkih nauka · Novi Sad</small></div>
+        </div>
       </header>
 
       <main className="subjects-main">
@@ -927,7 +1111,11 @@ function SubjectSelector({ onOpenSubject }: { onOpenSubject: (id: string) => voi
       </main>
 
       <footer className="subjects-footer">
-        <span>© {new Date().getFullYear()} Univerzitet u Novom Sadu — Fakultet tehničkih nauka</span>
+        <div className="subjects-footer-brand">
+          <span className="subjects-footer-mark">FTN</span>
+          <span><strong>Univerzitet u Novom Sadu</strong><small>Fakultet tehničkih nauka · Primenjeno softversko inženjerstvo</small></span>
+        </div>
+        <span className="subjects-footer-copyright">© {new Date().getFullYear()}</span>
       </footer>
     </div>
   )
@@ -965,6 +1153,8 @@ export default function StaticApp() {
         titlePrefix="ERS"
         doc={practicum2026}
         presentationDownloads={ersPresentationDownloads}
+        presentationBundle={{ file: '/downloads/ERS_sve_prezentacije.zip', size: '4,2 MB' }}
+        project={ersProjectDocument}
         checkpoints={checkpoints}
       />
     )
@@ -982,7 +1172,9 @@ export default function StaticApp() {
         academicYear="2026/2027"
         titlePrefix="OIB"
         doc={oibPracticum2026}
-        presentationDecks={oibThematicPresentationDecks}
+        presentationDownloads={oibPresentationDownloads}
+        presentationBundle={{ file: '/downloads/OIB_sve_prezentacije.zip', size: '7,0 MB' }}
+        project={oibProjectDocument}
         checkpoints={oibCheckpoints}
       />
     )

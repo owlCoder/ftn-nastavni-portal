@@ -4,7 +4,7 @@ import { text, list, callout, code, table, image, diagram, page } from './canvaP
 export const exercise4 = (): DocumentPage[] => [
   page('Vežba 4 — SOLID i Clean Architecture', [
     text('h1', 'Vežba 4 — SOLID i Clean Architecture'),
-    text('paragraph', 'SOLID principi nisu skup formalnih pravila koja se primenjuju radi bodovanja, već smernice za oblikovanje sistema u kome su promene lokalizovane, zavisnosti zamenjive, a ponašanje lakše proverljivo. Pre njihove primene potrebno je jasno razumeti osnovne objektno orijentisane pojmove: ugovor, enkapsulaciju, polimorfizam i odgovornost. Clean Architecture isti način razmišljanja primenjuje na granice podsistema: poslovno jezgro treba da ostane nezavisno od korisničkog interfejsa, skladišta podataka i drugih promenljivih tehničkih detalja.'),
+    text('paragraph', 'SOLID principi usmeravaju oblikovanje sistema u kome su promene lokalizovane, zavisnosti zamenjive, a ponašanje dostupno proveri. Njihova primena zasniva se na razumevanju ugovora, enkapsulacije, polimorfizma i odgovornosti. Clean Architecture isti pristup primenjuje na granice podsistema: poslovno jezgro ostaje nezavisno od korisničkog interfejsa, skladišta podataka i drugih promenljivih tehničkih detalja.'),
     table(['Princip', 'Pitanje pri pregledu koda'], [
       ['S — Single Responsibility', 'Da li ovaj modul ima jedan koherentan razlog za promenu?'],
       ['O — Open/Closed', 'Može li se nova varijanta ponašanja dodati bez izmene stabilnog centralnog toka?'],
@@ -69,15 +69,15 @@ export const exercise4 = (): DocumentPage[] => [
 
   page('4.5. Clean Architecture i smer zavisnosti', [
     text('h2', '4.5. Clean Architecture i smer zavisnosti'),
-    text('paragraph', 'Clean Architecture posmatramo kao disciplinu granica. Domain sadrži modele, invarijante i stabilna poslovna pravila. Application orkestrira use-case-ove i definiše ugovore potrebne tim slučajevima upotrebe. Infrastructure implementira pristup bazi, datotekama ili spoljnim servisima, dok Presentation prevodi korisnički ili mrežni ulaz u pozive aplikacionog sloja. Nazivi projekata mogu da se razlikuju, ali je smer zavisnosti važniji od fizičkog rasporeda foldera.'),
+    text('paragraph', 'Clean Architecture uređuje granice i smer zavisnosti. Domain sadrži modele i domenske ugovore. Application realizuje slučajeve upotrebe, koordinira validatore i poslovne servise i definiše portove potrebne aplikaciji. Infrastructure implementira pristup bazi podataka, datotekama i spoljnim servisima, dok Presentation prevodi korisnički ili mrežni ulaz u pozive aplikacionog sloja. Nazivi projekata mogu se razlikovati, ali unutrašnji slojevi ne smeju zavisiti od promenljivih spoljnih detalja.'),
     diagram('Smer zavisnosti', [
       ['Presentation', 'UI, API ili konzola; bez poslovnih pravila', 'cyan'],
-      ['Application', 'slučajevi upotrebe i orkestracija', 'blue'],
-      ['Domain', 'entiteti, invarijante i stabilna pravila', 'violet'],
+      ['Application', 'slučajevi upotrebe, validacija i poslovni servisi', 'blue'],
+      ['Domain', 'modeli i domenski ugovori', 'violet'],
       ['Infrastructure', 'baza, datoteke i spoljni adapteri', 'amber'],
     ], 'Spoljni slojevi mogu da zavise od ugovora unutrašnjih slojeva; poslovno jezgro ne zavisi od framework-a i skladišta.'),
     list([
-      'Controller treba da bude tanak: mapira zahtev, poziva use-case i mapira rezultat.',
+      'Kontroler mapira zahtev, poziva slučaj upotrebe i prevodi rezultat u odgovor.',
       'Domain ne referencira Entity Framework, HTTP, konzolu niti UI framework.',
       'Composition root je mesto na kome se bira konkretan graf zavisnosti.',
       'Interfejs pripada sloju koji definiše potrebu ili ugovor, a ne automatski sloju koji ga implementira.',
@@ -108,7 +108,7 @@ export const exercise4 = (): DocumentPage[] => [
       'Dokumentovati odgovornost svakog sloja i dozvoljeni smer zavisnosti.',
       'Implementirati najmanje jedan mali vertikalni prolaz kroz sistem.',
       'U `docs/architecture.md` zapisati najmanje dve odluke i obrazloženje njihovog izbora.',
-      'Proveriti da Domain/Application mogu da se testiraju bez pokretanja realne baze podataka ili korisničkog interfejsa.',
+      'Proveriti da se domenski i aplikacioni sloj mogu testirati bez pokretanja stvarne baze podataka ili korisničkog interfejsa.',
     ]),
     callout('task', 'Mini domaći — bonus 2 boda', 'Dodati alternativnu implementaciju jedne spoljne zavisnosti, na primer InMemory umesto JSON repozitorijuma. Prvi bod se dobija ako use-case kod ostane neizmenjen; drugi bod za jasno obrazloženje kako DIP/OCP omogućavaju zamenu.'),
   ]),

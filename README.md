@@ -1,103 +1,63 @@
-# Materijali za predmete — FTN
+# FTN nastavni portal
 
-Javni statički sajt sa nastavnim materijalima za predmete na studijskom programu Primenjeno softversko inženjerstvo, Fakultet tehničkih nauka, Univerzitet u Novom Sadu.
+Javni web portal za nastavne materijale na Fakultetu tehničkih nauka. Portal objedinjuje prezentacije, praktikume, primere koda i projektne informacije za predmete na studijskom programu Primenjeno softversko inženjerstvo.
 
-Sajt trenutno sadrži:
+## Dostupni predmeti
 
-- **Elementi razvoja softvera** (zimski semestar) — Praktikum, Prezentacije za vežbe i Kontrolne tačke projekta (P1–P8);
-- **Osnove informacione bezbednosti** (zimski semestar) — Praktikum, Prezentacije za vežbe i Kontrolne tačke projekta (P1–P8);
-- **Osnove distribuiranog programiranja** (letnji semestar) — u pripremi.
+- **Elementi razvoja softvera**: praktikum, prezentacije, primeri koda i kontrolne tačke projekta.
+- **Osnove informacione bezbednosti**: praktikum, prezentacije, .NET primeri i kontrolne tačke projekta.
+- **Osnove distribuiranog programiranja**: projektna dokumentacija i materijali koji se postepeno dodaju.
 
-Svaki predmet ima tri prikaza dostupna kroz segmentovanu navigaciju: **Praktikum**, **Prezentacije** i **Kont. tačke**.
-
-Produkcijska verzija:
-
-**https://predmeti-ftn.vercel.app/**
+Materijali su namenjeni studentima za pregled i preuzimanje, a nastavnicima za održavanje sadržaja.
 
 ## Lokalno pokretanje
 
-Potreban je Node.js 22, a podržan je i Node.js `^20.19.0`.
+Potreban je Node.js 22.
 
 ```bash
-npm install
+npm ci
 npm run dev -- --host 127.0.0.1 --port 5600
 ```
 
-Zatim otvoriti:
+Portal je tada dostupan na `http://localhost:5600`.
 
-```text
-http://localhost:5600
-```
+Za Windows se može koristiti `start.cmd`, a za macOS/Linux `./start.sh`.
 
-Na macOS/Linux sistemima može se koristiti i:
-
-```bash
-./start.sh
-```
-
-Na Windows sistemu:
-
-```text
-start.cmd
-```
-
-## Izgradnja
+## Provera produkcijskog build-a
 
 ```bash
 npm run build
 npm run preview
 ```
 
-Vite koristi relativni `base` lokalno, `/` na Vercel-u, i `/predmeti-ftn/` na GitHub Pages-u, pa isti `dist/` radi u sva tri okruženja.
+Vite generiše statički sadržaj u `dist/`. Pre build-a skripta priprema ZIP pakete sa primerima za preuzimanje.
 
-## Organizacija sajta
+## CI/CD
 
-- `src/main.tsx` — minimalna ulazna tačka aplikacije;
-- `src/StaticApp.tsx` — selektor predmeta i deljeni `CourseApp` prikaz (Praktikum / Prezentacije / Kontrolne tačke) za svaki predmet;
-- `src/static-site.css`, `src/presentations.css`, `src/checkpoints.css`, `src/ui-refresh.css` — stilovi za prikaz na ekranu i štampu;
-- `src/content/` — strukturirani nastavni sadržaj za ERS (`src/content/*.ts`) i OIB (`src/content/oib/`);
-- `public/course-assets/` — nastavne ilustracije i snimci ekrana iz Tapiz Boards;
-- `public/brand/` — institucionalni logotipi;
-- `.github/workflows/build.yml` — automatska provera izgradnje;
-- `.github/workflows/pages.yml` — automatsko objavljivanje na GitHub Pages.
+GitHub Actions workflow `.github/workflows/build.yml` izvršava sledeći tok:
 
-Statički prikaz automatski generiše navigaciju kroz naslove, numeraciju slika, listinga i tabela, blokove koda sa označavanjem sintakse, akademske tabele, napomene, dijagrame i slike.
+1. instalira zavisnosti komandom `npm ci`;
+2. proverava produkcijski build komandom `npm run build`;
+3. nakon uspešnog build-a na grani `main` priprema i objavljuje produkciju na Vercel-u.
 
-## Tapiz Boards — snimci ekrana
+Za Vercel deploy potrebno je u GitHub repozitorijumu podesiti sledeći Actions secret:
 
-Snimci ekrana za Tapiz Boards koriste slike dostavljene uz Praktikum u izvornim dimenzijama, bez promene veličine. Cilj je da tekst i detalji interfejsa ostanu čitljivi i pri uvećanju.
+- `VERCEL_TOKEN`
 
-## PDF
+`VERCEL_ORG_ID` i `VERCEL_PROJECT_ID` su podešeni kao repository variables i pripadaju Vercel projektu koji hostuje portal. Token se ne upisuje u repozitorijum.
 
-Dugme **Preuzmi PDF** ne otvara dijalog za štampu. PDF se generiše direktno u pregledaču za trenutno otvoreni dokument i preuzima kao A4 datoteka.
+Produkciona adresa: [predmeti-ftn.vercel.app](https://predmeti-ftn.vercel.app/)
 
-Dokument se tokom izvoza deli na A4 stranice pre iscrtavanja. Time se izbegavaju ograničenja pregledača kod veoma dugih dokumenata i zadržava se bolja čitljivost slika.
+## Organizacija koda
 
-## Fullscreen i zoom
+- `src/StaticApp.tsx` — izbor predmeta i deljeni prikaz portala;
+- `src/content/` — nastavni sadržaj za ERS i OIB;
+- `src/ExamplesEnhancer.tsx` — prikaz primera i paketa za preuzimanje;
+- `src/*css` — stilovi za portal, prezentacije i kontrolne tačke;
+- `public/downloads/` — PDF, ZIP i projektni paketi dostupni studentima;
+- `public/brand/` i `public/course-assets/` — vizuelni materijal portala;
+- `scripts/` — pomoćne skripte za pripremu paketa.
 
-Praktikum i Prezentacije imaju floating kontrole za uvećanje i prikaz preko celog ekrana. U fullscreen modu prezentacije dinamički skaliraju sadržaj slajda (font, razmak) da popune ceo dostupan prostor, umesto da ostanu vizuelno male.
+## Struktura javnih materijala
 
-## Vercel
-
-Produkcijski deploy ide na Vercel (`npx vercel --prod`), sa `predmeti-ftn.vercel.app` kao produkcijskim aliasom.
-
-## GitHub Pages (alternativa)
-
-Tok rada `.github/workflows/pages.yml` pri svakom push-u na `main`:
-
-1. instalira zavisnosti;
-2. pokreće `npm run build`;
-3. pakuje `dist/` kao GitHub Pages artefakt;
-4. objavljuje artefakt pomoću zvanične GitHub Pages akcije.
-
-Repozitorijum je javan, pa GitHub Pages može da se koristi i na GitHub Free planu. Ako GitHub Pages još nije aktiviran, u **Settings → Pages → Build and deployment** treba jednokratno izabrati **GitHub Actions**.
-
-## Sačuvana verzija starog editora
-
-Prethodni Word/Fluent UI editor sačuvan je na grani:
-
-```text
-archive/editor-word-ui-2026-08-26
-```
-
-`main` koristi samo statički prikaz i nema IndexedDB, Fluent UI okruženje niti `.ersdoc` tok rada.
+Prezentacije su dostupne u PDF formatu za pregled i u PPTX formatu za nastavno uređivanje. Primeri koda su organizovani po predmetu i vežbi, sa posebnim paketom za svaku vežbu i zbirnim paketom tamo gde je to potrebno.

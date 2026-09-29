@@ -14,14 +14,14 @@ export const checkpoints: Checkpoint[] = [
     code: 'P1',
     title: 'Problem, backlog i razvojni tok',
     exercise: 'Vežba 1–2',
-    date: '12.10.',
+    date: '19.10.',
     summary:
-      'Ne očekuje se završena arhitektura ni veliki obim implementacije. Tim treba da pokaže da razume problem, da rad može da se planira kroz proverljive stavke i da repozitorijum već predstavlja stvarni trag zajedničkog razvoja.',
+      'U ovoj fazi ne zahteva se završena arhitektura niti veliki obim implementacije. Tim obrazlaže problem, razlaže rad na proverljive stavke i dokumentuje početni tok zajedničkog razvoja u repozitorijumu.',
     items: [
       'Zajednički repozitorijum sa README dokumentom i pristupom svih članova tima.',
       'Tapiz Boards sadrži backlog sa prioritetima i proverljivim kriterijumima prihvatanja.',
-      'Najmanje jedan pull request pokazuje pregled diff-a i smislen razgovor o promeni.',
-      'Tim koristi dogovoreni tok Backlog → In Progress → Code Review → Done.',
+      'Najmanje jedan zahtev za spajanje (pull request) sadrži pregled izmena i obrazložene komentare učesnika.',
+      'Tim koristi dogovoreni tok Backlog → Ready → In Progress → Code Review → QA/Verify → Done.',
     ],
   },
   {
@@ -29,14 +29,14 @@ export const checkpoints: Checkpoint[] = [
     code: 'P2',
     title: 'Arhitektura i funkcionalno jezgro',
     exercise: 'Vežba 2–3',
-    date: '26.10.',
+    date: '02.11.',
     summary:
-      'Tim treba da pokaže jasne arhitektonske granice i najmanje jedan koherentan use-case čije je ponašanje moguće objasniti od zahteva do rezultata, bez mešanja poslovne logike i infrastrukture.',
+      'Tim prikazuje arhitektonske granice i najmanje jedan zaokružen slučaj upotrebe, od ulaznog zahteva do poslovnog rezultata, uz razdvojene odgovornosti poslovnog i infrastrukturnog koda.',
     items: [
       'Dokumentovana odgovornost svakog sloja i dozvoljeni smer zavisnosti.',
-      'Implementiran najmanje jedan vertikalni prolaz kroz sistem, od zahteva do rezultata.',
+      'Implementiran je najmanje jedan vertikalni prolaz kroz sistem, od zahteva do rezultata.',
       'Za očekivane neuspehe definisani stabilni kodovi ili tipovi rezultata, bez generičkih izuzetaka.',
-      'Domain/Application sloj može da se testira bez pokretanja realne baze ili UI-ja.',
+      'Domenski i aplikacioni sloj mogu se testirati bez pokretanja stvarne baze podataka ili korisničkog interfejsa.',
     ],
   },
   {
@@ -44,11 +44,11 @@ export const checkpoints: Checkpoint[] = [
     code: 'P3',
     title: 'Testiranje i manual-core-baseline',
     exercise: 'Vežba 4',
-    date: '16.11.',
+    date: '23.11.',
     summary:
-      'Ova kontrolna tačka razdvaja dve faze kursa. Do nje tim samostalno projektuje jezgro sistema i osnovne testove; nakon toga AI dobija veću ulogu, ali sistem već ima dovoljno testova da se svaki predlog nezavisno proveri.',
+      'Do ove kontrolne tačke tim samostalno projektuje jezgro sistema i osnovni skup testova. U narednoj fazi AI alati mogu imati veću ulogu, ali se svaki njihov predlog proverava postojećim testovima i pregledom izmena.',
     items: [
-      'Ključni use-case-ovi imaju testove za uspešne i negativne scenarije.',
+      'Ključni slučajevi upotrebe imaju testove za uspešne i negativne scenarije.',
       'Izveštaj o pokrivenosti je pregledan i najmanje jedna rizična grana je obrazložena ili dodatno pokrivena.',
       'Najmanje jedan bug je najpre reprodukovan testom, a zatim ispravljen.',
       'Stabilna verzija jezgra je označena Git tag-om `manual-core-baseline`.',
@@ -57,14 +57,14 @@ export const checkpoints: Checkpoint[] = [
   {
     id: 'p4',
     code: 'P4',
-    title: 'AI/agentski tok i završna odbrana',
+    title: 'Razvoj uz podršku AI alata i završna odbrana',
     exercise: 'Vežba 6–8',
-    date: '07.12.',
+    date: '14.12.',
     summary:
-      'Završni rezultat kursa nije projekat čiju implementaciju tim ne razume, već sistem čiji svaki član ume da objasni zahteve, arhitekturu, testove i način na koji je AI podrška uključena i proverena.',
+      'Na završnoj odbrani svaki član tima obrazlaže zahteve, arhitekturu, testove i način na koji su AI alati korišćeni i proveravani tokom razvoja.',
     items: [
       '`AI_INSTRUCTIONS.md` i `AI_USAGE.md` sadrže projektna pravila i reprezentativne zapise odluka.',
-      'Najmanje dve ponovljive procedure ili agentske uloge imaju jasan ulaz, izlaz i ograničenja.',
+      'Najmanje dve ponovljive procedure ili uloge AI agenata imaju definisane ulaze, izlaze i ograničenja.',
       'Postoje najmanje tri evaluaciona scenarija, uključujući negativan slučaj.',
       'Na odbrani svaki član tima objašnjava svoj deo bez oslanjanja na automatski generisan odgovor.',
     ],

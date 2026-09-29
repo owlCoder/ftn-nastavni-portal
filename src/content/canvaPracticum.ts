@@ -30,8 +30,8 @@ const cover = (): DocumentPage => ({
   blocks: [
     institution(),
     { id: id('title'), type: 'text', variant: 'title', html: 'Praktikum iz predmeta Elementi razvoja softvera', align: 'center' },
-    { id: id('subtitle'), type: 'text', variant: 'subtitle', html: 'Studijska 2026/2027. godina', align: 'center' },
-    { id: id('quote'), type: 'text', variant: 'quote', html: 'Radni materijal za vežbe, samostalno ponavljanje i kontinuiran razvoj projektnog zadatka.', align: 'center' },
+    { id: id('subtitle'), type: 'text', variant: 'subtitle', html: 'Akademska 2026/2027. godina', align: 'center' },
+    { id: id('quote'), type: 'text', variant: 'quote', html: 'Materijal za vežbe, samostalan rad i kontinuirani razvoj projektnog zadatka.', align: 'center' },
     { id: id('caption'), type: 'text', variant: 'caption', html: 'Univerzitet u Novom Sadu · Fakultet tehničkih nauka · Primenjeno softversko inženjerstvo', align: 'center' },
   ],
 })
@@ -39,19 +39,19 @@ const cover = (): DocumentPage => ({
 const introPages = (): DocumentPage[] => [
   page('0.1. Kako koristiti praktikum', [
     text('h1', '0.1. Kako koristiti praktikum'),
-    text('paragraph', 'Praktikum je zamišljen kao jedinstven pratilac vežbi i projektnog zadatka. Svaka oblast sadrži teorijsko objašnjenje, praktičan primer, pitanja za proveru razumevanja i zadatke koji povezuju gradivo sa projektnim repozitorijumom. Cilj je da student nakon časa može samostalno da obnovi postupak, razume razloge koji stoje iza donetih odluka i primeni isti princip u drugom kontekstu.'),
+    text('paragraph', 'Praktikum prati sadržaj vežbi i razvoj projektnog zadatka. Svaka oblast sadrži teorijsko objašnjenje, praktičan primer, pitanja za proveru razumevanja i zadatke povezane sa projektnim repozitorijumom. Nakon vežbe student treba da ume da obrazloži donete odluke i primeni obrađeni princip u drugom kontekstu.'),
     table(['Faza', 'Preporučeni način rada'], [
       ['Pre vežbe', 'Pročitati uvodni deo oblasti i označiti pojmove koji zahtevaju dodatno razjašnjenje.'],
       ['Tokom vežbe', 'Pratiti demonstraciju i obrazloženje odluka, a ne samo konačan kod ili niz komandi.'],
-      ['Posle vežbe', 'Primeniti isti princip na projektnom repozitorijumu i sačuvati proverljiv razvojni trag kroz commit, test, dokument ili zapis o upotrebi AI alata.'],
+      ['Posle vežbe', 'Primeniti obrađeni princip u projektnom repozitorijumu i dokumentovati rezultat kroz commit, test, tehnički dokument ili zapis o upotrebi AI alata.'],
       ['Pre projektne kontrolne tačke', 'Proći kontrolnu listu, proveriti izgradnju projekta i testove, a zatim pregledati konačan diff. Svaki član tima treba da ume da obrazloži urađeno.'],
     ]),
-    callout('info', 'Nastavni primeri', 'Praktikum koristi mali domen rezervacije fakultetske opreme, kao i studije slučaja Logger–Blogger i ECommerce kada su korisne za poređenje arhitektonskih odluka. Studentski tim ne dobija unapred pripremljen projektni šablon: principe primenjuje na sopstvenu temu i samostalno oblikuje strukturu koju može da obrazloži.'),
+    callout('info', 'Nastavni primeri', 'Praktikum koristi domen rezervacije fakultetske opreme i studije slučaja Logger–Blogger i ECommerce za poređenje arhitektonskih odluka. Studentski tim primenjuje iste principe na sopstvenu temu i samostalno oblikuje projektnu strukturu.'),
     callout('note', 'Jezik i alati', 'Primeri su pretežno u C#/.NET okruženju. Sintaksa pojedinih AI alata može se menjati između verzija, zato se u praktikumu naglašavaju stabilni koncepti: kontekst, ugovori, granice alata, provera rezultata i evaluacioni scenariji.'),
   ]),
   page('0.2. Tok semestra i projekta', [
     text('h1', '0.2. Tok semestra i projekta'),
-    text('paragraph', 'Praktikum je organizovan u osam povezanih vežbi. Prva vežba objedinjuje zahteve, backlog, Git i timski razvojni tok. Druga povezuje OOP i Clean Code sa SOLID principima i Clean Architecture. Nakon poslovne logike i testiranja uvodi se posebna oblast integracije modula i podataka, što je važno za zajednički proizvod na kome radi više timova. Završni deo praktikuma obrađuje kontrolisan razvoj uz AI podršku, MCP i determinističke mehanizme provere.'),
+    text('paragraph', 'Praktikum je organizovan u osam povezanih vežbi. Prva obrađuje zahteve, backlog, Git i timski razvojni tok. Druga povezuje objektno orijentisano programiranje i principe čistog koda sa SOLID principima i Clean Architecture. Slede poslovna logika, testiranje i integracija modula i podataka. Završne vežbe obrađuju razvoj uz podršku AI alata, Model Context Protocol (MCP) i izvršive mehanizme provere.'),
     image('/course-assets/semester-map.svg', 'Tok praktikuma: zahtevi i razvojni proces → arhitektura → poslovna logika → testiranje → integracija modula → razvoj uz AI podršku → MCP → završna provera kvaliteta.', 'Mapa semestra'),
     list([
       'P1 (Vežba 1–2) — problem, backlog, kriterijumi prihvatanja i uredan razvojni tok kroz Git i pull request.',
@@ -65,7 +65,7 @@ const introPages = (): DocumentPage[] => [
 const summaryPages = (): DocumentPage[] => [
   page('Sažetak: isti principi u novom razvojnom okruženju', [
     text('h1', 'Sažetak: isti principi u novom razvojnom okruženju'),
-    text('paragraph', 'Klasični principi softverskog inženjerstva ostaju osnova i kada se u razvoj uvedu AI agenti i dodatna automatizacija. Jasan interfejs odgovara dobro definisanom ugovoru alata, SRP pomaže pri razdvajanju agentskih uloga, dependency injection ima analogiju u kontrolisanom dodeljivanju alata i spoljnog konteksta, a testiranje se proširuje evaluacionim scenarijima celog toka rada.'),
+    text('paragraph', 'Principi softverskog inženjerstva primenjuju se i kada razvoj uključuje AI agente i dodatnu automatizaciju. Interfejs definiše ugovor alata, SRP razdvaja odgovornosti agentskih uloga, kontrolisano dodeljivanje alata i konteksta odgovara načelima upravljanja zavisnostima, a evaluacioni scenariji dopunjuju testiranje celog razvojnog toka.'),
     table(['Softversko inženjerstvo', 'Razvoj uz podršku AI alata'], [
       ['Interfejs', 'Ugovor alata ili MCP funkcionalnosti sa jasnim ulazom, izlazom i ograničenjima.'],
       ['Single Responsibility', 'Specijalizovana agentska uloga sa ograničenom odgovornošću.'],
@@ -76,14 +76,14 @@ const summaryPages = (): DocumentPage[] => [
       ['Middleware / policy', 'Hook ili guardrail koji se izvršava na definisanoj granici životnog ciklusa.'],
       ['Ponovljiva procedura', 'Skill koji čuva i verzioniše razvojni postupak.'],
     ]),
-    callout('success', 'Odgovornost ostaje kod studenta', 'AI može da ubrza analizu, implementaciju i pregled, ali student mora da razume zahtev, objasni arhitekturu i pokaže nezavisan dokaz da je promena ispravna.'),
+    callout('success', 'Odgovornost studenta', 'Student je odgovoran za razumevanje zahteva, obrazloženje arhitekture i proveru ispravnosti promene, bez obzira na to da li je u radu korišćen AI alat.'),
   ]),
 ]
 
 const literaturePages = (): DocumentPage[] => [
   page('Preporučena literatura i dokumentacija', [
     text('h1', 'Preporučena literatura i dokumentacija'),
-    text('paragraph', 'Literatura služi za produbljivanje tema iz praktikuma. Preporuka je da se čita uz konkretan primer iz projekta, jer se principi najbrže usvajaju kada student može da poveže definiciju sa sopstvenim diff-om, testom ili arhitektonskom odlukom.'),
+    text('paragraph', 'Literatura je namenjena produbljivanju tema iz praktikuma. Pojmove treba povezivati sa konkretnim izmenama koda, testovima i arhitektonskim odlukama u studentskom projektu.'),
     list([
       'Robert C. Martin — <i>Clean Code: A Handbook of Agile Software Craftsmanship</i>.',
       'Robert C. Martin — <i>Clean Architecture: A Craftsman’s Guide to Software Structure and Design</i>.',

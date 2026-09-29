@@ -1,7 +1,8 @@
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
 
-const sourceRoot = path.resolve('examples/ers-ai-workflow')
+const ersSourceRoot = path.resolve('examples/ers-ai-workflow')
+const oibSourceRoot = path.resolve('examples/oib-dotnet')
 const outputDir = path.resolve('public/downloads')
 const ignoredDirectories = new Set(['bin', 'obj', '.vs'])
 
@@ -195,5 +196,53 @@ async function createZip(bundle, sourceFiles) {
 }
 
 await fs.mkdir(outputDir, { recursive: true })
-const sourceFiles = await collectFiles(sourceRoot)
+const sourceFiles = await collectFiles(ersSourceRoot)
 for (const bundle of bundles) await createZip(bundle, sourceFiles)
+
+const oibLessons = [
+  ['01', 'identitet-rbac'],
+  ['02', 'resurs-klasifikacija'],
+  ['03', 'politike-konfiguracija'],
+  ['04', 'threat-modeling'],
+  ['05', 'mfa-sesije-tajne'],
+  ['06', 'detekcija-incident'],
+  ['07', 'abac-rizik-pregled'],
+  ['08', 'korelacija-efektivnost'],
+]
+
+for (const [number, slug] of oibLessons) {
+  const directoryName = `vezba-${number}-${slug}`
+  const files = await collectFiles(path.join(oibSourceRoot, directoryName))
+  await createZip({
+    fileName: `oib-${directoryName}.zip`,
+    archiveRoot: `oib-${directoryName}`,
+    lesson: null,
+  }, files)
+}
+
+await createZip({
+  fileName: 'oib-svi-primeri.zip',
+  archiveRoot: 'oib-dotnet-primeri',
+  lesson: null,
+}, await collectFiles(oibSourceRoot))
+
+const presentationBundles = [
+  { directory: 'ers-prezentacije', fileName: 'ERS_sve_prezentacije.zip', archiveRoot: 'ERS_prezentacije' },
+  { directory: 'oib-prezentacije', fileName: 'OIB_sve_prezentacije.zip', archiveRoot: 'OIB_prezentacije' },
+]
+
+for (const presentationBundle of presentationBundles) {
+  try {
+    const presentationRoot = path.resolve('public/downloads', presentationBundle.directory)
+    const presentationFiles = (await collectFiles(presentationRoot)).filter((file) => file.relative.endsWith('.pdf'))
+    if (presentationFiles.length > 0) {
+      await createZip({
+        fileName: presentationBundle.fileName,
+        archiveRoot: presentationBundle.archiveRoot,
+        lesson: null,
+      }, presentationFiles)
+    }
+  } catch (error) {
+    if (error?.code !== 'ENOENT') throw error
+  }
+}

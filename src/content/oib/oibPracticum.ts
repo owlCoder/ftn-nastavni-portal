@@ -24,8 +24,8 @@ const cover = (): DocumentPage => ({
   blocks: [
     institution(),
     { id: id('title'), type: 'text', variant: 'title', html: 'Praktikum iz predmeta Osnove informacione bezbednosti', align: 'center' },
-    { id: id('subtitle'), type: 'text', variant: 'subtitle', html: 'Studijska 2026/2027. godina', align: 'center' },
-    { id: id('quote'), type: 'text', variant: 'quote', html: 'Radni materijal za vežbe, samostalno ponavljanje i sistematsko razumevanje oblasti informacione bezbednosti.', align: 'center' },
+    { id: id('subtitle'), type: 'text', variant: 'subtitle', html: 'Akademska 2026/2027. godina', align: 'center' },
+    { id: id('quote'), type: 'text', variant: 'quote', html: 'Materijal za vežbe, samostalan rad i sistematsko proučavanje informacione bezbednosti.', align: 'center' },
     { id: id('caption'), type: 'text', variant: 'caption', html: 'Univerzitet u Novom Sadu · Fakultet tehničkih nauka · Primenjeno softversko inženjerstvo', align: 'center' },
   ],
 })
@@ -33,12 +33,12 @@ const cover = (): DocumentPage => ({
 const introPages = (): DocumentPage[] => [
   page('0.1. Kako koristiti praktikum', [
     text('h1', '0.1. Kako koristiti praktikum'),
-    text('paragraph', 'Praktikum je samostalan materijal za razumevanje informacione bezbednosti. Svaka vežba objašnjava temu kroz problem koji rešava, razloge zbog kojih je važna, tipične greške i način na koji se odluka prepoznaje u razvoju informacionih sistema. Cilj je da student nakon vežbe može samostalno da obnovi princip i primeni ga na dodeljenoj projektnoj celini, a ne da zapamti jedan konkretan primer.'),
-    callout('info', 'Od metode do projekta', 'Praktikum ne daje gotovo bezbednosno rešenje za projekat. Svaki tim dobija dodeljenu projektnu celinu (npr. identitet, autorizaciju, audit ili detekciju) i princip sa vežbe primenjuje na sopstveni domen, uz obrazloženje odluke na projektnoj kontrolnoj tački.'),
+    text('paragraph', 'Praktikum prati sadržaj vežbi iz informacione bezbednosti. Svaka tema obuhvata problem, primenjene kontrole, tipične greške i način provere donete odluke. Nakon vežbe student treba da ume da obrazloži obrađeni princip i primeni ga u okviru dodeljene projektne celine.'),
+    callout('info', 'Primena na projektu', 'Svaki tim dobija projektnu celinu, kao što su identitet, autorizacija, revizijski trag ili detekcija, i obrađene principe primenjuje na sopstveni domen. Donete odluke obrazlažu se na projektnoj kontrolnoj tački.'),
     table(['Faza', 'Preporučeni način rada'], [
       ['Pre vežbe', 'Pročitati temu i izdvojiti pretpostavke koje bi u informacionom sistemu mogle biti pogrešne.'],
-      ['Tokom vežbe', 'Povezati pojam sa njegovom posledicom u realnom razvoju, a ne samo sa nazivom klase ili endpointa.'],
-      ['Posle vežbe', 'Povezati princip sa primerom sistema i objasniti dokaz kroz test, odluku ili audit trag.'],
+      ['Tokom vežbe', 'Povezati pojam sa posledicama u razvoju informacionog sistema, a ne samo sa nazivom klase ili krajnje tačke API-ja.'],
+      ['Posle vežbe', 'Primeniti princip na primeru sistema i dokumentovati rezultat testom, odlukom ili revizijskim zapisom.'],
       ['Pred odbranu', 'Objasniti problem, izabranu kontrolu, njeno ograničenje i način na koji je ponašanje provereno.'],
     ]),
     callout('info', 'Defanzivna orijentacija', 'Praktikum ne zahteva razvoj eksploita, malvera ni napad na realne sisteme. Sumnjiva aktivnost, greška konfiguracije ili pokušaj nedozvoljenog pristupa reprodukuju se kontrolisanim simulatorima i testnim identitetima.'),
@@ -46,11 +46,11 @@ const introPages = (): DocumentPage[] => [
   ]),
   page('0.2. Tok gradiva', [
     text('h1', '0.2. Tok gradiva'),
-    text('paragraph', 'Osam vežbi prati prirodan tok bezbednosnog razmišljanja: od identiteta i odluke o pristupu, preko podataka, pravila i granica poverenja, do operativne reakcije, procene rizika i unapređivanja kontrola. Redosled pomaže da se kasnije teme oslone na već razumljive pojmove.'),
+    text('paragraph', 'Osam vežbi obrađuje identitet i pristup, zaštitu podataka, bezbednosne politike, granice poverenja, reagovanje na incidente, procenu rizika i unapređivanje kontrola. Teme su raspoređene tako da se svaka naredna oslanja na prethodno uvedene pojmove.'),
     list([
       'Identitet i RBAC: ko pristupa sistemu, sa kojim pravom i zašto.',
       'Autorizacija i podaci: odluka nad konkretnim resursom i osetljivost informacije.',
-      'Politike i granice poverenja: pravila, konfiguracija, imovina i threat modeling.',
+      'Politike i granice poverenja: pravila, konfiguracija, imovina i modelovanje pretnji.',
       'Operativna bezbednost: sesije, MFA, tajne, detekcija i incident.',
       'Napredne odluke: kontekstualna pravila, rizik, korelacija i dokaz efektivnosti.',
     ]),
@@ -78,20 +78,20 @@ function appendCheckpoints(pages: DocumentPage[]) {
 const summaryPages = (): DocumentPage[] => [
   page('Sažetak: bezbednost kao sledljiv, dokaziv proces', [
     text('h1', 'Sažetak: bezbednost kao sledljiv, dokaziv proces'),
-    text('paragraph', 'Kroz osam vežbi gradi se jedan konzistentan lanac: Asset → Threat/misuse → Security Requirement → Control → Security Test → Evidence. Taj lanac ostaje isti bez obzira na to da li se radi o osnovnoj autentikaciji, privilegovanom pristupu ili naprednoj attack-path analitici — menja se samo nivo sistema na kome se primenjuje.'),
+    text('paragraph', 'Vežbe primenjuju isti analitički sled: imovina → pretnja ili zloupotreba → bezbednosni zahtev → kontrola → bezbednosni test → dokaz. Postupak se primenjuje na autentikaciju, privilegovani pristup i analizu putanja napada, uz prilagođavanje nivou posmatranog sistema.'),
     table(['Nivo', 'Šta uvodi'], [
       ['R1 — osnovni', 'Identitet, resursi, klasifikacija, autorizacija, politike i audit.'],
-      ['R2 — operativni', 'MFA, sesije, secrets, detekcija, incidenti, vulnerabilities.'],
-      ['R3 — napredni', 'Policy engine, access review, risk, correlation, response automation.'],
+      ['R2 — operativni', 'MFA, sesije, tajne, detekcija, incidenti i ranjivosti.'],
+      ['R3 — napredni', 'Mehanizam politika, pregled pristupa, rizik, korelacija i automatizacija odgovora.'],
     ]),
-    callout('success', 'Odgovornost ostaje kod studenta', 'Analitika i automatizacija mogu ubrzati detekciju i odgovor, ali tim mora razumeti zahtev, objasniti bezbednosni model i pokazati nezavisan dokaz da je kontrola efektivna.'),
+    callout('success', 'Odgovornost studenta', 'Tim je odgovoran za razumevanje zahteva, obrazloženje bezbednosnog modela i dokazivanje efektivnosti primenjene kontrole.'),
   ]),
 ]
 
 const literaturePages = (): DocumentPage[] => [
   page('Preporučena literatura i dokumentacija', [
     text('h1', 'Preporučena literatura i dokumentacija'),
-    text('paragraph', 'Literatura služi za produbljivanje tema iz praktikuma. Preporuka je da se čita uz konkretan primer informacionog sistema, jer se bezbednosni principi najbrže usvajaju kada student može da poveže definiciju sa threat modelom, testom ili audit zapisom.'),
+    text('paragraph', 'Literatura je namenjena produbljivanju tema iz praktikuma. Pojmove treba povezivati sa modelom pretnji, bezbednosnim testovima i revizijskim zapisima konkretnog informacionog sistema.'),
     list([
       'OWASP — <i>Application Security Verification Standard (ASVS)</i> i <i>OWASP Top 10</i>: <a href="https://owasp.org">owasp.org</a>.',
       'NIST — <i>Digital Identity Guidelines (SP 800-63)</i>: <a href="https://pages.nist.gov/800-63-3/">pages.nist.gov/800-63-3</a>.',
@@ -124,7 +124,7 @@ function contentsPage(body: DocumentPage[]): DocumentPage {
     ['Vežba 2', 'Vežba 2'],
     ['P1 — Identitet, uloge i autorizacija', 'P1 — Identitet'],
     ['Vežba 3', 'Vežba 3'],
-    ['P2 — Politike, klasifikacija i baseline', 'P2 — Politike'],
+    ['P2 — Politike, klasifikacija i referentna konfiguracija', 'P2 — Politike'],
     ['Vežba 4', 'Vežba 4'],
     ['P3 — Testiranje i manual-core-baseline', 'P3 — Testiranje'],
     ['Vežba 5', 'Vežba 5'],
