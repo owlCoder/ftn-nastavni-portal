@@ -34,19 +34,15 @@ Vite generiše statički sadržaj u `dist/`. Pre build-a skripta priprema ZIP pa
 
 ## CI/CD
 
-GitHub Actions workflow `.github/workflows/build.yml` izvršava sledeći tok:
+GitHub Actions workflow `.github/workflows/build.yml` proverava svaki pull request i svaki push na `main`:
 
 1. instalira zavisnosti komandom `npm ci`;
-2. proverava produkcijski build komandom `npm run build`;
-3. nakon uspešnog build-a na grani `main` priprema i objavljuje produkciju na Vercel-u.
+2. priprema ZIP pakete sa primerima;
+3. proverava produkcijski build komandom `npm run build`.
 
-Za Vercel deploy potrebno je u GitHub repozitorijumu podesiti sledeći Actions secret:
+Vercel projekat `ftn-nastavni-portal` povezan je sa ovim GitHub repozitorijumom. Push na `main` automatski pokreće production deploy preko Vercel Git integracije. Tokeni i pristupni podaci nisu deo repozitorijuma.
 
-- `VERCEL_TOKEN`
-
-`VERCEL_ORG_ID` i `VERCEL_PROJECT_ID` su podešeni kao repository variables i pripadaju Vercel projektu koji hostuje portal. Token se ne upisuje u repozitorijum.
-
-Produkciona adresa: [predmeti-ftn.vercel.app](https://predmeti-ftn.vercel.app/)
+Produkciona adresa: [ftn-nastavni-portal.vercel.app](https://ftn-nastavni-portal.vercel.app/)
 
 ## Organizacija koda
 
