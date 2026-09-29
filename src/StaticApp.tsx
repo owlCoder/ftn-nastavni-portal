@@ -55,27 +55,27 @@ type ProjectDocument = {
 }
 
 const ersPresentationDownloads: PresentationDownload[] = [
-  { number: '00', label: 'Uvodna prezentacija', title: 'Osnovne informacije', description: 'Organizacija nastave, način polaganja, projektne obaveze i rokovi.', pages: 14, size: '323 KB', file: '/downloads/ers-prezentacije/00_Osnovne_informacije.pdf' },
-  { number: '01', label: 'Vežba 1', title: 'Zahtevi, backlog i Git', description: 'Formulisanje zahteva, vođenje backloga i sledljiv rad u Git repozitorijumu.', pages: 20, size: '426 KB', file: '/downloads/ers-prezentacije/01_Zahtevi_backlog_i_Git.pdf' },
-  { number: '02', label: 'Vežba 2', title: 'SOLID i Clean Architecture', description: 'Primena SOLID principa i organizacija sistema prema pravilima Clean Architecture.', pages: 20, size: '511 KB', file: '/downloads/ers-prezentacije/02_SOLID_i_Clean_Architecture.pdf' },
-  { number: '03', label: 'Vežba 3', title: 'Poslovna logika i slučajevi upotrebe', description: 'Modelovanje poslovnih pravila i odgovornosti aplikacionog sloja.', pages: 20, size: '514 KB', file: '/downloads/ers-prezentacije/03_Poslovna_logika_i_use_case.pdf' },
-  { number: '04', label: 'Vežba 4', title: 'Testabilni dizajn, NUnit i Moq', description: 'Projektovanje komponenti za izolovano testiranje uz NUnit i Moq.', pages: 20, size: '490 KB', file: '/downloads/ers-prezentacije/04_Testabilni_dizajn_NUnit_i_Moq.pdf' },
-  { number: '05', label: 'Vežba 5', title: 'Integracija modula i ugovori', description: 'Razgraničenje modula, ugovori između komponenti i razmena podataka.', pages: 20, size: '489 KB', file: '/downloads/ers-prezentacije/05_Integracija_modula_ugovori.pdf' },
-  { number: '06', label: 'Vežba 6', title: 'Razvoj uz podršku AI alata', description: 'Upotreba AI alata u okviru definisanih arhitektonskih i razvojnih pravila.', pages: 20, size: '481 KB', file: '/downloads/ers-prezentacije/06_Kontrolisan_AI_workflow.pdf' },
-  { number: '07', label: 'Vežba 7', title: 'Model Context Protocol (MCP)', description: 'Pristup projektnom kontekstu i alatima preko ograničenog MCP interfejsa.', pages: 20, size: '497 KB', file: '/downloads/ers-prezentacije/07_MCP.pdf' },
-  { number: '08', label: 'Vežba 8', title: 'Zaštitni mehanizmi i evaluacija', description: 'Izvršive zaštitne politike, evaluacioni scenariji i kontrola kvaliteta.', pages: 20, size: '581 KB', file: '/downloads/ers-prezentacije/08_Guardrails_evaluacije_i_QA.pdf' },
+  { number: '00', label: 'Uvodna prezentacija', title: 'Osnovne informacije', description: 'Organizacija nastave, način polaganja, projektne obaveze i rokovi.', pages: 13, size: '176 KB', file: '/downloads/ers-prezentacije/00_Osnovne_informacije.pdf' },
+  { number: '01', label: 'Vežba 1', title: 'Zahtevi, backlog i Git', description: 'Formulisanje zahteva, vođenje backloga i sledljiv rad u Git repozitorijumu.', pages: 20, size: '196 KB', file: '/downloads/ers-prezentacije/01_Zahtevi_backlog_i_Git.pdf' },
+  { number: '02', label: 'Vežba 2', title: 'SOLID i Clean Architecture', description: 'Primena SOLID principa i organizacija sistema prema pravilima Clean Architecture.', pages: 20, size: '202 KB', file: '/downloads/ers-prezentacije/02_SOLID_i_Clean_Architecture.pdf' },
+  { number: '03', label: 'Vežba 3', title: 'Poslovna logika i slučajevi upotrebe', description: 'Modelovanje poslovnih pravila i odgovornosti aplikacionog sloja.', pages: 20, size: '199 KB', file: '/downloads/ers-prezentacije/03_Poslovna_logika_i_use_case.pdf' },
+  { number: '04', label: 'Vežba 4', title: 'Testabilni dizajn, NUnit i Moq', description: 'Projektovanje komponenti za izolovano testiranje uz NUnit i Moq.', pages: 20, size: '224 KB', file: '/downloads/ers-prezentacije/04_Testabilni_dizajn_NUnit_i_Moq.pdf' },
+  { number: '05', label: 'Vežba 5', title: 'Integracija modula i ugovori', description: 'Razgraničenje modula, ugovori između komponenti i razmena podataka.', pages: 20, size: '215 KB', file: '/downloads/ers-prezentacije/05_Integracija_modula_ugovori.pdf' },
+  { number: '06', label: 'Vežba 6', title: 'Razvoj uz podršku AI alata', description: 'Upotreba AI alata u okviru definisanih arhitektonskih i razvojnih pravila.', pages: 20, size: '198 KB', file: '/downloads/ers-prezentacije/06_Kontrolisan_AI_workflow.pdf' },
+  { number: '07', label: 'Vežba 7', title: 'Model Context Protocol (MCP)', description: 'Pristup projektnom kontekstu i alatima preko ograničenog MCP interfejsa.', pages: 20, size: '205 KB', file: '/downloads/ers-prezentacije/07_MCP.pdf' },
+  { number: '08', label: 'Vežba 8', title: 'Zaštitni mehanizmi i evaluacija', description: 'Izvršive zaštitne politike, evaluacioni scenariji i kontrola kvaliteta.', pages: 20, size: '197 KB', file: '/downloads/ers-prezentacije/08_Guardrails_evaluacije_i_QA.pdf' },
 ]
 
 const oibPresentationDownloads: PresentationDownload[] = [
-  { number: '00', label: 'Uvodna prezentacija', title: 'Osnovne informacije', description: 'Organizacija nastave, načini polaganja, obaveze i rokovi.', pages: 20, size: '1017 KB', file: '/downloads/oib-prezentacije/00_Osnovne_informacije.pdf' },
-  { number: '01', label: 'Vežba 1', title: 'Identitet, autentikacija i RBAC', description: 'Upravljanje identitetima, autentikacija, uloge i dozvole.', pages: 20, size: '825 KB', file: '/downloads/oib-prezentacije/01_Identitet_autentikacija_i_RBAC.pdf' },
-  { number: '02', label: 'Vežba 2', title: 'Autorizacija nad resursom', description: 'Autorizacija nad konkretnim resursom i klasifikacija podataka.', pages: 20, size: '787 KB', file: '/downloads/oib-prezentacije/02_Autorizacija_nad_resursom_i_klasifikacija_podataka.pdf' },
-  { number: '03', label: 'Vežba 3', title: 'Politike i bezbednosna konfiguracija', description: 'Verzionisanje politika, upravljanje konfiguracijom i evidencija odstupanja.', pages: 20, size: '780 KB', file: '/downloads/oib-prezentacije/03_Politike_konfiguracija_i_vidljivost.pdf' },
-  { number: '04', label: 'Vežba 4', title: 'Imovina i modelovanje pretnji', description: 'Evidencija imovine, granice poverenja, tokovi podataka i pretnje.', pages: 20, size: '740 KB', file: '/downloads/oib-prezentacije/04_Imovina_granice_poverenja_i_threat_modeling.pdf' },
-  { number: '05', label: 'Vežba 5', title: 'MFA, sesije, servisi i tajne', description: 'Dodatna autentikacija, upravljanje sesijama i zaštita tajni.', pages: 20, size: '747 KB', file: '/downloads/oib-prezentacije/05_MFA_sesije_servisi_i_tajne.pdf' },
-  { number: '06', label: 'Vežba 6', title: 'Detekcija i incident', description: 'Bezbednosni signali, detekcija, incidenti i ranjivosti.', pages: 20, size: '739 KB', file: '/downloads/oib-prezentacije/06_Detekcija_incident_i_ranjivosti.pdf' },
-  { number: '07', label: 'Vežba 7', title: 'Atributi, rizik i pregled pristupa', description: 'ABAC politike, procena rizika i periodični pregled prava pristupa.', pages: 20, size: '740 KB', file: '/downloads/oib-prezentacije/07_Atributi_rizik_i_pregled_pristupa.pdf' },
-  { number: '08', label: 'Vežba 8', title: 'Korelacija i efektivnost kontrola', description: 'Korelacija događaja, merenje efektivnosti kontrola i analiza incidenata.', pages: 20, size: '753 KB', file: '/downloads/oib-prezentacije/08_Korelacija_efektivnost_i_ucenje.pdf' },
+  { number: '00', label: 'Uvodna prezentacija', title: 'Osnovne informacije', description: 'Organizacija nastave, načini polaganja, obaveze i rokovi.', pages: 20, size: '1019 KB', file: '/downloads/oib-prezentacije/00_Osnovne_informacije.pdf' },
+  { number: '01', label: 'Vežba 1', title: 'Identitet, autentikacija i RBAC', description: 'Upravljanje identitetima, autentikacija, uloge i dozvole.', pages: 20, size: '707 KB', file: '/downloads/oib-prezentacije/01_Identitet_autentikacija_i_RBAC.pdf' },
+  { number: '02', label: 'Vežba 2', title: 'Autorizacija nad resursom', description: 'Autorizacija nad konkretnim resursom i klasifikacija podataka.', pages: 20, size: '693 KB', file: '/downloads/oib-prezentacije/02_Autorizacija_nad_resursom_i_klasifikacija_podataka.pdf' },
+  { number: '03', label: 'Vežba 3', title: 'Politike i bezbednosna konfiguracija', description: 'Verzionisanje politika, upravljanje konfiguracijom i evidencija odstupanja.', pages: 20, size: '679 KB', file: '/downloads/oib-prezentacije/03_Politике_konfiguracija_i_vidljivost.pdf' },
+  { number: '04', label: 'Vežba 4', title: 'Imovina i modelovanje pretnji', description: 'Evidencija imovine, granice poverenja, tokovi podataka i pretnje.', pages: 20, size: '392 KB', file: '/downloads/oib-prezentacije/04_Imovina_granice_poverenja_i_threat_modeling.pdf' },
+  { number: '05', label: 'Vežba 5', title: 'MFA, sesije, servisi i tajne', description: 'Dodatna autentikacija, upravljanje sesijama i zaštita tajni.', pages: 20, size: '404 KB', file: '/downloads/oib-prezentacije/05_MFA_sesije_servisi_i_tajne.pdf' },
+  { number: '06', label: 'Vežba 6', title: 'Detekcija i incident', description: 'Bezbednosni signali, detekcija, incidenti i ranjivosti.', pages: 20, size: '412 KB', file: '/downloads/oib-prezentacije/06_Detekcija_incident_i_ranjivosti.pdf' },
+  { number: '07', label: 'Vežba 7', title: 'Atributi, rizik i pregled pristupa', description: 'ABAC politike, procena rizika i periodični pregled prava pristupa.', pages: 20, size: '398 KB', file: '/downloads/oib-prezentacije/07_Atributi_rizik_i_pregled_pristupa.pdf' },
+  { number: '08', label: 'Vežba 8', title: 'Korelacija i efektivnost kontrola', description: 'Korelacija događaja, merenje efektivnosti kontrola i analiza incidenata.', pages: 20, size: '398 KB', file: '/downloads/oib-prezentacije/08_Korelacija_efektivnost_i_ucenje.pdf' },
 ]
 
 const ersProjectDocument: ProjectDocument = {
@@ -910,7 +910,7 @@ function CourseApp({ onBack, hashPrefix, brandInitial, brandAccent, brandShadow,
       <div className="tab-panel" key={active}>
         {active === 'prezentacije' ? (
           presentationDownloads ? (
-            <PresentationDownloadsView downloads={presentationDownloads} bundle={presentationBundle ?? { file: '/downloads/ERS_sve_prezentacije.zip', size: '4,2 MB' }} />
+            <PresentationDownloadsView downloads={presentationDownloads} bundle={presentationBundle ?? { file: '/downloads/ERS_sve_prezentacije.zip', size: '2,4 MB' }} />
           ) : presentationDecks ? (
             <PresentationsView presentationDecks={presentationDecks} />
           ) : null
@@ -1153,7 +1153,7 @@ export default function StaticApp() {
         titlePrefix="ERS"
         doc={practicum2026}
         presentationDownloads={ersPresentationDownloads}
-        presentationBundle={{ file: '/downloads/ERS_sve_prezentacije.zip', size: '4,2 MB' }}
+        presentationBundle={{ file: '/downloads/ERS_sve_prezentacije.zip', size: '2,4 MB' }}
         project={ersProjectDocument}
         checkpoints={checkpoints}
       />
@@ -1173,7 +1173,7 @@ export default function StaticApp() {
         titlePrefix="OIB"
         doc={oibPracticum2026}
         presentationDownloads={oibPresentationDownloads}
-        presentationBundle={{ file: '/downloads/OIB_sve_prezentacije.zip', size: '7,0 MB' }}
+        presentationBundle={{ file: '/downloads/OIB_sve_prezentacije.zip', size: '2,4 MB' }}
         project={oibProjectDocument}
         checkpoints={oibCheckpoints}
       />
