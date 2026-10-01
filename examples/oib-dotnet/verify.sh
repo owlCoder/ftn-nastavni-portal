@@ -1,7 +1,8 @@
 #!/usr/bin/env sh
 set -eu
 
-for project in vezba-*/*.csproj; do
-  dotnet build "$project" --nologo
-done
+cd "$(dirname "$0")"
 
+for solution in vezba-*/*.sln; do
+  dotnet test "$solution" --nologo
+done

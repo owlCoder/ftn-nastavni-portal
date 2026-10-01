@@ -10,44 +10,52 @@ dotnet restore EquipmentReservation.sln
 dotnet build EquipmentReservation.sln --configuration Release
 dotnet test EquipmentReservation.sln --configuration Release --no-build`, 'Otvaranje i provera kompletnog nastavnog primera'),
     diagram('Jedan solution, jasne granice', [
-      ['Domain', 'poslovna pravila i entiteti', 'slate'],
+      ['Domain', 'modeli i domenski servisi', 'slate'],
       ['Application', 'use-case i portovi', 'cyan'],
       ['Infrastructure', 'adapteri ka spoljnim detaljima', 'blue'],
-      ['API', 'composition root i transport', 'violet'],
+      ['API / Console UI', 'composition root i transport', 'violet'],
       ['Tests', 'nezavisna provera ponašanja', 'emerald'],
     ], 'MCP i Guardrails projekti postoje u istom solution-u, ali ne postaju zavisnosti poslovnog jezgra.'),
   ]),
 
   page('5.1. Struktura solution-a i Dependency Rule', [
     text('h2', '5.1. Struktura solution-a i Dependency Rule'),
-    text('paragraph', 'Rešenje sadrži sedam projekata. Prva četiri čine aplikaciju, MCP i Guardrails pripadaju razvojnim alatima, dok projekat sa testovima proverava poslovno jezgro i izvršive zaštitne politike. Smer zavisnosti ostaje osnovno arhitektonsko pravilo: unutrašnji slojevi ne poznaju spoljne detalje.'),
+    text('paragraph', 'Rešenje sadrži osam projekata. Prvih pet čine aplikaciju sa dva presentation adaptera, MCP i Guardrails pripadaju razvojnim alatima, dok projekat sa testovima proverava poslovno jezgro, izvršive zaštitne politike i sam smer zavisnosti. Smer zavisnosti ostaje osnovno arhitektonsko pravilo: unutrašnji slojevi ne poznaju spoljne detalje.'),
     table(['Projekat', 'Odgovornost'], [
-      ['EquipmentReservation.Domain', 'Entiteti i poslovna pravila; nema projektnih zavisnosti.'],
-      ['EquipmentReservation.Application', 'Slučajevi upotrebe i portovi prema drugim modulima/infrastrukturi.'],
-      ['EquipmentReservation.Infrastructure', 'Implementacije portova; u primeru in-memory adapteri.'],
+      ['EquipmentReservation.Domain', 'Modeli, Result i domenski servisi sa poslovnim pravilima; nema projektnih zavisnosti.'],
+      ['EquipmentReservation.Application', 'Slučajevi upotrebe, validatori i portovi prema drugim modulima/infrastrukturi.'],
+      ['EquipmentReservation.Infrastructure', 'Implementacije portova; u primeru in-memory adapteri bez poslovnih odluka.'],
       ['EquipmentReservation.Api', 'Composition root i HTTP granica; ne sadrži poslovna pravila.'],
+      ['EquipmentReservation.ConsoleUi', 'Drugi presentation adapter nad istim slučajevima upotrebe.'],
       ['EquipmentReservation.Mcp', 'Kontrolisano izlaganje projektnog konteksta AI klijentu.'],
       ['EquipmentReservation.Guardrails', 'Determinističke politike za rizične pozive alata.'],
-      ['EquipmentReservation.Tests', 'NUnit provere domena, use-case-a i guardrail-a.'],
+      ['EquipmentReservation.Tests', 'NUnit provere domena, use-case-a, guardrail-a i smera zavisnosti.'],
     ]),
-    callout('info', 'Zašto je ovo Clean Architecture', 'Promena baze, AI klijenta, MCP transporta ili hook konfiguracije ne zahteva promenu poslovnih pravila. Spoljni detalji zavise ka unutra, a ne obrnuto.'),
+    callout('info', 'Zašto je ovo Clean Architecture', 'Promena baze, AI klijenta, MCP transporta ili hook konfiguracije ne zahteva promenu poslovnih pravila. Spoljni detalji zavise ka unutra, a ne obrnuto. Test <code>DependencyRuleTests</code> pada ako neki projekat dobije zavisnost u pogrešnom smeru.'),
   ]),
 
   page('5.2. Poslovno pravilo ostaje u Domain sloju', [
     text('h2', '5.2. Poslovno pravilo ostaje u Domain sloju'),
-    text('paragraph', 'Domain model <code>Reservation</code> predstavlja stanje rezervacije i ne zna za HTTP, bazu, MCP niti AI. Provera ulaznih vrednosti pripada validatoru, a pravilo raspoložive količine pripada Inventory modulu.'),
-    code('csharp', `public sealed class Reservation
+    text('paragraph', 'Modeli <code>Reservation</code> i <code>InventoryItem</code> predstavljaju stanje i ne znaju za HTTP, bazu, MCP niti AI. Provera ulaznih vrednosti pripada validatoru, a pravilo raspoložive količine sprovodi domenski servis <code>InventoryReservationService</code>.'),
+    code('csharp', `public sealed record InventoryItem(Guid EquipmentId, int Available);
+
+public sealed class InventoryReservationService
 {
-    public Guid Id { get; }
-    public Guid EquipmentId { get; }
-    public int Quantity { get; }
-    public ReservationStatus Status { get; }
-    public string? RejectionReason { get; }
-}`, 'examples/ers-ai-workflow/src/EquipmentReservation.Domain/Reservations/Reservation.cs'),
+    public Result<InventoryItem> Reserve(InventoryItem item, int quantity)
+    {
+        if (quantity <= 0)
+            return Result<InventoryItem>.Fail(InventoryErrorCodes.InvalidQuantity);
+        if (item.Available < quantity)
+            return Result<InventoryItem>.Fail(InventoryErrorCodes.InsufficientStock);
+
+        return Result<InventoryItem>.Ok(
+            item with { Available = item.Available - quantity });
+    }
+}`, 'examples/ers-ai-workflow/src/EquipmentReservation.Domain/Inventory/InventoryReservationService.cs'),
     list([
-      'SRP: model čuva stanje; validator proverava ulaz; use-case orkestrira; Inventory adapter čuva svoju zalihu.',
+      'SRP: model čuva stanje; validator proverava ulaz; domenski servis sprovodi pravilo; use-case orkestrira; adapter čuva podatke.',
       'Kod neuspeha je deo poslovnog ishoda, a ne izuzetak infrastrukture.',
-      'Pravila su raspoređena po odgovarajućim granicama bez dupliranja u API sloju.',
+      'Isto pravilo koriste API, Console UI, testovi i budući adapteri, bez dupliranja.',
     ]),
   ]),
 
@@ -59,13 +67,9 @@ dotnet test EquipmentReservation.sln --configuration Release --no-build`, 'Otvar
     int Quantity,
     Guid ReservationId);
 
-public sealed record ReserveInventoryResult(
-    bool Success,
-    string? ErrorCode);
-
 public interface IInventoryModule
 {
-    Task<ReserveInventoryResult> ReserveAsync(
+    Task<Result> ReserveAsync(
         ReserveInventoryRequest request,
         CancellationToken cancellationToken);
 }
@@ -80,40 +84,37 @@ public interface IReservationRepository
         Reservation reservation,
         CancellationToken cancellationToken);
 }`, 'examples/ers-ai-workflow/src/EquipmentReservation.Application/Ports/'),
-    callout('note', 'Dependency inversion', 'Use-case zavisi od ugovora koje poseduje Application sloj. Infrastructure bira kako će ti ugovori biti realizovani.'),
+    callout('note', 'Dependency inversion', 'Use-case zavisi od ugovora koje poseduje Application sloj. Infrastructure bira kako će ti ugovori biti realizovani, a pravilo zalihe poziva iz domenskog servisa umesto da ga sam donosi.'),
   ]),
 
   page('5.4. Use-case orkestrira, ali ne preuzima tuđe odgovornosti', [
     text('h2', '5.4. CreateReservationHandler kao Application use-case'),
-    text('paragraph', 'Handler proverava idempotentnost, kreira domen objekat, poziva Inventory kroz port i čuva rezultat kroz repository port. Ne zna koja konkretna klasa čuva podatke i ne menja zalihu direktnim pristupom drugom modulu.'),
+    text('paragraph', 'Handler proverava ulaz kroz validator, zatim idempotentnost, poziva Inventory kroz port i čuva rezultat kroz repository port. Ne zna koja konkretna klasa čuva podatke i ne menja zalihu direktnim pristupom drugom modulu. API i Console UI ga pozivaju preko interfejsa <code>ICreateReservationUseCase</code>.'),
     code('csharp', `public async Task<CreateReservationResult> HandleAsync(
     CreateReservationCommand command,
     CancellationToken cancellationToken)
 {
-    CreateReservationCommandValidator.ValidateAndThrow(command);
+    var validation = _validator.Validate(command);
+    if (!validation.Success)
+        return CreateReservationResult.Invalid(validation.Error);
 
-    var existing = await reservations.FindByRequestIdAsync(
+    await using var requestLease = await _requestLock.AcquireAsync(
+        command.RequestId, cancellationToken);
+
+    var existing = await _reservations.FindByRequestIdAsync(
         command.RequestId, cancellationToken);
     if (existing is not null)
-        return Map(existing, replayed: true);
+        return CreateReservationResult.From(existing, replayed: true);
 
-    var reservationId = Guid.NewGuid();
-    var inventoryResult = await inventory.ReserveAsync(
-        new ReserveInventoryRequest(
-            command.EquipmentId, command.Quantity, reservationId),
-        cancellationToken);
-
-    var reservation = new Reservation(
-        reservationId, command.RequestId, command.EquipmentId,
-        command.StudentId, command.Quantity,
-        inventoryResult.Success
-            ? ReservationStatus.Confirmed
-            : ReservationStatus.Rejected,
-        inventoryResult.ErrorCode);
-
-    await reservations.AddAsync(reservation, cancellationToken);
-    return Map(reservation, replayed: false);
+    var reservation = await ReserveAsync(command, cancellationToken);
+    await _reservations.AddAsync(reservation, cancellationToken);
+    return CreateReservationResult.From(reservation, replayed: false);
 }`, 'examples/ers-ai-workflow/src/EquipmentReservation.Application/Reservations/Create/CreateReservationHandler.cs'),
+    table(['Ishod', 'Značenje', 'HTTP odgovor'], [
+      ['Confirmed', 'Zaliha je umanjena i rezervacija sačuvana.', '200'],
+      ['Rejected', 'Inventory je odbio zahtev, na primer <code>InsufficientStock</code>.', '409'],
+      ['Invalid', 'Komanda nije prošla validaciju, na primer <code>QuantityMustBePositive</code>.', '400'],
+    ]),
   ]),
 
   page('5.5. Idempotentnost mora biti proverena testom', [
@@ -122,38 +123,33 @@ public interface IReservationRepository
     code('csharp', `[Test]
 public async Task CreateReservation_WhenRequestIsRepeated_IsIdempotent()
 {
-    var equipmentId = Guid.NewGuid();
-    var inventory = new InMemoryInventoryModule();
-    inventory.Seed(equipmentId, available: 5);
+    ComposeSystem(available: 5);
+    var command = Command(quantity: 2);
 
-    var handler = new CreateReservationHandler(
-        new InMemoryReservationRepository(),
-        inventory,
-        new InMemoryReservationRequestLock());
+    var first = await _handler.HandleAsync(command, CancellationToken.None);
+    var replay = await _handler.HandleAsync(command, CancellationToken.None);
 
-    var command = new CreateReservationCommand(
-        Guid.NewGuid(), equipmentId, Guid.NewGuid(), Quantity: 2);
-
-    var first = await handler.HandleAsync(command, CancellationToken.None);
-    var replay = await handler.HandleAsync(command, CancellationToken.None);
-
-    Assert.That(replay.ReservationId, Is.EqualTo(first.ReservationId));
-    Assert.That(replay.Replayed, Is.True);
-    Assert.That(
-        await inventory.GetAvailableAsync(equipmentId, CancellationToken.None),
-        Is.EqualTo(3));
-}`, 'examples/ers-ai-workflow/tests/EquipmentReservation.Tests/Application/CreateReservationHandlerTests.cs'),
+    using (Assert.EnterMultipleScope())
+    {
+        Assert.That(first.Outcome,
+            Is.EqualTo(CreateReservationOutcome.Confirmed));
+        Assert.That(replay.ReservationId, Is.EqualTo(first.ReservationId));
+        Assert.That(replay.Replayed, Is.True);
+        Assert.That(await AvailableAsync(), Is.EqualTo(3));
+    }
+}`, 'examples/ers-ai-workflow/tests/EquipmentReservation.Tests/Integration/ReservationFlowTests.cs'),
+    text('paragraph', 'Pored integracionih testova nad in-memory adapterima, <code>CreateReservationHandlerTests</code> proverava handler u izolaciji. Moq zamenjuje samo portove: repository, Inventory, lock i generator identifikatora.'),
     callout('success', 'Provera integracije', 'Ispravnost integracije potvrđuje se pokretanjem komande <code>dotnet test EquipmentReservation.sln</code> i pregledom rezultata testova.'),
   ]),
 
   page('5.6. SOLID mapa na stvarnom primeru', [
     text('h2', '5.6. SOLID mapa na stvarnom primeru'),
     table(['Princip', 'Gde se vidi'], [
-      ['SRP', 'Reservation čuva stanje; validator proverava ulaz; handler orkestrira use-case; adapter čuva podatke.'],
-      ['OCP', 'Nova Infrastructure implementacija može se dodati bez menjanja handler-a.'],
+      ['SRP', 'Reservation čuva stanje; validator proverava ulaz; InventoryReservationService sprovodi pravilo zalihe; handler orkestrira use-case; adapter čuva podatke.'],
+      ['OCP', 'Nova Infrastructure implementacija ili nova opcija menija (IMenuAction) dodaje se bez menjanja handler-a.'],
       ['LSP', 'Svaka IInventoryModule implementacija mora poštovati isti ugovor uspeha/neuspeha.'],
-      ['ISP', 'IInventoryModule izlaže samo ReserveAsync koji ovom use-case-u treba.'],
-      ['DIP', 'Application zavisi od interfejsa; composition root bira konkretne adaptere.'],
+      ['ISP', 'IInventoryModule izlaže samo ReserveAsync; čitanje stanja ide kroz poseban IInventoryReadModel.'],
+      ['DIP', 'API i Console UI zavise od ICreateReservationUseCase, handler od portova; composition root bira konkretne adaptere.'],
     ]),
     callout('task', 'Rad na vežbi', 'Otvoriti <code>EquipmentReservation.sln</code>, pronaći smer svih ProjectReference zavisnosti i nacrtati ga. Zatim zameniti jedan in-memory adapter sopstvenim test-double-om bez promene Domain/Application koda i pokrenuti ceo solution test.'),
   ]),

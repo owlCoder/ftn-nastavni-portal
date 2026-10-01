@@ -4,7 +4,7 @@ import path from 'node:path'
 const ersSourceRoot = path.resolve('examples/ers-ai-workflow')
 const oibSourceRoot = path.resolve('examples/oib-dotnet')
 const outputDir = path.resolve('public/downloads')
-const ignoredDirectories = new Set(['bin', 'obj', '.vs'])
+const ignoredDirectories = new Set(['bin', 'obj', '.vs', 'TestResults'])
 
 const lessonBundles = [
   {
@@ -18,7 +18,9 @@ const lessonBundles = [
       'src/EquipmentReservation.Application/',
       'src/EquipmentReservation.Infrastructure/',
       'src/EquipmentReservation.Api/',
+      'src/EquipmentReservation.ConsoleUi/',
       'tests/EquipmentReservation.Tests/Application/CreateReservationHandlerTests.cs',
+      'tests/EquipmentReservation.Tests/Integration/ReservationFlowTests.cs',
     ],
   },
   {
@@ -29,9 +31,9 @@ const lessonBundles = [
     focus: [
       '.ai/AI_INSTRUCTIONS.md',
       '.ai/AI_USAGE.md',
-      '.ai/skills/review-pull-request/SKILL.md',
-      '.ai/agents/architecture-reviewer.md',
-      '.ai/agents/implementer.md',
+      '.kova/skills/architecture-review/SKILL.md',
+      '.kova/skills/implement-approved-plan/SKILL.md',
+      '.kova/skills/review-pull-request/SKILL.md',
     ],
   },
   {
@@ -43,8 +45,9 @@ const lessonBundles = [
       'src/EquipmentReservation.Mcp/Program.cs',
       'src/EquipmentReservation.Mcp/Resources/ProjectResources.cs',
       'src/EquipmentReservation.Mcp/Tools/ProjectTools.cs',
-      'src/EquipmentReservation.Mcp/Workspace/ProjectWorkspace.cs',
-      '.ai/AI_INSTRUCTIONS.md',
+      'src/EquipmentReservation.Mcp/Workspace/ProjectPathPolicy.cs',
+      'src/EquipmentReservation.Mcp/Processes/ProjectCommand.cs',
+      '.kova/mcp.json',
     ],
   },
   {
@@ -56,8 +59,10 @@ const lessonBundles = [
       'src/EquipmentReservation.Guardrails/Policies/DangerousCommandGuardrail.cs',
       'src/EquipmentReservation.Guardrails/Policies/SensitiveFileGuardrail.cs',
       'src/EquipmentReservation.Guardrails/Services/GuardrailEvaluator.cs',
-      'src/EquipmentReservation.Guardrails/Program.cs',
-      '.claude/settings.json',
+      'src/EquipmentReservation.Guardrails/Hosting/GuardrailHook.cs',
+      '.vscode/settings.json',
+      '.kova/hooks.json',
+      'scripts/kova-audit.mjs',
       'evals/review-architecture.json',
       'evals/prompt-injection.json',
       'evals/missing-context.json',

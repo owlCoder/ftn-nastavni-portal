@@ -67,25 +67,26 @@ const lessons: LessonExamples[] = [
     zip: 'vezba-5-integracija-modula.zip',
     entries: [
       { path: 'EquipmentReservation.sln', note: 'Glavno rešenje za otvaranje primera', kind: 'solution' },
-      { path: 'src/EquipmentReservation.Domain/', note: 'Entiteti i poslovna pravila', kind: 'code' },
-      { path: 'src/EquipmentReservation.Application/', note: 'Slučajevi upotrebe i portovi', kind: 'code' },
+      { path: 'src/EquipmentReservation.Domain/', note: 'Modeli, Result i domenski servis za pravilo zalihe', kind: 'code' },
+      { path: 'src/EquipmentReservation.Application/', note: 'Slučajevi upotrebe, validatori i portovi', kind: 'code' },
       { path: 'src/EquipmentReservation.Infrastructure/', note: 'Implementacije portova i infrastrukturni adapteri', kind: 'code' },
       { path: 'src/EquipmentReservation.Api/', note: 'HTTP API kao ulaz u aplikaciju', kind: 'code' },
       { path: 'src/EquipmentReservation.ConsoleUi/', note: 'Jednostavan konzolni interfejs za rad sa primerom', kind: 'code' },
-      { path: 'tests/EquipmentReservation.Tests/Application/CreateReservationHandlerTests.cs', note: 'Testovi poslovnih pravila i idempotentnosti', kind: 'test' },
+      { path: 'tests/EquipmentReservation.Tests/Application/CreateReservationHandlerTests.cs', note: 'Testovi slučaja upotrebe uz zamenjene portove', kind: 'test' },
+      { path: 'tests/EquipmentReservation.Tests/Integration/ReservationFlowTests.cs', note: 'Testovi idempotentnosti i konkurentnih zahteva', kind: 'test' },
     ],
   },
   {
     number: 6,
     title: 'Kontrolisan razvoj uz AI',
-    summary: 'Projektna pravila, evidencija odluka, ponovljive procedure i podela odgovornosti pri upotrebi AI alata.',
+    summary: 'Projektna pravila, evidencija odluka i Kova skill-ovi sa jasno podeljenim ulogama i režimima rada.',
     zip: 'vezba-6-ai-workflow.zip',
     entries: [
       { path: '.ai/AI_INSTRUCTIONS.md', note: 'Projektna pravila za AI razvoj', kind: 'config' },
       { path: '.ai/AI_USAGE.md', note: 'Evidencija odluka i provera', kind: 'config' },
-      { path: '.ai/skills/review-pull-request/SKILL.md', note: 'Procedura za pregled izmene', kind: 'config' },
-      { path: '.ai/agents/architecture-reviewer.md', note: 'Uloga za proveru arhitekture', kind: 'config' },
-      { path: '.ai/agents/implementer.md', note: 'Uloga za implementaciju zadatka', kind: 'config' },
+      { path: '.kova/skills/architecture-review/SKILL.md', note: 'Analiza uticaja promene u režimu Plan', kind: 'config' },
+      { path: '.kova/skills/implement-approved-plan/SKILL.md', note: 'Implementacija usvojenog plana u režimu Manual', kind: 'config' },
+      { path: '.kova/skills/review-pull-request/SKILL.md', note: 'Procedura za pregled izmene', kind: 'config' },
     ],
   },
   {
@@ -97,8 +98,9 @@ const lessons: LessonExamples[] = [
       { path: 'src/EquipmentReservation.Mcp/Program.cs', note: 'Pokretanje i konfiguracija MCP servera', kind: 'code' },
       { path: 'src/EquipmentReservation.Mcp/Resources/ProjectResources.cs', note: 'MCP resources', kind: 'code' },
       { path: 'src/EquipmentReservation.Mcp/Tools/ProjectTools.cs', note: 'MCP tools', kind: 'code' },
-      { path: 'src/EquipmentReservation.Mcp/Workspace/ProjectWorkspace.cs', note: 'Kontrolisan pristup projektu i dozvoljenim komandama', kind: 'code' },
-      { path: '.ai/AI_INSTRUCTIONS.md', note: 'Projektna pravila dostupna kao MCP resurs', kind: 'config' },
+      { path: 'src/EquipmentReservation.Mcp/Workspace/ProjectPathPolicy.cs', note: 'Pravilo koje putanje server sme da izloži', kind: 'code' },
+      { path: 'src/EquipmentReservation.Mcp/Processes/ProjectCommand.cs', note: 'Zatvoren skup dozvoljenih komandi', kind: 'code' },
+      { path: '.kova/mcp.json', note: 'Povezivanje Kova agenta sa MCP serverom', kind: 'config' },
     ],
   },
   {
@@ -110,8 +112,9 @@ const lessons: LessonExamples[] = [
       { path: 'src/EquipmentReservation.Guardrails/Policies/DangerousCommandGuardrail.cs', note: 'Pravilo za opasne komande', kind: 'code' },
       { path: 'src/EquipmentReservation.Guardrails/Policies/SensitiveFileGuardrail.cs', note: 'Pravilo za osetljive fajlove', kind: 'code' },
       { path: 'src/EquipmentReservation.Guardrails/Services/GuardrailEvaluator.cs', note: 'Evaluator izvršivih zaštitnih politika', kind: 'code' },
-      { path: 'src/EquipmentReservation.Guardrails/Program.cs', note: 'Adapter za izvršavanje zaštitnih provera', kind: 'code' },
-      { path: '.claude/settings.json', note: 'Primer povezivanja PreToolUse mehanizma', kind: 'config' },
+      { path: 'src/EquipmentReservation.Guardrails/Hosting/GuardrailHook.cs', note: 'Adapter između procesa i zaštitnih politika', kind: 'code' },
+      { path: '.vscode/settings.json', note: 'Povezivanje guardrail projekta sa Kova agentom', kind: 'config' },
+      { path: '.kova/hooks.json', note: 'Hook-ovi pre i posle izvršenja alata', kind: 'config' },
       { path: 'evals/review-architecture.json', note: 'Provera arhitektonske regresije', kind: 'eval' },
       { path: 'evals/prompt-injection.json', note: 'Scenario za prompt injection', kind: 'eval' },
       { path: 'evals/missing-context.json', note: 'Scenario sa nepotpunim kontekstom', kind: 'eval' },
@@ -255,11 +258,11 @@ function OibExamplesView() {
         <div className="examples-hero-copy">
           <span className="eyebrow">C# / .NET 8</span>
           <h1>Primeri iz informacione bezbednosti</h1>
-          <p>Svaku vežbu prati samostalan .NET projekat sa uputstvom za pokretanje i analizom obrađene kontrole.</p>
+          <p>Svaku vežbu prati samostalno .NET rešenje sa razdvojenim slojevima, testovima i uputstvom za pokretanje.</p>
           <div className="examples-summary" aria-label="Sadržaj primera">
             <span><strong>8</strong> ZIP paketa</span>
             <span><strong>1–8</strong> vežbe</span>
-            <span><strong>.NET 8</strong> konzolni projekti</span>
+            <span><strong>.NET 8</strong> rešenja sa testovima</span>
           </div>
         </div>
         <a href={zipUrl} download className="examples-hero-download">
@@ -278,7 +281,7 @@ function OibExamplesView() {
           <div>
             <span className="eyebrow">Primeri po vežbama</span>
             <h2>Primeri po temama</h2>
-            <p>Paketi su međusobno nezavisni i sadrže kratko uputstvo za pokretanje.</p>
+            <p>Paketi su međusobno nezavisni: svaki ima sopstveni solution, testove i uputstvo za pokretanje.</p>
           </div>
         </div>
         <div className="examples-course-grid" aria-label="OIB primeri po vežbama">
