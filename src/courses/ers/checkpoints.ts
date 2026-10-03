@@ -20,7 +20,7 @@ export const ersCheckpoints: Checkpoint[] = [
     id: 'p2',
     code: 'P2',
     title: 'Arhitektura i funkcionalno jezgro',
-    exercises: [2, 3],
+    exercises: [3, 4],
     date: '02.11.',
     summary:
       'Tim prikazuje arhitektonske granice i najmanje jedan zaokružen slučaj upotrebe, od ulaznog zahteva do poslovnog rezultata, uz razdvojene odgovornosti poslovnog i infrastrukturnog koda.',
@@ -35,7 +35,7 @@ export const ersCheckpoints: Checkpoint[] = [
     id: 'p3',
     code: 'P3',
     title: 'Testiranje i manual-core-baseline',
-    exercises: [4, 4],
+    exercises: [5, 6],
     date: '23.11.',
     summary:
       'Do ove kontrolne tačke tim samostalno projektuje jezgro sistema i osnovni skup testova. U narednoj fazi AI alati mogu imati veću ulogu, ali se svaki njihov predlog proverava postojećim testovima i pregledom izmena.',
@@ -50,7 +50,7 @@ export const ersCheckpoints: Checkpoint[] = [
     id: 'p4',
     code: 'P4',
     title: 'Razvoj uz podršku AI alata i završna odbrana',
-    exercises: [6, 8],
+    exercises: [7, 8],
     date: '14.12.',
     summary:
       'Na završnoj odbrani svaki član tima obrazlaže zahteve, arhitekturu, testove i način na koji su AI alati korišćeni i proveravani tokom razvoja.',
