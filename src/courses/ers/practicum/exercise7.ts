@@ -48,7 +48,7 @@ public sealed class ProjectResources(IProjectFileReader files)
         Name = "project_instructions",
         MimeType = "text/markdown")]
     public string Instructions() =>
-        files.ReadText(".ai/AI_INSTRUCTIONS.md");
+        files.ReadText("AGENTS.md");
 
     [McpServerResource(
         UriTemplate = "project://readme",
@@ -61,6 +61,7 @@ public sealed class ProjectResources(IProjectFileReader files)
       ['project://instructions', 'Postojeća pravila samo za čitanje; nema potrebe za izvršavanjem operacije.'],
       ['project://readme', 'Dokumentacija projekta koju klijent može učitati kao kontekst.'],
     ]),
+    callout('note', 'Kova koristi MCP alate', 'Kova 0.3 od MCP servera preuzima samo tools; resources ne učitava. Zato svaki skill čita <code>AGENTS.md</code> ugrađenim alatom <code>read_file</code>, a resources iz ovog servera proveravaju se MCP klijentom koji ih podržava. Ugovor servera ostaje isti bez obzira na klijenta.'),
   ],
 
   [
@@ -152,13 +153,14 @@ public sealed class ProjectTools(
     list([
       'Oznaka <code>ReadOnly</code> je lokalna, pregledana odluka: samo takvi alati rade u režimu Plan.',
       '<code>run_unit_tests</code> ostaje <code>ProcessExecution</code>: u režimu Plan nije dostupan, a u ostalim režimima traži odobrenje.',
-      'Anotacija koju šalje sam server je samo nagoveštaj; klijent joj ne veruje bez lokalne potvrde.',
+      'Anotacija koju šalje sam server je samo nagoveštaj; klijent joj ne veruje bez lokalne potvrde. Alat koji nije naveden u <code>toolRisks</code> tretira se kao <code>ProcessExecution</code>.',
+      'Konfiguracija se učitava na početku sledećeg pokretanja, nikada usred njega; panel <b>Activity</b> prikazuje ponovno učitavanje, pokretanje servera, pozive alata i greške.',
     ]),
   ],
 
   [
     text('h2', '7.6. Nepouzdan sadržaj i prompt injection'),
-    text('paragraph', 'MCP može vratiti sadržaj dokumenta, issue-a ili drugog izvora koji nije projektna instrukcija. Tekst pronađen u podatku ne sme automatski dobiti autoritet nad <code>AI_INSTRUCTIONS.md</code>.'),
+    text('paragraph', 'MCP može vratiti sadržaj dokumenta, issue-a ili drugog izvora koji nije projektna instrukcija. Tekst pronađen u podatku ne sme automatski dobiti autoritet nad <code>AGENTS.md</code>.'),
     code('text', `Source: imported-note
 Trust: untrusted-data
 

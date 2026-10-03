@@ -21,7 +21,7 @@ const intro: Block[] = [
     ['Pre projektne kontrolne tačke', 'Proći kontrolnu listu, proveriti izgradnju projekta i testove, a zatim pregledati konačan diff. Svaki član tima treba da ume da obrazloži urađeno.'],
   ]),
   callout('info', 'Nastavni primeri', 'Praktikum koristi domen rezervacije fakultetske opreme i studije slučaja Logger–Blogger i ECommerce za poređenje arhitektonskih odluka. Studentski tim primenjuje iste principe na sopstvenu temu i samostalno oblikuje projektnu strukturu.'),
-  callout('note', 'Jezik i alati', 'Primeri su pretežno u C#/.NET okruženju. Sintaksa pojedinih AI alata može se menjati između verzija, zato se u praktikumu naglašavaju stabilni koncepti: kontekst, ugovori, granice alata, provera rezultata i evaluacioni scenariji.'),
+  callout('note', 'Jezik i alati', 'Primeri su pretežno u C#/.NET okruženju. Na vežbama 6–8 koristi se Kova, lokalni AI agent za VS Code, koji projektnu konfiguraciju čita iz direktorijuma <code>.kova/</code>. Sintaksa AI alata može se menjati između verzija, zato se u praktikumu naglašavaju stabilni koncepti: kontekst, ugovori, granice alata, provera rezultata i evaluacioni scenariji.'),
   text('h1', '0.2. Tok semestra i projekta'),
   text('paragraph', 'Praktikum je organizovan u osam povezanih vežbi. Prva obrađuje zahteve, backlog, Git i timski razvojni tok. Druga povezuje objektno orijentisano programiranje i principe čistog koda sa SOLID principima i Clean Architecture. Slede poslovna logika, testiranje i integracija modula i podataka. Završne vežbe obrađuju razvoj uz podršku AI alata, Model Context Protocol (MCP) i izvršive mehanizme provere.'),
   image('/course-assets/semester-map.svg', 'Tok praktikuma: zahtevi i razvojni proces → arhitektura → poslovna logika → testiranje → integracija modula → razvoj uz AI podršku → MCP → završna provera kvaliteta.', 'Mapa semestra'),
@@ -54,7 +54,7 @@ const closing: Block[] = [
     'NUnit dokumentacija: <a href="https://docs.nunit.org">docs.nunit.org</a>; Moq projekat i dokumentacija: <a href="https://github.com/devlooped/moq">github.com/devlooped/moq</a>.',
     'Microsoft Learn — .NET dependency injection, testiranje i arhitektura aplikacija: <a href="https://learn.microsoft.com/dotnet/">learn.microsoft.com/dotnet</a>.',
     'Model Context Protocol — specifikacija i koncepti resources/tools/prompts: <a href="https://modelcontextprotocol.io">modelcontextprotocol.io</a>.',
-    'Zvanična dokumentacija AI razvojnog okruženja koje se koristi na vežbama; pratiti aktuelnu verziju sintakse za projektne instrukcije, procedure, agente i hooks.',
+    'Kova — dokumentacija za skill-ove, MCP, hook-ove i režime rada: <a href="https://github.com/owlCoder/kova">github.com/owlCoder/kova</a>; pratiti aktuelnu verziju sintakse.',
   ]),
   callout('note', 'Napomena o verzijama', 'AI alati i njihova konfiguraciona sintaksa menjaju se brže od osnovnih principa softverskog inženjerstva. Kada se razlikuje konkretna komanda ili naziv konfiguracione datoteke, treba pratiti aktuelnu zvaničnu dokumentaciju, ali zadržati isti mentalni model, granice odgovornosti i način provere.'),
 ]

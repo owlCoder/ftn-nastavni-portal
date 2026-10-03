@@ -29,7 +29,7 @@ const lessonBundles = [
     archiveRoot: 'ers-vezba-6-ai-workflow',
     title: 'Kontrolisan razvoj uz AI',
     focus: [
-      '.ai/AI_INSTRUCTIONS.md',
+      'AGENTS.md',
       '.ai/AI_USAGE.md',
       '.kova/skills/architecture-review/SKILL.md',
       '.kova/skills/implement-approved-plan/SKILL.md',

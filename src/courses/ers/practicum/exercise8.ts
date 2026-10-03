@@ -148,10 +148,21 @@ public sealed class DangerousCommandGuardrail : IToolGuardrail
     }
   ]
 }`, 'examples/ers-ai-workflow/.kova/hooks.json'),
+    text('paragraph', 'Hook na standardnom ulazu dobija sažet JSON opis poziva: događaj, naziv alata, skraćene argumente, putanje i rizik. Na standardni izlaz vraća odluku <code>continue</code> ili <code>veto</code>. Audit skripta iz primera samo beleži događaj.'),
+    code('text', `// User-configured observational hook. It cannot approve or modify tool arguments.
+let input = '';
+for await (const chunk of process.stdin) {
+  input += chunk;
+  if (input.length > 16_384) throw new Error('Hook input too large.');
+}
+const context = JSON.parse(input);
+process.stdout.write(
+  JSON.stringify({ decision: 'continue', message: \`\${context.event}: \${context.tool.name}\` }),
+);`, 'examples/ers-ai-workflow/scripts/kova-audit.mjs'),
     list([
       'Hook može da posmatra ili da stavi veto; ne može da odobri poziv niti da izmeni argumente alata.',
       'Hook pre izvršenja koji padne ili istekne blokira poziv, dok greška hook-a posle izvršenja ne menja rezultat.',
-      'Guardrail se izvršava i posle hook-ova, u svakom režimu rada; odobrenje korisnika ne pretvara blokadu u dozvolu.',
+      'Guardrail se izvršava i posle hook-ova, u svakom režimu rada; odobrenje korisnika ne pretvara blokadu u dozvolu. Kova mu prosleđuje <code>tool_name</code> i <code>tool_input</code> sa poljima <code>command</code> i <code>file_path</code>, a razlog blokade čita sa standardnog izlaza za greške.',
     ]),
     callout('note', 'Adapter se menja, politika ostaje', 'Clean Architecture način razmišljanja važi i ovde: format događaja konkretnog AI alata je spoljni detalj, dok pravilo zabrane ostaje izolovano i testabilno.'),
   ],
@@ -233,13 +244,13 @@ dotnet test EquipmentReservation.sln --configuration Release --no-build`, 'Zavr�
     list([
       'Objasniti Dependency Rule na projektima u solution-u.',
       'Pokazati jedan AI zadatak sa planom pre izmene i zapisom u AI_USAGE.md.',
-      'Pokazati MCP resource i najmanje jedan tool koji vraća stvarni razvojni signal.',
+      'Pokazati najmanje jedan MCP tool koji vraća stvarni razvojni signal i objasniti zašto su projektne instrukcije izložene kao resource.',
       'Demonstrirati da guardrail blokira rizičnu operaciju.',
       'Pokazati najmanje jedan negativni eval scenario i objasniti njegovu svrhu.',
     ]),
     text('paragraph', 'Isti trag dokaza očekuje se i u projektnom repozitorijumu. Tabela pokazuje gde se on nalazi u nastavnom primeru.'),
     table(['Artefakt u primeru', 'Šta se na njemu pokazuje'], [
-      ['.ai/AI_INSTRUCTIONS.md', 'Projektna pravila koja važe za svaki AI zadatak.'],
+      ['AGENTS.md', 'Projektna pravila koja važe za svaki AI zadatak.'],
       ['.ai/AI_USAGE.md', 'Zapisi odluka: predlog, razlog prihvatanja ili odbijanja i dokaz provere.'],
       ['.kova/skills/*/SKILL.md', 'Ponovljive procedure sa ulazima, izlazom i ograničenjima.'],
       ['.kova/mcp.json i EquipmentReservation.Mcp', 'Uzak, pregledan pristup projektnom kontekstu.'],

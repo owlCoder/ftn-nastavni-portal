@@ -55,7 +55,7 @@ export const ersCheckpoints: Checkpoint[] = [
     summary:
       'Na završnoj odbrani svaki član tima obrazlaže zahteve, arhitekturu, testove i način na koji su AI alati korišćeni i proveravani tokom razvoja.',
     items: [
-      '`AI_INSTRUCTIONS.md` i `AI_USAGE.md` sadrže projektna pravila i reprezentativne zapise odluka.',
+      '`AGENTS.md` i `AI_USAGE.md` sadrže projektna pravila i reprezentativne zapise odluka.',
       'Najmanje dve ponovljive procedure ili uloge AI agenata imaju definisane ulaze, izlaze i ograničenja.',
       'Postoje najmanje tri evaluaciona scenarija, uključujući negativan slučaj.',
       'Na odbrani svaki član tima objašnjava svoj deo bez oslanjanja na automatski generisan odgovor.',

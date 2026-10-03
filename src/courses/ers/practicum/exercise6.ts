@@ -4,18 +4,41 @@ import { text, list, callout, code, table, diagram } from '../../../practicum/bl
 export const exercise6: Block[] = [
   [
     text('h1', 'Vežba 6 — Kontrolisan razvoj uz AI: kontekst, instrukcije, skill-ovi i režimi rada'),
-    text('paragraph', 'AI alati uvode se nakon što je u Vežbi 5 uspostavljeno razumljivo i testirano jezgro sistema. Rad se nastavlja u rešenju <code>examples/ers-ai-workflow/EquipmentReservation.sln</code>. AI deo primera podešen je za <b>Kova</b>, lokalnog AI agenta za VS Code, koji konfiguraciju čita iz direktorijuma <code>.kova/</code>. AI alat mora poštovati postojeće arhitektonske granice, a rezultat se proverava izgradnjom projekta, testovima i pregledom izmena.'),
+    text('paragraph', 'AI alati uvode se nakon što je u Vežbi 5 uspostavljeno razumljivo i testirano jezgro sistema. Rad se nastavlja u rešenju <code>examples/ers-ai-workflow/EquipmentReservation.sln</code>. AI deo primera podešen je za <b>Kova</b>, lokalnog AI agenta za VS Code, koji konfiguraciju čita iz direktorijuma <code>.kova/</code>, dok projektna pravila stoje u <code>AGENTS.md</code>. AI alat mora poštovati postojeće arhitektonske granice, a rezultat se proverava izgradnjom projekta, testovima i pregledom izmena.'),
     diagram('Kontrolisan tok nad EquipmentReservation solution-om', [
       ['Zadatak', 'jasan cilj i kriterijumi', 'slate'],
       ['Kontekst', 'relevantni projekti i testovi', 'cyan'],
-      ['Instrukcije', '.ai/AI_INSTRUCTIONS.md', 'blue'],
+      ['Instrukcije', 'AGENTS.md', 'blue'],
       ['Skill + režim', '.kova/skills i Plan/Manual', 'violet'],
       ['Provera', 'build, test i git diff', 'emerald'],
     ]),
   ],
 
   [
-    text('h2', '6.1. Od nejasnog zahteva do proverljivog zadatka'),
+    text('h2', '6.1. Priprema: Kova u VS Code-u'),
+    text('paragraph', 'Kova je lokalni AI agent za VS Code, dostupan kao ekstenzija <code>owlcoder.kova-local</code>. Podrazumevani provajder je Ollama sa modelom <code>qwen3:4b</code>, pa se ceo primer može raditi bez slanja koda van računara. Opis u praktikumu odgovara verziji Kova 0.3.'),
+    list([
+      'Instalirati VS Code 1.100 ili noviji, ekstenziju Kova, Ollama i model <code>qwen3:4b</code>. Audit hook iz Vežbe 8 koristi Node.js.',
+      'Izgraditi solution u Release konfiguraciji, jer Kova pokreće MCP server i guardrail projekat sa <code>--no-build</code>.',
+      'Otvoriti direktorijum <code>examples/ers-ai-workflow</code> kao VS Code workspace. Skill-ovi, MCP, hook-ovi i guardrail koriste upravo taj root.',
+      'Pokrenuti <b>Kova: Open Chat</b>, izabrati model, režim rada i skill. Za Qwen3 uključiti Thinking: bez njega model razmišljanje ispisuje kao običan odgovor i ne vraća pozive alata.',
+    ], true),
+    code('bash', `ollama pull qwen3:4b
+cd examples/ers-ai-workflow
+dotnet build EquipmentReservation.sln --configuration Release
+code .`, 'Priprema modela, solution-a i workspace-a'),
+    table(['Režim', 'Šta agent sme'], [
+      ['Plan', 'Samo alati za čitanje; nema izmena datoteka ni pokretanja komandi.'],
+      ['Manual', 'Čitanje radi direktno; svaki upis i svaki proces traže odobrenje.'],
+      ['Edit', 'Uobičajene izmene u workspace-u rade direktno; procesi traže odobrenje.'],
+      ['Auto', 'Izmene i komande sa liste <code>kova.commands.allow</code> rade direktno; ostalo traži odobrenje ili se blokira.'],
+    ]),
+    text('paragraph', 'Na vežbama se koriste režimi Plan i Manual, jer je u njima svaka izmena vidljiva pre izvršenja. Guardrail iz Vežbe 8 važi u svakom režimu. Budžet konteksta, Thinking i lista dozvoljenih komandi menjaju se kroz <b>Kova: Open Settings</b>.'),
+    callout('warning', 'Drugi provajderi šalju kontekst van računara', 'Postavkom <code>kova.provider</code> može se izabrati DeepSeek ili OpenAI-kompatibilan endpoint, a ključ se unosi komandom <b>Kova: Set Provider API Key</b> i čuva u VS Code SecretStorage, ne u <code>settings.json</code>. Upit i priloženi kontekst tada odlaze na taj endpoint, pa pravilo da se tajne i <code>.env</code> ne daju agentu postaje još važnije.'),
+  ],
+
+  [
+    text('h2', '6.2. Od nejasnog zahteva do proverljivog zadatka'),
     text('paragraph', 'Umesto upita „sredi rezervacije“, zadatak treba da kaže koje ponašanje menjamo, koje slojeve ne smemo da narušimo i kako dokazujemo rezultat.'),
     code('markdown', `# Zadatak
 Analiziraj promenu: jedna rezervacija ne sme tražiti više od 5 komada opreme.
@@ -37,9 +60,15 @@ Ne menjaj kod u ovoj fazi.
   ],
 
   [
-    text('h2', '6.2. Projektne instrukcije su verzionisana pravila'),
-    text('paragraph', 'Gotov primer sadrži <code>.ai/AI_INSTRUCTIONS.md</code>. Njegova pravila su konkretna za arhitekturu ovog solution-a i mogu se proveriti čitanjem project reference-a i pokretanjem testova. Datoteka ne zavisi od alata: Kova je ne učitava automatski, pa je svaki skill čita kao prvi korak.'),
-    code('markdown', `## Arhitektura
+    text('h2', '6.3. Projektne instrukcije su verzionisana pravila'),
+    text('paragraph', 'Projektna pravila stoje u datoteci <code>AGENTS.md</code> u korenu repozitorijuma. To je otvorena konvencija za instrukcije AI agentima koju prepoznaje više alata, pa pravila ostaju ista i kada se alat promeni. Pravila u primeru su konkretna za arhitekturu ovog solution-a i mogu se proveriti čitanjem project reference-a i pokretanjem testova.'),
+    callout('note', 'Kova i AGENTS.md', 'Kova 0.3 ne učitava <code>AGENTS.md</code> automatski: iz workspace-a čita samo direktorijum <code>.kova/</code> i u kontekst stavlja jedan izabran skill. Zato svaki skill u primeru kao prvi korak čita <code>AGENTS.md</code> ugrađenim alatom <code>read_file</code>, što radi i u režimu Plan. Test <code>AiWorkflowArtifactsTests</code> pada ako neki skill izostavi taj korak.'),
+    code('markdown', `## Komande
+- Izgradnja: dotnet build EquipmentReservation.sln --configuration Release
+- Testovi: dotnet test EquipmentReservation.sln --configuration Release --no-build
+- Pregled izmena: git diff -- .
+
+## Arhitektura
 - Domain ne zavisi ni od jednog drugog projekta. Modeli nose stanje,
   a pravila sprovode domenski servisi.
 - Application zavisi samo od Domain. Sadrži use-case-ove, validatore i portove.
@@ -55,14 +84,14 @@ Ne menjaj kod u ovoj fazi.
 2. Pokreni kompletan test projekat kada je praktično.
 3. Pregledaj git diff i ukloni nepovezane izmene.
 4. Ne tvrdi da je nešto provereno ako stvarna komanda nije izvršena.
-5. Ne čitaj .env, tajne ili pristupne tokene.`, 'examples/ers-ai-workflow/.ai/AI_INSTRUCTIONS.md'),
+5. Ne čitaj .env, tajne ili pristupne tokene.`, 'examples/ers-ai-workflow/AGENTS.md'),
     text('paragraph', '<code>.ai/AI_USAGE.md</code> čuva sažet trag: zadatak, korišćeni alat i režim, kontekst, predlog modela, odluku tima i nezavisan dokaz provere. Potpuni chat transcript nije zamena za inženjersku evidenciju. Gotov primer sadrži jedan prihvaćen i jedan odbijen predlog, jer zapis ima vrednost tek kada pokazuje i razlog odluke.'),
     code('markdown', `## Primer zapisa — odbijen predlog
 
 - **Zadatak:** odrediti gde se sprovodi pravilo raspoložive količine opreme.
 - **Alat:** Kova, model qwen3:4b, režim Plan, skill architecture-review.
 - **Kontekst:** InMemoryInventoryModule.cs, InventoryReservationService.cs,
-  ReservationEndpoints.cs, .ai/AI_INSTRUCTIONS.md.
+  ReservationEndpoints.cs, AGENTS.md.
 - **Predlog AI alata:** uporediti traženu i raspoloživu količinu direktno
   u InMemoryInventoryModule, jer adapter već drži stanje zalihe.
 - **Odluka tima:** odbijeno; poslovna odluka bi prešla u Infrastructure
@@ -73,7 +102,7 @@ Ne menjaj kod u ovoj fazi.
   ],
 
   [
-    text('h2', '6.3. Skill za ponovljiv pregled pull request-a'),
+    text('h2', '6.4. Skill za ponovljiv pregled pull request-a'),
     text('paragraph', 'Kova otkriva skill-ove samo u <code>.kova/skills/&lt;naziv&gt;/SKILL.md</code>. Procedura <code>.kova/skills/review-pull-request/SKILL.md</code> razdvaja review od implementacije. Isti postupak može da se primeni na više izmena u solution-u.'),
     code('markdown', `---
 name: review-pull-request
@@ -87,12 +116,12 @@ Koristi se u Kova režimu Manual.
 
 ## Ulazi
 - zahtev i kriterijumi prihvatanja
-- projektna pravila iz .ai/AI_INSTRUCTIONS.md
+- projektna pravila iz AGENTS.md
 - git diff (MCP alat get_git_diff)
 - rezultat testova (MCP alat run_unit_tests)
 
 ## Postupak
-1. Pročitaj .ai/AI_INSTRUCTIONS.md.
+1. Pročitaj AGENTS.md.
 2. Sažmi očekivano ponašanje.
 3. Proveri da li diff izlazi iz obima zahteva.
 4. Proveri Dependency Rule i granice modula.
@@ -105,13 +134,14 @@ Ne menjaj kod tokom review faze.`, 'Sažeta verzija procedure iz gotovog primera
     list([
       'Zaglavlje sadrži samo <code>name</code> i <code>description</code>; naziv mora da odgovara nazivu direktorijuma.',
       'Skill se bira iz liste <b>Skill</b> iznad polja za unos; u kontekst modela ulazi samo izabrani skill.',
+      'Posle dodavanja novog skill-a pokrenuti <b>Developer: Reload Window</b> i ponovo otvoriti Kova; izbor <b>None</b> uklanja skill iz razgovora.',
       'Skill je proceduralni kontekst: ne može da promeni dozvole, odobri alat niti izmeni zaštićenu konfiguraciju.',
     ]),
     callout('info', 'Podela odgovornosti', 'Uloga namenjena pregledu ne treba istovremeno da bude autor izmene koju ocenjuje. Razdvajanje uloga omogućava nezavisniju proveru rezultata.'),
   ],
 
   [
-    text('h2', '6.4. Specijalizovane uloge i najmanje privilegije'),
+    text('h2', '6.5. Specijalizovane uloge i najmanje privilegije'),
     text('paragraph', 'Uloga je u primeru par skill + režim rada. Skill opisuje postupak, a režim određuje šta agent tehnički sme: u režimu Plan Kova izlaže samo alate za čitanje, dok u režimu Manual svaka izmena i svaka komanda traže odobrenje.'),
     table(['Skill u primeru', 'Kova režim i dozvole', 'Ograničenje'], [
       ['architecture-review', 'Plan: čitanje solution-a, strukture, instrukcija i diff-a.', 'Ne piše kod; režim to sprovodi nezavisno od modela.'],
@@ -137,7 +167,7 @@ Ne menjaj kod tokom review faze.`, 'Sažeta verzija procedure iz gotovog primera
   ],
 
   [
-    text('h2', '6.5. AI rezultat nije dokaz'),
+    text('h2', '6.6. AI rezultat nije dokaz'),
     text('paragraph', 'Ocena modela nije dokaz ispravnosti promene. Završetak zadatka zahteva uspešnu izgradnju rešenja, prolazak NUnit testova i pregled konačnog skupa izmena.'),
     code('bash', `dotnet build EquipmentReservation.sln --configuration Release
 dotnet test EquipmentReservation.sln --configuration Release --no-build
@@ -151,7 +181,7 @@ git diff -- .`, 'Minimalna nezavisna provera nakon AI izmene'),
   ],
 
   [
-    text('h2', '6.6. Rad na vežbi — razvojni tok uz podršku AI alata'),
+    text('h2', '6.7. Rad na vežbi — razvojni tok uz podršku AI alata'),
     callout('task', 'Zadatak', 'Na kopiji <code>EquipmentReservation.sln</code> zadati malu promenu poslovnog pravila. Prvo koristiti skill <code>architecture-review</code> u režimu Plan samo za analizu; zatim skill-u <code>implement-approved-plan</code> u režimu Manual proslediti usvojen plan. Na kraju pokrenuti solution build/test, pregledati diff i uneti sažet zapis u <code>.ai/AI_USAGE.md</code>.'),
     table(['Dokaz', 'Šta student pokazuje'], [
       ['Plan pre izmene', 'Da je razumeo pogođene slojeve i granice.'],
