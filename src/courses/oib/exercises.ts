@@ -1,5 +1,5 @@
-import type { DocumentPage } from '../../types'
-import { callout, diagram, list, page, table, text } from '../canvaPracticumShared'
+import type { Accent, Block } from '../../practicum/types'
+import { callout, diagram, list, table, text } from '../../practicum/blocks'
 
 type Topic = {
   number: number
@@ -7,9 +7,9 @@ type Topic = {
   subtitle: string
   opening: string
   why: string
-  model: Array<[string, string, 'slate' | 'cyan' | 'blue' | 'violet' | 'emerald' | 'amber' | 'rose']>
+  model: Array<[string, string, Accent]>
   schemaTitle: string
-  schema: Array<[string, string, 'slate' | 'cyan' | 'blue' | 'violet' | 'emerald' | 'amber' | 'rose']>
+  schema: Array<[string, string, Accent]>
   schemaFooter: string
   compareTitle: string
   compareHeaders: string[]
@@ -293,63 +293,53 @@ const topics: Topic[] = [
   },
 ]
 
-function pagesFor(topic: Topic): DocumentPage[] {
+function blocksFor(topic: Topic): Block[] {
   return [
-    page(`Vežba ${topic.number} — ${topic.title}`, [
-      text('h1', `Vežba ${topic.number} — ${topic.title}`),
-      text('paragraph', topic.opening),
-      text('paragraph', topic.why),
-      diagram(topic.subtitle, topic.model, 'Bezbednosna odluka nastaje povezivanjem prikazanih pojmova.'),
-      callout('info', 'Cilj vežbe', 'Student treba da obrazloži odluku sistema, podatke na kojima se ona zasniva i njen uticaj na zaštitu podataka i usluga.'),
-    ]),
-    page(`${topic.number}.1. ${topic.principleTitle}`, [
-      text('h2', `${topic.number}.1. ${topic.principleTitle}`),
-      text('paragraph', topic.why),
-      list(topic.principles),
-      callout('note', 'Pitanje za diskusiju', topic.prompt),
-    ]),
-    page(`${topic.number}.2. ${topic.developmentTitle}`, [
-      text('h2', `${topic.number}.2. ${topic.developmentTitle}`),
-      text('paragraph', topic.development),
-      text('h3', 'Česte greške koje treba prepoznati'),
-      list(topic.pitfalls),
-      callout('success', 'Veza sa ostalim temama', 'Razmatrana odluka povezuje identitet, podatke, politike i dokaze, a isti postupak analize primenjuje se na različite vrste informacionih sistema.'),
-    ]),
-    page(`${topic.number}.3. ${topic.caseTitle}`, [
-      text('h2', `${topic.number}.3. ${topic.caseTitle}`),
-      text('paragraph', topic.caseText),
-      list(topic.casePoints),
-      callout('note', 'Kriterijumi rešenja', 'Rešenje treba da bude obrazloženo poslovnim kontekstom, primenjeno na serverskoj strani i potvrđeno ponovljivim testom, revizijskim zapisom ili demonstracijom.'),
-    ]),
-    page(`${topic.number}.4. ${topic.deepTitle}`, [
-      text('h2', `${topic.number}.4. ${topic.deepTitle}`),
-      text('paragraph', topic.deepText),
-      list(topic.deepPoints),
-    ]),
-    page(`${topic.number}.5. ${topic.evidenceTitle}`, [
-      text('h2', `${topic.number}.5. ${topic.evidenceTitle}`),
-      text('paragraph', topic.evidenceText),
-      list(topic.evidencePoints),
-      callout('success', 'Samostalna provera', 'Za izabrani scenario navedite odluku sistema, korišćene podatke, očekivani ishod i dokaz na osnovu kog drugi član tima može da potvrdi rezultat.'),
-    ]),
-    page(`${topic.number}.6. ${topic.schemaTitle}`, [
-      text('h2', `${topic.number}.6. ${topic.schemaTitle}`),
-      diagram(topic.schemaTitle, topic.schema, topic.schemaFooter),
-      text('paragraph', 'Za svaki korak šeme odredite pokretača, odluku koja se donosi i zapis koji ostaje nakon izvršenja.'),
-    ]),
-    page(`${topic.number}.7. ${topic.compareTitle}`, [
-      text('h2', `${topic.number}.7. ${topic.compareTitle}`),
-      table(topic.compareHeaders, topic.compareRows),
-      callout('note', 'Tumačenje poređenja', 'Svaki pojam opisuje poseban deo bezbednosne odluke; tek njihovom pravilnom kombinacijom nastaje celovit model.'),
-    ]),
-    page(`${topic.number}.8. ${topic.walkthroughTitle}`, [
-      text('h2', `${topic.number}.8. ${topic.walkthroughTitle}`),
-      text('paragraph', topic.walkthroughText),
-      list(topic.walkthroughPoints, true),
-      callout('success', 'Ishod učenja', 'Student treba da ume da izabere odgovarajuća pitanja za analizu bezbednosno značajne odluke i da obrazloži redosled njihove primene.'),
-      callout('task', 'Primena na projektu', `Na dodeljenoj projektnoj celini primeniti princip iz teme „${topic.title}". Identifikovati odluku sistema, implementirati je na serverskoj strani i pripremiti dokaz u obliku testa, revizijskog zapisa ili demonstracije.`),
-    ]),
+    text('h1', `Vežba ${topic.number} — ${topic.title}`),
+    text('paragraph', topic.opening),
+    text('paragraph', topic.why),
+    diagram(topic.subtitle, topic.model, 'Bezbednosna odluka nastaje povezivanjem prikazanih pojmova.'),
+    callout('info', 'Cilj vežbe', 'Student treba da obrazloži odluku sistema, podatke na kojima se ona zasniva i njen uticaj na zaštitu podataka i usluga.'),
+
+    text('h2', `${topic.number}.1. ${topic.principleTitle}`),
+    text('paragraph', topic.why),
+    list(topic.principles),
+    callout('note', 'Pitanje za diskusiju', topic.prompt),
+
+    text('h2', `${topic.number}.2. ${topic.developmentTitle}`),
+    text('paragraph', topic.development),
+    text('h3', 'Česte greške koje treba prepoznati'),
+    list(topic.pitfalls),
+    callout('success', 'Veza sa ostalim temama', 'Razmatrana odluka povezuje identitet, podatke, politike i dokaze, a isti postupak analize primenjuje se na različite vrste informacionih sistema.'),
+
+    text('h2', `${topic.number}.3. ${topic.caseTitle}`),
+    text('paragraph', topic.caseText),
+    list(topic.casePoints),
+    callout('note', 'Kriterijumi rešenja', 'Rešenje treba da bude obrazloženo poslovnim kontekstom, primenjeno na serverskoj strani i potvrđeno ponovljivim testom, revizijskim zapisom ili demonstracijom.'),
+
+    text('h2', `${topic.number}.4. ${topic.deepTitle}`),
+    text('paragraph', topic.deepText),
+    list(topic.deepPoints),
+
+    text('h2', `${topic.number}.5. ${topic.evidenceTitle}`),
+    text('paragraph', topic.evidenceText),
+    list(topic.evidencePoints),
+    callout('success', 'Samostalna provera', 'Za izabrani scenario navedite odluku sistema, korišćene podatke, očekivani ishod i dokaz na osnovu kog drugi član tima može da potvrdi rezultat.'),
+
+    text('h2', `${topic.number}.6. ${topic.schemaTitle}`),
+    diagram(topic.schemaTitle, topic.schema, topic.schemaFooter),
+    text('paragraph', 'Za svaki korak šeme odredite pokretača, odluku koja se donosi i zapis koji ostaje nakon izvršenja.'),
+
+    text('h2', `${topic.number}.7. ${topic.compareTitle}`),
+    table(topic.compareHeaders, topic.compareRows),
+    callout('note', 'Tumačenje poređenja', 'Svaki pojam opisuje poseban deo bezbednosne odluke; tek njihovom pravilnom kombinacijom nastaje celovit model.'),
+
+    text('h2', `${topic.number}.8. ${topic.walkthroughTitle}`),
+    text('paragraph', topic.walkthroughText),
+    list(topic.walkthroughPoints, true),
+    callout('success', 'Ishod učenja', 'Student treba da ume da izabere odgovarajuća pitanja za analizu bezbednosno značajne odluke i da obrazloži redosled njihove primene.'),
+    callout('task', 'Primena na projektu', `Na dodeljenoj projektnoj celini primeniti princip iz teme „${topic.title}". Identifikovati odluku sistema, implementirati je na serverskoj strani i pripremiti dokaz u obliku testa, revizijskog zapisa ili demonstracije.`),
   ]
 }
 
-export const oibThematicExercises = () => topics.flatMap(pagesFor)
+export const oibExercises: Block[][] = topics.map(blocksFor)

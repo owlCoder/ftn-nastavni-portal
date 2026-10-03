@@ -1,8 +1,8 @@
-import type { DocumentPage } from '../types'
-import { text, list, callout, code, table, image, diagram, page } from './canvaPracticumShared'
+import type { Block } from '../../../practicum/types'
+import { text, list, callout, code, table, image, diagram } from '../../../practicum/blocks'
 
-export const exercise1 = (): DocumentPage[] => [
-  page('Vežba 1 — Zahtevi, backlog, Git i timski razvoj', [
+export const exercise1: Block[] = [
+  [
     text('h1', 'Vežba 1 — Zahtevi, backlog, Git i timski razvoj'),
     text('paragraph', 'Razvoj softvera počinje razumevanjem problema, ali se kvalitet tog razumevanja potvrđuje tek kada zahtev postane proverljiva promena u proizvodu. U ovoj vežbi zahtevi, planiranje rada i Git ne posmatraju se kao odvojene teme. Oni čine jedan razvojni tok: poslovna potreba se oblikuje kao stavka u backlog-u, razrađuje kroz kriterijume prihvatanja, implementira na izdvojenoj grani, pregleda kroz pull request i integriše tek nakon provere.'),
     diagram('Od zahteva do integrisane promene', [
@@ -13,9 +13,9 @@ export const exercise1 = (): DocumentPage[] => [
       ['Integracija', 'proverena promena u glavnoj grani', 'emerald'],
     ], 'Razvojni trag treba da omogući timu da poveže zahtev, odluku, implementaciju i proveru rezultata.'),
     callout('info', 'Osnovna ideja', 'Git istorija nije rezervna kopija završnog rešenja. Backlog nije spisak želja. Pull request nije formalnost. Svaki od ovih elemenata predstavlja deo proverljivog procesa razvoja.'),
-  ]),
+  ],
 
-  page('1.1. User Story i kriterijumi prihvatanja', [
+  [
     text('h2', '1.1. User Story i kriterijumi prihvatanja'),
     text('paragraph', 'User Story predstavlja sažet zapis potrebe korisnika ili drugog učesnika u poslovnom procesu. Njegova svrha nije da unapred propiše klasu, tabelu ili tehnološko rešenje, već da jasno odredi kome je funkcionalnost potrebna, koji rezultat se očekuje i zbog čega taj rezultat ima vrednost.'),
     callout('info', 'Primer', 'Kao nastavnik laboratorije, želim da rezervišem slobodnu opremu za određeni termin, kako bih unapred znao da je oprema dostupna i sprečio dvostruku rezervaciju.'),
@@ -27,9 +27,9 @@ export const exercise1 = (): DocumentPage[] => [
       ['Granični slučaj', 'Pravilo mora jasno da odredi da li nova rezervacija može početi tačno u trenutku završetka prethodne.'],
     ]),
     callout('task', 'Rad na vežbi', 'Za jednu stavku projektnog domena napisati User Story, najmanje dva uspešna i tri negativna ili granična kriterijuma prihvatanja. Za svaki kriterijum navesti kako će se proveriti.'),
-  ]),
+  ],
 
-  page('1.2. Backlog, Tapiz Boards i plan rada', [
+  [
     text('h2', '1.2. Backlog, Tapiz Boards i plan rada'),
     text('paragraph', 'Rad tima se odvija u ponovljivim ciklusima (sprintovima) unutar kojih se planira, implementira i preispituje ograničen obim posla. Product Backlog je zajednički izvor svih budućih stavki; Sprint Backlog i Increment nastaju kada tim za tekući sprint izabere i realizuje deo tog posla.'),
     image('/course-assets/scrum-sprint-cycle.png', 'Product Backlog napaja Sprint Planning; tim potom prolazi kroz Daily Scrum, Sprint Review i Sprint Retrospective, dok povratne informacije i plan unapređenja zatvaraju ciklus.', 'Scrum — ciklus sprinta'),
@@ -56,9 +56,9 @@ export const exercise1 = (): DocumentPage[] => [
     image('/course-assets/tapiz/09-priority-labels-assignees.webp', 'Visok prioritet i dodeljena osoba su vidljivi na samoj stavci, zajedno sa checklistom koja pokazuje koliko je posla još preostalo.', 'Tapiz Boards — prioritet i dodeljena osoba'),
     image('/course-assets/tapiz/10-activity-comments.webp', 'Komentar na stavci beleži dogovor tima o narednom koraku, čineći odluku sledljivom i nezavisnom od usmenog dogovora.', 'Tapiz Boards — aktivnost i komentari'),
     callout('info', 'Tapiz Boards je alat, ne cilj', 'Svrha ovih ekrana nije da se nauči jedan konkretan alat, već da se vidi kako backlog, kriterijumi prihvatanja, raspodela na zadatke, status i trag odluka rade zajedno kao jedan koherentan proces planiranja rada.'),
-  ]),
+  ],
 
-  page('1.3. Git kao sledljiv zapis razvoja', [
+  [
     text('h2', '1.3. Git kao sledljiv zapis razvoja'),
     text('paragraph', 'Git omogućava da se razvoj rekonstruiše kroz male i smislene promene. Radno stablo sadrži trenutne izmene, staging area određuje šta ulazi u naredni commit, a commit predstavlja imenovanu tačku istorije. U timskom radu posebna grana izdvaja jednu promenu od stabilne glavne grane.'),
     table(['Pojam', 'Uloga u radu tima'], [
@@ -75,9 +75,9 @@ export const exercise1 = (): DocumentPage[] => [
       'Promene koje nisu povezane sa ciljem stavke ne treba usput uključivati u isti pull request.',
       'Glavna grana treba da ostane stabilna i spremna za zajednički rad tima.',
     ]),
-  ]),
+  ],
 
-  page('1.4. Pull request, pregled koda i konflikti', [
+  [
     text('h2', '1.4. Pull request, pregled koda i konflikti'),
     text('paragraph', 'Pull request je mesto na kome se zahtev povezuje sa konkretnom implementacijom. Pregledalac proverava da li je promena u odgovarajućem obimu, da li poštuje arhitektonska pravila, da li postoje potrebni testovi i da li se iz diff-a može razumeti namera autora. Tek nakon pregleda i provere promena se integriše u glavnu granu.'),
     diagram('Tok jedne promene', [
@@ -90,19 +90,6 @@ export const exercise1 = (): DocumentPage[] => [
     text('paragraph', 'Konflikt pri spajanju nastaje kada Git ne može samostalno da odredi konačni sadržaj. Rešavanje konflikta nije uklanjanje tehničkih markera, već odluka o tome koje ponašanje treba da ostane nakon spajanja paralelnih promena.'),
     code('bash', `git checkout main\ngit pull\ngit checkout feature/reservation-overlap\ngit merge main\n# rešiti konflikt i pregledati konačan diff\ngit add src/Application/ReservationService.cs\ngit commit -m "Resolve reservation rule conflict"\ndotnet test`, 'Rešavanje konflikta uz završnu proveru'),
     callout('warning', 'Prepisivanje zajedničke istorije', '`git push --force` nije deo uobičajenog timskog toka. Na deljenim granama može ukloniti tuđe commit-e i koristi se samo kada tim razume posledice i postoji opravdan razlog.'),
-  ]),
-
-  page('1.5. Prva projektna kontrolna tačka P1', [
-    text('h2', '1.5. Projektna kontrolna tačka P1 — problem, backlog i razvojni tok'),
-    text('paragraph', 'Na prvoj kontrolnoj tački ne očekuje se završena arhitektura ni veliki obim implementacije. Potrebno je pokazati da tim razume problem, da rad može da se planira kroz proverljive stavke i da repozitorijum već predstavlja stvarni trag zajedničkog razvoja.'),
-    list([
-      'Postoji zajednički projektni repozitorijum sa početnim README dokumentom i odgovarajućim pristupom članova tima.',
-      'Tapiz Boards sadrži početni backlog sa prioritetima i jasno izdvojenim stavkama spremnim za rad.',
-      'Najmanje jedna stavka ima proverljive kriterijume prihvatanja i povezana je sa konkretnom granom ili pull request-om.',
-      'Tim koristi dogovoreni tok Backlog → Ready → In Progress → Code Review → QA/Verify → Done.',
-      'Najmanje jedan pull request pokazuje pregled diff-a, rezultat provere i smislen razgovor o promeni.',
-      'Ako je AI alat korišćen pri analizi zahteva, tim može da objasni šta je prihvaćeno, šta je odbačeno i kako je rezultat proveravan.',
-    ]),
     callout('success', 'Ishod vežbe', 'Student ume da poveže zahtev, backlog, Git istoriju, pull request i proveru ponašanja u jedan sledljiv razvojni proces.'),
-  ]),
-]
+  ],
+].flat()

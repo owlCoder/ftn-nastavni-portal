@@ -46,13 +46,30 @@ Produkciona adresa: [ftn-nastavni-portal.vercel.app](https://ftn-nastavni-portal
 
 ## Organizacija koda
 
-- `src/StaticApp.tsx` — izbor predmeta i deljeni prikaz portala;
-- `src/content/` — nastavni sadržaj za ERS i OIB;
-- `src/ExamplesEnhancer.tsx` — prikaz primera i paketa za preuzimanje;
-- `src/*css` — stilovi za portal, prezentacije i kontrolne tačke;
-- `public/downloads/` — PDF, ZIP i projektni paketi dostupni studentima;
-- `public/brand/` i `public/course-assets/` — vizuelni materijal portala;
-- `scripts/` — pomoćne skripte za pripremu paketa.
+```text
+src/
+  main.tsx, App.tsx      ulazna tačka i izbor predmeta
+  courses/               sadržaj po predmetu: ers/, oib/, odp/
+    types.ts             Course, Checkpoint i tipovi materijala za preuzimanje
+    <predmet>/index.ts   opis predmeta koji portal prikazuje
+    <predmet>/checkpoints.ts
+    ers/practicum/       uvod, vežbe 1–8 i završni deo praktikuma
+  practicum/             model dokumenta: blokovi i sklapanje praktikuma
+  components/            prikaz: CourseApp, tabovi, document/, examples/
+  lib/                   pomoćne funkcije (putanje, isticanje koda, fullscreen)
+  styles/                stilovi portala
+examples/                izvorni kod primera (ERS i OIB)
+public/downloads/        PDF i ZIP materijali dostupni studentima
+scripts/                 priprema ZIP paketa i lokalno pokretanje
+```
+
+### Kontrolne tačke
+
+Kontrolne tačke svakog predmeta definisane su na jednom mestu, u `src/courses/<predmet>/checkpoints.ts`. Iz te liste nastaju i kartica „Kontrolne tačke" i odgovarajući odeljci u praktikumu: `buildPracticum` svaku tačku ubacuje jednom, posle poslednje vežbe iz njenog opsega (`exercises`). Zahtevi se zato ne prepisuju u tekst vežbi; izmena termina, opsega ili stavke radi se samo u toj datoteci.
+
+### Primeri
+
+Praktikum citira kod iz `examples/`. Posle izmene primera treba uskladiti odgovarajuću vežbu u `src/courses/ers/practicum/` i fokus liste u `scripts/generate-example-zips.mjs`; ZIP paketi se ponovo prave pri svakom `npm run dev` i `npm run build`.
 
 ## Struktura javnih materijala
 

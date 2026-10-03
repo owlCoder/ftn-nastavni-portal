@@ -1,19 +1,11 @@
-export type Checkpoint = {
-  id: string
-  code: string
-  title: string
-  exercise: string
-  date: string
-  summary: string
-  items: string[]
-}
+import type { Checkpoint } from '../types'
 
-export const checkpoints: Checkpoint[] = [
+export const ersCheckpoints: Checkpoint[] = [
   {
     id: 'p1',
     code: 'P1',
     title: 'Problem, backlog i razvojni tok',
-    exercise: 'Vežba 1–2',
+    exercises: [1, 2],
     date: '19.10.',
     summary:
       'U ovoj fazi ne zahteva se završena arhitektura niti veliki obim implementacije. Tim obrazlaže problem, razlaže rad na proverljive stavke i dokumentuje početni tok zajedničkog razvoja u repozitorijumu.',
@@ -28,7 +20,7 @@ export const checkpoints: Checkpoint[] = [
     id: 'p2',
     code: 'P2',
     title: 'Arhitektura i funkcionalno jezgro',
-    exercise: 'Vežba 2–3',
+    exercises: [2, 3],
     date: '02.11.',
     summary:
       'Tim prikazuje arhitektonske granice i najmanje jedan zaokružen slučaj upotrebe, od ulaznog zahteva do poslovnog rezultata, uz razdvojene odgovornosti poslovnog i infrastrukturnog koda.',
@@ -43,7 +35,7 @@ export const checkpoints: Checkpoint[] = [
     id: 'p3',
     code: 'P3',
     title: 'Testiranje i manual-core-baseline',
-    exercise: 'Vežba 4',
+    exercises: [4, 4],
     date: '23.11.',
     summary:
       'Do ove kontrolne tačke tim samostalno projektuje jezgro sistema i osnovni skup testova. U narednoj fazi AI alati mogu imati veću ulogu, ali se svaki njihov predlog proverava postojećim testovima i pregledom izmena.',
@@ -58,7 +50,7 @@ export const checkpoints: Checkpoint[] = [
     id: 'p4',
     code: 'P4',
     title: 'Razvoj uz podršku AI alata i završna odbrana',
-    exercise: 'Vežba 6–8',
+    exercises: [6, 8],
     date: '14.12.',
     summary:
       'Na završnoj odbrani svaki član tima obrazlaže zahteve, arhitekturu, testove i način na koji su AI alati korišćeni i proveravani tokom razvoja.',

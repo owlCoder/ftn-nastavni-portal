@@ -1,11 +1,11 @@
-import type { Checkpoint } from '../checkpoints'
+import type { Checkpoint } from '../types'
 
 export const oibCheckpoints: Checkpoint[] = [
   {
     id: 'oib-p1',
     code: 'P1',
     title: 'Identitet, uloge i autorizacija',
-    exercise: 'Vežba 1–2',
+    exercises: [1, 2],
     date: '19.10.',
     summary:
       'U ovoj fazi ne zahteva se završen bezbednosni model. Tim identifikuje subjekte sistema, razdvaja autentikaciju od autorizacije i povezuje stavke backloga sa proverljivim bezbednosnim zahtevima.',
@@ -20,7 +20,7 @@ export const oibCheckpoints: Checkpoint[] = [
     id: 'oib-p2',
     code: 'P2',
     title: 'Politike, klasifikacija i referentna konfiguracija',
-    exercise: 'Vežba 2–3',
+    exercises: [2, 3],
     date: '02.11.',
     summary:
       'Tim uspostavlja katalog bezbednosnih pravila povezan sa konkretnim resursima, klasifikacijom podataka i očekivanom konfiguracijom sistema.',
@@ -35,7 +35,7 @@ export const oibCheckpoints: Checkpoint[] = [
     id: 'oib-p3',
     code: 'P3',
     title: 'Testiranje i manual-core-baseline',
-    exercise: 'Vežba 4',
+    exercises: [4, 4],
     date: '23.11.',
     summary:
       'Ova kontrolna tačka zaokružuje osnovni nivo sistema. Postojeća struktura i skup testova moraju omogućiti nezavisnu proveru svake naredne izmene, uključujući izmene predložene pomoću AI alata.',
@@ -50,7 +50,7 @@ export const oibCheckpoints: Checkpoint[] = [
     id: 'oib-p4',
     code: 'P4',
     title: 'Operativna i napredna bezbednost — završna odbrana',
-    exercise: 'Vežba 5–8',
+    exercises: [5, 8],
     date: '14.12.',
     summary:
       'Na završnoj odbrani svaki član tima obrazlaže imovinu, pretnje, primenjene kontrole, način provere i preostali rizik u okviru dodeljene projektne celine.',

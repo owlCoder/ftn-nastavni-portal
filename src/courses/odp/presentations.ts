@@ -1,4 +1,4 @@
-import type { PresentationDeck } from '../presentations'
+import type { PresentationDeck } from '../types'
 
 type Topic = {
   title: string
@@ -333,7 +333,7 @@ function checkpointSlide(checkpoint: NonNullable<Topic['checkpoints']>[number]) 
   }
 }
 
-export const odpThematicPresentationDecks: PresentationDeck[] = topics.map((topic, index) => ({
+export const odpPresentationDecks: PresentationDeck[] = topics.map((topic, index) => ({
   id: `tema-${index + 1}`,
   exercise: index + 1,
   title: topic.title,

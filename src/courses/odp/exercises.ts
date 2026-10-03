@@ -1,5 +1,5 @@
-import type { DocumentPage } from '../../types'
-import { callout, diagram, list, page, table, text } from '../canvaPracticumShared'
+import type { Accent, Block } from '../../practicum/types'
+import { callout, diagram, list, table, text } from '../../practicum/blocks'
 
 type Topic = {
   number: number
@@ -7,7 +7,7 @@ type Topic = {
   subtitle: string
   opening: string
   why: string
-  model: Array<[string, string, 'slate' | 'cyan' | 'blue' | 'violet' | 'emerald' | 'amber' | 'rose']>
+  model: Array<[string, string, Accent]>
   principleTitle: string
   principles: string[]
   developmentTitle: string
@@ -18,7 +18,7 @@ type Topic = {
   caseText: string
   casePoints: string[]
   schemaTitle: string
-  schema: Array<[string, string, 'slate' | 'cyan' | 'blue' | 'violet' | 'emerald' | 'amber' | 'rose']>
+  schema: Array<[string, string, Accent]>
   schemaFooter: string
 }
 
@@ -185,57 +185,48 @@ const topics: Topic[] = [
   },
 ]
 
-function pagesFor(topic: Topic): DocumentPage[] {
+function blocksFor(topic: Topic): Block[] {
   return [
-    page(`Vežba ${topic.number} — ${topic.title}`, [
-      text('h1', `Vežba ${topic.number} — ${topic.title}`),
-      text('paragraph', topic.opening),
-      text('paragraph', topic.why),
-      diagram(topic.subtitle, topic.model, 'Distribuirana svojstva nastaju u odnosu između komponenti, vremena i granica odgovornosti.'),
-      callout('info', 'Fokus vežbe', 'Materijal objašnjava distribuirani problem, posledice izbora i granice garancije koju sistem može da pruži.'),
-    ]),
-    page(`${topic.number}.1. ${topic.principleTitle}`, [
-      text('h2', `${topic.number}.1. ${topic.principleTitle}`),
-      text('paragraph', topic.why),
-      list(topic.principles),
-      callout('note', 'Pitanje za diskusiju', topic.prompt),
-    ]),
-    page(`${topic.number}.2. ${topic.developmentTitle}`, [
-      text('h2', `${topic.number}.2. ${topic.developmentTitle}`),
-      text('paragraph', topic.development),
-      text('h3', 'Česte greške koje treba prepoznati'),
-      list(topic.pitfalls),
-      callout('success', 'Veza sa ostatkom gradiva', 'Ovaj princip se nadovezuje na ugovore, failure scenarije, observability i testiranje. Ista logika važi bez obzira na konkretnu tehnologiju ili domen sistema.'),
-    ]),
-    page(`${topic.number}.3. ${topic.caseTitle}`, [
-      text('h2', `${topic.number}.3. ${topic.caseTitle}`),
-      text('paragraph', topic.caseText),
-      list(topic.casePoints),
-      callout('note', 'Kako se scenario analizira', 'Najpre razdvojite ono što sistem zna od onoga što pretpostavlja. Zatim odredite stabilan identitet operacije i vidljiv ishod koji se može proveriti.'),
-    ]),
-    page(`${topic.number}.4. Od principa do dokaza`, [
-      text('h2', `${topic.number}.4. Od principa do dokaza`),
-      text('paragraph', 'Distribuirani princip je koristan tek kada sistem ima jasan, proverljiv odgovor na njegov failure scenario. Dobar dokaz ne pokazuje samo da je normalan tok uspeo, već i da kašnjenje, duplikat, prekid ili kasna poruka ne menjaju poslovno značenje operacije.'),
-      list(['Imenovati stanje koje je autoritativno i komponentu koja ima pravo da ga menja.', 'Navesti šta se dešava kada odgovor izostane ili stigne nakon isteka roka.', 'Ponavljati kontrolisani scenario dok se ishod može objasniti i nezavisno proveriti.']),
-    ]),
-    page(`${topic.number}.5. ${topic.schemaTitle}`, [
-      text('h2', `${topic.number}.5. ${topic.schemaTitle}`),
-      diagram(topic.schemaTitle, topic.schema, topic.schemaFooter),
-      text('paragraph', 'Šemu koristite kao kratku proveru: za svaki korak treba umeti navesti vlasnika odluke, poruku ili stanje koje se prenosi i failure scenario koji može promeniti tok.'),
-    ]),
-    page(`${topic.number}.6. Uporedni pregled elemenata toka`, [
-      text('h2', `${topic.number}.6. Uporedni pregled elemenata toka`),
-      table(['Element', 'Uloga u toku', 'Pitanje koje treba postaviti'], topic.model.map(([name, role]) => [name, role, `Šta se dešava kada ${name.toLocaleLowerCase('sr-Latn-RS')} nije dostupan ili daje zastarelu informaciju?`])),
-      callout('note', 'Poređenje pojmova', 'Svaki element toka rešava drugi deo problema. Stabilan dizajn ne prebacuje odgovornost jednog elementa na drugi samo zato što je to kratkoročno jednostavnije.'),
-    ]),
-    page(`${topic.number}.7. Pitanja za analizu distribuiranog ponašanja`, [
-      text('h2', `${topic.number}.7. Pitanja za analizu distribuiranog ponašanja`),
-      text('paragraph', 'Kada se analizira distribuirani tok, nije dovoljno opisati samo srećan put. Potrebno je imenovati stanje koje se menja, granicu odgovornosti, poruku ili vreme koje može zakasniti i ishod koji sistem mora sačuvati uprkos neizvesnosti.'),
-      list([...topic.principles, 'Koji kontrolisani scenario bi pokazao da se poslovno značenje operacije ne menja pri kašnjenju, duplikatu ili prekidu?'], true),
-      callout('success', 'Pitanje za vežbu', topic.prompt),
-      callout('task', 'Rad na vežbi — primena na projekat', `Na dodeljenoj projektnoj celini primeniti princip iz teme „${topic.title}". Identifikovati konkretnu distribuiranu odluku, implementirati je i pripremiti ponovljiv failure scenario i test koji tim može da pokaže na projektnoj kontrolnoj tački.`),
-    ]),
+    text('h1', `Vežba ${topic.number} — ${topic.title}`),
+    text('paragraph', topic.opening),
+    text('paragraph', topic.why),
+    diagram(topic.subtitle, topic.model, 'Distribuirana svojstva nastaju u odnosu između komponenti, vremena i granica odgovornosti.'),
+    callout('info', 'Fokus vežbe', 'Materijal objašnjava distribuirani problem, posledice izbora i granice garancije koju sistem može da pruži.'),
+
+    text('h2', `${topic.number}.1. ${topic.principleTitle}`),
+    text('paragraph', topic.why),
+    list(topic.principles),
+    callout('note', 'Pitanje za diskusiju', topic.prompt),
+
+    text('h2', `${topic.number}.2. ${topic.developmentTitle}`),
+    text('paragraph', topic.development),
+    text('h3', 'Česte greške koje treba prepoznati'),
+    list(topic.pitfalls),
+    callout('success', 'Veza sa ostatkom gradiva', 'Ovaj princip se nadovezuje na ugovore, failure scenarije, observability i testiranje. Ista logika važi bez obzira na konkretnu tehnologiju ili domen sistema.'),
+
+    text('h2', `${topic.number}.3. ${topic.caseTitle}`),
+    text('paragraph', topic.caseText),
+    list(topic.casePoints),
+    callout('note', 'Kako se scenario analizira', 'Najpre razdvojite ono što sistem zna od onoga što pretpostavlja. Zatim odredite stabilan identitet operacije i vidljiv ishod koji se može proveriti.'),
+
+    text('h2', `${topic.number}.4. Od principa do dokaza`),
+    text('paragraph', 'Distribuirani princip je koristan tek kada sistem ima jasan, proverljiv odgovor na njegov failure scenario. Dobar dokaz ne pokazuje samo da je normalan tok uspeo, već i da kašnjenje, duplikat, prekid ili kasna poruka ne menjaju poslovno značenje operacije.'),
+    list(['Imenovati stanje koje je autoritativno i komponentu koja ima pravo da ga menja.', 'Navesti šta se dešava kada odgovor izostane ili stigne nakon isteka roka.', 'Ponavljati kontrolisani scenario dok se ishod može objasniti i nezavisno proveriti.']),
+
+    text('h2', `${topic.number}.5. ${topic.schemaTitle}`),
+    diagram(topic.schemaTitle, topic.schema, topic.schemaFooter),
+    text('paragraph', 'Šemu koristite kao kratku proveru: za svaki korak treba umeti navesti vlasnika odluke, poruku ili stanje koje se prenosi i failure scenario koji može promeniti tok.'),
+
+    text('h2', `${topic.number}.6. Uporedni pregled elemenata toka`),
+    table(['Element', 'Uloga u toku', 'Pitanje koje treba postaviti'], topic.model.map(([name, role]) => [name, role, `Šta se dešava kada ${name.toLocaleLowerCase('sr-Latn-RS')} nije dostupan ili daje zastarelu informaciju?`])),
+    callout('note', 'Poređenje pojmova', 'Svaki element toka rešava drugi deo problema. Stabilan dizajn ne prebacuje odgovornost jednog elementa na drugi samo zato što je to kratkoročno jednostavnije.'),
+
+    text('h2', `${topic.number}.7. Pitanja za analizu distribuiranog ponašanja`),
+    text('paragraph', 'Kada se analizira distribuirani tok, nije dovoljno opisati samo srećan put. Potrebno je imenovati stanje koje se menja, granicu odgovornosti, poruku ili vreme koje može zakasniti i ishod koji sistem mora sačuvati uprkos neizvesnosti.'),
+    list([...topic.principles, 'Koji kontrolisani scenario bi pokazao da se poslovno značenje operacije ne menja pri kašnjenju, duplikatu ili prekidu?'], true),
+    callout('success', 'Pitanje za vežbu', topic.prompt),
+    callout('task', 'Rad na vežbi — primena na projekat', `Na dodeljenoj projektnoj celini primeniti princip iz teme „${topic.title}". Identifikovati konkretnu distribuiranu odluku, implementirati je i pripremiti ponovljiv failure scenario i test koji tim može da pokaže na projektnoj kontrolnoj tački.`),
   ]
 }
 
-export const odpThematicExercises = () => topics.flatMap(pagesFor)
+export const odpExercises: Block[][] = topics.map(blocksFor)

@@ -1,15 +1,15 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import StaticApp from './StaticApp'
-import ExamplesEnhancer from './ExamplesEnhancer'
-import './ui-refresh.css'
-
-document.documentElement.lang = 'sr'
-document.body.style.margin = '0'
+import App from './App'
+import './styles/static-site.css'
+import './styles/presentations.css'
+import './styles/checkpoints.css'
+import './styles/subjects.css'
+import './styles/examples.css'
+import './styles/ui-refresh.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <StaticApp />
-    <ExamplesEnhancer />
+    <App />
   </React.StrictMode>,
 )

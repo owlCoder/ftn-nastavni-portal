@@ -1,20 +1,3 @@
-/* ERS examples tab: injected as a portal so the existing course app stays reusable for other subjects. */
-.document-switcher > button { order: 10; }
-.document-switcher > .nav-tab-praktikum { order: 1; }
-.document-switcher > .examples-tab-button { order: 2; }
-.document-switcher > .nav-tab-prezentacije { order: 3; }
-.document-switcher > .nav-tab-projekat { order: 4; }
-.document-switcher > .nav-tab-kontrolne { order: 5; }
-
-.document-switcher.examples-tab-active > button.active:not(.examples-tab-button),
-.site-shell:has(.tab-panel.examples-tab-active) .document-switcher > button.active:not(.examples-tab-button) {
-  color: #5f6f82 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-.tab-panel.examples-tab-active > :not(.examples-shell) { display: none !important; }
-
 .examples-shell {
   width: min(1240px, calc(100% - 40px));
   margin: 34px auto 72px;
@@ -117,68 +100,6 @@
 .examples-course-download { width: fit-content; display: inline-flex; align-items: center; gap: 7px; margin-top: 3px; padding: 9px 12px; border: 1px solid #bfd0e4; border-radius: 9px; color: #1d4f82; background: #fff; text-decoration: none; font-size: 12px; font-weight: 750; }
 .examples-course-download:hover { color: #1d4ed8; background: #f2f7fd; border-color: #9eb9d8; }
 .examples-course-download svg { width: 15px; height: 15px; }
-.examples-folder-icon { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 9px; color: #2563eb; background: #eaf2ff; }
-.examples-folder-icon.small { width: 28px; height: 28px; border-radius: 7px; }
-.examples-folder-icon svg { width: 20px; height: 20px; }
-.examples-small-download,
-.lesson-download,
-.lesson-download-secondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border: 1px solid #cbd8e8;
-  color: #24558a;
-  background: #fff;
-  text-decoration: none;
-  font-weight: 750;
-  transition: background .15s ease, border-color .15s ease, transform .15s ease;
-}
-.examples-small-download { flex: none; padding: 10px 13px; border-radius: 9px; font-size: 12px; }
-.examples-small-download:hover,
-.lesson-download:hover,
-.lesson-download-secondary:hover { background: #f2f7fd; border-color: #adc3dc; }
-.examples-small-download svg,
-.lesson-download svg,
-.lesson-download-secondary svg { width: 15px; height: 15px; }
-
-.examples-tree { display: grid; gap: 10px; }
-.examples-lesson { position: relative; overflow: hidden; border: 1px solid #dfe6ef; border-radius: 13px; background: #fbfcfe; }
-.examples-lesson[open] { border-color: #cdd9e8; background: #fff; box-shadow: 0 7px 18px rgba(15,23,42,.05); }
-.examples-lesson summary { position: relative; min-height: 62px; display: grid; grid-template-columns: 28px 36px minmax(0, 1fr) auto; align-items: center; gap: 9px; padding: 8px 116px 8px 14px; cursor: pointer; list-style: none; }
-.examples-lesson summary::-webkit-details-marker { display: none; }
-.examples-lesson summary::before { content: '›'; width: 24px; height: 24px; display: grid; place-items: center; color: #60758c; font-size: 21px; transition: transform .15s ease; }
-.examples-lesson[open] summary::before { transform: rotate(90deg); }
-.tree-branch { display: none; }
-.lesson-copy { display: grid; gap: 2px; min-width: 0; }
-.lesson-copy strong { color: #1d4f82; font-size: 13px; }
-.lesson-copy > span { color: #33465b; font-size: 13.5px; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.lesson-count { color: #8795a7; font-size: 11px; }
-.lesson-download {
-  position: absolute;
-  top: 13px;
-  right: 10px;
-  z-index: 2;
-  padding: 7px 9px;
-  border-radius: 8px;
-  font-size: 11px;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
-}
-.lesson-body { margin: 0; padding: 16px 18px 18px 87px; border-top: 1px solid #e5eaf1; background: #fff; }
-.lesson-body-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 12px; }
-.lesson-body-heading > p { flex: 1; margin: 0; color: #6b7b8e; font-size: 12.5px; line-height: 1.55; }
-.lesson-download-secondary { flex: none; padding: 7px 10px; border-radius: 8px; font-size: 11px; }
-
-.example-file-list { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
-.example-file-list li { display: grid; grid-template-columns: 48px minmax(220px, .9fr) minmax(0, 1fr); align-items: center; gap: 10px; min-height: 34px; padding: 6px 8px; border-radius: 8px; }
-.example-file-list li:hover { background: #f1f5f9; }
-.example-file-list code { overflow: hidden; color: #234a72; font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; font-size: 11.5px; text-overflow: ellipsis; white-space: nowrap; }
-.example-file-list li > span:last-child { color: #7b8999; font-size: 11.5px; }
-.example-kind { width: fit-content; min-width: 39px; padding: 3px 6px; border-radius: 999px; text-align: center; font-size: 9px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
-.kind-solution { color: #1d4ed8; background: #dbeafe; }
-.kind-code { color: #047857; background: #d1fae5; }
-.kind-config { color: #7c3aed; background: #ede9fe; }
-.kind-test { color: #b45309; background: #fef3c7; }
-.kind-eval { color: #be123c; background: #ffe4e6; }
 
 @media (max-width: 900px) {
   .examples-hero { grid-template-columns: 1fr; }
@@ -186,9 +107,6 @@
   .supplemental-grid { grid-template-columns: 1fr; }
   .examples-course-grid { grid-template-columns: 1fr; }
   .examples-section-heading { align-items: flex-start; flex-direction: column; }
-  .example-file-list li { grid-template-columns: 48px minmax(0, 1fr); }
-  .example-file-list li > span:last-child { grid-column: 2; }
-  .lesson-body-heading { align-items: flex-start; flex-direction: column; }
 }
 
 @media (max-width: 720px) {
@@ -200,10 +118,4 @@
   .examples-hero-download-arrow { display: none; }
   .examples-card { padding: 18px; }
   .examples-project-heading { align-items: flex-start; flex-direction: column; }
-  .lesson-count { display: none; }
-  .examples-lesson summary { padding: 8px 64px 8px 10px; }
-  .lesson-download span { display: none; }
-  .lesson-download { top: 14px; right: 6px; padding: 8px; }
-  .lesson-body { padding: 14px; }
-  .example-file-list li { grid-template-columns: 44px minmax(0, 1fr); padding: 7px 0; }
 }

@@ -650,7 +650,6 @@
     flex-direction: column;
     padding: 16px 18px;
   }
-
 }
 
 @media (prefers-reduced-motion: reduce) {

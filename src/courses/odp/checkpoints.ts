@@ -1,11 +1,11 @@
-import type { Checkpoint } from '../checkpoints'
+import type { Checkpoint } from '../types'
 
 export const odpCheckpoints: Checkpoint[] = [
   {
     id: 'odp-p1',
     code: 'P1',
     title: 'Osnovni entiteti, ugovori i simulator',
-    exercise: 'Vežba 1–2',
+    exercises: [1, 2],
     date: '10.02.',
     summary:
       'Ne očekuje se završen distribuirani sistem. Tim treba da pokaže da razume osnovne entitete (misija, stanica, station node), da poseduje ponovljiv simulator i da su prvi ugovori (telemetrijska schema, katalog komandi) stabilni.',
@@ -20,7 +20,7 @@ export const odpCheckpoints: Checkpoint[] = [
     id: 'odp-p2',
     code: 'P2',
     title: 'Identitet, audit, observability i konfiguracija',
-    exercise: 'Vežba 3–4',
+    exercises: [3, 4],
     date: '10.03.',
     summary:
       'Tim treba da pokaže da su poprečni mehanizmi sistema (ovlašćenja, audit, observability, referentna konfiguracija) stabilni pre nego što se na njih oslone operativni tokovi, i da su message contract registry i failure simulator spremni.',
@@ -35,7 +35,7 @@ export const odpCheckpoints: Checkpoint[] = [
     id: 'odp-p3',
     code: 'P3',
     title: 'Testiranje i manual-core-baseline',
-    exercise: 'Vežba 4',
+    exercises: [4, 4],
     date: '07.04.',
     summary:
       'Ova kontrolna tačka razdvaja dve faze kursa. Do nje tim samostalno projektuje jezgro distribuiranog sistema i osnovne testove, uključujući failure scenarije; nakon toga AI dobija veću ulogu, ali sistem već ima dovoljno testova da se svaki predlog nezavisno proveri.',
@@ -50,7 +50,7 @@ export const odpCheckpoints: Checkpoint[] = [
     id: 'odp-p4',
     code: 'P4',
     title: 'Operativni i napredni nivo — završna odbrana',
-    exercise: 'Vežba 5–8',
+    exercises: [5, 8],
     date: '26.05.',
     summary:
       'Završni rezultat kursa nije distribuirani sistem čiju implementaciju tim ne razume, već sistem čiji svaki član ume da objasni distribuirani use-case, failure scenario, testove i trade-off arhitektonske odluke svoje projektne celine.',
