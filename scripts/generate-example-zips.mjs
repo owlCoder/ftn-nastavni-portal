@@ -66,17 +66,15 @@ const lessonBundles = [
       'evals/review-architecture.json',
       'evals/prompt-injection.json',
       'evals/missing-context.json',
+      'evals/README.md',
       'tests/EquipmentReservation.Tests/Guardrails/GuardrailPolicyTests.cs',
+      'tests/EquipmentReservation.Tests/AiWorkflow/AiWorkflowArtifactsTests.cs',
     ],
   },
 ]
 
 const bundles = [
-  {
-    fileName: 'ers-ai-vezbe-5-8.zip',
-    archiveRoot: 'ers-ai-vezbe-5-8',
-    lesson: null,
-  },
+  { fileName: 'ers-ai-vezbe-5-8.zip', archiveRoot: 'ers-ai-vezbe-5-8' },
   ...lessonBundles.map((lesson) => ({
     fileName: lesson.fileName,
     archiveRoot: lesson.archiveRoot,
@@ -218,18 +216,10 @@ const oibLessons = [
 for (const [number, slug] of oibLessons) {
   const directoryName = `vezba-${number}-${slug}`
   const files = await collectFiles(path.join(oibSourceRoot, directoryName))
-  await createZip({
-    fileName: `oib-${directoryName}.zip`,
-    archiveRoot: `oib-${directoryName}`,
-    lesson: null,
-  }, files)
+  await createZip({ fileName: `oib-${directoryName}.zip`, archiveRoot: `oib-${directoryName}` }, files)
 }
 
-await createZip({
-  fileName: 'oib-svi-primeri.zip',
-  archiveRoot: 'oib-dotnet-primeri',
-  lesson: null,
-}, await collectFiles(oibSourceRoot))
+await createZip({ fileName: 'oib-svi-primeri.zip', archiveRoot: 'oib-dotnet-primeri' }, await collectFiles(oibSourceRoot))
 
 const presentationBundles = [
   { directory: 'ers-prezentacije', fileName: 'ERS_sve_prezentacije.zip', archiveRoot: 'ERS_prezentacije' },
@@ -241,11 +231,7 @@ for (const presentationBundle of presentationBundles) {
     const presentationRoot = path.resolve('public/downloads', presentationBundle.directory)
     const presentationFiles = (await collectFiles(presentationRoot)).filter((file) => file.relative.endsWith('.pdf'))
     if (presentationFiles.length > 0) {
-      await createZip({
-        fileName: presentationBundle.fileName,
-        archiveRoot: presentationBundle.archiveRoot,
-        lesson: null,
-      }, presentationFiles)
+      await createZip(presentationBundle, presentationFiles)
     }
   } catch (error) {
     if (error?.code !== 'ENOENT') throw error
