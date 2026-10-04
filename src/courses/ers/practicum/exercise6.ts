@@ -16,7 +16,7 @@ export const exercise6: Block[] = [
 
   [
     text('h2', '6.1. Priprema: Kova u VS Code-u'),
-    text('paragraph', 'Kova je lokalni AI agent za VS Code, dostupan kao ekstenzija <code>owlcoder.kova-local</code>. Podrazumevani provajder je Ollama sa modelom <code>qwen3:4b</code>, pa se ceo primer može raditi bez slanja koda van računara. Opis u praktikumu odgovara verziji Kova 0.3.'),
+    text('paragraph', 'Kova je lokalni AI agent za VS Code, dostupan kao ekstenzija <code>owlcoder.kova-local</code>. Podrazumevani provajder je Ollama sa modelom <code>qwen3:4b</code>, pa se ceo primer može raditi bez slanja koda van računara. Opis u praktikumu odgovara verziji Kova 0.3.2 ili novijoj.'),
     list([
       'Instalirati VS Code 1.100 ili noviji, ekstenziju Kova, Ollama i model <code>qwen3:4b</code>. Audit hook iz Vežbe 8 koristi Node.js.',
       'Izgraditi solution u Release konfiguraciji, jer Kova pokreće MCP server i guardrail projekat sa <code>--no-build</code>.',
@@ -62,7 +62,7 @@ Ne menjaj kod u ovoj fazi.
   [
     text('h2', '6.3. Projektne instrukcije su verzionisana pravila'),
     text('paragraph', 'Projektna pravila stoje u datoteci <code>AGENTS.md</code> u korenu repozitorijuma. To je otvorena konvencija za instrukcije AI agentima koju prepoznaje više alata, pa pravila ostaju ista i kada se alat promeni. Pravila u primeru su konkretna za arhitekturu ovog solution-a i mogu se proveriti čitanjem project reference-a i pokretanjem testova.'),
-    callout('note', 'Kova i AGENTS.md', 'Kova 0.3 ne učitava <code>AGENTS.md</code> automatski: iz workspace-a čita samo direktorijum <code>.kova/</code> i u kontekst stavlja jedan izabran skill. Zato svaki skill u primeru kao prvi korak čita <code>AGENTS.md</code> ugrađenim alatom <code>read_file</code>, što radi i u režimu Plan. Test <code>AiWorkflowArtifactsTests</code> pada ako neki skill izostavi taj korak.'),
+    callout('note', 'Kova i AGENTS.md', 'Kova od verzije 0.3.2 učitava <code>AGENTS.md</code> iz korena projekta u svako pokretanje, pre izabranog skill-a, i to prikazuje u listi aktivnosti kao <em>Project rules · AGENTS.md</em>. Skill-ovi zato ne ponavljaju projektna pravila i ne čitaju ih sami. Datoteka sme da ima najviše 16.000 bajtova; veću Kova preskače uz poruku, a test <code>AiWorkflowArtifactsTests</code> pada čim se ta granica pređe.'),
     code('markdown', `## Komande
 - Izgradnja: dotnet build EquipmentReservation.sln --configuration Release
 - Testovi: dotnet test EquipmentReservation.sln --configuration Release --no-build
@@ -116,18 +116,17 @@ Koristi se u Kova režimu Manual.
 
 ## Ulazi
 - zahtev i kriterijumi prihvatanja
-- projektna pravila iz AGENTS.md
+- projektna pravila iz AGENTS.md (Kova ih učitava automatski)
 - git diff (MCP alat get_git_diff)
 - rezultat testova (MCP alat run_unit_tests)
 
 ## Postupak
-1. Pročitaj AGENTS.md.
-2. Sažmi očekivano ponašanje.
-3. Proveri da li diff izlazi iz obima zahteva.
-4. Proveri Dependency Rule i granice modula.
-5. Pregledaj negativne i granične scenarije.
-6. Uporedi promenjeno ponašanje sa testovima.
-7. Prijavi nalaze po ozbiljnosti.
+1. Sažmi očekivano ponašanje.
+2. Proveri da li diff izlazi iz obima zahteva.
+3. Proveri Dependency Rule i granice modula.
+4. Pregledaj negativne i granične scenarije.
+5. Uporedi promenjeno ponašanje sa testovima.
+6. Prijavi nalaze po ozbiljnosti.
 
 ## Ograničenje
 Ne menjaj kod tokom review faze.`, 'Sažeta verzija procedure iz gotovog primera'),

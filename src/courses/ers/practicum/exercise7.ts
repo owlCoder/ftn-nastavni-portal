@@ -61,7 +61,7 @@ public sealed class ProjectResources(IProjectFileReader files)
       ['project://instructions', 'Postojeća pravila samo za čitanje; nema potrebe za izvršavanjem operacije.'],
       ['project://readme', 'Dokumentacija projekta koju klijent može učitati kao kontekst.'],
     ]),
-    callout('note', 'Kova koristi MCP alate', 'Kova 0.3 od MCP servera preuzima samo tools; resources ne učitava. Zato svaki skill čita <code>AGENTS.md</code> ugrađenim alatom <code>read_file</code>, a resources iz ovog servera proveravaju se MCP klijentom koji ih podržava. Ugovor servera ostaje isti bez obzira na klijenta.'),
+    callout('note', 'Kova koristi MCP alate', 'Kova od MCP servera preuzima samo tools; resources ne učitava. Projektna pravila zato do modela ne stižu preko resource-a <code>project://instructions</code>, već ih Kova sama učitava iz <code>AGENTS.md</code>. Resources iz ovog servera proveravaju se MCP klijentom koji ih podržava. Ugovor servera ostaje isti bez obzira na klijenta.'),
   ],
 
   [
