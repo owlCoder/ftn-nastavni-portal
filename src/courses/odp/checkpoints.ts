@@ -35,7 +35,7 @@ export const odpCheckpoints: Checkpoint[] = [
     id: 'odp-p3',
     code: 'P3',
     title: 'Testiranje i manual-core-baseline',
-    exercises: [4, 4],
+    exercises: [5, 6],
     date: '07.04.',
     summary:
       'Ova kontrolna tačka razdvaja dve faze kursa. Do nje tim samostalno projektuje jezgro distribuiranog sistema i osnovne testove, uključujući failure scenarije; nakon toga AI dobija veću ulogu, ali sistem već ima dovoljno testova da se svaki predlog nezavisno proveri.',
@@ -50,7 +50,7 @@ export const odpCheckpoints: Checkpoint[] = [
     id: 'odp-p4',
     code: 'P4',
     title: 'Operativni i napredni nivo — završna odbrana',
-    exercises: [5, 8],
+    exercises: [7, 8],
     date: '26.05.',
     summary:
       'Završni rezultat kursa nije distribuirani sistem čiju implementaciju tim ne razume, već sistem čiji svaki član ume da objasni distribuirani use-case, failure scenario, testove i trade-off arhitektonske odluke svoje projektne celine.',

@@ -1,0 +1,27 @@
+name: ODP examples
+
+on:
+  pull_request:
+    paths:
+      - 'examples/odp-dotnet/**'
+      - '.github/workflows/odp-examples.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'examples/odp-dotnet/**'
+      - '.github/workflows/odp-examples.yml'
+
+jobs:
+  dotnet:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: examples/odp-dotnet
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Build and test every exercise
+        run: sh verify.sh

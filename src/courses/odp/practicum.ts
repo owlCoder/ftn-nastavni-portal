@@ -14,6 +14,7 @@ const intro: Block[] = [
     ['Posle vežbe', 'Povezati princip sa konkretnim distribuiranim scenarijem i objasniti dokaz kroz test ili kontrolisani failure scenario.'],
     ['Pred odbranu', 'Objasniti granicu odgovornosti, neizvestan ishod i razlog zbog kog sistem na njega reaguje baš tako.'],
   ]),
+  callout('info', 'Izvršivi primeri', 'Svaku vežbu prati mali, samostalan C#/.NET primer iz direktorijuma <code>examples/odp-dotnet</code>. Primer nije deo projekta: on na jednoj odluci pokazuje princip, failure scenario i test koji taj scenario zadaje. Odeljak „Izvršivi primer“ na kraju svake vežbe navodi pravilo u kodu, test i ispis demonstracije.'),
   callout('info', 'Simulatori umesto realne opreme', 'Praktikum ne zahteva realnu orbitalnu mehaniku, radio opremu ni pravu satelitsku komunikaciju. Udaljeni uređaji, mreža i failure situacije reprodukuju se kontrolisanim, ponovljivim simulatorima.'),
   callout('note', 'Jezik i alati', 'Primeri su pretežno u C#/.NET okruženju. Druga tehnologija može biti odobrena kada tim obezbedi interoperabilnost i ekvivalentan nivo testiranja i failure pokrivenosti.'),
   text('h1', '0.2. Tok gradiva'),

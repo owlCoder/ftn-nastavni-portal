@@ -1,5 +1,6 @@
 import type { Accent, Block } from '../../practicum/types'
-import { callout, diagram, list, table, text } from '../../practicum/blocks'
+import { callout, code, diagram, list, table, text } from '../../practicum/blocks'
+import { odpExampleNotes } from './exampleNotes'
 
 type Topic = {
   number: number
@@ -185,6 +186,25 @@ const topics: Topic[] = [
   },
 ]
 
+function exampleBlocks(number: number): Block[] {
+  const note = odpExampleNotes[number]
+
+  return [
+    text('h2', `${number}.8. Izvršivi primer`),
+    text('paragraph', note.summary),
+    code('bash', `cd examples/odp-dotnet/${note.folder}\ndotnet run --project src/${note.project}.ConsoleUi\ndotnet test ${note.project}.sln`, 'Pokretanje demonstracije i testova'),
+    text('h3', 'Pravilo u kodu'),
+    code('csharp', note.code, note.codeCaption),
+    text('h3', 'Test koji zadaje kvar'),
+    code('csharp', note.test, note.testCaption),
+    text('h3', 'Ispis demonstracije'),
+    code('text', note.output, `dotnet run --project src/${note.project}.ConsoleUi`),
+    text('h3', 'Šta treba uočiti'),
+    list(note.observe),
+    callout('task', 'Zadatak uz primer', note.task),
+  ]
+}
+
 function blocksFor(topic: Topic): Block[] {
   return [
     text('h1', `Vežba ${topic.number} — ${topic.title}`),
@@ -194,7 +214,6 @@ function blocksFor(topic: Topic): Block[] {
     callout('info', 'Fokus vežbe', 'Materijal objašnjava distribuirani problem, posledice izbora i granice garancije koju sistem može da pruži.'),
 
     text('h2', `${topic.number}.1. ${topic.principleTitle}`),
-    text('paragraph', topic.why),
     list(topic.principles),
     callout('note', 'Pitanje za diskusiju', topic.prompt),
 
@@ -225,6 +244,8 @@ function blocksFor(topic: Topic): Block[] {
     text('paragraph', 'Kada se analizira distribuirani tok, nije dovoljno opisati samo srećan put. Potrebno je imenovati stanje koje se menja, granicu odgovornosti, poruku ili vreme koje može zakasniti i ishod koji sistem mora sačuvati uprkos neizvesnosti.'),
     list([...topic.principles, 'Koji kontrolisani scenario bi pokazao da se poslovno značenje operacije ne menja pri kašnjenju, duplikatu ili prekidu?'], true),
     callout('success', 'Pitanje za vežbu', topic.prompt),
+
+    ...exampleBlocks(topic.number),
     callout('task', 'Rad na vežbi — primena na projekat', `Na dodeljenoj projektnoj celini primeniti princip iz teme „${topic.title}". Identifikovati konkretnu distribuiranu odluku, implementirati je i pripremiti ponovljiv failure scenario i test koji tim može da pokaže na projektnoj kontrolnoj tački.`),
   ]
 }

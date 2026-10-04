@@ -4,6 +4,7 @@ import { CheckpointsView } from './CheckpointsView'
 import { PracticumDocument } from './document/PracticumDocument'
 import { ErsExamplesView } from './examples/ErsExamplesView'
 import { OibExamplesView } from './examples/OibExamplesView'
+import { OdpExamplesView } from './examples/OdpExamplesView'
 import { PresentationDecksView } from './PresentationDecksView'
 import { PresentationDownloadsView } from './PresentationDownloadsView'
 import { ProjectDownloadView } from './ProjectDownloadView'
@@ -73,6 +74,7 @@ const tabs: Tab[] = [
 const examplesViews: Partial<Record<CourseId, ComponentType>> = {
   ers: ErsExamplesView,
   oib: OibExamplesView,
+  odp: OdpExamplesView,
 }
 
 const brandIcons: Partial<Record<CourseId, ReactElement>> = {

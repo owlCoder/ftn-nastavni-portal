@@ -3,6 +3,7 @@ import path from 'node:path'
 
 const ersSourceRoot = path.resolve('examples/ers-ai-workflow')
 const oibSourceRoot = path.resolve('examples/oib-dotnet')
+const odpSourceRoot = path.resolve('examples/odp-dotnet')
 const outputDir = path.resolve('public/downloads')
 const ignoredDirectories = new Set(['bin', 'obj', '.vs', 'TestResults'])
 
@@ -221,9 +222,29 @@ for (const [number, slug] of oibLessons) {
 
 await createZip({ fileName: 'oib-svi-primeri.zip', archiveRoot: 'oib-dotnet-primeri' }, await collectFiles(oibSourceRoot))
 
+const odpLessons = [
+  ['01', 'vlasnistvo-neizvesnost'],
+  ['02', 'ugovori-simulator'],
+  ['03', 'identitet-audit-konfiguracija'],
+  ['04', 'verzionisanje-failure-first'],
+  ['05', 'tok-podataka-read-model'],
+  ['06', 'komande-idempotentnost'],
+  ['07', 'rad-bez-veze-outbox'],
+  ['08', 'koordinacija-protok'],
+]
+
+for (const [number, slug] of odpLessons) {
+  const directoryName = `vezba-${number}-${slug}`
+  const files = await collectFiles(path.join(odpSourceRoot, directoryName))
+  await createZip({ fileName: `odp-${directoryName}.zip`, archiveRoot: `odp-${directoryName}` }, files)
+}
+
+await createZip({ fileName: 'odp-svi-primeri.zip', archiveRoot: 'odp-dotnet-primeri' }, await collectFiles(odpSourceRoot))
+
 const presentationBundles = [
   { directory: 'ers-prezentacije', fileName: 'ERS_sve_prezentacije.zip', archiveRoot: 'ERS_prezentacije' },
   { directory: 'oib-prezentacije', fileName: 'OIB_sve_prezentacije.zip', archiveRoot: 'OIB_prezentacije' },
+  { directory: 'odp-prezentacije', fileName: 'ODP_sve_prezentacije.zip', archiveRoot: 'ODP_prezentacije' },
 ]
 
 for (const presentationBundle of presentationBundles) {
