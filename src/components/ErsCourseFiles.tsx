@@ -83,17 +83,6 @@ function fileContent(item:Item,course:Course):DownloadEntry|null{
   if(item.kind==='section')return {path:'Vezba_'+exNumber(item.exercise??1)+'_praktikum.md',text:practicumMarkdown(course,item.exercise)}
   return null
 }
-function pathFor(item:Item,folderId:string){
-  const names=[fileContent(item,{practicum:{blocks:[]} } as unknown as Course)?.path??item.name]
-  let current=item.parent
-  while(current && current!==folderId){
-    const parent=lookup.get(current)
-    if(!parent)break
-    names.unshift(safeName(parent.name))
-    current=parent.parent
-  }
-  return names.map(safeName).join('/')
-}
 // Build archive paths directly from tree ids; actual filenames come from fileContent.
 function folderEntries(course:Course,id:string):DownloadEntry[]{
   return files.filter(item=>item.kind!=='folder' && (id==='root'||isDescendant(item,id)))
@@ -184,7 +173,6 @@ export function ErsCourseFiles({course}:{course:Course}){
   })
   const viewing=preview?.item
   const pdfViewing=viewing?.kind==='pdf' && viewing.source
-  const documentContent=viewing?.kind==='practicum'||viewing?.kind==='section'
   return <div className="ers-explorer">
     <header className="ers-explorer-toolbar">
       <div className="ers-files-navigation">
