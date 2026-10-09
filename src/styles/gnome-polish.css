@@ -97,6 +97,7 @@
     background-color .2s,border-color .2s,box-shadow .2s;
   animation:gn-app-fly-in .43s cubic-bezier(.16,1,.3,1) both;
   animation-delay:calc(var(--gn-app-index,0) * 32ms);
+  animation-fill-mode:backwards;
 }
 .gn-app-grid>button>span:last-child{
   display:block;max-width:100%;text-align:center;overflow-wrap:anywhere;
@@ -170,7 +171,7 @@
 }
 .gn-window{
   will-change:opacity;
-  animation:gn-window-in .26s cubic-bezier(.18,1,.3,1) both;
+  animation:gn-window-in .26s cubic-bezier(.18,1,.3,1) backwards;
   transition:opacity .21s ease,transform .24s cubic-bezier(.2,.85,.25,1),box-shadow .24s,filter .2s;
 }
 .gn-window.gn-window-min{
