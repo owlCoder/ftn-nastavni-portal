@@ -2,16 +2,16 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 type ProcessEnv = Record<string, string | undefined>
+const environment = (globalThis as typeof globalThis & {
+  process?: { env?: ProcessEnv }
+}).process?.env ?? {}
 
-const environment = (globalThis as typeof globalThis & { process?: { env?: ProcessEnv } }).process?.env ?? {}
-const isVercel = environment.VERCEL === '1' || environment.VERCEL === 'true'
-const isGitHubActions = environment.GITHUB_ACTIONS === 'true'
+// Most hosts (including local development and Vercel) serve from /.
+// The GitHub Pages workflow explicitly sets VITE_BASE_PATH to /<repository>/.
+const publicBasePath = environment.VITE_BASE_PATH?.trim() || '/'
 
 export default defineConfig({
-  // Vercel serves the app from the domain root, while GitHub Pages serves it
-  // from the repository subdirectory. Relative paths keep local development
-  // portable without changing the public document and asset content.
-  base: isVercel ? '/' : isGitHubActions ? '/predmeti-ftn/' : './',
+  base: publicBasePath,
   plugins: [react()],
   server: { port: 5600 },
 })

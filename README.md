@@ -1,147 +1,154 @@
-# FTN Desktop — GNOME-inspirisani nastavni portal
+# FTN Teaching Portal
 
-FTN Desktop je javna React/TypeScript web aplikacija koja nastavne materijale Fakulteta tehničkih nauka prikazuje kao interaktivnu radnu površinu u stilu GNOME Shell/Adwaita. Studenti mogu da otvaraju **ERS, OIB i ODP praktikume u prozorima**, pregledaju prezentacije i primere, koriste beleške i igraju Sudoku, Tetris, Space Invaders, Snake i 2048.
+**A browser-based desktop for course materials, exercises, and learning tools.**
 
-**FTN Desktop nije instaliran operativni sistem.** Izgled radne površine, prozori, Activities pregled, sistemska podešavanja i neke statistike su web simulacija. Vreme i kalendar prikazuju stvarne podatke: sat koristi vremensku zonu Europe/Belgrade, a vremenska prognoza Novi Sad/Open-Meteo.
+[![Build](https://github.com/owlCoder/ftn-nastavni-portal/actions/workflows/build.yml/badge.svg)](https://github.com/owlCoder/ftn-nastavni-portal/actions/workflows/build.yml)
+[![GitHub Pages](https://github.com/owlCoder/ftn-nastavni-portal/actions/workflows/pages.yml/badge.svg)](https://github.com/owlCoder/ftn-nastavni-portal/actions/workflows/pages.yml)
+[![License: MIT (code)](https://img.shields.io/badge/code%20license-MIT-blue.svg)](LICENSE)
 
-## O sistemu
+FTN Teaching Portal is an open-source React and TypeScript application that presents course material in a desktop-like interface inspired by GNOME Shell and Adwaita. It offers a file-manager workflow for navigating study materials without switching browser tabs, a custom PDF reader, an exercise viewer, and small built-in applications.
 
-U okviru desktopa otvori **README.md** da prikažeš ekran „O sistemu”, sa podacima o portalu, načinu upotrebe, primerom moćne radne stanice i originalnim AMD/NVIDIA logotipima.
+The educational content is primarily in Serbian. **This is a web application, not an operating system or a GNOME distribution.** The project is independent and is not an official product of the University of Novi Sad, GNOME, AMD, or NVIDIA.
 
-### High-end demonstracioni profil (nije tvoj stvarni hardver)
+## Live demo
 
-| Komponenta | Simulirana konfiguracija |
+**GitHub Pages:** [owlcoder.github.io/ftn-nastavni-portal](https://owlcoder.github.io/ftn-nastavni-portal/)
+
+> GitHub Pages must be enabled once under **Settings → Pages → Build and deployment → Source: GitHub Actions** before the first deployment will become public. See [Deployment](#deployment).
+
+The desktop uses a *local-only* illustrative login:
+
+| Field | Value |
 | --- | --- |
-| CPU | **AMD Ryzen 9 9950X3D** — 16 jezgara / 32 niti |
-| GPU | **NVIDIA GeForce RTX 5090** — 32 GB GDDR7 |
-| RAM | **128 GB DDR5** |
-| Skladište | **4 TB NVMe SSD** |
-| Desktop UI | **FTN Desktop**, izgled inspirisan GNOME 51 / Adwaita |
-| Implementacija | React, TypeScript, Vite (pokreće se u browseru) |
+| Username | `student` |
+| Password | `ftn` |
 
-<p>
-  <img src="public/brand/amd.svg" alt="AMD logo" height="36" width="130"/>
-  &nbsp;
-  <img src="public/brand/nvidia.svg" alt="NVIDIA logo" height="36" width="80"/>
-</p>
+These credentials are hard-coded in browser-side code and **do not authenticate or protect data**. Never use this login for private files, student records, or real access control.
 
-Logotipi su preuzeti iz [Simple Icons](https://github.com/simple-icons/simple-icons) (CC0); robne marke pripadaju svojim nosiocima. Ovo **ne znači** da AMD ili NVIDIA podržavaju projekat. Adwaita ikone u `public/gnome-icons/` su rad GNOME Project-a (LGPL v3 ili CC BY-SA 3.0 US; pogledati `public/gnome-icons/ATTRIBUTION.md`).
+## Features
 
-### Prijava i personalizacija
+- **Desktop workspace:** movable, minimizable and maximizable application windows; application overview; searchable launchers; persistent bottom dock; desktop course folders.
+- **Course file manager:** nested exercise, presentation and example folders, expandable navigation tree, breadcrumbs and file previews for ERS, OIB and ODP.
+- **Continuous practicum reader:** document-style scrolling, collapsible table of contents, links to exercises and zoom controls.
+- **Custom PDF viewer:** PDF.js-powered rendering with page navigation, zoom, fullscreen mode and downloads, rather than the browser's built-in PDF toolbar.
+- **ZIP explorer and downloads:** browse example archives, preview text-based source files, download individual documents or export entire folders as ZIP archives.
+- **Project milestones:** a timeline for checkpoint dates, descriptions, and required work.
+- **Desktop apps:** calendar with locally saved events, notes, system-monitor-style indicators, Sudoku, Tetris, Space Invaders, Snake and 2048.
+- **Personalization:** ten preset wallpapers, dark/light appearance, widgets and preferences saved to local storage.
+- **Weather and time:** Novi Sad forecast from Open-Meteo and a clock using the `Europe/Belgrade` time zone.
 
-Na ulazu je lokalna prijava namenjena prikazu desktop iskustva:
+**Data transparency:** desktop performance indicators and the hardware profile shown in *About System* are illustrative and do not read device hardware telemetry. Local notes, preferences and game scores live in the browser's `localStorage`.
 
-- **Korisničko ime:** `student`
-- **Lozinka:** `ftn`
+### Courses
 
-Ova prijava je **isključivo klijentska** (hardkodovana u isporučenom JavaScript-u) i ne štiti privatne ili poverljive resurse. **Ne koristiti je kao realnu autentifikaciju.** Za produkcionu kontrolu pristupa potrebno je dodati serversku autentifikaciju i sesije.
+| Code | Course | Content |
+| --- | --- | --- |
+| ERS | Software Development Elements | Practicum, PDF presentations, source-code examples, checkpoints and project specification |
+| OIB | Fundamentals of Information Security | Practicum, PDF presentations, .NET examples and checkpoints |
+| ODP | Fundamentals of Distributed Programming | Practicum, PDF presentations, .NET examples and checkpoints |
 
-`localStorage` čuva status prijave (`ftn-os-session-v1`), izabranu pozadinu (10 predefinisanih), svetlu/tamnu temu, prikaz widgeta, noćni režim, osvetljenje i rekorde za Snake i 2048. Odjava briše samo status prijave, a podešavanja i beleške ostaju u istom browseru. Dok je korisnik prijavljen, **donji dock je uvek vidljiv** sa aplikacijama i igrama (predmeti ostaju u folderima na desktopu). Drawer sa aplikacijama je modalni prozor koji se zatvara klikom van njega ili tasterom Esc.
+Exercise materials are arranged by course and exercise number. PDF and ZIP downloads are static assets; checkpoint/practicum text can also be exported as Markdown. Not all third-party or educational materials are distributed under the software license; see [Licensing](#licensing).
 
-### Korišćenje
+## Technology
 
-- **Aktivnosti** otvaraju umanjeni prikaz svih aplikacija; pretraga radi po nazivu predmeta ili aplikacije. Podržani su Super ili Ctrl+Space, kao i Esc za zatvaranje.
-- **Folderi predmeta** se otvaraju dvoklikom u istom tabu; prozori se mogu pomerati, minimizovati, maksimizovati i prebaciti preko celog ekrana.
-- **Gornja traka** sadrži pravi sat, kalendar i simulirane sistemske kontrole; **Quick Settings** omogućavaju promenu teme, prikaza widgeta i izgleda pozadine.
-- **Widgeti** prikazuju prognozu, časovnik i kalendar; monitor se nalazi u zasebnoj aplikaciji. Beleške se čuvaju samo lokalno u browseru.
+- React 19 and TypeScript 6
+- Vite 8
+- CSS for the desktop, window manager, file explorer and course content
+- Mozilla PDF.js (loaded from cdnjs for the custom PDF reader)
+- GitHub Actions for CI and GitHub Pages deployment
+- No backend, database or user-account service
 
+## Getting started
 
-## Predmeti — istraživač fajlova (ERS, OIB, ODP)
-
-Sva tri predmeta — **ERS, OIB i ODP** — koriste **GNOME Files-style** prikaz umesto tabova. Na početnom nivou su direktni dokumenti **Praktikum**, **Kontrolne tačke** i **Projektna specifikacija.pdf**, kao i folderi **Vežbe**, **Prezentacije** i **Primeri**. Folderi imaju pregled stabla (tree view) i navigaciju preko breadcrumb putanje.
-
-- **Praktikum** se i dalje otvara u istom kontinuiranom dokumentu sa sadržajem, zumiranjem i pregledom slika. U folderu pojedinačne vežbe nalazi se prečica do odgovarajućeg poglavlja.
-- **PDF fajlovi** prikazuju se u internom PDF Viewer-u zasnovanom na Mozilla PDF.js (Canvas), sa izborom stranice, zumiranjem, fullscreen prikazom i preuzimanjem — umesto Chromium PDF toolbar-a. PDF.js se učitava sa cdnjs CDN-a i za prvi prikaz zahteva internet konekciju; ako nije dostupan, korisnik može otvoriti/preuzeti originalni PDF.
-- **ZIP primeri** imaju ugrađen prikaz stabla arhive. Tekstualni fajlovi iz arhive mogu da se pregledaju bez preuzimanja; za binarne fajlove potrebno je preuzeti ZIP.
-- Svaka stavka ima dugme **Preuzmi**. Postojeći PDF i ZIP fajlovi se preuzimaju u originalnom formatu, dok se kontinuirani praktikum i kontrolne tačke izvoze u **Markdown (.md)**, bez tvrdnje da su izvorno PDF fajlovi.
-- Izborom preuzimanja foldera dobija se **ZIP** sa stvarnim fajlovima, pripadajućim podfolderima i tekstualnim izvozima. ZIP se sastavlja u browseru i može potrajati za veće foldere.
-
-**Kontrolne tačke** imaju neutralni Adwaita timeline sa etapama, rokovima, opisima i listom obaveza. Praktikum svakog predmeta ostaje kontinuiran dokument.
-
-## Ažurirane prezentacije iz ZIP arhiva
-
-Pripremljen je skript `scripts/import-presentations.py` koji iz `ersnovi.zip` i `oibnovi.zip` prihvata isključivo **18 PDF prezentacija (9 ERS + 9 OIB)** i zamenjuje istoimene fajlove u `public/downloads/ers-prezentacije/` i `public/downloads/oib-prezentacije/`. `.pptx`, fontovi i prateći izvorni fajlovi se ignorišu. Skript proverava da svaki očekivani PDF postoji pre nego što počne zapisivanje.
+**Requirements:** Node.js 22.x and npm.
 
 ```bash
-python3 scripts/import-presentations.py ./ersnovi.zip ./oibnovi.zip
-git add public/downloads/ers-prezentacije public/downloads/oib-prezentacije
-git commit -m "content: update ERS and OIB PDF presentations"
-git push origin main
-```
-
-**Status binarnih priloga:** kod, preglednik i import skript su na `main`, ali **nova binarna izdanja PDF prezentacija još nisu otpremljena na GitHub**. Postojeći PDF fajlovi ostaju aktivni dok ne budu zamenjeni. Preuzimanje iz uploadovanih ZIP-ova je obavljeno lokalno, a PPTX nije uključen.
-
-## Dostupni predmeti
-
-- **Elementi razvoja softvera**: praktikum, prezentacije, primeri koda i kontrolne tačke projekta.
-- **Osnove informacione bezbednosti**: praktikum, prezentacije, .NET primeri i kontrolne tačke projekta.
-- **Osnove distribuiranog programiranja**: projektna dokumentacija i materijali koji se postepeno dodaju.
-
-Materijali su namenjeni studentima za pregled i preuzimanje, a nastavnicima za održavanje sadržaja.
-
-## Lokalno pokretanje
-
-Potreban je Node.js 22.
-
-```bash
+git clone https://github.com/owlCoder/ftn-nastavni-portal.git
+cd ftn-nastavni-portal
 npm ci
-npm run dev -- --host 127.0.0.1 --port 5600
+npm run dev
 ```
 
-Portal je tada dostupan na `http://localhost:5600`.
+Vite runs locally at **http://localhost:5600**. The `predev` script generates downloadable exercise ZIP packages before starting the development server.
 
-Za Windows se može koristiti `start.cmd`, a za macOS/Linux `./start.sh`.
-
-## Provera produkcijskog build-a
+To build and preview the production bundle:
 
 ```bash
 npm run build
 npm run preview
 ```
 
-Vite generiše statički sadržaj u `dist/`. Pre build-a skripta priprema ZIP pakete sa primerima za preuzimanje.
+The production bundle is written to `dist/`. The `prebuild` script regenerates downloadable ZIP packages; those archives are therefore part of the standard deployment pipeline.
 
-## CI/CD
-
-GitHub Actions workflow `.github/workflows/build.yml` proverava svaki pull request i svaki push na `main`:
-
-1. instalira zavisnosti komandom `npm ci`;
-2. priprema ZIP pakete sa primerima;
-3. proverava produkcijski build komandom `npm run build`.
-
-Vercel projekat `ftn-nastavni-portal` povezan je sa ovim GitHub repozitorijumom. Push na `main` automatski pokreće production deploy preko Vercel Git integracije. Tokeni i pristupni podaci nisu deo repozitorijuma.
-
-Produkciona adresa: [ftn-nastavni-portal.vercel.app](https://ftn-nastavni-portal.vercel.app/)
-
-## Organizacija koda
+## Repository layout
 
 ```text
+.github/workflows/
+  build.yml                 TypeScript/Vite build on pushes and PRs
+  pages.yml                 GitHub Pages publication from main
 src/
-  main.tsx, App.tsx      ulazna tačka i GNOME desktop shell
-  courses/               sadržaj po predmetu: ers/, oib/, odp/
-    types.ts             Course, Checkpoint i tipovi materijala za preuzimanje
-    <predmet>/index.ts   opis predmeta koji portal prikazuje
-    <predmet>/checkpoints.ts
-    ers/practicum/       uvod, vežbe 1–8 i završni deo praktikuma
-  practicum/             model dokumenta: blokovi i sklapanje praktikuma
-  components/            GnomeDesktop, SystemAbout, DesktopGames, CourseApp, document/, examples/
-  lib/                   pomoćne funkcije (putanje, isticanje koda, fullscreen)
-  styles/                GNOME / Adwaita stilovi portala i sadržaja
-examples/                izvorni kod primera (ERS i OIB)
-public/downloads/        PDF i ZIP materijali dostupni studentima
-public/brand/            vektorski logotipi (AMD, NVIDIA, FTN)
-public/gnome-icons/      Adwaita SVG ikonice i licenca
-scripts/                 priprema ZIP paketa i lokalno pokretanje
+  components/               Desktop, file manager, PDF reader, games, widgets
+  courses/{ers,oib,odp}/    Course metadata, checkpoints, practicum materials
+  practicum/                Continuous document model and composition
+  lib/                      Shared utilities and asset URL resolution
+  styles/                   Desktop, Adwaita-inspired UI and document styling
+examples/                   Educational source-code examples
+public/
+  downloads/                PDF files and generated/committed ZIP archives
+  brand/                    Branding assets
+  gnome-icons/              Upstream Adwaita icons and attribution
+scripts/
+  generate-example-zips.mjs Prepare archive downloads
+  import-presentations.py   Import PDF-only presentation updates
 ```
 
-### Kontrolne tačke
+### Updating course content
 
-Kontrolne tačke svakog predmeta definisane su na jednom mestu, u `src/courses/<predmet>/checkpoints.ts`. Iz te liste nastaju i kartica „Kontrolne tačke" i odgovarajući odeljci u praktikumu: `buildPracticum` svaku tačku ubacuje jednom, posle poslednje vežbe iz njenog opsega (`exercises`). Zahtevi se zato ne prepisuju u tekst vežbi; izmena termina, opsega ili stavke radi se samo u toj datoteci.
+1. Edit course metadata and practicum blocks under `src/courses/<course>/`.
+2. Keep checkpoint definitions in `src/courses/<course>/checkpoints.ts` so deadlines and related practicum references stay consistent.
+3. Update the relevant examples under `examples/` and, if necessary, the generated archive definitions in `scripts/generate-example-zips.mjs`.
+4. Run `npm run build` before committing.
 
-### Primeri
+For ERS and OIB presentation updates, `scripts/import-presentations.py` accepts two existing ZIP archives and extracts **PDFs only**, preserving the repository's published file paths. PPTX files are intentionally excluded. This importer does **not** run automatically during deployment, and updated binary presentation files must be committed separately.
 
-Praktikum citira kod iz `examples/`. Posle izmene primera treba uskladiti odgovarajuću vežbu u `src/courses/ers/practicum/` i fokus liste u `scripts/generate-example-zips.mjs`; ZIP paketi se ponovo prave pri svakom `npm run dev` i `npm run build`.
+```bash
+python3 scripts/import-presentations.py ./ersnovi.zip ./oibnovi.zip --dry-run
+python3 scripts/import-presentations.py ./ersnovi.zip ./oibnovi.zip
+```
 
-## Struktura javnih materijala
+## Deployment
 
-Prezentacije su dostupne u PDF formatu za pregled i u PPTX formatu za nastavno uređivanje. Primeri koda su organizovani po predmetu i vežbi, sa posebnim paketom za svaku vežbu i zbirnim paketom tamo gde je to potrebno.
+GitHub Pages is deployed from **`main`** using [`.github/workflows/pages.yml`](.github/workflows/pages.yml). The workflow installs dependencies using `npm ci`, generates course downloads, compiles the Vite application, uploads `dist/` and publishes it using the official GitHub Pages actions.
+
+### One-time GitHub Pages setup
+
+A repository administrator must:
+
+1. Open **[Settings → Pages](https://github.com/owlCoder/ftn-nastavni-portal/settings/pages)**.
+2. Under **Build and deployment**, select **GitHub Actions** as the publishing source.
+3. Open **[Actions → Deploy GitHub Pages](https://github.com/owlCoder/ftn-nastavni-portal/actions/workflows/pages.yml)** and run the workflow (or push another commit to `main`).
+
+After setup, changes pushed to `main` automatically trigger a fresh deployment. The workflow sets the Vite public base path to `/ftn-nastavni-portal/` so asset links resolve correctly at the GitHub Pages repository URL.
+
+Vercel can also serve the same static Vite application at the domain root. This project does not require Vercel for local development or GitHub Pages hosting.
+
+## Contributing
+
+Contributions, bug reports, UI accessibility improvements, course content corrections and pull requests are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting changes.
+
+- Check for an existing issue before filing a new one.
+- Explain how to reproduce bugs and include browser details where relevant.
+- Test with `npm run build`; keep the application keyboard-accessible.
+- Do not submit personal information, confidential course files, credentials or third-party material without redistribution rights.
+
+For sensitive security concerns, see [SECURITY.md](SECURITY.md).
+
+## Licensing
+
+The **original application source code** is available under the **MIT License** (see [LICENSE](LICENSE)). This does **not** automatically license academic slides, PDF course material, institutional branding or third-party artwork. Those works retain their respective owners and terms.
+
+See [NOTICE.md](NOTICE.md) and [Adwaita attribution](public/gnome-icons/ATTRIBUTION.md) for third-party and educational-content details. AMD and NVIDIA marks are used illustratively; no endorsement is implied.
+
+---
+
+Maintained as a community-oriented educational software project. Feedback and improvements are welcome via [GitHub Issues](https://github.com/owlCoder/ftn-nastavni-portal/issues).
