@@ -17,6 +17,7 @@ import './styles/gnome-experience.css'
 import './styles/gnome-arcade.css'
 import './styles/gnome-utilities.css'
 import './styles/gnome-icon-widget-polish.css'
+import './styles/ers-explorer.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
