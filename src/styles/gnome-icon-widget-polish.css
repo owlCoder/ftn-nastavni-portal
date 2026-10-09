@@ -1,0 +1,321 @@
+/* Adwaita desktop polish: transparent glyphs, coherent widget composition */
+
+/*
+ * Application artwork is a standalone glyph, not another coloured blue
+ * rounded-square "icon tile". This is intentionally scoped to GNOME shell
+ * surfaces; teaching documents retain their own icon styling.
+ */
+.gn-shell .os-appicon,
+.gn-shell .os-appicon-finder,
+.gn-shell .os-appicon-ers,
+.gn-shell .os-appicon-oib,
+.gn-shell .os-appicon-odp,
+.gn-shell .os-appicon-sudoku,
+.gn-shell .os-appicon-tetris,
+.gn-shell .os-appicon-invaders,
+.gn-shell .os-appicon-snake,
+.gn-shell .os-appicon-merge,
+.gn-shell .os-appicon-calendar,
+.gn-shell .os-appicon-monitor,
+.gn-shell .os-appicon-notes,
+.gn-shell .os-appicon-readme,
+.gn-shell .os-appicon-trash {
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:visible;
+}
+.gn-shell .os-appicon::after { display:none!important }
+.gn-shell .os-appicon svg {
+  width:100%;height:100%;
+  overflow:visible;
+  filter:drop-shadow(0 2px 3px rgba(10,12,33,.27));
+}
+.gn-shell .gn-app-art {background:none;box-shadow:none;border:0;}
+.gn-desktop-item,.gn-desktop-item .gn-app-art{border-radius:10px}
+.gn-desktop-item.gn-item-selected {
+  background:rgba(255,255,255,.09);
+  border-color:rgba(255,255,255,.22);
+  box-shadow:inset 0 1px rgba(255,255,255,.04);
+}
+.gn-item-selected>span:last-child { background:rgba(20,33,65,.25); }
+.gn-desktop-item:hover{background:rgba(255,255,255,.08)}
+.gn-bottom-dock .gn-dock-icon:not(.gn-dock-current){background:transparent}
+.gn-bottom-dock .gn-dock-icon.gn-dock-current{
+  background:rgba(255,255,255,.10);
+}
+.gn-app-grid>button:hover .os-appicon svg,
+.gn-bottom-dock button:hover .os-appicon svg{
+  filter:drop-shadow(0 5px 6px rgba(6,12,35,.35));
+}
+.gn-bottom-dock {max-width:min(94vw,780px);}
+
+/* Desktop sidebar: four consistent, comfortable Adwaita-style cards. */
+.gn-widget-rail{
+  width:292px;
+  top:16px;left:16px;bottom:90px;
+  overflow-y:auto;overflow-x:hidden;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(226,233,246,.2) transparent;
+}
+.gn-widget-rail .os-widgets{
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  gap:11px;
+  max-height:none;
+  padding:0 0 6px;
+  position:static;
+  overflow:visible;
+}
+.gn-widget-rail .os-widgets .widget {
+  position:relative;
+  isolation:isolate;
+  flex:none;
+  min-width:0;width:100%;
+  overflow:hidden;
+  padding:17px 18px;
+  color:#f3f5fb;
+  background:rgba(27,31,53,.70);
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:17px;
+  box-shadow:0 8px 23px rgba(8,14,32,.12),inset 0 1px rgba(255,255,255,.08);
+  -webkit-backdrop-filter:blur(30px) saturate(138%);
+  backdrop-filter:blur(30px) saturate(138%);
+  text-shadow:none;
+  transition:background-color .2s,border-color .2s,transform .2s;
+}
+.gn-widget-rail .os-widgets .widget::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(154deg,rgba(255,255,255,.065),transparent 52%);
+  pointer-events:none;
+}
+.gn-widget-rail .os-widgets .widget:hover {
+  background:rgba(31,36,62,.80);
+  border-color:rgba(255,255,255,.21);
+  box-shadow:0 10px 24px rgba(8,14,32,.15),inset 0 1px rgba(255,255,255,.085);
+}
+.gn-widget-rail .widget-heading{
+  display:flex;align-items:center;justify-content:space-between;gap:9px;
+  position:relative;margin:0;min-height:35px;
+}
+.gn-widget-rail .widget-heading>div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.gn-widget-rail .widget-eyebrow{
+  color:rgba(228,235,251,.62);
+  font-size:9px;font-weight:760;
+  letter-spacing:.12em;line-height:1.25;
+}
+.gn-widget-rail .widget-heading h2{
+  margin:0;
+  color:#f6f7fc;
+  font-size:14px;font-weight:750;
+  letter-spacing:-.025em;line-height:1.23;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.gn-widget-rail .widget-heading h2 span{font-size:12px;color:rgba(233,240,253,.70);font-weight:580}
+.gn-widget-rail .widget-location-indicator{
+  display:grid;place-items:center;
+  width:28px;height:28px;border-radius:9px;
+  background:rgba(255,255,255,.075);
+  color:#cdddf2;font-size:18px;
+}
+
+/* Weather */
+.gn-widget-rail .os-widgets .weather-widget{min-height:284px;padding-bottom:12px;}
+.gn-widget-rail .weather-hero{
+  display:flex;align-items:center;justify-content:space-between;
+  height:80px;
+  margin:3px 0 -3px;
+}
+.gn-widget-rail .weather-temp{
+  font-size:65px;font-weight:280;line-height:1;
+  letter-spacing:-.095em;font-variant-numeric:tabular-nums;color:#fff;
+}
+.gn-widget-rail .weather-icon{font-size:37px;color:#ffde99;line-height:1.1}
+.gn-widget-rail .weather-condition{
+  font-size:12px;line-height:1.2;
+  font-weight:660;letter-spacing:-.005em;
+  margin:0 0 8px;color:#f3f2fa;
+}
+.gn-widget-rail .weather-details{
+  display:flex;align-items:center;gap:13px;
+  font-size:10px;color:#d2d9e9;white-space:nowrap;
+}
+.gn-widget-rail .weather-detail-spacer{flex:1}
+.gn-widget-rail .widget-section-separator{
+  height:1px;background:rgba(255,255,255,.14);
+  margin:15px 0 9px;
+}
+.gn-widget-rail .weather-days{display:flex;flex-direction:column;gap:1px}
+.gn-widget-rail .weather-day{
+  display:grid;grid-template-columns:30px 25px 25px minmax(25px,1fr) 28px;
+  align-items:center;gap:7px;
+  min-height:26px;
+  font-size:10px;font-weight:560;
+}
+.gn-widget-rail .weather-day>span:first-child{color:#e4e9f7;text-transform:capitalize}
+.gn-widget-rail .weather-day .weather-day-symbol{
+  color:#f5dcb1;text-align:center;font-size:13px;
+}
+.gn-widget-rail .weather-day .weather-low{
+  color:#a8b8ce;text-align:right;
+}
+.gn-widget-rail .weather-range{
+  position:relative;height:4px;border-radius:999px;
+  background:rgba(216,227,245,.14);overflow:hidden;
+}
+.gn-widget-rail .weather-range span{
+  display:block;position:absolute;top:0;bottom:0;
+  border-radius:999px;
+  background:linear-gradient(90deg,#83b0ee,#f4c0a3);
+  min-width:5px;
+}
+.gn-widget-rail .weather-day strong{text-align:right;font-size:10.5px;color:#f3f5fa}
+.gn-widget-rail .widget-source{
+  margin-top:10px;color:rgba(225,234,252,.43);
+  font-size:8.5px;letter-spacing:.015em;
+}
+.gn-widget-rail .weather-unavailable{min-height:164px}
+
+/* A single readable clock/date card rather than two miniature cards. */
+.gn-widget-rail .os-widgets .clock-widget{
+  height:123px;min-height:123px;
+  display:flex;flex-direction:row;align-items:center;justify-content:space-between;
+  padding-top:16px;padding-bottom:16px;
+  gap:16px;
+}
+.gn-widget-rail .clock-copy{display:flex;flex-direction:column;align-items:flex-start;min-width:0;gap:5px}
+.gn-widget-rail .clock-digital{
+  font-size:42px;letter-spacing:-.075em;font-weight:500;
+  line-height:1.03;color:#fff;font-variant-numeric:tabular-nums;
+}
+.gn-widget-rail .clock-date{
+  max-width:154px;color:#c6cfdf;
+  font-size:10px;line-height:1.35;text-transform:capitalize;
+}
+.gn-widget-rail .analog-clock{
+  position:relative;flex:none;width:74px;height:74px;transform:none;
+  background:radial-gradient(circle at 40% 28%,rgba(255,255,255,.12),rgba(255,255,255,.025) 68%);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:50%;
+  box-shadow:inset 0 1px rgba(255,255,255,.10);
+}
+.gn-widget-rail .clock-tick{
+  top:6px;transform-origin:1px 30px;
+  height:5px;width:2px;background:rgba(241,246,255,.70);
+}
+.gn-widget-rail .clock-hour{height:20px;width:3px;left:calc(50% - 1.5px)}
+.gn-widget-rail .clock-minute{height:26px}
+.gn-widget-rail .clock-second{height:29px;background:#8cbafa}
+.gn-widget-rail .clock-center{background:#f8fafc}
+
+/* Full width calendar — weekdays and dates are no longer clipped. */
+.gn-widget-rail .os-widgets .calendar-widget{
+  min-height:226px;height:auto;
+  padding-top:16px;padding-bottom:14px;
+}
+.gn-widget-rail .calendar-widget .widget-heading{margin-bottom:13px}
+.gn-widget-rail .calendar-grid{
+  display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:3px 4px;width:100%;text-align:center;
+}
+.gn-widget-rail .calendar-grid span{
+  display:grid;place-items:center;
+  width:100%;height:23px;min-width:0;
+  color:#e3e8f4;
+  font-size:11px;line-height:1;font-weight:550;
+}
+.gn-widget-rail .calendar-grid .calendar-weekday{
+  height:21px;color:#a8b5cb;
+  font-size:9px;font-weight:730;
+}
+.gn-widget-rail .calendar-grid .calendar-today{
+  color:#18314f;background:#d6e8ff;
+  font-weight:800;
+  border-radius:8px;
+  box-shadow:0 1px 7px rgba(177,215,255,.15);
+}
+.gn-widget-rail .widget-launch{
+  position:relative;top:auto;right:auto;
+  width:28px;height:28px;flex:none;
+  border-radius:9px;
+  background:rgba(255,255,255,.075);
+  border:1px solid rgba(255,255,255,.09);
+  color:#c9ddf5;opacity:1;
+  font-size:17px;font-weight:550;
+}
+.gn-widget-rail .widget-launch:hover{
+  background:rgba(255,255,255,.18);
+  border-color:rgba(255,255,255,.25);
+}
+
+/* Monitor: same card header and discreet, comprehensible meter rows. */
+.gn-widget-rail .os-widgets .usage-widget{
+  min-height:220px;height:auto;
+  padding-top:16px;padding-bottom:17px;
+}
+.gn-widget-rail .usage-widget .widget-heading{padding:0;margin-bottom:14px}
+.gn-widget-rail .usage-chart{
+  position:relative;display:flex;align-items:flex-end;gap:4px;
+  height:56px;padding:0 0 1px;margin:0 0 15px;
+  border-bottom:1px solid rgba(216,228,248,.15);
+}
+.gn-widget-rail .usage-chart-column{
+  flex:1;min-width:3px;max-width:none;opacity:.86;
+  border-radius:3px 3px 0 0;
+  background:linear-gradient(180deg,#a1c8fb,#628bcd);
+  transition:height .35s;
+}
+.gn-widget-rail .usage-metrics{display:flex;flex-direction:column;gap:11px}
+.gn-widget-rail .usage-metric{
+  display:grid;align-items:center;
+  grid-template-columns:60px minmax(0,1fr) 35px;
+  gap:10px;
+}
+.gn-widget-rail .usage-metric-label{
+  display:flex;flex-direction:column;gap:3px;
+  font-size:10.5px;font-weight:730;color:#ebf0fa;line-height:1;
+}
+.gn-widget-rail .usage-metric-label small{
+  color:#aebbd1;font-size:9px;line-height:1.15;font-weight:440;margin:0;
+}
+.gn-widget-rail .usage-meter{
+  height:6px;background:rgba(213,227,248,.15);
+  border-radius:999px;overflow:hidden;
+}
+.gn-widget-rail .usage-meter i{
+  height:100%;border-radius:999px;
+  background:linear-gradient(90deg,#6c9fde,#96c6ff);
+}
+.gn-widget-rail .usage-metric strong{
+  text-align:right;font-size:11px;font-variant-numeric:tabular-nums;
+  color:#edf3ff;
+}
+.gn-light .gn-widget-rail .os-widgets .widget{background:rgba(246,246,251,.85);color:#252f45}
+.gn-light .gn-widget-rail .widget-heading h2,.gn-light .gn-widget-rail .clock-digital,.gn-light .gn-widget-rail .usage-metric-label,.gn-light .gn-widget-rail .usage-metric strong{color:#283950}
+.gn-light .gn-widget-rail .widget-eyebrow,.gn-light .gn-widget-rail .weather-details,.gn-light .gn-widget-rail .clock-date{color:#657793}
+
+@media(max-width:1120px) and (min-width:761px){
+  .gn-widget-rail{width:270px;left:12px}
+  .gn-desktop-items{width:min(558px,calc(100% - 316px))}
+  .gn-widget-rail .os-widgets .widget{padding-left:15px;padding-right:15px}
+}
+@media(max-width:760px){
+  .gn-widget-rail{position:relative;width:100%;left:auto;top:auto;bottom:auto;padding:12px 12px 0;overflow:visible}
+  .gn-widget-rail .os-widgets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:0}
+  .gn-widget-rail .os-widgets .widget{min-width:0;width:100%}
+  .gn-widget-rail .os-widgets .weather-widget,.gn-widget-rail .os-widgets .calendar-widget,
+  .gn-widget-rail .os-widgets .usage-widget{grid-column:1/-1}
+  .gn-widget-rail .os-widgets .clock-widget{grid-column:1/-1}
+  .gn-widget-rail .os-widgets .weather-widget{min-height:0}
+  .gn-widget-rail .os-widgets .calendar-widget{min-height:0}
+  .gn-widget-rail .os-widgets .usage-widget{min-height:0}
+  .gn-widget-rail .weather-hero{height:78px}
+  .gn-widget-rail .clock-copy{max-width:none}
+  .gn-widget-rail .calendar-grid{max-width:none}
+  .gn-widget-rail .calendar-grid span{height:27px}
+}
+@media(prefers-reduced-motion:reduce){
+  .gn-widget-rail .os-widgets .widget,.gn-widget-rail .usage-chart-column{transition:none}
+}
