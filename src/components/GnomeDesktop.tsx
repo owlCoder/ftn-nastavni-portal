@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react'
-import { CourseApp } from './CourseApp'
 import { ErsCourseFiles } from './ErsCourseFiles'
 import { OtherCourseFiles } from './OtherCourseFiles'
 import { DesktopWidgets } from './DesktopWidgets'
