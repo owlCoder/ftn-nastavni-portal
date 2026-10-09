@@ -178,7 +178,7 @@ export function ErsCourseFiles({course}:{course:Course}){
     const frame=window.requestAnimationFrame(()=>{
       const toc=document.querySelector('.ers-continuous-document .toc-panel')
       const heading=[...(toc?.querySelectorAll<HTMLAnchorElement>('a')??[])].find(link=>
-        new RegExp('^Vežba\\\\s+'+exercise+'(?:\\\\D|$)','i').test(link.textContent?.trim()??''))
+        new RegExp('^Vežba\\s+'+exercise+'(?:\\D|$)','i').test(link.textContent?.trim()??''))
       const id=heading?.getAttribute('href')?.slice(1)
       if(id)document.getElementById(id)?.scrollIntoView({behavior:'auto',block:'start'})
     })
