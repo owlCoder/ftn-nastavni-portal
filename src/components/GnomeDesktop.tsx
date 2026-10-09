@@ -111,7 +111,7 @@ function WindowFrame({ windowData: w, isFocused, gamesActive, now, onFocus, onCl
   const active=isFocused && !w.minimized && gamesActive
   return <section ref={ref} aria-label={'Prozor: '+title} onPointerDown={onFocus}
     className={'gn-window'+(isFocused?' gn-window-focused':'')+(w.maximized?' gn-window-max':'')+(w.minimized?' gn-window-min':'')+(['calendar','monitor'].includes(w.id)?' gn-utility-window':'')}
-    style={{left:w.x,top:w.y,zIndex:w.z} as CSSProperties}>
+    style={{left:w.x,top:w.y,zIndex:w.z,'--gn-window-y':`${w.y}px`} as CSSProperties}>
     <div className="gn-headerbar" onDoubleClick={onMaximize} onPointerDown={onPointerDown}
       onPointerMove={onPointerMove} onPointerUp={()=>dragging.current=null} onPointerCancel={()=>dragging.current=null}>
       <div className="gn-window-leading"><AppArtwork id={w.id}/></div>
