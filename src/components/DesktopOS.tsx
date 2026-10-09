@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react'
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from 'react'
 import { CourseApp } from './CourseApp'
 import { DesktopWidgets } from './DesktopWidgets'
+import { DockAppIcon } from './DesktopAppIcons'
 import { Sudoku, Tetris, SpaceInvaders, type GameId } from './DesktopGames'
 import { courses } from '../courses'
 import type { CourseId } from '../courses/types'
@@ -31,15 +32,7 @@ function FolderGlyph({ color = 'blue' }: { color?: string }) {
 
 
 function AppGlyph({ id }: { id: AppId }) {
-  if (isCourse(id)) return <FolderGlyph color="mac" />
-  if (id === 'sudoku') return <span className="os-game-art os-sudoku-art"><span>1</span><span>9</span><span>4</span><span>7</span></span>
-  if (id === 'tetris') return <span className="os-game-art os-tetris-art"><i /><i /><i /><i /><i /><i /><i /></span>
-  if (id === 'invaders') return <span className="os-game-art os-invaders-art">▟<span>✦</span>▙</span>
-  if (id === 'notes') return <span className="os-notes-art"><span>NOTES</span><i /><i /><i /></span>
-  if (id === 'trash') return <span className="os-trash-art" aria-hidden="true">
-    <svg viewBox="0 0 64 70" fill="none"><path d="M13 17h38l-4 44H17l-4-44Z" fill="#e7ecf0" stroke="#93a4ae" strokeWidth="2"/><path d="M10 14h44v7H10z" fill="#f9fafb" stroke="#a2b3be" strokeWidth="2"/><path d="M23 14l2-5h14l2 5" stroke="#f2f7f9" strokeWidth="5"/><path d="M24 30v23m8-23v23m8-23v23" stroke="#a9bac6" strokeWidth="2.5" strokeLinecap="round"/></svg>
-  </span>
-  return <span className="os-file-art" aria-hidden="true"><svg viewBox="0 0 60 70" fill="none"><path d="M10 4h27l14 14v47H10z" fill="#fff" stroke="#ccd3de" strokeWidth="2"/><path d="M37 4v15h14" fill="#edf1f7" stroke="#ccd3de" strokeWidth="2"/><path d="M17 32h27M17 39h27M17 46h21M17 53h24" stroke="#aebbd1" strokeWidth="2" strokeLinecap="round"/></svg></span>
+  return isCourse(id) ? <FolderGlyph color="mac" /> : <DockAppIcon id={id} />
 }
 
 function NotesWindow() {
@@ -155,6 +148,8 @@ export function DesktopOS() {
   const [selected, setSelected] = useState<AppId | null>(null)
   const [widgetsVisible, setWidgetsVisible] = useState(true)
   const [context, setContext] = useState<{ x: number; y: number } | null>(null)
+  const [menu, setMenu] = useState<{ name: 'finder' | 'file' | 'edit' | 'view' | 'go' | 'window' | 'help' | 'control' | 'date'; left: number } | null>(null)
+  const [brightness, setBrightness] = useState(100)
   const zRef = useRef(3)
   useEffect(() => {
     document.title = 'FTN OS — Nastavni portal'
@@ -174,6 +169,7 @@ export function DesktopOS() {
       : [...previous, { id, x: 95 + (previous.length % 5) * 42, y: 82 + (previous.length % 5) * 28, z, minimized: false, maximized: false }])
     setLauncher(false)
     setContext(null)
+    setMenu(null)
   }, [])
 
   useEffect(() => {
@@ -196,29 +192,108 @@ export function DesktopOS() {
   const shortcuts: AppId[] = [...courses.map(course => course.id), 'sudoku', 'tetris', 'invaders', 'notes', 'trash', 'readme']
   const activateIcon = (id: AppId) => { setSelected(id); setContext(null) }
 
-  return <div className="os-desktop" onKeyDown={event => { if (event.key === 'Escape') { setLauncher(false); setContext(null); setSelected(null) } }}>
+  type MenuId = NonNullable<typeof menu>['name']
+  const showMenu = (event: ReactMouseEvent<HTMLButtonElement>, name: MenuId) => {
+    event.stopPropagation()
+    const rect = event.currentTarget.getBoundingClientRect()
+    const width = name === 'control' ? 310 : 245
+    const left = Math.max(8, Math.min(window.innerWidth - width - 8, name === 'control' || name === 'date' ? rect.right - width : rect.left))
+    setMenu(current => current?.name === name ? null : { name, left })
+    setLauncher(false)
+    setContext(null)
+  }
+  const perform = (fn: () => void) => { fn(); setMenu(null) }
+  const menuItems: Record<MenuId, { label: string; action: () => void; hint?: string }[]> = {
+    finder: [
+      { label: 'O FTN OS...', action: () => open('readme') },
+      { label: 'Aplikacije...', action: () => setLauncher(true), hint: '⌘ A' },
+      { label: 'Prikaži desktop', action: () => windows.forEach(w => minimize(w.id)) },
+    ],
+    file: [
+      { label: 'Nova beleška', action: () => open('notes'), hint: '⌘ N' },
+      { label: 'Otvori ERS', action: () => open('ers') },
+      { label: 'Otvori OIB', action: () => open('oib') },
+      { label: 'Otvori ODP', action: () => open('odp') },
+      { label: 'README.txt', action: () => open('readme') },
+    ],
+    edit: [
+      { label: 'Beleške', action: () => open('notes') },
+      { label: 'Poništi selekciju', action: () => setSelected(null) },
+    ],
+    view: [
+      { label: widgetsVisible ? '✓  Prikaži widgete' : 'Prikaži widgete', action: () => setWidgetsVisible(current => !current) },
+      { label: 'Osveži desktop', action: () => setSelected(null) },
+      { label: 'Vrati osvetljenje pozadine', action: () => setBrightness(100) },
+    ],
+    go: shortcuts.map(id => ({ label: appName(id), action: () => open(id) })),
+    window: [
+      ...(focused ? [
+        { label: 'Minimizuj aktivni prozor', action: () => minimize(focused) },
+        { label: 'Uvećaj aktivni prozor', action: () => maximize(focused) },
+      ] : []),
+      ...windows.map(w => ({ label: (w.minimized ? '◌ ' : '● ') + appName(w.id), action: () => focus(w.id) })),
+      ...(!windows.length ? [{ label: 'Nema otvorenih prozora', action: () => setLauncher(true) }] : []),
+    ],
+    help: [
+      { label: 'FTN OS pomoć', action: () => open('readme') },
+      { label: 'Nastavni materijali', action: () => open('ers') },
+    ],
+    control: [],
+    date: [
+      { label: 'Prikaži kalendar i widgete', action: () => setWidgetsVisible(true) },
+      { label: 'Otvori beleške', action: () => open('notes') },
+    ],
+  }
+
+  return <div className="os-desktop" style={{ '--os-wallpaper-brightness': `${brightness}%` } as CSSProperties}
+    onKeyDown={event => { if (event.key === 'Escape') { setLauncher(false); setContext(null); setSelected(null); setMenu(null) } }}>
     <div className="os-wallpaper" aria-hidden="true" />
     <header className="os-menubar">
-      <div className="os-menubar-left">
-        <button className="os-menu-mark" aria-label="Otvori pokretač aplikacija" title="FTN OS" onClick={() => setLauncher(value => !value)}>✦</button>
-        <button className="os-menu-finder" onClick={() => setLauncher(value => !value)}>Finder</button>
-        <button onClick={() => open('notes')}>File</button>
-        <button title={widgetsVisible ? 'Sakrij widgete' : 'Prikaži widgete'} onClick={() => setWidgetsVisible(visible => !visible)}>View</button>
-        <button onClick={() => setLauncher(value => !value)}>Go</button>
-        <button onClick={() => focused ? focus(focused) : setLauncher(true)}>Window</button>
-        <button onClick={() => open('readme')}>Help</button>
+      <div className="os-menubar-left" role="menubar" aria-label="Desktop menu">
+        <button className="os-menu-mark" aria-label="FTN OS" title="FTN OS" onClick={event => showMenu(event, 'finder')}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 1.5 2.9 7.6 7.6 2.9-7.6 2.9L12 22.5l-2.9-7.6-7.6-2.9 7.6-2.9z"/></svg>
+        </button>
+        <button className="os-menu-finder" onClick={event => showMenu(event, 'finder')}>{focused ? appName(focused) : 'Finder'}</button>
+        {(['file','edit','view','go','window','help'] as const).map((name) =>
+          <button key={name} role="menuitem" aria-haspopup="menu" aria-expanded={menu?.name === name}
+            className={menu?.name === name ? 'os-menu-active' : ''}
+            onClick={event => showMenu(event, name)}>{({file:'File',edit:'Edit',view:'View',go:'Go',window:'Window',help:'Help'} as const)[name]}</button>)}
       </div>
       <div className="os-menubar-right">
-        <span className="os-top-stat" title="Simulirana upotreba procesora">CPU 28%</span>
-        <span className="os-top-stat" title="Simulirana upotreba memorije">RAM 63%</span>
-        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" aria-label="Wi-Fi" role="img"><path d="M2 8c5-5 15-5 20 0M5 12c3.5-3.5 10.5-3.5 14 0M9 16c1.8-1.8 4.2-1.8 6 0M12 20h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
-        <span className="os-menubar-battery" title="Simulirani indikator baterije">▰</span>
-        <span className="os-top-divider" />
-        <time dateTime={now.toISOString()}>{date} &nbsp; {clock}</time>
+        <span className="os-top-stat" title="Simulirani pokazatelj procesora">CPU 28%</span>
+        <span className="os-top-stat" title="Simulirani pokazatelj memorije">RAM 63%</span>
+        <button className="os-status-button" aria-label="Kontrolni centar" aria-expanded={menu?.name === 'control'} title="Control Center" onClick={event => showMenu(event, 'control')}>
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <path d="M2 9a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="20" r="1.2" fill="currentColor" stroke="none"/>
+          </svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round">
+            <path d="M5 7h14M5 17h14"/><circle cx="9" cy="7" r="3" fill="currentColor" stroke="none"/><circle cx="15" cy="17" r="3" fill="currentColor" stroke="none"/>
+          </svg>
+        </button>
+        <span className="os-top-divider"/>
+        <button className="os-menu-time" aria-expanded={menu?.name === 'date'} onClick={event => showMenu(event, 'date')}><time dateTime={now.toISOString()}>{date} &nbsp; {clock}</time></button>
       </div>
     </header>
+    {menu && <div className={`os-menu-popup os-menu-popup-${menu.name}`} style={{ left: menu.left }} role={menu.name === 'control' ? 'dialog' : 'menu'}
+      aria-label={menu.name === 'control' ? 'Kontrolni centar' : menu.name}>
+      {menu.name === 'control' ? <div className="os-control-center">
+        <div className="os-control-head"><strong>Control Center</strong><span>FTN OS</span></div>
+        <div className="os-control-tiles">
+          <div className="os-control-tile"><span className="os-control-emoji">⌁</span><div><strong>Wi-Fi</strong><small>Browser connection</small></div></div>
+          <button className={'os-control-tile os-control-toggle' + (widgetsVisible ? ' os-control-on' : '')}
+            onClick={() => setWidgetsVisible(value => !value)}><span className="os-control-emoji">▦</span><div><strong>Widgeti</strong><small>{widgetsVisible ? 'Uključeni' : 'Isključeni'}</small></div></button>
+        </div>
+        <label className="os-brightness-label" htmlFor="os-brightness">Osvetljenje pozadine <strong>{brightness}%</strong></label>
+        <input id="os-brightness" type="range" min="55" max="125" value={brightness} onChange={event => setBrightness(Number(event.target.value))}/>
+        <div className="os-control-hint">Sistemski pokazatelji su simulirani.</div>
+      </div> : <>
+        {menu.name === 'date' && <div className="os-menu-date">{new Intl.DateTimeFormat('sr-RS',{ dateStyle:'full',timeZone:'Europe/Belgrade'}).format(now)}</div>}
+        {menuItems[menu.name].map((item,index)=><button className="os-menu-option" key={index}
+          onClick={() => perform(item.action)}><span>{item.label}</span>{item.hint && <small>{item.hint}</small>}</button>)}
+      </>}
+    </div>}
 
-    <main className="os-workspace" onClick={() => { setSelected(null); setContext(null); setLauncher(false) }}
+    <main className="os-workspace" onClick={() => { setSelected(null); setContext(null); setLauncher(false); setMenu(null) }}
       onContextMenu={event => { if (event.target instanceof Element && event.target.closest('button, .widget')) return; event.preventDefault(); setContext({ x: event.clientX, y: event.clientY }) }}>
       {widgetsVisible && <DesktopWidgets now={now} />}
       <section className="os-shortcuts" aria-label="Desktop ikonice">
@@ -260,7 +335,7 @@ export function DesktopOS() {
       <nav className="os-dock" aria-label="Dock">
         <button className={'os-dock-button os-dock-home' + (launcher ? ' os-dock-selected' : '')}
           onClick={() => setLauncher(value => !value)} title="Finder / Aplikacije" aria-label="Finder / Aplikacije">
-          <span className="os-finder-face"><span>◡</span></span>
+          <DockAppIcon id="finder" />
         </button>
         <span className="os-dock-separator" />
         {shortcuts.filter(id => id !== 'readme' && id !== 'trash').map(id => {
@@ -268,11 +343,11 @@ export function DesktopOS() {
           return <button key={id} className={'os-dock-button' + (focused === id ? ' os-dock-selected' : '')}
             title={appName(id)} aria-label={appName(id)}
             onClick={() => w && !w.minimized && focused === id ? minimize(id) : open(id)}>
-            <span className="os-dock-glyph"><AppGlyph id={id} /></span>{w && <span className="os-dock-indicator" />}
+            <span className="os-dock-glyph"><DockAppIcon id={id} /></span>{w && <span className="os-dock-indicator" />}
           </button>
         })}
         <span className="os-dock-separator" />
-        <button className="os-dock-button" onClick={() => open('trash')} aria-label="Korpa" title="Korpa"><span className="os-dock-glyph"><AppGlyph id="trash" /></span>{windows.some(w => w.id === 'trash') && <span className="os-dock-indicator" />}</button>
+        <button className="os-dock-button" onClick={() => open('trash')} aria-label="Korpa" title="Korpa"><span className="os-dock-glyph"><DockAppIcon id="trash" /></span>{windows.some(w => w.id === 'trash') && <span className="os-dock-indicator" />}</button>
       </nav>
     </footer>
   </div>
