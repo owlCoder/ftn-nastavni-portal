@@ -49,7 +49,12 @@ export function LoginScreen({ onLogin }: { onLogin: () => void }) {
   const [password,setPassword] = useState('')
   const [error,setError] = useState('')
   const [busy,setBusy] = useState(false)
-  useEffect(()=>{document.title='Prijava · Nastavni portal'},[])
+  const [now,setNow] = useState(()=>new Date())
+  useEffect(()=>{
+    document.title='Prijava | Nastavni portal'
+    const timer=window.setInterval(()=>setNow(new Date()),1000)
+    return()=>window.clearInterval(timer)
+  },[])
   const submit = (event:FormEvent) => {
     event.preventDefault()
     if(busy)return
@@ -62,10 +67,13 @@ export function LoginScreen({ onLogin }: { onLogin: () => void }) {
       setPassword('')
     }
   }
-  return <main className="gn-login">
+  const clock=new Intl.DateTimeFormat('sr-RS',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Belgrade'}).format(now)
+  const date=new Intl.DateTimeFormat('sr-RS',{weekday:'long',day:'numeric',month:'long',timeZone:'Europe/Belgrade'}).format(now)
+  return <main className="gn-login gn-greeter">
     <div className="gn-login-glow" aria-hidden="true"/>
     <div className="gn-login-clock"><span>Nastavni portal</span><span>FTN · Univerzitet u Novom Sadu</span></div>
     <form className="gn-login-card" onSubmit={submit}>
+      <div className="gn-login-time"><time>{clock}</time><span>{date}</span></div>
       <div className="gn-login-avatar" aria-hidden="true">
         <svg width="47" height="47" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="16" r="9" fill="currentColor"/><path d="M8 43c0-12 6-18 16-18s16 6 16 18" fill="currentColor"/></svg>
       </div>
