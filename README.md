@@ -46,17 +46,30 @@ Ova prijava je **isključivo klijentska** (hardkodovana u isporučenom JavaScrip
 - **Widgeti** prikazuju prognozu, časovnik i kalendar; monitor se nalazi u zasebnoj aplikaciji. Beleške se čuvaju samo lokalno u browseru.
 
 
-## ERS — istraživač fajlova
+## Predmeti — istraživač fajlova (ERS, OIB, ODP)
 
-ERS koristi **GNOME Files-style** prikaz umesto tabova. Na početnom nivou su direktni dokumenti **Praktikum**, **Kontrolne tačke** i **Projektna specifikacija.pdf**, kao i folderi **Vežbe**, **Prezentacije** i **Primeri**. Folderi imaju pregled stabla (tree view) i navigaciju preko breadcrumb putanje.
+Sva tri predmeta — **ERS, OIB i ODP** — koriste **GNOME Files-style** prikaz umesto tabova. Na početnom nivou su direktni dokumenti **Praktikum**, **Kontrolne tačke** i **Projektna specifikacija.pdf**, kao i folderi **Vežbe**, **Prezentacije** i **Primeri**. Folderi imaju pregled stabla (tree view) i navigaciju preko breadcrumb putanje.
 
 - **Praktikum** se i dalje otvara u istom kontinuiranom dokumentu sa sadržajem, zumiranjem i pregledom slika. U folderu pojedinačne vežbe nalazi se prečica do odgovarajućeg poglavlja.
-- **PDF fajlovi** prikazuju se u internom PDF Viewer-u, bez automatskog otvaranja novog taba.
+- **PDF fajlovi** prikazuju se u internom PDF Viewer-u zasnovanom na Mozilla PDF.js (Canvas), sa izborom stranice, zumiranjem, fullscreen prikazom i preuzimanjem — umesto Chromium PDF toolbar-a. PDF.js se učitava sa cdnjs CDN-a i za prvi prikaz zahteva internet konekciju; ako nije dostupan, korisnik može otvoriti/preuzeti originalni PDF.
 - **ZIP primeri** imaju ugrađen prikaz stabla arhive. Tekstualni fajlovi iz arhive mogu da se pregledaju bez preuzimanja; za binarne fajlove potrebno je preuzeti ZIP.
 - Svaka stavka ima dugme **Preuzmi**. Postojeći PDF i ZIP fajlovi se preuzimaju u originalnom formatu, dok se kontinuirani praktikum i kontrolne tačke izvoze u **Markdown (.md)**, bez tvrdnje da su izvorno PDF fajlovi.
 - Izborom preuzimanja foldera dobija se **ZIP** sa stvarnim fajlovima, pripadajućim podfolderima i tekstualnim izvozima. ZIP se sastavlja u browseru i može potrajati za veće foldere.
 
-OIB i ODP za sada zadržavaju dosadašnji izgled, dok ih ne prebacimo na isti šablon predmet po predmet.
+**Kontrolne tačke** imaju neutralni Adwaita timeline sa etapama, rokovima, opisima i listom obaveza. Praktikum svakog predmeta ostaje kontinuiran dokument.
+
+## Ažurirane prezentacije iz ZIP arhiva
+
+Pripremljen je skript `scripts/import-presentations.py` koji iz `ersnovi.zip` i `oibnovi.zip` prihvata isključivo **18 PDF prezentacija (9 ERS + 9 OIB)** i zamenjuje istoimene fajlove u `public/downloads/ers-prezentacije/` i `public/downloads/oib-prezentacije/`. `.pptx`, fontovi i prateći izvorni fajlovi se ignorišu. Skript proverava da svaki očekivani PDF postoji pre nego što počne zapisivanje.
+
+```bash
+python3 scripts/import-presentations.py ./ersnovi.zip ./oibnovi.zip
+git add public/downloads/ers-prezentacije public/downloads/oib-prezentacije
+git commit -m "content: update ERS and OIB PDF presentations"
+git push origin main
+```
+
+**Status binarnih priloga:** kod, preglednik i import skript su na `main`, ali **nova binarna izdanja PDF prezentacija još nisu otpremljena na GitHub**. Postojeći PDF fajlovi ostaju aktivni dok ne budu zamenjeni. Preuzimanje iz uploadovanih ZIP-ova je obavljeno lokalno, a PPTX nije uključen.
 
 ## Dostupni predmeti
 
