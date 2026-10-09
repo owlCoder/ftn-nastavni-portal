@@ -241,7 +241,7 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
       if(e.target instanceof Element&&e.target.closest('button,.os-widgets'))return
       e.preventDefault();setContext({x:e.clientX,y:e.clientY})
     }}>
-      {showWidgets && <div className="gn-widget-rail" onClick={e=>e.stopPropagation()}><DesktopWidgets now={now}/></div>}
+      {showWidgets && <div className="gn-widget-rail" onClick={e=>e.stopPropagation()}><DesktopWidgets now={now} onOpenCalendar={()=>open('calendar')} onOpenMonitor={()=>open('monitor')}/></div>}
       <div className="gn-desktop-items">
         <section className="gn-shortcut-group gn-course-group" aria-label="Predmeti">
           <div className="gn-shortcut-heading"><span>PREDMETI</span><i/></div>
@@ -278,7 +278,7 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
     {panel && <><button className="gn-popover-scrim" aria-label="Zatvori meni" onClick={()=>setPanel(null)}/>
       {panel==='calendar'? <div className="gn-calendar-popover">
         <div className="gn-calendar-panel-left"><h3>Obaveštenja</h3><div className="gn-no-notifications"><Icon name="bell" size={36}/><strong>Nema obaveštenja</strong><span>Sve je ažurno.</span></div></div>
-        <div className="gn-calendar-panel-right"><div className="gn-calendar-date">{new Intl.DateTimeFormat('sr-RS',{dateStyle:'full',timeZone:'Europe/Belgrade'}).format(now)}</div><Calendar now={now}/><div className="gn-today-plans">Danas nema zakazanih događaja.</div></div>
+        <div className="gn-calendar-panel-right"><div className="gn-calendar-date">{new Intl.DateTimeFormat('sr-RS',{dateStyle:'full',timeZone:'Europe/Belgrade'}).format(now)}</div><Calendar now={now}/><button className="gn-launch-calendar" onClick={()=>open('calendar')}>Otvori Kalendar ↗</button></div>
       </div> : <div className="gn-quick-menu">
         <div className="gn-quick-grid">
           <div className="gn-quick-tile gn-quick-connected"><span className="gn-quick-round"><Icon name="wifi" size={19}/></span><div><strong>Internet</strong><span>Browser konekcija</span></div></div>
