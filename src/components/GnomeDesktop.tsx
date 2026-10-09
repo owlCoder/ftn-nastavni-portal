@@ -241,7 +241,7 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
       if(e.target instanceof Element&&e.target.closest('button,.os-widgets'))return
       e.preventDefault();setContext({x:e.clientX,y:e.clientY})
     }}>
-      {showWidgets && <div className="gn-widget-rail" onClick={e=>e.stopPropagation()}><DesktopWidgets now={now} onOpenCalendar={()=>open('calendar')} onOpenMonitor={()=>open('monitor')}/></div>}
+      {showWidgets && <div className="gn-widget-rail" onClick={e=>e.stopPropagation()}><DesktopWidgets now={now}/></div>}
       <div className="gn-desktop-items">
         <section className="gn-shortcut-group gn-course-group" aria-label="Predmeti">
           <div className="gn-shortcut-heading"><span>PREDMETI</span><i/></div>
