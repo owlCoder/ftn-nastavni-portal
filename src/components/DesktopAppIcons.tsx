@@ -4,70 +4,106 @@ export type AppIconId =
   | 'finder' | 'ers' | 'oib' | 'odp' | 'sudoku' | 'tetris' | 'invaders'
   | 'snake' | 'merge' | 'calendar' | 'monitor' | 'notes' | 'readme' | 'trash'
 
-/*
- * Symbolic Adwaita-inspired glyphs. No background rectangles, coloured app
- * tiles or baked-in gradients: the containing surface controls the icon colour.
+/**
+ * Minimal two-tone application symbols. Shapes are the icons themselves:
+ * there is no full-size coloured tile, rounded-square backdrop or gradient.
  */
 function Symbol({ id }: { id: AppIconId }): ReactNode {
   switch (id) {
     case 'finder':
-      return <><rect x="6" y="5" width="24" height="26" rx="4"/><path d="M6 13h24M12 20h12M12 25h8"/></>
+      return <>
+        <path d="M8 6h20a3 3 0 0 1 3 3v19a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V9a3 3 0 0 1 3-3Z" fill="#bdddf7" stroke="#edf6ff" strokeWidth="1.6"/>
+        <path d="M5 13h26M13 20h11M13 25h8" stroke="#4a82b7" strokeWidth="2" strokeLinecap="round"/>
+      </>
     case 'ers':
-      return <><path d="m12 11-7 7 7 7m12-14 7 7-7 7M21 7l-6 22"/></>
+      return <path d="m12 11-7 7 7 7m12-14 7 7-7 7M21 7l-6 22" stroke="#a4caff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+
     case 'oib':
-      return <><path d="M18 4 29 9v8c0 8-5 13-11 15C12 30 7 25 7 17V9z"/><rect x="13" y="17" width="10" height="9" rx="2"/><path d="M15 17v-3a3 3 0 0 1 6 0v3"/></>
+      return <>
+        <path d="M18 4 29 9v8c0 8-5 13-11 15C12 30 7 25 7 17V9z" fill="#a5bffd" fillOpacity=".22" stroke="#b6caff" strokeWidth="2.5" strokeLinejoin="round"/>
+        <rect x="13" y="17" width="10" height="9" rx="2" fill="#a5bffd" stroke="#b6caff" strokeWidth="1.6"/>
+        <path d="M15 17v-3a3 3 0 0 1 6 0v3" stroke="#f5f7ff" strokeWidth="2.2" strokeLinecap="round"/>
+      </>
     case 'odp':
-      return <><path d="m10 10 16 0-8 16z"/><circle cx="10" cy="10" r="3"/><circle cx="26" cy="10" r="3"/><circle cx="18" cy="26" r="3"/></>
+      return <>
+        <path d="M10 10h16l-8 16Z" fill="#63cdbb" fillOpacity=".20" stroke="#73e4ce" strokeWidth="2.3" strokeLinejoin="round"/>
+        <circle cx="10" cy="10" r="3.2" fill="#a0f3df"/>
+        <circle cx="26" cy="10" r="3.2" fill="#a0f3df"/>
+        <circle cx="18" cy="26" r="3.2" fill="#a0f3df"/>
+      </>
     case 'sudoku':
-      return <><rect x="5" y="5" width="26" height="26" rx="3"/><path d="M13.7 5v26m8.6-26v26M5 13.7h26m-26 8.6h26"/><path d="M8.5 8.5h.1m8.2 8.2h.1m8.3 8.3h.1" strokeWidth="3" strokeLinecap="round"/></>
+      return <>
+        <rect x="5" y="5" width="26" height="26" rx="2.8" fill="#a98bec" fillOpacity=".16" stroke="#cab5ff" strokeWidth="2.2"/>
+        <path d="M13.7 5v26m8.6-26v26M5 13.7h26m-26 8.6h26" stroke="#a58bea" strokeWidth="1.5"/>
+        <path d="M9.3 9.4h.1m8.5 8.6h.1m8.6 8.4h.1" stroke="#f2eaff" strokeWidth="3.3" strokeLinecap="round"/>
+      </>
     case 'tetris':
       return <>
-        <rect x="7" y="20" width="7" height="7" rx="1"/>
-        <rect x="14.5" y="20" width="7" height="7" rx="1"/>
-        <rect x="22" y="20" width="7" height="7" rx="1"/>
-        <rect x="14.5" y="12.5" width="7" height="7" rx="1"/>
-        <rect x="22" y="12.5" width="7" height="7" rx="1"/>
-        <path d="M9 10h4m-4 4h4" strokeLinecap="round"/>
+        <rect x="7" y="20" width="7" height="7" rx="1.2" fill="#ffdd99"/>
+        <rect x="14.5" y="20" width="7" height="7" rx="1.2" fill="#ffc078"/>
+        <rect x="22" y="20" width="7" height="7" rx="1.2" fill="#ff9e85"/>
+        <rect x="14.5" y="12.5" width="7" height="7" rx="1.2" fill="#ffe6a8"/>
+        <rect x="22" y="12.5" width="7" height="7" rx="1.2" fill="#ffc078"/>
+        <path d="M9 10h4m-4 4h4" fill="none" stroke="#fff0d3" strokeWidth="2.1" strokeLinecap="round"/>
       </>
     case 'invaders':
       return <>
-        <path d="M10 10V6m16 4V6M7 16V12h22v4h3v10h-5v-4h-4v6H13v-6H9v4H4V16z"/>
-        <path d="M11.5 17h2m9 0h2" strokeWidth="2.8" strokeLinecap="round"/>
+        <path d="M10 10V6m16 4V6" stroke="#9ef4ba" strokeWidth="2.7" strokeLinecap="round"/>
+        <path d="M7 16V12h22v4h3v10h-5v-4h-4v6H13v-6H9v4H4V16z" fill="#7fe5aa" stroke="#a5f6c8" strokeWidth="1" strokeLinejoin="round"/>
+        <path d="M12 16v3m12-3v3" stroke="#1e6555" strokeWidth="2.8" strokeLinecap="round"/>
       </>
     case 'snake':
       return <>
-        <path d="M6 22v-6a7 7 0 0 1 7-7h7a5 5 0 0 1 5 5v2c0 3-2 5-5 5h-7v7"/>
-        <path d="M13 28h4m8-13 5 1m-5-1 4-3"/>
-        <circle cx="21.5" cy="13.5" r="1" fill="currentColor" stroke="none"/>
+        <path d="M6 22v-6a7 7 0 0 1 7-7h7a5 5 0 0 1 5 5v2c0 3-2 5-5 5h-7v7" fill="none" stroke="#85e9de" strokeWidth="4.8" strokeLinecap="round" strokeLinejoin="round"/>
+        <circle cx="21" cy="13.4" r="1.15" fill="#205962"/>
+        <circle cx="29" cy="25" r="4" fill="#ffba99"/>
       </>
     case 'merge':
       return <>
-        <rect x="5" y="5" width="12" height="12" rx="2"/>
-        <rect x="19" y="5" width="12" height="12" rx="2"/>
-        <rect x="5" y="19" width="12" height="12" rx="2"/>
-        <rect x="19" y="19" width="12" height="12" rx="2"/>
-        <g fontSize="8.5" fontWeight="750" fill="currentColor" stroke="none" textAnchor="middle">
-          <text x="11" y="13.9">2</text><text x="25" y="13.9">4</text>
-          <text x="11" y="27.9">8</text><text x="25" y="27.9">16</text>
+        <rect x="5" y="5" width="12" height="12" rx="2.4" fill="#ffebbf"/>
+        <rect x="19" y="5" width="12" height="12" rx="2.4" fill="#ffdaaa"/>
+        <rect x="5" y="19" width="12" height="12" rx="2.4" fill="#ffc892"/>
+        <rect x="19" y="19" width="12" height="12" rx="2.4" fill="#ffb288"/>
+        <g fontSize="8.4" fontWeight="800" fill="#8a5948" textAnchor="middle">
+          <text x="11" y="13.7">2</text><text x="25" y="13.7">4</text>
+          <text x="11" y="27.6">8</text><text x="25" y="27.6">16</text>
         </g>
       </>
     case 'calendar':
-      return <><rect x="5" y="8" width="26" height="23" rx="3"/><path d="M5 15h26M11 5v6m14-6v6"/><path d="M12 21h4m5 0h3m-12 5h4m5 0h3" strokeLinecap="round"/></>
+      return <>
+        <rect x="5" y="8" width="26" height="23" rx="3" fill="#fff2e7" stroke="#fbe1d7" strokeWidth="1.1"/>
+        <path d="M5 15V11a3 3 0 0 1 3-3h20a3 3 0 0 1 3 3v4Z" fill="#fa8d85"/>
+        <path d="M11 5v6m14-6v6" stroke="#fff5ef" strokeWidth="2.8" strokeLinecap="round"/>
+        <path d="M12 21h4m5 0h3m-12 5h4m5 0h3" stroke="#ba7a73" strokeWidth="2" strokeLinecap="round"/>
+      </>
     case 'monitor':
-      return <><rect x="4" y="7" width="28" height="22" rx="4"/><path d="M7 19h5l3-7 6 13 3-6h5" strokeLinejoin="round"/></>
+      return <>
+        <rect x="4" y="7" width="28" height="22" rx="4" fill="#2d465a" fillOpacity=".45" stroke="#8fbeda" strokeWidth="2.2"/>
+        <path d="M7 19h5l3-7 6 13 3-6h5" fill="none" stroke="#90efbd" strokeWidth="2.7" strokeLinejoin="round" strokeLinecap="round"/>
+      </>
     case 'notes':
-      return <><rect x="7" y="5" width="22" height="27" rx="3"/><path d="M11 5v6h14V5M11 17h14m-14 5h14m-14 5h9" strokeLinecap="round"/></>
+      return <>
+        <rect x="7" y="5" width="22" height="27" rx="3" fill="#fff6dc" stroke="#f7e6ba" strokeWidth="1.2"/>
+        <path d="M7 9a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4v3H7Z" fill="#ffc878"/>
+        <path d="M11 17h14m-14 5h14m-14 5h10" fill="none" stroke="#b3a28e" strokeWidth="1.7" strokeLinecap="round"/>
+      </>
     case 'readme':
-      return <><circle cx="18" cy="18" r="13"/><circle cx="18" cy="11" r="1.8" fill="currentColor" stroke="none"/><path d="M18 17v9" strokeWidth="2.7" strokeLinecap="round"/></>
+      return <>
+        <circle cx="18" cy="18" r="13" fill="#d6e5ff" stroke="#f3f8ff" strokeWidth="1.2"/>
+        <circle cx="18" cy="11" r="2" fill="#567eb8"/>
+        <path d="M18 17v9" fill="none" stroke="#567eb8" strokeWidth="2.8" strokeLinecap="round"/>
+      </>
     case 'trash':
-      return <><path d="M10 10h16l-2 21H12z"/><path d="M7 10h22m-15 0V6h8v4M15 16v10m6-10v10" strokeLinecap="round"/></>
+      return <>
+        <path d="M10 10h16l-2 21H12Z" fill="#d9e1e9" stroke="#eff3f8" strokeWidth="1.4" strokeLinejoin="round"/>
+        <path d="M7 10h22m-15 0V6h8v4M15 16v10m6-10v10" fill="none" stroke="#91a4b5" strokeWidth="2" strokeLinecap="round"/>
+      </>
   }
 }
 
 export function DockAppIcon({ id }: { id: AppIconId }) {
   return <span className={`os-appicon os-appicon-${id}`} aria-hidden="true">
-    <svg viewBox="0 0 36 36" fill="none" stroke="currentColor"
-      strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 36 36" fill="none" strokeLinecap="round" strokeLinejoin="round">
       <Symbol id={id}/>
     </svg>
   </span>
