@@ -8,7 +8,7 @@ const CDN='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/'
 let loader:Promise<PdfLibrary>|null=null
 function library():Promise<PdfLibrary>{
   if(loader)return loader
-  loader=new Promise<PdfLibrary>((resolve,reject)=>{
+  const pending=new Promise<PdfLibrary>((resolve,reject)=>{
     const onReady=()=>{
       const lib=(window as Window&{pdfjsLib?:PdfLibrary}).pdfjsLib
       if(!lib){reject(Error('PDF renderer nije dostupan.'));return}
@@ -23,8 +23,9 @@ function library():Promise<PdfLibrary>{
     script.onload=onReady
     script.onerror=()=>reject(Error('PDF.js se nije učitao. Proveri internet konekciju.'))
     document.head.append(script)
-  }).catch(err=>{loader=null;throw err})
-  return loader
+  }).catch((err: unknown): never=>{loader=null;throw err})
+  loader=pending
+  return pending
 }
 const clamp=(value:number,min:number,max:number)=>Math.max(min,Math.min(value,max))
 export function PdfViewer({file,name}:{file:string;name:string}){
