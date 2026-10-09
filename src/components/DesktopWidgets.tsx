@@ -81,7 +81,7 @@ function ClockWidget({ now }: { now: Date }) {
   </section>
 }
 
-function CalendarWidget({ now }: { now: Date }) {
+function CalendarWidget({ now, onOpen }: { now: Date; onOpen?: () => void }) {
   const dt = new Intl.DateTimeFormat('en-US', { timeZone, year: 'numeric', month: 'numeric', day: 'numeric' }).formatToParts(now)
   const year = Number(dt.find(p => p.type === 'year')?.value)
   const month = Number(dt.find(p => p.type === 'month')?.value)
@@ -89,7 +89,7 @@ function CalendarWidget({ now }: { now: Date }) {
   const first = (new Date(year, month - 1, 1).getDay() + 6) % 7
   const length = new Date(year, month, 0).getDate()
   return <section className="widget calendar-widget" aria-label="Kalendar za tekući mesec">
-    <div className="calendar-month">{new Intl.DateTimeFormat('sr-RS', { month: 'long', timeZone }).format(now)} <span>{year}</span></div>
+    <div className="calendar-month">{new Intl.DateTimeFormat('sr-RS', { month: 'long', timeZone }).format(now)} <span>{year}</span></div>{onOpen&&<button className="widget-launch" type="button" onClick={onOpen} title="Otvori Kalendar" aria-label="Otvori Kalendar">↗</button>}
     <div className="calendar-grid">
       {['P','U','S','Č','P','S','N'].map((label, index) => <span className="calendar-weekday" key={index}>{label}</span>)}
       {Array.from({ length: first }, (_, i) => <span key={`empty-${i}`} />)}
@@ -98,7 +98,7 @@ function CalendarWidget({ now }: { now: Date }) {
   </section>
 }
 
-function UsageWidget() {
+function UsageWidget({ onOpen }: { onOpen?: () => void }) {
   const [usage, setUsage] = useState<Usage>({ cpu: 28, ram: 63, disk: 42 })
   const [history, setHistory] = useState<number[]>([32,40,28,46,38,51,44,28,33,41,35,52,43,31,36,28,44,38])
   useEffect(() => {
@@ -110,7 +110,7 @@ function UsageWidget() {
     return () => window.clearInterval(timer)
   }, [])
   return <section className="widget usage-widget" aria-label="Indikatori radne površine">
-    <div className="usage-header"><strong>Workspace Monitor</strong></div>
+    <div className="usage-header"><strong>Workspace Monitor</strong>{onOpen&&<button className="widget-launch" type="button" onClick={onOpen} title="Otvori System Monitor" aria-label="Otvori System Monitor">↗</button>}</div>
     <div className="usage-chart" aria-hidden="true">{history.map((value, i) => <div className="usage-chart-column" key={i} style={{ height: `${value}%` }} />)}</div>
     <div className="usage-metrics">
       {([
@@ -144,12 +144,12 @@ function MiniStatusWidget() {
   </section>
 }
 
-export function DesktopWidgets({ now }: { now: Date }) {
+export function DesktopWidgets({ now, onOpenCalendar, onOpenMonitor }: { now: Date; onOpenCalendar?: () => void; onOpenMonitor?: () => void }) {
   const time = useMemo(() => now, [now])
   return <aside className="os-widgets" aria-label="Desktop widgeti">
     <WeatherWidget />
-    <div className="os-widget-pair"><ClockWidget now={time} /><CalendarWidget now={time} /></div>
-    <UsageWidget />
+    <div className="os-widget-pair"><ClockWidget now={time} /><CalendarWidget now={time} onOpen={onOpenCalendar} /></div>
+    <UsageWidget onOpen={onOpenMonitor} />
     <div className="os-widget-pair os-widget-last"><DateWidget now={time} /><MiniStatusWidget /></div>
   </aside>
 }
