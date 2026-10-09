@@ -22,7 +22,7 @@ const short: Record<AppId, string> = { ers: 'ERS', oib: 'OIB', odp: 'ODP', sudok
 const applicationIds: AppId[] = ['ers','oib','odp','sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme','trash']
 const courseIds: AppId[] = ['ers','oib','odp']
 const utilityIds: AppId[] = ['sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme','trash']
-const dashIds: AppId[] = ['ers','oib','odp','sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme']
+const dashIds: AppId[] = ['sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme']
 const courseIcon: Record<CourseId, string> = { ers:'folder.svg', oib:'folder-documents.svg', odp:'folder-projects.svg' }
 const initialHashCourse = () => {
   const match = location.hash.match(/^#(ers|oib|odp)(?:\/|$)/)
