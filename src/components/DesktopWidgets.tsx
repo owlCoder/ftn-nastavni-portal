@@ -1,10 +1,9 @@
-import { useEffect, useState, type CSSProperties } from 'react'
+import { useEffect, useState } from 'react'
 
 type Weather = {
   current: { temperature_2m: number; relative_humidity_2m: number; weather_code: number; wind_speed_10m: number }
   daily: { time: string[]; weather_code: number[]; temperature_2m_max: number[]; temperature_2m_min: number[] }
 }
-type Usage = { cpu: number; ram: number; disk: number }
 
 const timeZone = 'Europe/Belgrade'
 const weatherUrl = 'https://api.open-meteo.com/v1/forecast?latitude=45.2671&longitude=19.8335&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=Europe%2FBelgrade&forecast_days=5'
@@ -49,7 +48,6 @@ function WeatherWidget() {
   return <section className="widget weather-widget" aria-label="Vremenska prognoza za Novi Sad">
     <div className="widget-heading">
       <div><span className="widget-eyebrow">VREMENSKA PROGNOZA</span><h2>Novi Sad</h2></div>
-      <span className="widget-location-indicator" aria-label="Lokacija Novi Sad">⌖</span>
     </div>
     {weather ? <>
       <div className="weather-hero">
@@ -103,7 +101,7 @@ function ClockWidget({ now }: { now: Date }) {
   </section>
 }
 
-function CalendarWidget({now,onOpen}:{now:Date;onOpen?:()=>void}) {
+function CalendarWidget({now}:{now:Date}) {
   const parts=new Intl.DateTimeFormat('en-US',{timeZone,year:'numeric',month:'numeric',day:'numeric'}).formatToParts(now)
   const get=(type:string)=>Number(parts.find(p=>p.type===type)?.value??0)
   const year=get('year'),month=get('month'),day=get('day')
@@ -113,7 +111,6 @@ function CalendarWidget({now,onOpen}:{now:Date;onOpen?:()=>void}) {
   return <section className="widget calendar-widget" aria-label="Kalendar za tekući mesec">
     <div className="widget-heading">
       <div><span className="widget-eyebrow">KALENDAR</span><h2>{monthName} <span>{year}</span></h2></div>
-      {onOpen&&<button className="widget-launch" type="button" onClick={onOpen} aria-label="Otvori Kalendar" title="Otvori Kalendar">↗</button>}
     </div>
     <div className="calendar-grid">
       {['Po','Ut','Sr','Če','Pe','Su','Ne'].map(label=><span className="calendar-weekday" key={label}>{label}</span>)}
@@ -123,40 +120,10 @@ function CalendarWidget({now,onOpen}:{now:Date;onOpen?:()=>void}) {
   </section>
 }
 
-function UsageWidget({onOpen}:{onOpen?:()=>void}) {
-  const [usage,setUsage]=useState<Usage>({cpu:28,ram:63,disk:42})
-  const [history,setHistory]=useState<number[]>([32,40,28,46,38,51,44,28,33,41,35,52,43,31,36,28,44,38,26,35,39,33])
-  useEffect(()=>{
-    const timer=window.setInterval(()=>{
-      const cpu=Math.min(85,Math.max(12,26+Math.round(Math.random()*34)))
-      setUsage(previous=>({cpu,ram:Math.min(75,Math.max(56,previous.ram+Math.round(Math.random()*6-3))),disk:previous.disk}))
-      setHistory(previous=>[...previous.slice(1),cpu])
-    },5000)
-    return()=>window.clearInterval(timer)
-  },[])
-  return <section className="widget usage-widget" aria-label="Resursi radnog okruženja">
-    <div className="widget-heading">
-      <div><span className="widget-eyebrow">PERFORMANSE</span><h2>System Monitor</h2></div>
-      {onOpen&&<button className="widget-launch" type="button" onClick={onOpen} aria-label="Otvori System Monitor" title="Otvori System Monitor">↗</button>}
-    </div>
-    <div className="usage-chart" aria-hidden="true">{history.map((value,i)=><div className="usage-chart-column" key={i} style={{height:value+'%'}}/>)}</div>
-    <div className="usage-metrics">{([
-      ['CPU',usage.cpu,'Procesor'],
-      ['RAM',usage.ram,'Memorija'],
-      ['SSD',usage.disk,'Disk'],
-    ] as const).map(([label,percent,description])=><div className="usage-metric" key={label}>
-      <span className="usage-metric-label">{label}<small>{description}</small></span>
-      <span className="usage-meter"><i style={{'--fill':percent+'%'} as CSSProperties}/></span>
-      <strong>{percent}%</strong>
-    </div>)}</div>
-  </section>
-}
-
-export function DesktopWidgets({now,onOpenCalendar,onOpenMonitor}:{now:Date;onOpenCalendar?:()=>void;onOpenMonitor?:()=>void}) {
+export function DesktopWidgets({now}:{now:Date}) {
   return <aside className="os-widgets" aria-label="Desktop widgeti">
     <WeatherWidget/>
     <ClockWidget now={now}/>
-    <CalendarWidget now={now} onOpen={onOpenCalendar}/>
-    <UsageWidget onOpen={onOpenMonitor}/>
+    <CalendarWidget now={now}/>
   </aside>
 }
