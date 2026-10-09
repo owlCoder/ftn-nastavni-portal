@@ -1,6 +1,6 @@
 # FTN Desktop — GNOME-inspirisani nastavni portal
 
-FTN Desktop je javna React/TypeScript web aplikacija koja nastavne materijale Fakulteta tehničkih nauka prikazuje kao interaktivnu radnu površinu u stilu GNOME Shell/Adwaita. Studenti mogu da otvaraju **ERS, OIB i ODP praktikume u prozorima**, pregledaju prezentacije i primere, koriste beleške i igraju Sudoku, Tetris i Space Invaders.
+FTN Desktop je javna React/TypeScript web aplikacija koja nastavne materijale Fakulteta tehničkih nauka prikazuje kao interaktivnu radnu površinu u stilu GNOME Shell/Adwaita. Studenti mogu da otvaraju **ERS, OIB i ODP praktikume u prozorima**, pregledaju prezentacije i primere, koriste beleške i igraju Sudoku, Tetris, Space Invaders, Snake i 2048.
 
 **FTN Desktop nije instaliran operativni sistem.** Izgled radne površine, prozori, Activities pregled, sistemska podešavanja i neke statistike su web simulacija. Vreme i kalendar prikazuju stvarne podatke: sat koristi vremensku zonu Europe/Belgrade, a vremenska prognoza Novi Sad/Open-Meteo.
 
@@ -27,9 +27,20 @@ U okviru desktopa otvori **README.md** da prikažeš ekran „O sistemu”, sa p
 
 Logotipi su preuzeti iz [Simple Icons](https://github.com/simple-icons/simple-icons) (CC0); robne marke pripadaju svojim nosiocima. Ovo **ne znači** da AMD ili NVIDIA podržavaju projekat. Adwaita ikone u `public/gnome-icons/` su rad GNOME Project-a (LGPL v3 ili CC BY-SA 3.0 US; pogledati `public/gnome-icons/ATTRIBUTION.md`).
 
+### Prijava i personalizacija
+
+Na ulazu je lokalna prijava namenjena prikazu desktop iskustva:
+
+- **Korisničko ime:** `student`
+- **Lozinka:** `ftn`
+
+Ova prijava je **isključivo klijentska** (hardkodovana u isporučenom JavaScript-u) i ne štiti privatne ili poverljive resurse. **Ne koristiti je kao realnu autentifikaciju.** Za produkcionu kontrolu pristupa potrebno je dodati serversku autentifikaciju i sesije.
+
+`localStorage` čuva status prijave (`ftn-os-session-v1`), izabranu pozadinu (10 predefinisanih), svetlu/tamnu temu, prikaz widgeta, noćni režim, osvetljenje i rekorde za Snake i 2048. Odjava briše samo status prijave, a podešavanja i beleške ostaju u istom browseru. Dok je korisnik prijavljen, **donji dock je uvek vidljiv** sa aplikacijama za tri predmeta i igre. Drawer sa aplikacijama je modalni prozor koji se zatvara klikom van njega ili tasterom Esc.
+
 ### Korišćenje
 
-- **Aktivnosti** odmah prikazuju sve aplikacije; pretraga radi po nazivu predmeta ili aplikacije. Podržani su Super ili Ctrl+Space, kao i Esc za zatvaranje.
+- **Aktivnosti** otvaraju umanjeni prikaz svih aplikacija; pretraga radi po nazivu predmeta ili aplikacije. Podržani su Super ili Ctrl+Space, kao i Esc za zatvaranje.
 - **Folderi predmeta** se otvaraju dvoklikom u istom tabu; prozori se mogu pomerati, minimizovati, maksimizovati i prebaciti preko celog ekrana.
 - **Gornja traka** sadrži pravi sat, kalendar i simulirane sistemske kontrole; **Quick Settings** omogućavaju promenu teme, prikaza widgeta i izgleda pozadine.
 - **Widgeti** prikazuju prognozu, časovnik, kalendar i *jasno obeležene simulirane* CPU/RAM/SSD vrednosti. Beleške se čuvaju samo lokalno u browseru.
