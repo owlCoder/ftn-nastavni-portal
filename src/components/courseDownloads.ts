@@ -1,6 +1,5 @@
 import { assetUrl } from '../lib/assets'
 import type { Course } from '../courses/types'
-import type { Block } from '../practicum/types'
 
 export type DownloadEntry={path:string;url?:string;text?:string}
 
@@ -21,7 +20,7 @@ export function practicumMarkdown(course:Course,exercise?:number):string{
       if(block.type==='text')out.push(escapeText(block.html),'')
       else if(block.type==='list')out.push(...block.items.map((item,i)=>(block.ordered?`${i+1}. `:'- ')+escapeText(item)),'')
       else if(block.type==='callout')out.push(`> ${block.title}: ${escapeText(block.html)}`,'')
-      else if(block.type==='code')out.push(```\`\`\`${block.language}\n${block.code}\n\`\`\``,'')
+      else if(block.type==='code')out.push('```'+block.language+'\n'+block.code+'\n```','')
       else if(block.type==='table')out.push('| '+block.headers.map(escapeText).join(' | ')+' |','| '+block.headers.map(()=> '---').join(' | ')+' |',...block.rows.map(row=>'| '+row.map(escapeText).join(' | ')+' |'),'')
       else if(block.type==='image')out.push(`![${block.alt}](${block.src})`,'',block.caption,'')
       else if(block.type==='diagram')out.push(`### ${block.title}`,'',...block.items.map(item=>`- ${item.title}: ${item.subtitle}`),'')
