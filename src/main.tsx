@@ -13,6 +13,8 @@ import './styles/gnome.css'
 import './styles/gnome-windows.css'
 import './styles/gnome-polish.css'
 import './styles/gnome-about.css'
+import './styles/gnome-experience.css'
+import './styles/gnome-arcade.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
