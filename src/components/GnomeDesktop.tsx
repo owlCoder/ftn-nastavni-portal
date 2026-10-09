@@ -216,7 +216,7 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
   const dateString=new Intl.DateTimeFormat('sr-RS',{weekday:'short',day:'numeric',month:'short',timeZone:'Europe/Belgrade'}).format(now)
   const timeString=new Intl.DateTimeFormat('sr-RS',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Belgrade'}).format(now)
   const panelToggle=(id:Panel)=>{setPanel(current=>current===id?null:id);setContext(null)}
-  return <div className={'gn-shell'+(!isDark?' gn-light':'')+(nightLight?' gn-nightlight':'')}
+  return <div className={'gn-shell'+(!isDark?' gn-light':'')+(nightLight?' gn-nightlight':'')+(wallpaper===0?' gn-wallpaper-default':'')}
     style={{'--gn-brightness':String(brightness/100),'--gn-wallpaper':WALLPAPERS[wallpaper].background} as CSSProperties}>
     <div className="gn-wallpaper" aria-hidden="true"/>
     <header className="gn-topbar">
@@ -288,7 +288,8 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
       </div>
     </>}
 
-    {overview && <div className="gn-overview">
+    {overview && <><button className="gn-drawer-scrim" aria-label="Zatvori pregled aplikacija" onClick={()=>{setOverview(false);setSearch('')}}/>
+      <div className="gn-overview">
       <button className="gn-overview-dismiss" aria-label="Zatvori pregled" onClick={()=>{setOverview(false);setSearch('')}}/>
       <button className="gn-overview-close" title="Zatvori aplikacije" aria-label="Zatvori aplikacije" onClick={()=>{setOverview(false);setSearch('')}}><Icon name="close" size={17}/></button>
       <div className="gn-overview-body">
@@ -306,7 +307,7 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
           {!filteredApps.length && <div className="gn-no-app-results"><Icon name="search" size={30}/><strong>Nema rezultata</strong><span>Probaj drugi naziv predmeta ili aplikacije.</span></div>}
         </div>
       </div>
-    </div>}
+    </div></>}
     <nav className="gn-bottom-dock" aria-label="Traka aplikacija">
       <button className={'gn-dock-apps'+(overview?' gn-dock-current':'')} title="Sve aplikacije" aria-label="Sve aplikacije" onClick={()=>{setSearch('');setOverview(v=>!v);setPanel(null)}}><Icon name="grid" size={25}/></button>
       <span className="gn-bottom-separator"/>
