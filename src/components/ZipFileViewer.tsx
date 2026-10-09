@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { assetUrl } from '../lib/assets'
 
 type ZipEntry = { name:string; size:number; compressedSize:number; offset:number; method:number; isDirectory:boolean }
