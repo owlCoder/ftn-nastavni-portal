@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type CSSProperties, type FormEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent } from 'react'
 
 const ZONE='Europe/Belgrade'
 const KEY='ftn-os-calendar-events-v1'
@@ -92,18 +92,20 @@ const initial:Metrics={cpu:32,ram:61,disk:42,network:8,gpu:27}
 const nextMetric=(value:number,min:number,max:number,step:number)=>Math.max(min,Math.min(max,value+(Math.random()-.48)*step))
 export function SystemMonitorApp() {
   const [metrics,setMetrics]=useState<Metrics>(initial)
+  const metricsRef=useRef<Metrics>(initial)
   const [history,setHistory]=useState<number[]>([29,31,37,24,40,38,32,44,39,35,42,30,29,41,36,33,40,34,30,32,38,36,33,32])
   const [since]=useState(()=>Date.now())
   const [seconds,setSeconds]=useState(0)
   useEffect(()=>{
     const timer=window.setInterval(()=>{
-      setMetrics(previous=>{
-        const cpu=Math.round(nextMetric(previous.cpu,9,88,27))
-        setHistory(items=>[...items.slice(1),cpu])
-        return {cpu,ram:Math.round(nextMetric(previous.ram,54,74,3)),
-          disk:previous.disk,network:Math.round(nextMetric(previous.network,1,60,13)),
-          gpu:Math.round(nextMetric(previous.gpu,12,82,22))}
-      })
+      const previous=metricsRef.current
+      const cpu=Math.round(nextMetric(previous.cpu,9,88,27))
+      const next:Metrics={cpu,ram:Math.round(nextMetric(previous.ram,54,74,3)),
+        disk:previous.disk,network:Math.round(nextMetric(previous.network,1,60,13)),
+        gpu:Math.round(nextMetric(previous.gpu,12,82,22))}
+      metricsRef.current=next
+      setMetrics(next)
+      setHistory(items=>[...items.slice(1),cpu])
       setSeconds(Math.floor((Date.now()-since)/1000))
     },1600)
     return ()=>window.clearInterval(timer)
