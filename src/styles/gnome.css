@@ -1,0 +1,283 @@
+/* GNOME 51 / Adwaita-inspired desktop shell */
+:root { --gnome-blue:#3584e4; --gnome-blue-dark:#1c71d8; --gnome-green:#33d17a; }
+.gn-shell {
+  --gn-panel:#252436;--gn-panel-soft:#302c41;--gn-text:#f6f5f4;--gn-muted:#c3c2c7;--gn-outline:rgba(255,255,255,.115);
+  position:fixed;inset:0;overflow:hidden;isolation:isolate;background:#231b46;color:var(--gn-text);
+  font-family:"Adwaita Sans","Cantarell","Inter","Segoe UI",sans-serif;
+  font-size:13px;font-weight:450;font-synthesis:none;
+}
+.gn-shell *{box-sizing:border-box}
+.gn-shell button,.gn-shell input,.gn-shell textarea{font:inherit}
+.gn-shell button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.gn-shell button:focus-visible{outline:2px solid #99c1f1;outline-offset:2px}
+.gn-wallpaper {
+  position:absolute;inset:0;z-index:-2;overflow:hidden;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 8% 110%,#8f44ad 0%,transparent 54%),
+    radial-gradient(ellipse at 86% -16%,#3d84c0 0%,transparent 46%),
+    radial-gradient(ellipse at 61% 72%,#58348c 0%,transparent 52%),
+    linear-gradient(130deg,#1c245a 0%,#362c75 33%,#44347b 65%,#181b42 100%);
+  filter:brightness(var(--gn-brightness,1));transition:filter .25s;
+}
+.gn-wallpaper::before{
+  content:"";position:absolute;inset:-30%;transform:rotate(-24deg);
+  border-radius:44%;
+  background:radial-gradient(ellipse at 35% 40%,rgba(177,104,215,.57),transparent 48%);
+  filter:blur(85px);
+}
+.gn-wallpaper::after{
+  content:"";position:absolute;z-index:1;
+  right:-13vw;top:8%;width:85vw;height:80vh;border-radius:45% 55% 47% 53%;
+  transform:rotate(-30deg);
+  box-shadow:inset 8vw 5vw 11vw -5vw rgba(136,115,234,.28),-17vw 22vw 18vw -16vw rgba(236,119,187,.22);
+  background:linear-gradient(130deg,rgba(162,166,255,.13),rgba(119,80,180,.07) 50%,rgba(42,28,103,.22));
+  filter:blur(20px);
+}
+.gn-nightlight .gn-wallpaper::after{background:linear-gradient(130deg,rgba(252,168,118,.3),rgba(140,80,80,.19))}
+.gn-topbar{
+  position:absolute;inset:0 0 auto;z-index:120;height:34px;
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 11px;
+  background:rgba(21,19,34,.94);border-bottom:1px solid rgba(255,255,255,.045);
+  color:#f6f5f4;text-shadow:none;
+}
+.gn-topbar button{
+  height:27px;border:0;border-radius:8px;background:transparent;color:inherit;
+  padding:0 12px;font-size:12px;font-weight:650;
+}
+.gn-topbar button:hover,.gn-topbar button.gn-top-button-active,.gn-topbar button.gn-activities-active{background:rgba(255,255,255,.13)}
+.gn-top-left{display:flex;align-items:center;gap:16px;min-width:0}
+.gn-topbar .gn-activities{padding:0 12px 0 10px;display:flex;align-items:center;gap:8px;font-weight:750}
+.gn-activities-dot{width:6px;height:6px;background:#68b7ff;border-radius:50%;opacity:.9}
+.gn-running-name{font-size:12px;color:#dfdde9;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:650}
+.gn-top-clock{grid-column:2;white-space:nowrap;font-variant-numeric:tabular-nums;letter-spacing:.005em}
+.gn-clock-dot{font-size:7px;color:#8ac4ff;margin-left:7px;vertical-align:middle}
+.gn-topbar .gn-system-status{justify-self:end;display:flex;align-items:center;gap:9px;padding:0 12px}
+.gn-desktop{position:absolute;inset:34px 0 0;z-index:1;overflow:auto}
+.gn-desktop-items{
+  position:absolute;top:23px;right:26px;display:grid;grid-template-columns:repeat(4,105px);
+  column-gap:22px;row-gap:31px;justify-items:center;align-items:start;
+}
+.gn-desktop-item{
+  display:flex;flex-direction:column;align-items:center;justify-content:start;gap:4px;
+  width:105px;min-height:108px;padding:5px 4px 6px;color:#fff;
+  background:transparent;border:1px solid transparent;border-radius:8px;
+  text-align:center;cursor:default;
+}
+.gn-desktop-item:hover{background:rgba(255,255,255,.075)}
+.gn-desktop-item.gn-item-selected{background:rgba(56,145,240,.27);border-color:rgba(160,196,245,.6)}
+.gn-desktop-item>span:last-child{
+  max-width:103px;padding:2px 5px;border-radius:4px;font-size:11.5px;font-weight:700;line-height:1.25;
+  text-shadow:0 1px 4px rgba(2,7,25,.9);overflow-wrap:anywhere;
+}
+.gn-item-selected>span:last-child{background:#3584e4}
+.gn-folder-svg{width:77px;height:77px;object-fit:contain;filter:drop-shadow(0 6px 8px rgba(0,0,0,.17))}
+.gn-file-svg{width:72px;height:72px;object-fit:contain;filter:drop-shadow(0 5px 9px rgba(0,0,0,.13))}
+.gn-app-art{display:inline-grid;place-items:center;width:74px;height:74px;flex:none}
+.gn-shell .os-appicon{
+  width:69px;height:69px;display:grid;place-items:center;border-radius:17px;
+  overflow:hidden;isolation:isolate;border:1px solid rgba(255,255,255,.14);
+  background:#3584e4;box-shadow:0 6px 15px rgba(10,7,35,.22),inset 0 1px rgba(255,255,255,.25);
+}
+.gn-shell .os-appicon svg{display:block;width:100%;height:100%}
+.gn-shell .os-appicon-ers{background:linear-gradient(145deg,#58a4f6,#1760c6)}
+.gn-shell .os-appicon-oib{background:linear-gradient(145deg,#ec8396,#bc4269)}
+.gn-shell .os-appicon-odp{background:linear-gradient(145deg,#54d9b5,#168d91)}
+.gn-shell .os-appicon-sudoku{background:linear-gradient(145deg,#be8deb,#7249a5)}
+.gn-shell .os-appicon-tetris{background:linear-gradient(145deg,#ffd383,#dc8b3c)}
+.gn-shell .os-appicon-invaders{background:linear-gradient(145deg,#314d8a,#16295e)}
+.gn-shell .os-appicon-notes{background:linear-gradient(145deg,#fff0b5,#d6ac51)}
+.gn-shell .os-appicon-readme{background:#f3f6f8}
+.gn-shell .os-appicon-trash{background:transparent;border:0;box-shadow:none}
+.gn-overview-shortcut{
+  position:absolute;left:50%;bottom:20px;transform:translateX(-50%);
+  display:flex;align-items:center;gap:10px;padding:10px 18px;
+  color:#f7f7fe;border:1px solid rgba(255,255,255,.13);
+  border-radius:999px;background:rgba(30,26,52,.42);
+  -webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);
+  box-shadow:0 10px 30px rgba(21,15,44,.16);font-size:12px;font-weight:650;
+}
+.gn-overview-shortcut:hover{background:rgba(35,31,61,.78)}
+/* GNOME overview, workspace thumbnails, app search, dash */
+.gn-overview{
+  position:absolute;inset:34px 0 0;z-index:180;
+  background:rgba(20,18,47,.56);
+  -webkit-backdrop-filter:blur(22px) saturate(115%);
+  backdrop-filter:blur(22px) saturate(115%);
+  animation:gn-overview-enter .16s ease-out;
+}
+@keyframes gn-overview-enter{from{opacity:.4;transform:scale(1.012)}to{opacity:1;transform:scale(1)}}
+.gn-overview-dismiss{position:absolute;inset:0;border:0;background:transparent;cursor:default}
+.gn-overview-body{
+  position:relative;z-index:1;pointer-events:none;display:flex;flex-direction:column;align-items:center;
+  width:100%;height:100%;padding:25px 25px 21px;
+}
+.gn-overview-body>*{pointer-events:auto}
+.gn-overview-top{position:relative;width:min(385px,calc(100vw - 60px));height:46px;flex:none}
+.gn-overview-top input{
+  width:100%;height:100%;border:1px solid rgba(255,255,255,.2);border-radius:30px;
+  color:#f6f5f4;outline:none;
+  background:rgba(30,28,59,.91);
+  box-shadow:0 4px 18px rgba(13,13,44,.21);
+  text-align:center;padding:0 45px;font-size:13px;
+}
+.gn-overview-top input::placeholder{color:rgba(244,244,251,.70)}
+.gn-overview-top input:focus{border-color:rgba(167,198,250,.88);box-shadow:0 0 0 2px rgba(91,146,237,.35)}
+.gn-overview-top>svg{position:absolute;left:18px;top:13px;pointer-events:none;color:#d3d5ee}
+.gn-workspace-overview{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;width:min(980px,100%)}
+.gn-workspace-top{display:flex;align-items:center;justify-content:space-between;gap:12px;width:min(700px,84%);margin-bottom:12px;color:#eeeaf8;font-size:13px;font-weight:750}
+.gn-workspace-top button{display:flex;align-items:center;gap:7px;background:transparent;color:#fff;border:0;padding:7px 12px;border-radius:12px}
+.gn-workspace-top button:hover{background:rgba(255,255,255,.13)}
+.gn-workspace-preview{
+  position:relative;overflow:hidden;width:min(700px,84%);height:min(46vh,440px);min-height:165px;
+  border:5px solid rgba(255,255,255,.24);border-radius:22px;
+  background:radial-gradient(ellipse at 10% 110%,#9c5abe,transparent 50%),radial-gradient(ellipse at 80% -10%,#4288cb,transparent 48%),#453477;
+  box-shadow:0 25px 65px rgba(8,6,24,.38);transition:transform .2s,border-color .2s;
+}
+.gn-workspace-preview:hover{transform:scale(1.012);border-color:rgba(255,255,255,.55)}
+.gn-mini-topbar{height:13px;background:#151627}
+.gn-mini-desk{position:absolute;inset:13px 0 0}
+.gn-mini-window{position:absolute;width:53%;height:49%;padding-top:13px;border-radius:7px;background:#f3f4f8;color:#34374a;box-shadow:0 7px 18px rgba(0,0,0,.17);font-size:11px;font-weight:650}
+.gn-mini-window span{position:absolute;top:0;left:0;right:0;height:10px;background:#d9dae2;border-radius:7px 7px 0 0}
+.gn-mini-empty{position:absolute;inset:0;display:grid;place-items:center;font-size:19px;font-weight:700;color:rgba(255,255,255,.8)}
+.gn-workspace-help{display:block;margin:15px 0 0;color:#cac9df;font-size:11px;text-align:center}
+.gn-apps-overview{
+  flex:1;width:min(930px,100%);min-height:0;overflow-y:auto;scrollbar-width:thin;
+  margin:27px auto;padding:12px 20px;
+}
+.gn-apps-overview h2{font-size:15px;font-weight:700;text-align:center;margin:0 0 17px;color:#f5f3fd}
+.gn-app-grid{display:grid;grid-template-columns:repeat(5,minmax(100px,1fr));gap:19px 12px}
+.gn-app-grid>button{
+  display:flex;flex-direction:column;gap:7px;align-items:center;justify-content:center;
+  padding:10px 5px;border:1px solid transparent;border-radius:16px;
+  background:transparent;color:#fff;font-weight:600;font-size:12px;text-align:center;
+}
+.gn-app-grid>button:hover,.gn-app-grid>button:focus-visible{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.12)}
+.gn-app-grid .gn-app-art{width:79px;height:79px}
+.gn-app-grid .gn-file-svg{width:78px;height:78px}
+.gn-apps-overview p{text-align:center;color:#c9c3db}
+.gn-overview-dash{
+  position:relative;flex:none;display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:9px 10px;margin-top:10px;max-width:100%;
+  border-radius:21px;border:1px solid rgba(255,255,255,.11);background:rgba(25,24,42,.82);
+  box-shadow:0 10px 28px rgba(8,6,19,.21);
+}
+.gn-overview-dash button{position:relative;width:61px;height:61px;display:grid;place-items:center;padding:0;border:0;border-radius:13px;background:transparent;color:#fff}
+.gn-overview-dash button:hover{background:rgba(255,255,255,.14);transform:translateY(-2px)}
+.gn-overview-dash .gn-app-art{width:55px;height:55px}
+.gn-overview-dash .os-appicon{width:53px;height:53px;border-radius:13px}
+.gn-overview-dash button>i{position:absolute;bottom:0;width:5px;height:5px;background:#f6f5f4;border-radius:50%}
+.gn-dash-divider{width:1px;height:42px;background:rgba(255,255,255,.20);margin:0 5px}
+.gn-show-apps svg{color:#fff}
+.gn-show-apps-active{background:rgba(255,255,255,.19)!important}
+/* GNOME quick settings and notification calendar */
+.gn-popover-scrim,.gn-context-scrim{position:fixed;z-index:125;inset:34px 0 0;width:100%;border:0;background:transparent;cursor:default}
+.gn-quick-menu,.gn-calendar-popover{
+  position:absolute;z-index:135;top:42px;
+  background:#303044;color:#f6f5f4;
+  border:1px solid rgba(255,255,255,.12);border-radius:17px;
+  box-shadow:0 16px 58px rgba(8,6,26,.50),0 2px 8px rgba(0,0,0,.15);
+}
+.gn-quick-menu{right:12px;width:366px;max-width:calc(100vw - 24px);padding:17px}
+.gn-quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.gn-quick-tile{
+  min-height:68px;display:flex;align-items:center;gap:9px;text-align:left;
+  background:#464659;border:0;border-radius:14px;padding:10px;
+  color:#f6f5f4;
+}
+.gn-quick-tile>div{display:grid;min-width:0;gap:4px}
+.gn-quick-tile strong{font-size:12px;line-height:1.2}
+.gn-quick-tile>div>span{font-size:10px;color:#d8d6e2;line-height:1.15}
+.gn-quick-round{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#676579;color:#fff}
+.gn-quick-connected .gn-quick-round,.gn-quick-enabled .gn-quick-round{background:#3584e4}
+.gn-quick-tile:hover:is(button){background:#56556a}
+.gn-quick-slider{margin:19px 1px 15px;display:flex;align-items:center;gap:13px}
+.gn-quick-slider input{flex:1;min-width:0;accent-color:#99c1f1}
+.gn-quick-slider>span{width:34px;text-align:right;color:#dcdbe8;font-size:11px;font-variant-numeric:tabular-nums}
+.gn-quick-footer{padding-top:10px;border-top:1px solid rgba(255,255,255,.13);display:flex;align-items:center;gap:8px}
+.gn-quick-footer>span{font-size:11px;color:#d4d1e1;margin-right:auto}
+.gn-quick-footer button{width:36px;height:36px;display:grid;place-items:center;border:0;border-radius:50%;color:#fff;background:#474759}
+.gn-quick-footer button:hover{background:#595872}
+.gn-fake-warning{display:block;color:#a9a7bc;font-size:10px;line-height:1.4;margin-top:10px}
+.gn-calendar-popover{left:50%;transform:translateX(-50%);width:min(720px,calc(100vw - 20px));display:grid;grid-template-columns:1fr 310px;min-height:343px;overflow:hidden}
+.gn-calendar-panel-left{padding:23px;border-right:1px solid rgba(255,255,255,.10)}
+.gn-calendar-panel-left h3{font-size:15px;margin:0;font-weight:700}
+.gn-no-notifications{height:255px;display:flex;flex-direction:column;gap:9px;align-items:center;justify-content:center;color:#adadbf}
+.gn-no-notifications strong{font-size:13px;color:#d9d8e0}
+.gn-no-notifications span{font-size:11px}
+.gn-calendar-panel-right{padding:23px;background:#37374a}
+.gn-calendar-date{font-size:12px;font-weight:700;text-transform:capitalize;line-height:1.6;margin-bottom:14px}
+.gn-calendar h3{margin:0 0 16px;font-size:14px;font-weight:750;text-transform:capitalize}
+.gn-calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px 2px;text-align:center}
+.gn-calendar-grid strong{color:#bab9cc;font-size:11px;padding:6px 0}
+.gn-calendar-grid span{display:grid;place-items:center;height:29px;font-size:12px}
+.gn-calendar-grid .gn-today{border-radius:50%;background:#3584e4;color:#fff;font-weight:800}
+.gn-today-plans{font-size:10px;color:#c6c5d4;text-align:center;margin-top:15px}
+.gn-context-scrim{z-index:140}
+.gn-context{position:fixed;z-index:145;width:227px;border-radius:13px;padding:7px;background:#303043;border:1px solid rgba(255,255,255,.16);box-shadow:0 12px 34px rgba(0,0,0,.36)}
+.gn-context button{display:block;width:100%;border:0;border-radius:7px;color:#f6f5f4;background:transparent;padding:10px 12px;text-align:left}
+.gn-context button:hover{background:#3584e4}
+.gn-context hr{height:1px;border:0;background:rgba(255,255,255,.17);margin:5px 4px}
+/* Optional dashboard widgets: retain existing real weather, date and simulated stats */
+.gn-widget-rail{position:absolute;top:14px;left:14px;bottom:84px;width:236px;z-index:2;overflow:auto;scrollbar-width:thin}
+.gn-widget-rail .os-widgets{position:static;left:auto;top:auto;max-height:none;overflow:visible;width:100%;display:flex;flex-direction:column;gap:10px;padding:0}
+.gn-widget-rail .os-widgets .widget{
+  background:rgba(34,32,60,.80);color:#f6f5f4;border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);box-shadow:0 8px 25px rgba(15,10,47,.13);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+}
+.gn-widget-rail .weather-widget{min-height:228px}
+.gn-widget-rail .weather-icon{color:#ffe2aa}
+.gn-widget-rail .usage-header>span{color:#b5cbed}
+.gn-widget-rail .usage-chart-column{background:#99c1f1}
+.gn-widget-rail .usage-meter i{background:#62a0ea}
+.gn-widget-rail .os-widget-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gn-widget-rail .analog-clock{background:rgba(255,255,255,.08)}
+.gn-widget-rail .system-ring{border-color:#62a0ea;border-top-color:#f6f5f4}
+/* Light style only affects shell popovers and cards */
+.gn-light{--gn-panel:#f5f5f7;--gn-text:#2e3440;--gn-muted:#5e5c64}
+.gn-light .gn-quick-menu,.gn-light .gn-calendar-popover,.gn-light .gn-context{background:#f6f5f4;color:#24242a;border-color:rgba(0,0,0,.10)}
+.gn-light .gn-calendar-panel-right{background:#ededef}
+.gn-light .gn-quick-tile{background:#e5e5e9;color:#282831}
+.gn-light .gn-quick-tile>div>span,.gn-light .gn-calendar-grid strong,.gn-light .gn-quick-footer>span,.gn-light .gn-no-notifications strong,.gn-light .gn-no-notifications{color:#5e5c64}
+.gn-light .gn-context button{color:#24242a}
+.gn-light .gn-quick-footer button{color:#24242a;background:#e5e5e9}
+.gn-light .gn-calendar-panel-left{border-right-color:#d7d7dc}
+.gn-light .gn-widget-rail .os-widgets .widget{background:rgba(247,246,250,.93);color:#33333b}
+@media(max-width:1100px){
+  .gn-desktop-items{grid-template-columns:repeat(3,105px);right:12px;gap:14px}
+  .gn-widget-rail{width:220px}
+}
+@media(max-width:760px){
+  .gn-topbar{grid-template-columns:auto 1fr auto;padding:0 7px}
+  .gn-topbar button{font-size:11px;padding:0 8px}
+  .gn-running-name{display:none}
+  .gn-topbar .gn-system-status{gap:4px;padding:0 7px}
+  .gn-system-status svg:nth-child(2),.gn-system-status svg:nth-child(3){display:none}
+  .gn-top-clock{justify-self:center}
+  .gn-desktop{padding-bottom:96px}
+  .gn-widget-rail{position:relative;left:auto;top:auto;bottom:auto;width:auto;padding:13px 14px;overflow:visible}
+  .gn-widget-rail .os-widgets{display:grid;grid-template-columns:1fr 1fr}
+  .gn-widget-rail .weather-widget,.gn-widget-rail .usage-widget{grid-column:1/-1}
+  .gn-widget-rail .os-widget-pair{grid-column:1/-1}
+  .gn-desktop-items{position:relative;top:auto;right:auto;grid-template-columns:repeat(3,minmax(0,1fr));justify-content:center;column-gap:5px;row-gap:16px;padding:12px}
+  .gn-desktop-item{width:100%;max-width:115px}
+  .gn-overview-shortcut{position:relative;left:50%;bottom:auto;margin:22px 0 32px;white-space:nowrap}
+  .gn-workspace-preview{width:96%;height:35vh}
+  .gn-workspace-top{width:95%}
+  .gn-overview-body{padding:17px 11px 13px}
+  .gn-app-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 3px}
+  .gn-app-grid .gn-app-art{width:62px;height:62px}
+  .gn-app-grid .os-appicon{width:61px;height:61px;border-radius:14px}
+  .gn-overview-dash{gap:0;padding:5px;border-radius:15px}
+  .gn-overview-dash button{width:clamp(35px,10vw,52px);height:52px}
+  .gn-overview-dash .gn-app-art{width:44px;height:44px}
+  .gn-overview-dash .os-appicon{width:43px;height:43px;border-radius:11px}
+  .gn-dash-divider{margin:0 3px}
+  .gn-calendar-popover{grid-template-columns:1fr;left:10px;right:10px;transform:none;width:auto;max-height:calc(100dvh - 64px);overflow:auto}
+  .gn-calendar-panel-left{display:none}
+  .gn-calendar-panel-right{padding:15px}
+  .gn-quick-menu{top:41px;right:8px;padding:12px}
+}
+@media(prefers-reduced-motion:reduce){
+  .gn-overview,.gn-workspace-preview,.gn-wallpaper{animation:none;transition:none}
+}
