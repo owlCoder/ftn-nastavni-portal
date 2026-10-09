@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState, type CSSProperties, type Poin
 import { CourseApp } from './CourseApp'
 import { DesktopWidgets } from './DesktopWidgets'
 import { SystemAbout } from './SystemAbout'
+import { CalendarApp, SystemMonitorApp } from './DesktopUtilities'
 import { Snake, Merge2048 } from './ExtraGames'
 import { loadPreferences, savePreferences, WALLPAPERS } from './DesktopSettings'
 import { DockAppIcon } from './DesktopAppIcons'
@@ -10,16 +11,18 @@ import { courses } from '../courses'
 import { assetUrl } from '../lib/assets'
 import type { CourseId } from '../courses/types'
 
-type AppId = CourseId | GameId | 'snake' | 'merge' | 'notes' | 'readme' | 'trash'
+type AppId = CourseId | GameId | 'snake' | 'merge' | 'notes' | 'readme' | 'trash' | 'calendar' | 'monitor'
 type WindowData = { id: AppId; x: number; y: number; z: number; minimized: boolean; maximized: boolean }
 type Panel = 'calendar' | 'quick' | null
 const names: Record<AppId, string> = {
   ers: 'Elementi razvoja softvera', oib: 'Osnove informacione bezbednosti', odp: 'Osnove distribuiranog programiranja',
-  sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa',
+  sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor', calendar: 'Kalendar', monitor: 'System Monitor',
 }
 const short: Record<AppId, string> = { ers: 'ERS', oib: 'OIB', odp: 'ODP', sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa' }
-const applicationIds: AppId[] = ['ers','oib','odp','sudoku','tetris','invaders','snake','merge','notes','readme','trash']
-const dashIds: AppId[] = ['ers','oib','odp','sudoku','tetris','invaders','snake','merge','notes','readme']
+const applicationIds: AppId[] = ['ers','oib','odp','sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme','trash']
+const courseIds: AppId[] = ['ers','oib','odp']
+const utilityIds: AppId[] = ['sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme','trash']
+const dashIds: AppId[] = ['ers','oib','odp','sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme']
 const courseIcon: Record<CourseId, string> = { ers:'folder.svg', oib:'folder-documents.svg', odp:'folder-projects.svg' }
 const initialHashCourse = () => {
   const match = location.hash.match(/^#(ers|oib|odp)(?:\/|$)/)
@@ -73,8 +76,8 @@ function Notes() {
 }
 function Trash() { return <div className="gn-trash-empty"><AppArtwork id="trash"/><h2>Korpa je prazna</h2><p>Nema obrisanih stavki.</p></div> }
 
-function WindowFrame({ windowData: w, isFocused, gamesActive, onFocus, onClose, onMinimize, onMaximize, onMove, open }: {
-  windowData: WindowData; isFocused: boolean; gamesActive:boolean; onFocus:()=>void; onClose:()=>void; onMinimize:()=>void; onMaximize:()=>void;
+function WindowFrame({ windowData: w, isFocused, gamesActive, now, onFocus, onClose, onMinimize, onMaximize, onMove, open }: {
+  windowData: WindowData; isFocused: boolean; gamesActive:boolean; now:Date; onFocus:()=>void; onClose:()=>void; onMinimize:()=>void; onMaximize:()=>void;
   onMove:(x:number,y:number)=>void; open:(id:AppId)=>void
 }) {
   const ref=useRef<HTMLElement>(null)
@@ -106,12 +109,12 @@ function WindowFrame({ windowData: w, isFocused, gamesActive, onFocus, onClose, 
   const course=courses.find(c=>c.id===w.id)
   const active=isFocused && !w.minimized && gamesActive
   return <section ref={ref} aria-label={'Prozor: '+title} onPointerDown={onFocus}
-    className={'gn-window'+(isFocused?' gn-window-focused':'')+(w.maximized?' gn-window-max':'')+(w.minimized?' gn-window-min':'')}
+    className={'gn-window'+(isFocused?' gn-window-focused':'')+(w.maximized?' gn-window-max':'')+(w.minimized?' gn-window-min':'')+(['calendar','monitor'].includes(w.id)?' gn-utility-window':'')}
     style={{left:w.x,top:w.y,zIndex:w.z} as CSSProperties}>
     <div className="gn-headerbar" onDoubleClick={onMaximize} onPointerDown={onPointerDown}
       onPointerMove={onPointerMove} onPointerUp={()=>dragging.current=null} onPointerCancel={()=>dragging.current=null}>
       <div className="gn-window-leading"><AppArtwork id={w.id}/></div>
-      <div className="gn-header-title"><strong>{course ? course.name : title}</strong><span>{course ? 'Nastavni materijali · '+course.code : w.id==='notes' ? 'Text Editor' : w.id==='readme' ? 'Text Viewer' : w.id==='trash' ? 'Files' : 'Igre'}</span></div>
+      <div className="gn-header-title"><strong>{course ? course.name : title}</strong><span>{course ? 'Nastavni materijali · '+course.code : w.id==='notes' ? 'Text Editor' : w.id==='readme' ? 'Settings' : w.id==='calendar' ? 'Calendar' : w.id==='monitor' ? 'Resources' : w.id==='trash' ? 'Files' : 'Igre'}</span></div>
       <div className="gn-window-controls">
         <button title="Minimizuj" aria-label="Minimizuj" onClick={onMinimize}><Icon name="minimize" size={15}/></button>
         <button title={w.maximized?'Vrati prozor':'Maksimizuj'} aria-label={w.maximized?'Vrati prozor':'Maksimizuj'} onClick={onMaximize}><Icon name={w.maximized?'restore':'maximize'} size={15}/></button>
@@ -126,7 +129,9 @@ function WindowFrame({ windowData: w, isFocused, gamesActive, onFocus, onClose, 
         w.id==='invaders'?<SpaceInvaders active={active}/> :
         w.id==='snake'?<Snake active={active}/> :
         w.id==='merge'?<Merge2048 active={active}/> :
-        w.id==='notes'?<Notes/> : w.id==='readme'?<SystemAbout onOpenCourse={open}/>:<Trash/>}
+        w.id==='calendar'?<CalendarApp now={now}/> :
+        w.id==='monitor'?<SystemMonitorApp/> :
+        w.id==='notes'?<Notes/> : w.id==='readme'?<SystemAbout/>:<Trash/>}
     </div>
   </section>
 }
@@ -238,17 +243,34 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
     }}>
       {showWidgets && <div className="gn-widget-rail" onClick={e=>e.stopPropagation()}><DesktopWidgets now={now}/></div>}
       <div className="gn-desktop-items">
-        {applicationIds.map(id=><button key={id} className={'gn-desktop-item'+(selected===id?' gn-item-selected':'')}
-          onClick={e=>{e.stopPropagation();setSelected(id)}} onDoubleClick={e=>{e.stopPropagation();open(id)}}
-          onPointerUp={e=>{if(e.pointerType==='touch')open(id)}}
-          onKeyDown={e=>{if(e.key==='Enter'){e.preventDefault();open(id)}}}
-          aria-label={short[id]+', dvoklik za otvaranje'} title={names[id]}>
-          <AppArtwork id={id} folder/><span>{short[id]}</span>
-        </button>)}
+        <section className="gn-shortcut-group gn-course-group" aria-label="Predmeti">
+          <div className="gn-shortcut-heading"><span>PREDMETI</span><i/></div>
+          <div className="gn-shortcut-grid gn-shortcut-courses">
+            {courseIds.map(id=><button key={id} className={'gn-desktop-item'+(selected===id?' gn-item-selected':'')}
+              onClick={e=>{e.stopPropagation();setSelected(id)}} onDoubleClick={e=>{e.stopPropagation();open(id)}}
+              onPointerUp={e=>{if(e.pointerType==='touch')open(id)}}
+              onKeyDown={e=>{if(e.key==='Enter'){e.preventDefault();open(id)}}}
+              aria-label={short[id]+', dvoklik za otvaranje'} title={names[id]}>
+              <AppArtwork id={id} folder/><span>{short[id]}</span>
+            </button>)}
+          </div>
+        </section>
+        <section className="gn-shortcut-group gn-app-group" aria-label="Aplikacije">
+          <div className="gn-shortcut-heading"><span>APLIKACIJE</span><i/></div>
+          <div className="gn-shortcut-grid gn-shortcut-apps">
+            {utilityIds.map(id=><button key={id} className={'gn-desktop-item'+(selected===id?' gn-item-selected':'')}
+              onClick={e=>{e.stopPropagation();setSelected(id)}} onDoubleClick={e=>{e.stopPropagation();open(id)}}
+              onPointerUp={e=>{if(e.pointerType==='touch')open(id)}}
+              onKeyDown={e=>{if(e.key==='Enter'){e.preventDefault();open(id)}}}
+              aria-label={short[id]+', dvoklik za otvaranje'} title={names[id]}>
+              <AppArtwork id={id} folder/><span>{short[id]}</span>
+            </button>)}
+          </div>
+        </section>
       </div>
     </main>
 
-    {windows.map(w=><WindowFrame key={w.id} windowData={w} isFocused={activeWindow?.id===w.id} gamesActive={!overview && panel===null}
+    {windows.map(w=><WindowFrame key={w.id} windowData={w} isFocused={activeWindow?.id===w.id} gamesActive={!overview && panel===null} now={now}
       onFocus={()=>{if(!w.minimized&&activeWindow?.id!==w.id)focus(w.id)}}
       onClose={()=>close(w.id)} onMinimize={()=>minimize(w.id)} onMaximize={()=>maximize(w.id)}
       onMove={(x,y)=>move(w.id,x,y)} open={open}/>)}
