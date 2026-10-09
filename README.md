@@ -1,6 +1,39 @@
-# FTN nastavni portal
+# FTN Desktop — GNOME-inspirisani nastavni portal
 
-Javni web portal za nastavne materijale na Fakultetu tehničkih nauka. Portal objedinjuje prezentacije, praktikume, primere koda i projektne informacije za predmete na studijskom programu Primenjeno softversko inženjerstvo.
+FTN Desktop je javna React/TypeScript web aplikacija koja nastavne materijale Fakulteta tehničkih nauka prikazuje kao interaktivnu radnu površinu u stilu GNOME Shell/Adwaita. Studenti mogu da otvaraju **ERS, OIB i ODP praktikume u prozorima**, pregledaju prezentacije i primere, koriste beleške i igraju Sudoku, Tetris i Space Invaders.
+
+**FTN Desktop nije instaliran operativni sistem.** Izgled radne površine, prozori, Activities pregled, sistemska podešavanja i neke statistike su web simulacija. Vreme i kalendar prikazuju stvarne podatke: sat koristi vremensku zonu Europe/Belgrade, a vremenska prognoza Novi Sad/Open-Meteo.
+
+## O sistemu
+
+U okviru desktopa otvori **README.md** da prikažeš ekran „O sistemu”, sa podacima o portalu, načinu upotrebe, primerom moćne radne stanice i originalnim AMD/NVIDIA logotipima.
+
+### High-end demonstracioni profil (nije tvoj stvarni hardver)
+
+| Komponenta | Simulirana konfiguracija |
+| --- | --- |
+| CPU | **AMD Ryzen 9 9950X3D** — 16 jezgara / 32 niti |
+| GPU | **NVIDIA GeForce RTX 5090** — 32 GB GDDR7 |
+| RAM | **128 GB DDR5** |
+| Skladište | **4 TB NVMe SSD** |
+| Desktop UI | **FTN Desktop**, izgled inspirisan GNOME 51 / Adwaita |
+| Implementacija | React, TypeScript, Vite (pokreće se u browseru) |
+
+<p>
+  <img src="public/brand/amd.svg" alt="AMD logo" height="36" width="130"/>
+  &nbsp;
+  <img src="public/brand/nvidia.svg" alt="NVIDIA logo" height="36" width="80"/>
+</p>
+
+Logotipi su preuzeti iz [Simple Icons](https://github.com/simple-icons/simple-icons) (CC0); robne marke pripadaju svojim nosiocima. Ovo **ne znači** da AMD ili NVIDIA podržavaju projekat. Adwaita ikone u `public/gnome-icons/` su rad GNOME Project-a (LGPL v3 ili CC BY-SA 3.0 US; pogledati `public/gnome-icons/ATTRIBUTION.md`).
+
+### Korišćenje
+
+- **Aktivnosti** odmah prikazuju sve aplikacije; pretraga radi po nazivu predmeta ili aplikacije. Podržani su Super ili Ctrl+Space, kao i Esc za zatvaranje.
+- **Folderi predmeta** se otvaraju dvoklikom u istom tabu; prozori se mogu pomerati, minimizovati, maksimizovati i prebaciti preko celog ekrana.
+- **Gornja traka** sadrži pravi sat, kalendar i simulirane sistemske kontrole; **Quick Settings** omogućavaju promenu teme, prikaza widgeta i izgleda pozadine.
+- **Widgeti** prikazuju prognozu, časovnik, kalendar i *jasno obeležene simulirane* CPU/RAM/SSD vrednosti. Beleške se čuvaju samo lokalno u browseru.
+
 
 ## Dostupni predmeti
 
@@ -48,18 +81,20 @@ Produkciona adresa: [ftn-nastavni-portal.vercel.app](https://ftn-nastavni-portal
 
 ```text
 src/
-  main.tsx, App.tsx      ulazna tačka i izbor predmeta
+  main.tsx, App.tsx      ulazna tačka i GNOME desktop shell
   courses/               sadržaj po predmetu: ers/, oib/, odp/
     types.ts             Course, Checkpoint i tipovi materijala za preuzimanje
     <predmet>/index.ts   opis predmeta koji portal prikazuje
     <predmet>/checkpoints.ts
     ers/practicum/       uvod, vežbe 1–8 i završni deo praktikuma
   practicum/             model dokumenta: blokovi i sklapanje praktikuma
-  components/            prikaz: CourseApp, tabovi, document/, examples/
+  components/            GnomeDesktop, SystemAbout, DesktopGames, CourseApp, document/, examples/
   lib/                   pomoćne funkcije (putanje, isticanje koda, fullscreen)
-  styles/                stilovi portala
+  styles/                GNOME / Adwaita stilovi portala i sadržaja
 examples/                izvorni kod primera (ERS i OIB)
 public/downloads/        PDF i ZIP materijali dostupni studentima
+public/brand/            vektorski logotipi (AMD, NVIDIA, FTN)
+public/gnome-icons/      Adwaita SVG ikonice i licenca
 scripts/                 priprema ZIP paketa i lokalno pokretanje
 ```
 
