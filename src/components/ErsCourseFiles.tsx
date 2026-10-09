@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { Course } from '../courses/types'
 import { ersPresentations, ersProject } from '../courses/ers/downloads'
 import { ersLessonPackages, ersProjectBundle, ersStandaloneExamples } from '../courses/ers/examples'
@@ -172,6 +172,18 @@ export function ErsCourseFiles({course}:{course:Course}){
     </div>
   })
   const viewing=preview?.item
+  useEffect(()=>{
+    if(viewing?.kind!=='section'||!viewing.exercise)return
+    const exercise=viewing.exercise
+    const frame=window.requestAnimationFrame(()=>{
+      const toc=document.querySelector('.ers-continuous-document .toc-panel')
+      const heading=[...(toc?.querySelectorAll<HTMLAnchorElement>('a')??[])].find(link=>
+        new RegExp('^Vežba\\\\s+'+exercise+'(?:\\\\D|$)','i').test(link.textContent?.trim()??''))
+      const id=heading?.getAttribute('href')?.slice(1)
+      if(id)document.getElementById(id)?.scrollIntoView({behavior:'auto',block:'start'})
+    })
+    return()=>window.cancelAnimationFrame(frame)
+  },[viewing?.id,viewing?.kind,viewing?.exercise])
   const pdfViewing=viewing?.kind==='pdf' && viewing.source
   return <div className="ers-explorer">
     <header className="ers-explorer-toolbar">
@@ -207,7 +219,7 @@ export function ErsCourseFiles({course}:{course:Course}){
             viewing.kind==='checkpoints'?<div className="ers-checkpoint-document"><CheckpointsView checkpoints={course.checkpoints}/></div>:
             pdfViewing?<div className="ers-pdf-viewer">
               <div className="ers-pdf-header"><span>PDF VIEWER</span><strong>{viewing.name}</strong><small>{viewing.pages?viewing.pages+' strana':''}</small>
-                <a href={assetUrl(viewing.source!)} target="_blank" rel="noopener noreferrer" download={viewing.name}>↓ PDF</a></div>
+                <a href={assetUrl(viewing.source!)} download={viewing.name}>↓ PDF</a></div>
               <iframe title={'PDF Viewer: '+viewing.name} src={assetUrl(viewing.source!)+'#view=FitH'} loading="lazy" />
             </div>:
             viewing.kind==='zip'&&viewing.source?<ZipFileViewer file={viewing.source} title={viewing.name}/>:
