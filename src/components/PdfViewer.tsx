@@ -8,7 +8,7 @@ const CDN='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/'
 let loader:Promise<PdfLibrary>|null=null
 function library():Promise<PdfLibrary>{
   if(loader)return loader
-  loader=new Promise((resolve,reject)=>{
+  loader=new Promise<PdfLibrary>((resolve,reject)=>{
     const onReady=()=>{
       const lib=(window as Window&{pdfjsLib?:PdfLibrary}).pdfjsLib
       if(!lib){reject(Error('PDF renderer nije dostupan.'));return}
