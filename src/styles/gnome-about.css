@@ -1,0 +1,140 @@
+/* GNOME Settings-inspired About System / README.md */
+.gn-about{
+  width:min(910px,calc(100% - 36px));
+  margin:0 auto;padding:32px 0 56px;
+  color:#27282e;font-size:13.5px;line-height:1.55;
+}
+.gn-about-heading{
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  margin:0 0 29px;
+  animation:gn-about-enter .45s cubic-bezier(.22,1,.36,1) both;
+}
+.gn-about-system-mark{
+  width:85px;height:85px;filter:drop-shadow(0 9px 16px rgba(69,51,136,.16));
+  margin-bottom:17px;
+}
+.gn-about-eyebrow{
+  font-size:10px;letter-spacing:.18em;font-weight:850;color:#757581;
+}
+.gn-about-heading h1{font-size:33px;letter-spacing:-.055em;line-height:1.18;margin:8px 0 6px;font-weight:820;color:#22232b}
+.gn-about-heading p{margin:0;color:#666773;font-size:13px}
+.gn-about-version{
+  margin-top:13px;padding:5px 12px;
+  border-radius:99px;border:1px solid #dbe0e8;background:#eceef3;
+  color:#535667;font-size:11px;font-weight:650;
+}
+.gn-about-section{
+  margin:16px 0;padding:23px 25px 25px;
+  border-radius:17px;border:1px solid #e0e1e5;
+  background:#fff;
+  box-shadow:0 3px 13px rgba(18,21,43,.045);
+  animation:gn-about-enter .48s cubic-bezier(.22,1,.36,1) both;
+}
+.gn-about-section:nth-of-type(2){animation-delay:.06s}
+.gn-about-section:nth-of-type(3){animation-delay:.1s}
+.gn-about-section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.gn-about-section h2{font-size:16px;letter-spacing:-.025em;margin:0 0 11px;font-weight:760;color:#34353c}
+.gn-about-section-head h2{margin:0}
+.gn-about-demo{
+  flex:none;display:inline-flex;align-items:center;gap:5px;
+  background:#fff1d6;color:#87600a;border:1px solid #f3da9b;
+  border-radius:100px;padding:5px 9px;font-size:9px;font-weight:850;letter-spacing:.07em;
+}
+.gn-about-intro{margin:10px 0 17px;color:#71727e;font-size:12px}
+.gn-about-hardware{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:14px 0 20px}
+.gn-about-hardware-card{
+  position:relative;overflow:hidden;isolation:isolate;
+  min-height:181px;display:flex;flex-direction:column;align-items:flex-start;
+  padding:19px;border-radius:16px;color:#fff;
+  border:1px solid rgba(255,255,255,.13);
+  box-shadow:0 7px 19px rgba(19,20,47,.11);
+}
+.gn-about-hardware-card::before{
+  content:"";position:absolute;z-index:-1;
+  top:-40px;right:-45px;width:205px;height:205px;border-radius:50%;
+  background:rgba(255,255,255,.095);filter:blur(15px);
+}
+.gn-about-amd{background:linear-gradient(145deg,#1a2835,#242934 55%,#393449)}
+.gn-about-nvidia{background:linear-gradient(140deg,#15261b,#182b22 55%,#2d4538)}
+.gn-about-brand{display:flex;align-items:center;gap:10px;height:35px;margin-bottom:auto}
+.gn-about-brand img{display:block;width:88px;height:32px;object-fit:contain;object-position:left center;filter:invert(1)}
+.gn-about-nvidia .gn-about-brand img{width:46px;height:36px;filter:invert(1)}
+.gn-about-nvidia .gn-about-brand::after{content:"NVIDIA";color:#fff;font-size:19px;letter-spacing:.015em;font-weight:850}
+.gn-about-hardware-label{
+  font-size:9px;font-weight:800;letter-spacing:.18em;color:rgba(255,255,255,.60);
+  margin-top:14px;margin-bottom:3px;
+}
+.gn-about-hardware-card strong{font-size:18px;line-height:1.3;letter-spacing:-.03em;font-weight:770}
+.gn-about-hardware-card>span:last-child{font-size:11px;color:rgba(255,255,255,.70);margin-top:5px}
+.gn-about-specs{overflow:hidden;border:1px solid #e4e5ea;border-radius:13px}
+.gn-about-spec-row{
+  min-height:58px;display:grid;grid-template-columns:minmax(96px,28%) 1fr;
+  gap:10px;align-items:center;padding:11px 16px;
+  background:#fbfbfc;border-bottom:1px solid #eaebef;
+}
+.gn-about-spec-row:nth-child(2n){background:#fff}
+.gn-about-spec-row:last-child{border-bottom:0}
+.gn-about-spec-row>span{font-size:12px;font-weight:650;color:#80818e}
+.gn-about-spec-row>div{display:grid;gap:3px}
+.gn-about-spec-row strong{font-size:12.5px;color:#33333c;font-weight:770}
+.gn-about-spec-row small{font-size:10.5px;color:#9494a0}
+.gn-about-section>p{color:#666874;margin:0 0 19px;line-height:1.75}
+.gn-about-features{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin:18px 0}
+.gn-about-features>div{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:80px;padding:10px;background:#f1f2f6;border:1px solid #e6e8ed;border-radius:11px;
+}
+.gn-about-features strong{font-size:22px;color:#3584e4;font-weight:800;letter-spacing:-.04em}
+.gn-about-features span{font-size:11px;color:#696b78}
+.gn-about-course-links{display:flex;flex-direction:column;gap:7px}
+.gn-about-course-links button{
+  display:flex;align-items:center;gap:12px;min-height:46px;
+  text-align:left;padding:8px 13px;
+  border-radius:11px;border:1px solid #e1e5ea;background:#fcfcfe;
+  color:#404251;transition:background .16s,transform .16s,border-color .16s;
+}
+.gn-about-course-links button:hover{background:#eaf2fd;border-color:#adccf4;transform:translateX(3px)}
+.gn-about-course-links button>span:first-child{
+  width:42px;flex:none;padding:5px 0;text-align:center;
+  background:#e7effb;border-radius:7px;color:#245fa2;font-size:10px;font-weight:850;
+}
+.gn-about-course-links button strong{flex:1;font-weight:650;font-size:12px}
+.gn-about-course-links button>span:last-child{color:#4b79b4}
+.gn-about-section kbd{
+  display:inline-block;white-space:nowrap;
+  background:#f3f4f7;border:1px solid #dedfe5;
+  border-bottom-width:2px;border-radius:5px;padding:1px 6px;font-size:11px;font-weight:700;color:#4d5060;
+}
+.gn-about-footer{
+  color:#93939c;text-align:center;max-width:710px;margin:22px auto 0;
+  padding:0 15px;font-size:10px;line-height:1.7;
+}
+.gn-about-footer a{display:block;color:#2e77c8;margin-top:10px;font-size:11px;font-weight:750}
+@keyframes gn-about-enter{
+  from{opacity:0;transform:translateY(11px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@media(max-width:760px){
+ .gn-about{width:calc(100% - 20px);padding:20px 0 30px}
+ .gn-about-heading h1{font-size:29px}
+ .gn-about-section{padding:16px 13px;margin:12px 0;border-radius:13px}
+ .gn-about-section-head{align-items:flex-start}
+ .gn-about-hardware{gap:9px}
+ .gn-about-hardware-card{min-height:172px;padding:12px;border-radius:12px}
+ .gn-about-hardware-card strong{font-size:13.5px;line-height:1.35}
+ .gn-about-brand img{width:67px}
+ .gn-about-nvidia .gn-about-brand img{width:35px}
+ .gn-about-nvidia .gn-about-brand::after{font-size:14px}
+ .gn-about-spec-row{grid-template-columns:minmax(82px,28%) 1fr;padding:10px}
+ .gn-about-features{gap:6px}
+ .gn-about-features strong{font-size:19px}
+ .gn-about-features span{font-size:10px}
+}
+@media(max-width:400px){
+ .gn-about-hardware{grid-template-columns:1fr}
+ .gn-about-hardware-card{min-height:158px}
+}
+@media(prefers-reduced-motion:reduce){
+ .gn-about-section,.gn-about-heading{animation:none}
+ .gn-about-course-links button{transition:none}
+}
