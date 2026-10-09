@@ -7,8 +7,8 @@ type Specification = { label: string; value: string; detail: string }
 const specifications: Specification[] = [
   { label: 'Procesor', value: 'AMD Ryzen™ 9 9950X3D', detail: '16 jezgara · 32 niti · Zen 5' },
   { label: 'Grafika', value: 'NVIDIA GeForce RTX™ 5090', detail: '32 GB GDDR7 · Blackwell' },
-  { label: 'Memorija', value: '128 GB DDR5', detail: 'Radna memorija · demonstracioni profil' },
-  { label: 'Skladište', value: '4 TB NVMe SSD', detail: 'Brzi SSD · demonstracioni profil' },
+  { label: 'Memorija', value: '128 GB DDR5', detail: 'Radna memorija · radna stanica' },
+  { label: 'Skladište', value: '4 TB NVMe SSD', detail: 'Brzi SSD · radna stanica' },
 ]
 
 function SystemMark() {
@@ -26,13 +26,13 @@ export function SystemAbout({ onOpenCourse }: { onOpenCourse: (id: CourseId) => 
       <SystemMark/>
       <span className="gn-about-eyebrow">FTN DESKTOP · O SISTEMU</span>
       <h1>FTN OS</h1>
-      <p>GNOME 51-inspired desktop za nastavne materijale.</p>
+      <p>Radna površina nastavnog portala.</p>
       <span className="gn-about-version">Desktop Experience · 2.0</span>
     </header>
 
     <section className="gn-about-section">
-      <div className="gn-about-section-head"><h2>Demonstraciona radna stanica</h2><span className="gn-about-demo">SIMULIRANE SPECIFIKACIJE</span></div>
-      <p className="gn-about-intro">Zamišljeni high-end sistemski profil za ovaj web desktop. Ove vrednosti nisu očitane sa tvog računara.</p>
+      <div className="gn-about-section-head"><h2>Konfiguracija FTN OS profila</h2></div>
+      <p className="gn-about-intro">Radna stanica visokih performansi · AMD Ryzen i NVIDIA GeForce.</p>
       <div className="gn-about-hardware">
         <div className="gn-about-hardware-card gn-about-amd">
           <div className="gn-about-brand"><img src={assetUrl('/brand/amd.svg')} alt="AMD" /></div>
@@ -47,12 +47,12 @@ export function SystemAbout({ onOpenCourse }: { onOpenCourse: (id: CourseId) => 
           <span>32 GB GDDR7 · Blackwell</span>
         </div>
       </div>
-      <div className="gn-about-specs" aria-label="Specifikacije demonstracionog sistema">
+      <div className="gn-about-specs" aria-label="Konfiguracija FTN OS profila">
         {specifications.map(spec=><div className="gn-about-spec-row" key={spec.label}>
           <span>{spec.label}</span>
           <div><strong>{spec.value}</strong><small>{spec.detail}</small></div>
         </div>)}
-        <div className="gn-about-spec-row"><span>Interfejs</span><div><strong>FTN Desktop · GNOME 51 izgled</strong><small>React · TypeScript · Vite · Web simulacija</small></div></div>
+        <div className="gn-about-spec-row"><span>Interfejs</span><div><strong>FTN OS · Adwaita izgled</strong><small>React · TypeScript · Vite · Web aplikacija</small></div></div>
       </div>
     </section>
 
@@ -61,7 +61,7 @@ export function SystemAbout({ onOpenCourse }: { onOpenCourse: (id: CourseId) => 
       <p>FTN Desktop je nastavni portal Fakulteta tehničkih nauka, organizovan kao radna površina. Folderi otvaraju predmete u pomerljivim prozorima, a pregled aktivnosti služi za pokretanje aplikacija i pretragu.</p>
       <div className="gn-about-features">
         <div><strong>03</strong><span>Predmeta</span></div>
-        <div><strong>03</strong><span>Mini-igre</span></div>
+        <div><strong>05</strong><span>Mini-igre</span></div>
         <div><strong>Live</strong><span>Vreme i datum</span></div>
       </div>
       <div className="gn-about-course-links">
@@ -77,7 +77,7 @@ export function SystemAbout({ onOpenCourse }: { onOpenCourse: (id: CourseId) => 
     </section>
 
     <footer className="gn-about-footer">
-      FTN Desktop nije instalirani operativni sistem. Hardverske specifikacije, Wi-Fi i sistemske kontrole su demonstracioni prikazi. GNOME/Adwaita ikonice: © GNOME Project, LGPL-3.0 ili CC BY-SA 3.0. AMD i NVIDIA oznake služe isključivo ilustraciji simuliranog profila i ne predstavljaju saradnju sa proizvođačima. SVG logotipi preuzeti iz Simple Icons (CC0).
+      FTN OS je web nastavni portal. Konfiguracija profila nije automatski očitana sa uređaja. GNOME/Adwaita ikonice: © GNOME Project, LGPL-3.0 ili CC BY-SA 3.0. AMD i NVIDIA oznake prikazane su kao deo konfiguracije FTN OS profila i ne predstavljaju saradnju sa proizvođačima. SVG logotipi preuzeti iz Simple Icons (CC0).
       <a href="https://github.com/owlCoder/ftn-nastavni-portal" target="_blank" rel="noreferrer">Izvorni kod ↗</a>
     </footer>
   </article>
