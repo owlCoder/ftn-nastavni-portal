@@ -7,15 +7,13 @@ import './styles/checkpoints.css'
 import './styles/subjects.css'
 import './styles/examples.css'
 import './styles/ui-refresh.css'
+import './styles/desktop-games.css'
+import './styles/desktop-widgets.css'
+import './styles/gnome.css'
+import './styles/gnome-windows.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
 )
-
-import './styles/desktop.css'
-import './styles/desktop-windows.css'
-import './styles/desktop-games.css'
-import './styles/desktop-widgets.css'
-import './styles/desktop-liquid.css'
