@@ -117,7 +117,7 @@ function TabPanel({ course, tab }: { course: Course; tab: TabKey }) {
   return <PracticumDocument practicum={course.practicum} />
 }
 
-export function CourseApp({ course, onBack }: { course: Course; onBack: () => void }) {
+export function CourseApp({ course, onBack, embedded = false }: { course: Course; onBack: () => void; embedded?: boolean }) {
   const [active, setActive] = useState<TabKey>(() => tabFromHash(course) ?? 'praktikum')
   const visibleTabs = availableTabs(course)
 
@@ -136,13 +136,15 @@ export function CourseApp({ course, onBack }: { course: Course; onBack: () => vo
   }, [course])
 
   useEffect(() => {
-    document.title = `${course.code} — ${tabs.find(({ key }) => key === active)!.title}`
-  }, [active, course])
+    if (!embedded) document.title = `${course.code} — ${tabs.find(({ key }) => key === active)!.title}`
+  }, [active, course, embedded])
 
   const choose = (key: TabKey) => {
     setActive(key)
-    history.replaceState(null, '', `#${course.id}/${key}`)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    if (!embedded) {
+      history.replaceState(null, '', `#${course.id}/${key}`)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
   }
 
   return (
