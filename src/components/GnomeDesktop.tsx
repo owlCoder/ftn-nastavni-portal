@@ -16,9 +16,9 @@ type WindowData = { id: AppId; x: number; y: number; z: number; minimized: boole
 type Panel = 'calendar' | 'quick' | null
 const names: Record<AppId, string> = {
   ers: 'Elementi razvoja softvera', oib: 'Osnove informacione bezbednosti', odp: 'Osnove distribuiranog programiranja',
-  sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor', calendar: 'Kalendar', monitor: 'System Monitor',
+  sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor',
 }
-const short: Record<AppId, string> = { ers: 'ERS', oib: 'OIB', odp: 'ODP', sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa' }
+const short: Record<AppId, string> = { ers: 'ERS', oib: 'OIB', odp: 'ODP', sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor' }
 const applicationIds: AppId[] = ['ers','oib','odp','sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme','trash']
 const courseIds: AppId[] = ['ers','oib','odp']
 const utilityIds: AppId[] = ['sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme','trash']
@@ -76,9 +76,9 @@ function Notes() {
 }
 function Trash() { return <div className="gn-trash-empty"><AppArtwork id="trash"/><h2>Korpa je prazna</h2><p>Nema obrisanih stavki.</p></div> }
 
-function WindowFrame({ windowData: w, isFocused, gamesActive, now, onFocus, onClose, onMinimize, onMaximize, onMove, open }: {
+function WindowFrame({ windowData: w, isFocused, gamesActive, now, onFocus, onClose, onMinimize, onMaximize, onMove }: {
   windowData: WindowData; isFocused: boolean; gamesActive:boolean; now:Date; onFocus:()=>void; onClose:()=>void; onMinimize:()=>void; onMaximize:()=>void;
-  onMove:(x:number,y:number)=>void; open:(id:AppId)=>void
+  onMove:(x:number,y:number)=>void
 }) {
   const ref=useRef<HTMLElement>(null)
   const dragging=useRef<{px:number;py:number;x:number;y:number}|null>(null)
@@ -273,7 +273,7 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
     {windows.map(w=><WindowFrame key={w.id} windowData={w} isFocused={activeWindow?.id===w.id} gamesActive={!overview && panel===null} now={now}
       onFocus={()=>{if(!w.minimized&&activeWindow?.id!==w.id)focus(w.id)}}
       onClose={()=>close(w.id)} onMinimize={()=>minimize(w.id)} onMaximize={()=>maximize(w.id)}
-      onMove={(x,y)=>move(w.id,x,y)} open={open}/>)}
+      onMove={(x,y)=>move(w.id,x,y)}/>)}
 
     {panel && <><button className="gn-popover-scrim" aria-label="Zatvori meni" onClick={()=>setPanel(null)}/>
       {panel==='calendar'? <div className="gn-calendar-popover">
