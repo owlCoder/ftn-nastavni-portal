@@ -11,6 +11,8 @@ import './styles/desktop-games.css'
 import './styles/desktop-widgets.css'
 import './styles/gnome.css'
 import './styles/gnome-windows.css'
+import './styles/gnome-polish.css'
+import './styles/gnome-about.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
