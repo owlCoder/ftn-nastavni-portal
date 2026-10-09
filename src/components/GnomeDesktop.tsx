@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react'
 import { CourseApp } from './CourseApp'
+import { ErsCourseFiles } from './ErsCourseFiles'
 import { DesktopWidgets } from './DesktopWidgets'
 import { SystemAbout } from './SystemAbout'
 import { CalendarApp, SystemMonitorApp } from './DesktopUtilities'
@@ -122,8 +123,8 @@ function WindowFrame({ windowData: w, isFocused, gamesActive, now, onFocus, onCl
         <button className="gn-close" title="Zatvori" aria-label="Zatvori" onClick={onClose}><Icon name="close" size={15}/></button>
       </div>
     </div>
-    <div className={'gn-window-body'+(course?' gn-course-body':'')}>
-      {course ? <CourseApp course={course} embedded onBack={onClose} /> :
+    <div className={'gn-window-body'+(course?' gn-course-body':'')+(course?.id==='ers'?' gn-course-files-body':'')}>
+      {course ? (course.id==='ers'?<ErsCourseFiles course={course}/>:<CourseApp course={course} embedded onBack={onClose}/>) :
         w.id==='sudoku'?<Sudoku active={active}/> :
         w.id==='tetris'?<Tetris active={active}/> :
         w.id==='invaders'?<SpaceInvaders active={active}/> :
