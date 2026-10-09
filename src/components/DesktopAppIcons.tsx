@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-export type AppIconId = 'finder' | 'ers' | 'oib' | 'odp' | 'sudoku' | 'tetris' | 'invaders' | 'snake' | 'merge' | 'notes' | 'readme' | 'trash'
+export type AppIconId = 'finder' | 'ers' | 'oib' | 'odp' | 'sudoku' | 'tetris' | 'invaders' | 'snake' | 'merge' | 'calendar' | 'monitor' | 'notes' | 'readme' | 'trash'
 
 function Symbol({ id }: { id: AppIconId }): ReactNode {
   switch (id) {
@@ -71,6 +71,19 @@ function Symbol({ id }: { id: AppIconId }): ReactNode {
         <rect x="5.5" y="19" width="11.5" height="11.5" rx="2.4" fill="#ffbe77"/>
         <rect x="19" y="19" width="11.5" height="11.5" rx="2.4" fill="#ef895a"/>
         <g fill="#815334" fontSize="8" fontWeight="bold" textAnchor="middle"><text x="11.25" y="13.7">2</text><text x="24.7" y="13.7">4</text><text x="11.25" y="27.3">8</text><text x="24.7" y="27.3">16</text></g>
+      </>
+    case 'calendar':
+      return <>
+        <rect x="5" y="6" width="26" height="25" rx="4.5" fill="#f6f5f4"/>
+        <path d="M5 10.5A4.5 4.5 0 0 1 9.5 6h17A4.5 4.5 0 0 1 31 10.5V14H5z" fill="#e96d62"/>
+        <path d="M11 4v6m14-6v6" stroke="#fff" strokeWidth="2.6" strokeLinecap="round"/>
+        <text x="18" y="26" fill="#495269" fontSize="12" fontWeight="800" textAnchor="middle">9</text>
+      </>
+    case 'monitor':
+      return <>
+        <rect x="5" y="6" width="26" height="24" rx="4.7" fill="#1b365a" stroke="rgba(255,255,255,.36)" strokeWidth="1.1"/>
+        <path d="M8 21h4l3-7 4 11 3-7h6" stroke="#a1eac3" strokeWidth="2.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M9 10h18" stroke="#5a7695" strokeWidth="1"/>
       </>
     case 'notes':
       return <>
