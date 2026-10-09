@@ -319,3 +319,89 @@
 @media(prefers-reduced-motion:reduce){
   .gn-widget-rail .os-widgets .widget,.gn-widget-rail .usage-chart-column{transition:none}
 }
+
+
+/* Explicitly monochrome app artwork: every foreground shape inherits colour,
+   rather than relying on CSS to cover coloured SVG rectangles. */
+.gn-shell .gn-desktop-item .os-appicon,
+.gn-shell .gn-app-grid .os-appicon,
+.gn-shell .gn-bottom-dock .os-appicon {
+  color:#f7f8fa;
+}
+.gn-shell .gn-window-leading .os-appicon{color:#374151}
+.gn-shell .os-appicon svg {
+  filter:drop-shadow(0 2px 2px rgba(5,14,30,.24));
+}
+.gn-shell .gn-bottom-dock button:hover .os-appicon svg,
+.gn-shell .gn-app-grid button:hover .os-appicon svg{
+  filter:drop-shadow(0 3px 3px rgba(5,14,30,.28));
+}
+.gn-shell .gn-desktop-item .os-appicon svg{filter:drop-shadow(0 3px 3px rgba(5,14,30,.27))}
+
+/* Calm, wallpaper-independent light widgets.
+   Both saved shell appearances keep high-contrast off-white cards; the
+   light appearance makes them marginally brighter rather than coloured. */
+.gn-shell .gn-widget-rail .os-widgets .widget {
+  color:#283241;
+  background:rgba(249,250,252,.96)!important;
+  border:1px solid rgba(231,234,241,.94);
+  border-radius:17px;
+  box-shadow:0 9px 27px rgba(8,15,32,.13),0 1px 3px rgba(8,15,32,.06);
+  text-shadow:none;
+  -webkit-backdrop-filter:blur(24px) saturate(100%);
+  backdrop-filter:blur(24px) saturate(100%);
+}
+.gn-shell.gn-light .gn-widget-rail .os-widgets .widget{
+  background:rgba(255,255,255,.98)!important;
+}
+.gn-shell .gn-widget-rail .os-widgets .widget::before{display:none}
+.gn-shell .gn-widget-rail .os-widgets .widget:hover {
+  background:rgba(255,255,255,.99)!important;
+  border-color:#e0e4eb;
+  box-shadow:0 11px 30px rgba(8,15,32,.14),0 2px 5px rgba(8,15,32,.05);
+}
+.gn-shell .gn-widget-rail .widget-eyebrow{color:#8a92a1}
+.gn-shell .gn-widget-rail .widget-heading h2,
+.gn-shell .gn-widget-rail .weather-temp,
+.gn-shell .gn-widget-rail .weather-condition,
+.gn-shell .gn-widget-rail .clock-digital,
+.gn-shell .gn-widget-rail .usage-metric-label,
+.gn-shell .gn-widget-rail .usage-metric strong{
+  color:#263245;
+}
+.gn-shell .gn-widget-rail .widget-heading h2 span{color:#7a8797}
+.gn-shell .gn-widget-rail .weather-details,
+.gn-shell .gn-widget-rail .clock-date{color:#667489}
+.gn-shell .gn-widget-rail .widget-section-separator{background:#e5e9ee}
+.gn-shell .gn-widget-rail .weather-icon,
+.gn-shell .gn-widget-rail .weather-day .weather-day-symbol{
+  color:#627087;
+  filter:grayscale(1);
+}
+.gn-shell .gn-widget-rail .weather-day>span:first-child,
+.gn-shell .gn-widget-rail .weather-day strong{color:#344156}
+.gn-shell .gn-widget-rail .weather-day .weather-low{color:#8490a2}
+.gn-shell .gn-widget-rail .weather-range{background:#edf0f4}
+.gn-shell .gn-widget-rail .weather-range span{background:#97a5b5}
+.gn-shell .gn-widget-rail .widget-source{color:#9ba4af}
+.gn-shell .gn-widget-rail .clock-widget .analog-clock{
+  background:#f1f3f6;
+  border:1px solid #e5e9ed;
+  box-shadow:inset 0 1px 2px rgba(35,48,69,.04);
+}
+.gn-shell .gn-widget-rail .clock-widget .clock-tick{background:#667487}
+.gn-shell .gn-widget-rail .clock-widget .clock-hour,
+.gn-shell .gn-widget-rail .clock-widget .clock-minute{background:#344255}
+.gn-shell .gn-widget-rail .clock-widget .clock-second{background:#899aab}
+.gn-shell .gn-widget-rail .clock-widget .clock-center{background:#344255}
+.gn-shell .gn-widget-rail .calendar-grid span{color:#364355}
+.gn-shell .gn-widget-rail .calendar-grid .calendar-weekday{color:#99a2af}
+.gn-shell .gn-widget-rail .calendar-grid .calendar-today{
+  background:#e8edf4;color:#273b55;box-shadow:none;
+}
+.gn-shell .gn-widget-rail .weather-unavailable strong{color:#344255}
+.gn-shell .gn-widget-rail .weather-unavailable small{color:#8993a4}
+/* Never render open-arrow widget controls. */
+.gn-widget-rail .widget-launch{display:none!important}
+/* Monitor is a standalone application; the dashboard contains no monitor card. */
+.gn-widget-rail .usage-widget{display:none!important}
