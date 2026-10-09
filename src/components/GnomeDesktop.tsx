@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react'
 import { CourseApp } from './CourseApp'
 import { DesktopWidgets } from './DesktopWidgets'
+import { SystemAbout } from './SystemAbout'
 import { DockAppIcon } from './DesktopAppIcons'
 import { Sudoku, Tetris, SpaceInvaders, type GameId } from './DesktopGames'
 import { courses } from '../courses'
@@ -12,9 +13,9 @@ type WindowData = { id: AppId; x: number; y: number; z: number; minimized: boole
 type Panel = 'calendar' | 'quick' | null
 const names: Record<AppId, string> = {
   ers: 'Elementi razvoja softvera', oib: 'Osnove informacione bezbednosti', odp: 'Osnove distribuiranog programiranja',
-  sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', notes: 'Beleške', readme: 'README.txt', trash: 'Korpa',
+  sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', notes: 'Beleške', readme: 'README.md', trash: 'Korpa',
 }
-const short: Record<AppId, string> = { ers: 'ERS', oib: 'OIB', odp: 'ODP', sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', notes: 'Beleške', readme: 'README.txt', trash: 'Korpa' }
+const short: Record<AppId, string> = { ers: 'ERS', oib: 'OIB', odp: 'ODP', sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', notes: 'Beleške', readme: 'README.md', trash: 'Korpa' }
 const applicationIds: AppId[] = ['ers', 'oib', 'odp', 'sudoku', 'tetris', 'invaders', 'notes', 'readme', 'trash']
 const dashIds: AppId[] = ['ers','oib','odp','sudoku','tetris','invaders','notes']
 const courseIcon: Record<CourseId, string> = { ers:'folder.svg', oib:'folder-documents.svg', odp:'folder-projects.svg' }
@@ -67,18 +68,6 @@ function Notes() {
       try { localStorage.setItem('ftn-os-notes',event.target.value) } catch { /* storage blocked */ }
     }} placeholder="Nova beleška..." />
   </div>
-}
-function Readme({ open }: { open: (id: AppId) => void }) {
-  return <article className="gn-readme">
-    <div className="gn-readme-symbol"><AppArtwork id="readme"/></div>
-    <h1>Dobro došao u FTN desktop</h1>
-    <p>Materijali za predmete Fakulteta tehničkih nauka, sada organizovani kao GNOME radna površina.</p>
-    <h2>Kako da počneš?</h2>
-    <p>Dvaput klikni na folder predmeta da otvoriš praktikum. Klikni na <strong>Aktivnosti</strong> ili pritisni Super (Windows) / Ctrl+Space za pregled otvorenih aplikacija. Tu možeš da pretražuješ predmete i igre.</p>
-    <p>Prozori podržavaju prevlačenje, minimizovanje, maksimizovanje i ceo ekran. Beleške se čuvaju lokalno u browseru.</p>
-    <div className="gn-readme-links">{courses.map(c=><button key={c.id} onClick={()=>open(c.id)}><AppArtwork id={c.id} folder/><span>{c.name}</span><Icon name="arrow" size={16}/></button>)}</div>
-    <p className="gn-readme-credit">Adwaita folder i dokument ikonice: © GNOME Project, LGPL-3.0 ili CC BY-SA 3.0. <a href="https://www.gnome.org/" target="_blank" rel="noreferrer">gnome.org</a>. Sistem je web simulacija, ne prava GNOME sesija.</p>
-  </article>
 }
 function Trash() { return <div className="gn-trash-empty"><AppArtwork id="trash"/><h2>Korpa je prazna</h2><p>Nema obrisanih stavki.</p></div> }
 
@@ -133,7 +122,7 @@ function WindowFrame({ windowData: w, isFocused, onFocus, onClose, onMinimize, o
         w.id==='sudoku'?<Sudoku active={active}/> :
         w.id==='tetris'?<Tetris active={active}/> :
         w.id==='invaders'?<SpaceInvaders active={active}/> :
-        w.id==='notes'?<Notes/> : w.id==='readme'?<Readme open={open}/>:<Trash/>}
+        w.id==='notes'?<Notes/> : w.id==='readme'?<SystemAbout onOpenCourse={open}/>:<Trash/>}
     </div>
   </section>
 }
@@ -162,7 +151,6 @@ export function GnomeDesktop() {
   })
   const [selected,setSelected]=useState<AppId|null>(null)
   const [overview,setOverview]=useState(false)
-  const [showApps,setShowApps]=useState(false)
   const [search,setSearch]=useState('')
   const [panel,setPanel]=useState<Panel>(null)
   const [showWidgets,setShowWidgets]=useState(true)
@@ -188,7 +176,7 @@ export function GnomeDesktop() {
     setWindows(current=>current.some(w=>w.id===id)?
       current.map(w=>w.id===id?{...w,minimized:false,z}:w):
       [...current,{id,x:125+(current.length%5)*43,y:85+(current.length%5)*27,z,minimized:false,maximized:false}])
-    setOverview(false);setShowApps(false);setSearch('');setPanel(null);setContext(null)
+    setOverview(false);setSearch('');setPanel(null);setContext(null)
   },[])
   useEffect(()=>{
     const onHash=()=>{const course=initialHashCourse();if(course)open(course)}
@@ -251,7 +239,7 @@ export function GnomeDesktop() {
           <AppArtwork id={id} folder/><span>{short[id]}</span>
         </button>)}
       </div>
-      <button className="gn-overview-shortcut" onClick={e=>{e.stopPropagation();setOverview(true)}}><Icon name="grid" size={18}/> Prikaži aplikacije</button>
+      <button className="gn-overview-shortcut" onClick={e=>{e.stopPropagation();setSearch('');setOverview(true)}}><Icon name="grid" size={18}/> Prikaži aplikacije</button>
     </main>
 
     {windows.map(w=><WindowFrame key={w.id} windowData={w} isFocused={activeWindow?.id===w.id}
@@ -285,28 +273,25 @@ export function GnomeDesktop() {
     </>}
 
     {overview && <div className="gn-overview">
-      <button className="gn-overview-dismiss" aria-label="Zatvori pregled" onClick={()=>{setOverview(false);setSearch('');setShowApps(false)}}/>
+      <button className="gn-overview-dismiss" aria-label="Zatvori pregled" onClick={()=>{setOverview(false);setSearch('')}}/>
       <div className="gn-overview-body">
-        <div className="gn-overview-top"><input ref={searchRef} value={search} onChange={e=>{setSearch(e.target.value);if(e.target.value)setShowApps(true)}} placeholder="Pretraži..." aria-label="Pretraži aplikacije"/>
+        <div className="gn-overview-top"><input ref={searchRef} value={search} onChange={e=>setSearch(e.target.value)} placeholder="Pretraži..." aria-label="Pretraži aplikacije"/>
           <Icon name="search" size={19}/></div>
-        {showApps || search ? <div className="gn-apps-overview">
-          <h2>{search?'Rezultati pretrage':'Sve aplikacije'}</h2>
-          <div className="gn-app-grid">{filteredApps.map(id=><button key={id} onClick={()=>open(id)}><AppArtwork id={id}/><span>{short[id]}</span></button>)}</div>
-          {!filteredApps.length&&<p>Za ovu pretragu nema aplikacija.</p>}
-        </div> : <div className="gn-workspace-overview">
-          <div className="gn-workspace-top"><span>Radni prostor 1</span><button onClick={()=>setShowApps(true)}><Icon name="grid" size={16}/> Sve aplikacije</button></div>
-          <button className="gn-workspace-preview" onClick={()=>setOverview(false)} aria-label="Vrati se na radnu površinu">
-            <div className="gn-mini-topbar"/><div className="gn-mini-desk">
-              {windows.filter(w=>!w.minimized).slice(-4).map((w,i)=><div key={w.id} className="gn-mini-window" style={{left:`${12+i*16}%`,top:`${20+i*10}%`}}><span/>{short[w.id]}</div>)}
-              {!windows.some(w=>!w.minimized)&&<span className="gn-mini-empty">Radna površina</span>}
-            </div>
-          </button>
-          <span className="gn-workspace-help">Izaberi radni prostor ili pokreni aplikaciju iz doka.</span>
-        </div>}
+        <div className="gn-apps-overview">
+          <div className="gn-apps-overview-heading"><div><span className="gn-apps-eyebrow">FTN DESKTOP</span><h2>{search ? 'Rezultati pretrage' : 'Sve aplikacije'}</h2></div><span>{filteredApps.length} {filteredApps.length === 1 ? 'aplikacija' : 'aplikacija'}</span></div>
+          <div className="gn-app-grid">
+            {filteredApps.map((id,index)=><button key={id} onClick={()=>open(id)}
+              style={{ '--gn-app-index': index } as CSSProperties} title={names[id]}>
+              <AppArtwork id={id}/>
+              <span>{short[id]}</span>
+            </button>)}
+          </div>
+          {!filteredApps.length && <div className="gn-no-app-results"><Icon name="search" size={30}/><strong>Nema rezultata</strong><span>Probaj drugi naziv predmeta ili aplikacije.</span></div>}
+        </div>
         <div className="gn-overview-dash" aria-label="Omiljene aplikacije">
           {dashIds.map(id=><button key={id} title={names[id]} onClick={()=>open(id)}><AppArtwork id={id}/>{windows.some(w=>w.id===id)&&<i/>}</button>)}
           <span className="gn-dash-divider"/>
-          <button className={'gn-show-apps'+(showApps?' gn-show-apps-active':'')} title="Prikaži aplikacije" aria-label="Prikaži aplikacije" onClick={()=>{setShowApps(v=>!v);setSearch('')}}><Icon name="grid" size={26}/></button>
+          <button className="gn-show-apps gn-show-apps-active" title="Prikaži aplikacije" aria-label="Prikaži aplikacije" onClick={()=>{setSearch('');searchRef.current?.focus()}}><Icon name="grid" size={26}/></button>
         </div>
       </div>
     </div>}
