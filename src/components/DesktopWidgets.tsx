@@ -109,8 +109,8 @@ function UsageWidget() {
     }, 5000)
     return () => window.clearInterval(timer)
   }, [])
-  return <section className="widget usage-widget" aria-label="Simulirana upotreba sistema">
-    <div className="usage-header"><strong>System Monitor</strong><span>● DEMO</span></div>
+  return <section className="widget usage-widget" aria-label="Indikatori radne površine">
+    <div className="usage-header"><strong>Workspace Monitor</strong></div>
     <div className="usage-chart" aria-hidden="true">{history.map((value, i) => <div className="usage-chart-column" key={i} style={{ height: `${value}%` }} />)}</div>
     <div className="usage-metrics">
       {([
@@ -123,7 +123,7 @@ function UsageWidget() {
         <strong>{percent}%</strong>
       </div>)}
     </div>
-    <div className="usage-disclaimer">Simulirani podaci · nisu podaci tvog uređaja</div>
+    
   </section>
 }
 
@@ -140,7 +140,7 @@ function DateWidget({ now }: { now: Date }) {
 function MiniStatusWidget() {
   return <section className="widget system-widget">
     <div className="system-ring"><span>FTN</span></div>
-    <div><strong>Portal OS</strong><span>Sistem aktivan</span><small>2026/27</small></div>
+    <div><strong>FTN OS</strong><span>Sistem aktivan</span><small>2026/27</small></div>
   </section>
 }
 
