@@ -1,0 +1,267 @@
+/* Dock-safe windows, neutral Adwaita-style controls, and a tidier file manager.
+   Kept separate so all courses and desktop apps share the same window rules. */
+.gn-shell{
+  --gn-dock-reserve:98px;
+}
+.gn-shell .gn-window:not(.gn-window-max):not(:fullscreen){
+  height:min(770px,calc(100dvh - var(--gn-window-y,85px) - var(--gn-dock-reserve)));
+  max-height:calc(100dvh - var(--gn-window-y,85px) - var(--gn-dock-reserve));
+  min-height:min(320px,calc(100dvh - var(--gn-window-y,85px) - var(--gn-dock-reserve)));
+}
+.gn-shell .gn-window.gn-window-max:not(:fullscreen){
+  top:34px!important;
+  height:calc(100dvh - 34px - var(--gn-dock-reserve));
+  max-height:calc(100dvh - 34px - var(--gn-dock-reserve));
+}
+.gn-shell .gn-window:fullscreen{
+  top:0!important;
+  height:100dvh!important;
+  max-height:100dvh!important;
+}
+/* Keep the dock unobstructed but do not make the app window artificially tiny. */
+.gn-shell .gn-window.gn-window-max:not(:fullscreen) {
+  border-radius:0 0 13px 13px;
+  border-bottom:1px solid rgba(20,25,40,.14);
+  box-shadow:0 9px 30px rgba(9,15,33,.21);
+}
+.gn-shell .gn-window.gn-window-max:not(:fullscreen) .gn-window-body{
+  overscroll-behavior:contain;
+}
+
+/* Continuous practicum: preserve existing page content, just calm the stage. */
+.gn-course-files-body .ers-continuous-document,
+.gn-course-files-body .ers-continuous-document .document-stage,
+.gn-course-files-body .ers-continuous-document .document-scroll{
+  background:#f8fafc;
+}
+.gn-course-files-body .ers-continuous-document .toc-panel{
+  background:#f8fafc;
+  border-right:1px solid #edf0f4;
+  padding:10px 11px 16px 0;
+}
+.gn-course-files-body .ers-continuous-document .document-paper{
+  background:#fff;
+  border-color:#e3e7ed;
+  box-shadow:0 6px 22px rgba(19,32,51,.07);
+}
+.gn-course-files-body .ers-continuous-document .document-cover{
+  background:#fff;
+}
+.gn-course-files-body .ers-continuous-document .document-layout{
+  transition:grid-template-columns .20s ease;
+}
+.document-layout .toc-header{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:6px;margin:0 0 11px;
+  padding:1px 0 9px;
+  border-bottom:1px solid #e8ecf1;
+}
+.document-layout .toc-header .toc-title{
+  margin:0 0 0 7px;
+  color:#758299;font-size:10px;font-weight:780;
+  letter-spacing:.09em;text-transform:uppercase;
+}
+.document-layout .toc-collapse{
+  width:30px;height:30px;
+  padding:0;border:1px solid #e3e8f0;border-radius:9px;
+  display:grid;place-items:center;flex:none;
+  background:#fff;color:#63758c;
+  transition:background .16s,color .16s,border-color .16s;
+}
+.document-layout .toc-collapse:hover{
+  background:#eaf1fa;border-color:#d4e2f4;color:#2d639b;
+}
+.document-layout .toc-collapse:focus-visible,
+.ers-explorer button:focus-visible,.ers-explorer a:focus-visible{
+  outline:2px solid #89b4e8;
+  outline-offset:2px;
+}
+.document-layout .toc-panel nav[hidden]{display:none!important}
+.document-layout.toc-collapsed:not(.is-fullscreen){
+  grid-template-columns:46px minmax(0,1fr);
+  gap:13px;
+}
+.gn-course-files-body .ers-continuous-document .document-layout.toc-collapsed:not(.is-fullscreen){
+  grid-template-columns:46px minmax(0,1fr);
+  gap:13px;
+}
+.document-layout.toc-collapsed .toc-panel{
+  width:46px;min-width:0;padding:9px 5px;
+  overflow:visible;
+}
+.document-layout.toc-collapsed .toc-panel nav{display:none!important}
+.document-layout.toc-collapsed .toc-header{
+  border:0;padding:0;margin:0;
+  justify-content:center;
+}
+.document-layout.toc-collapsed .toc-title{display:none}
+.document-layout.toc-collapsed .toc-collapse{
+  width:33px;height:35px;border:1px solid #e1e7ef;
+}
+.document-layout.is-fullscreen.toc-collapsed{
+  grid-template-columns:46px minmax(0,1fr);
+}
+/* Improve click targets and navigation clarity without a marketing-dashboard look. */
+.ers-explorer{
+  color:#344153;background:#fafbfc;
+}
+.ers-explorer-toolbar{
+  gap:10px;min-height:55px;
+  background:#f5f6f8;
+  border-bottom:1px solid #e4e7ec;
+  padding:8px 14px;
+}
+.ers-files-navigation{gap:3px}
+.ers-nav-button{
+  display:grid;place-items:center;
+  width:32px;height:32px;
+  color:#526175;background:#fff;
+  border:1px solid #e2e6eb;
+  box-shadow:0 1px 2px rgba(16,33,57,.035);
+  font-size:23px;
+}
+.ers-nav-button:hover:not(:disabled){background:#e9edf3;border-color:#d4dae2}
+.ers-breadcrumb{
+  background:#fff;
+  border:1px solid #e0e4e9;
+  box-shadow:0 1px 2px rgba(18,34,52,.035);
+  border-radius:9px;
+}
+.ers-breadcrumb button{
+  color:#52657d;
+  font-size:12px;font-weight:650;
+}
+.ers-breadcrumb button:hover{background:#f0f3f8;color:#354e6e}
+.ers-explorer-sidebar{
+  background:#f2f4f7;
+  border-right:1px solid #e1e5eb;
+}
+.ers-tree-caption{
+  color:#8792a4;font-weight:760;letter-spacing:.09em;
+}
+.ers-tree-root:hover,.ers-tree-root.selected{
+  background:#e3e9f2;color:#354d72;
+}
+.ers-tree-row:hover{background:#e8edf4}
+.ers-tree-row.selected{
+  background:#e1e9f4;color:#315779;
+}
+.ers-tree-select:hover{color:#2d5684}
+.ers-explorer-main,.ers-directory{background:#fbfcfe}
+.ers-file-list{
+  border-color:#e3e7ee;
+  border-radius:12px;
+  box-shadow:0 3px 13px rgba(31,47,67,.035);
+}
+.ers-file-row{min-height:66px}
+.ers-file-row:hover{background:#f5f8fc}
+.ers-file-row-name strong{color:#2e3e56}
+.ers-directory-eyebrow{color:#8998a9;font-weight:790}
+.ers-directory-heading h2{color:#26364e;font-weight:755}
+.ers-directory-count{
+  color:#7e899b;background:#eef1f5;
+}
+.ers-directory-footnote{color:#929dab}
+.ers-pdf-header{background:#f9fafc}
+.ers-pdf-header a{
+  color:#405b78;border:1px solid #e0e5ed;
+  background:#fff;border-radius:8px;
+}
+.ers-pdf-header a:hover{background:#eef2f7;color:#344d6a}
+.ers-archive-header{background:#f9fafc}
+.ers-file-error{border-radius:0}
+
+/* Native-looking neutral action buttons: useful hierarchy without bright rectangles. */
+.ers-explorer .ers-download,
+.ers-archive .ers-download{
+  min-height:35px;
+  display:inline-flex;justify-content:center;align-items:center;gap:7px;
+  padding:8px 13px;
+  color:#344c68;background:#fff;
+  border:1px solid #d7dee8;
+  border-radius:9px;
+  box-shadow:0 1px 2px rgba(23,44,70,.06);
+  font-weight:690;
+  font-size:12px;
+  transition:background .17s,border-color .17s,box-shadow .17s;
+}
+.ers-explorer .ers-download:hover:not(:disabled),
+.ers-archive .ers-download:hover:not(:disabled){
+  background:#edf2f8;
+  color:#29476a;
+  border-color:#bbcee3;
+  box-shadow:0 2px 6px rgba(34,66,97,.10);
+}
+.ers-explorer .ers-download:active:not(:disabled),
+.ers-archive .ers-download:active:not(:disabled){
+  background:#e1e9f2;box-shadow:inset 0 1px 2px rgba(12,32,51,.08);
+}
+.ers-explorer .ers-download:disabled{opacity:.6;cursor:wait}
+.ers-file-row .ers-download-mini{
+  color:#718397;
+  border:1px solid transparent;
+  background:transparent;
+  transition:background .17s,border-color .17s,color .17s;
+}
+.ers-file-row .ers-download-mini:hover{
+  color:#375b82;background:#eaf0f7;border-color:#d9e3ed;
+}
+.gn-greeter .gn-login-submit{
+  min-height:44px;
+  background:#e9edf4;
+  color:#293a51;
+  border:1px solid rgba(232,238,248,.88);
+  box-shadow:0 2px 8px rgba(9,15,31,.13),inset 0 1px rgba(255,255,255,.84);
+  border-radius:10px;
+  font-size:13px;font-weight:720;
+  letter-spacing:.002em;
+  transition:background .18s,box-shadow .18s,transform .18s;
+}
+.gn-greeter .gn-login-submit:hover:not(:disabled){
+  background:#f8f9fd;
+  color:#24344a;
+  border-color:#f8fafc;
+  box-shadow:0 4px 14px rgba(11,20,38,.15);
+  transform:translateY(-1px);
+}
+.gn-greeter .gn-login-submit:active:not(:disabled){
+  background:#dde6f0;
+  transform:translateY(0);
+}
+.gn-greeter .gn-login-submit>span{
+  font-size:16px;color:#526b8a;
+}
+.gn-greeter .gn-login-submit:focus-visible{outline:3px solid #a9c9fa;outline-offset:3px}
+
+/* Mobile: dock still exists, so maximized course windows stop above it. */
+@media(max-width:760px){
+  .gn-shell{--gn-dock-reserve:78px}
+  .gn-shell .gn-window.gn-window-max:not(:fullscreen),
+  .gn-shell .gn-window:not(.gn-window-max):not(:fullscreen){
+    top:34px!important;
+    height:calc(100dvh - 34px - var(--gn-dock-reserve));
+    max-height:calc(100dvh - 34px - var(--gn-dock-reserve));
+    min-height:0;
+  }
+  .document-layout.toc-collapsed:not(.is-fullscreen),
+  .gn-course-files-body .ers-continuous-document .document-layout.toc-collapsed:not(.is-fullscreen){
+    display:grid!important;
+    grid-template-columns:42px minmax(0,1fr)!important;
+    gap:9px;
+  }
+  .document-layout.toc-collapsed .toc-panel{
+    position:sticky!important;
+    top:9px!important;width:42px;max-height:60px!important;
+  }
+  .document-layout.toc-collapsed .toc-collapse{width:32px}
+  .ers-explorer-toolbar{padding:7px 9px}
+  .ers-explorer .ers-toolbar-actions .ers-download{width:35px;max-width:35px;padding:7px;font-size:16px}
+}
+@media(max-height:580px) and (min-width:761px){
+  .gn-shell{--gn-dock-reserve:84px}
+  .gn-shell .gn-window:not(.gn-window-max):not(:fullscreen){min-height:0}
+}
+@media(prefers-reduced-motion:reduce){
+  .document-layout,.ers-explorer .ers-download,
+  .gn-greeter .gn-login-submit{transition:none!important}
+}
