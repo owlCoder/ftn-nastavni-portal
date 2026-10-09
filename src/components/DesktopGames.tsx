@@ -14,7 +14,7 @@ function createSudoku(seed: number) {
 export function Sudoku({ active }: { active: boolean }) {
   const [seed, setSeed] = useState(0)
   const [game, setGame] = useState(() => createSudoku(0))
-  const [selected, setSelected] = useState<number | null>(null)
+  const [selected, setSelected] = useState<number | null>(() => createSudoku(0).given.findIndex(given => !given))
   const [errors, setErrors] = useState(0)
   const won = game.cells.every((value, i) => value === game.solution[i])
 
@@ -31,8 +31,8 @@ export function Sudoku({ active }: { active: boolean }) {
   useEffect(() => {
     if (!active) return
     const handler = (event: KeyboardEvent) => {
-      if (/^[1-9]$/.test(event.key)) input(Number(event.key))
-      else if (event.key === 'Backspace' || event.key === 'Delete' || event.key === '0') input(0)
+      if (/^[1-9]$/.test(event.key)) { event.preventDefault(); input(Number(event.key)) }
+      else if (event.key === 'Backspace' || event.key === 'Delete' || event.key === '0') { event.preventDefault(); input(0) }
       else if (selected !== null && event.key.startsWith('Arrow')) {
         event.preventDefault()
         const row = Math.floor(selected / 9), col = selected % 9
@@ -49,7 +49,7 @@ export function Sudoku({ active }: { active: boolean }) {
     const next = seed + 1
     setSeed(next)
     setGame(createSudoku(next))
-    setSelected(null)
+    setSelected(createSudoku(next).given.findIndex(given => !given))
     setErrors(0)
   }
 
