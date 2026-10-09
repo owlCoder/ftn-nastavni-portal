@@ -98,7 +98,7 @@ function WindowFrame({ windowData: w, isFocused, gamesActive, now, onFocus, onCl
   const onPointerMove=(e:ReactPointerEvent<HTMLDivElement>)=>{
     if(!dragging.current)return
     const d=dragging.current
-    onMove(Math.max(0,Math.min(window.innerWidth-160,d.x+e.clientX-d.px)),Math.max(35,Math.min(window.innerHeight-90,d.y+e.clientY-d.py)))
+    onMove(Math.max(0,Math.min(window.innerWidth-160,d.x+e.clientX-d.px)),Math.max(35,Math.min(Math.max(35,window.innerHeight-430),d.y+e.clientY-d.py)))
   }
   const fullscreen=async()=>{
     try{
