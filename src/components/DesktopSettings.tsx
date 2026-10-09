@@ -69,7 +69,7 @@ export function LoginScreen({ onLogin }: { onLogin: () => void }) {
       <div className="gn-login-avatar" aria-hidden="true">
         <svg width="47" height="47" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="16" r="9" fill="currentColor"/><path d="M8 43c0-12 6-18 16-18s16 6 16 18" fill="currentColor"/></svg>
       </div>
-      <h1>Dobro došao</h1><p>Prijavi se da pristupiš svom desktopu.</p>
+      <h1>student</h1><p>Prijavi se na nastavni portal</p>
       <label htmlFor="gn-login-user">Korisničko ime</label>
       <input id="gn-login-user" autoComplete="username" spellCheck={false} value={username} onChange={e=>{setUsername(e.target.value);setError('')}} placeholder="student" required autoFocus />
       <label htmlFor="gn-login-pass">Lozinka</label>
