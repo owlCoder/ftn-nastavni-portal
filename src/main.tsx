@@ -13,3 +13,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <App />
   </React.StrictMode>,
 )
+
+import './styles/desktop.css'
+import './styles/desktop-games.css'
