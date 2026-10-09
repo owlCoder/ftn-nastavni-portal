@@ -45,7 +45,7 @@ export function savePreferences(preferences: DesktopPreferences) {
 }
 
 export function LoginScreen({ onLogin }: { onLogin: () => void }) {
-  const [username,setUsername] = useState('')
+  const [username,setUsername] = useState('student')
   const [password,setPassword] = useState('')
   const [error,setError] = useState('')
   const [busy,setBusy] = useState(false)
@@ -79,9 +79,9 @@ export function LoginScreen({ onLogin }: { onLogin: () => void }) {
       </div>
       <h1>student</h1><p>Prijavi se na nastavni portal</p>
       <label htmlFor="gn-login-user">Korisničko ime</label>
-      <input id="gn-login-user" autoComplete="username" spellCheck={false} value={username} onChange={e=>{setUsername(e.target.value);setError('')}} placeholder="student" required autoFocus />
+      <input id="gn-login-user" autoComplete="username" spellCheck={false} value={username} onChange={e=>{setUsername(e.target.value);setError('')}} placeholder="student" required />
       <label htmlFor="gn-login-pass">Lozinka</label>
-      <input id="gn-login-pass" type="password" autoComplete="current-password" value={password} onChange={e=>{setPassword(e.target.value);setError('')}} placeholder="Lozinka" required />
+      <input id="gn-login-pass" type="password" autoComplete="current-password" value={password} onChange={e=>{setPassword(e.target.value);setError('')}} placeholder="Lozinka" required autoFocus />
       {error && <div className="gn-login-error" role="alert">{error}</div>}
       <button type="submit" className="gn-login-submit" disabled={busy}>Prijavi se <span>→</span></button>
       <small>Lokalna prijava za pristup nastavnom portalu.</small>
