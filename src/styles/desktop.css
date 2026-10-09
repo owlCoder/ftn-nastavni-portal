@@ -1,0 +1,76 @@
+/* FTN OS: desktop shell */
+.os-desktop{position:fixed;inset:0;overflow:hidden;isolation:isolate;background:#091529;color:#f7faff;font-family:Inter,"Segoe UI",Arial,sans-serif}
+.os-desktop button{-webkit-tap-highlight-color:transparent}
+.os-wallpaper{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden;background:radial-gradient(ellipse at 70% 42%,#1b3659 0,transparent 55%),linear-gradient(125deg,#081124 2%,#0c1d36 55%,#101f37)}
+.os-wallpaper:before{content:"";position:absolute;inset:0;background-image:linear-gradient(135deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:60px 60px}
+.os-wallpaper:after{content:"";position:absolute;width:55vw;aspect-ratio:1;right:-8vw;top:3vh;border:1px solid rgba(151,192,255,.1);border-radius:50%;box-shadow:0 0 0 90px rgba(91,145,220,.02),0 0 0 180px rgba(91,145,220,.012)}
+.os-glow{position:absolute;filter:blur(30px);border-radius:50%}
+.os-glow-one{width:700px;height:660px;background:radial-gradient(circle,rgba(70,116,209,.23),transparent 65%);left:23%;top:7%}
+.os-glow-two{width:570px;height:570px;background:radial-gradient(circle,rgba(53,190,179,.12),transparent 68%);right:-6%;bottom:-30%}
+.os-wallpaper-orbit{position:absolute;width:36vw;aspect-ratio:1;right:5%;top:22%;border:1px dashed rgba(215,229,255,.12);border-radius:50%;transform:rotate(-24deg)}
+.os-wallpaper-grid{position:absolute;width:270px;height:240px;top:17%;left:39%;background-image:radial-gradient(circle,rgba(174,211,250,.3) 1px,transparent 1px);background-size:23px 23px;mask-image:radial-gradient(ellipse,#000 8%,transparent 74%);opacity:.35}
+.os-menubar{height:52px;position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 34px;border-bottom:1px solid rgba(255,255,255,.105);background:rgba(8,18,36,.72);backdrop-filter:blur(22px);font-size:12px}
+.os-menubar-left,.os-menubar-right{display:flex;align-items:center;gap:14px}
+.os-logo{width:26px;height:26px;display:grid;place-items:center;border-radius:8px;background:#deff97;color:#10233d;font-size:21px}
+.os-menubar strong{font-size:15px;letter-spacing:-.04em}
+.os-menubar strong span{color:#baf08c}
+.os-menu-divider{height:18px;width:1px;background:rgba(255,255,255,.17)}
+.os-menu-desktop{font-weight:700;color:#fff}
+.os-menu-extra,.os-menubar-right{color:#a4b6d1}
+.os-status-dot{flex:none;width:7px;height:7px;border-radius:50%;background:#b8e987;box-shadow:0 0 0 4px rgba(184,233,135,.09)}
+.os-menubar-right time{color:#f7faff;font-size:13px;font-weight:650}
+.os-workspace{position:absolute;inset:52px 0 0;display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,460px);padding:clamp(40px,7vh,108px) clamp(36px,6vw,108px) 145px;gap:6vw;overflow:auto}
+.os-welcome{align-self:center;max-width:650px;padding-bottom:24px}
+.os-eyebrow,.os-shortcuts-heading{display:flex;align-items:center;gap:11px;font-size:11px;font-weight:800;letter-spacing:.16em;color:#c7e9b2}
+.os-eyebrow .os-status-dot{width:6px;height:6px}
+.os-welcome h1{font-size:clamp(54px,6.5vw,112px);line-height:1.02;font-weight:750;letter-spacing:-.065em;margin:30px 0 24px}
+.os-welcome h1 em{font-style:normal;color:#dbff9e}
+.os-welcome>p{max-width:430px;line-height:1.8;font-size:clamp(14px,1.2vw,17px);color:#acbfd9}
+.os-welcome-actions{display:flex;gap:25px;align-items:center;margin-top:36px}
+.os-welcome-actions button{display:inline-flex;align-items:center;gap:45px;padding:15px 17px 15px 23px;background:#ddff9e;color:#18263d;border:1px solid #f0ffcf;border-radius:14px;cursor:pointer;font-size:13px;font-weight:800;box-shadow:0 12px 35px rgba(193,249,130,.17);transition:transform .2s,background .2s}
+.os-welcome-actions button:hover{background:#fff;transform:translateY(-3px)}
+.os-welcome-actions button span{font-size:20px}
+.os-welcome-actions>span{color:#8093b0;font-size:12px;text-transform:capitalize}
+.os-shortcuts{align-self:center;padding:27px 24px 30px;border:1px solid rgba(201,221,255,.17);border-radius:28px;background:linear-gradient(135deg,rgba(255,255,255,.095),rgba(255,255,255,.035));box-shadow:0 24px 90px rgba(0,0,0,.16),inset 0 1px rgba(255,255,255,.08);backdrop-filter:blur(25px)}
+.os-shortcuts-heading{color:#d4e2fa;justify-content:space-between;gap:10px;letter-spacing:.11em;padding:0 5px}
+.os-shortcuts-heading span:last-child{color:#8398b9;font-size:9px;letter-spacing:.1em}
+.os-games-heading{padding-top:28px;margin-top:15px;border-top:1px solid rgba(255,255,255,.11)}
+.os-icon-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 5px;margin-top:17px}
+.os-desktop-icon{min-width:0;padding:8px 3px 11px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:5px;cursor:pointer;background:transparent;border:1px solid transparent;border-radius:16px;color:#f8fbff;text-align:center;transition:background .2s,transform .2s,border .2s}
+.os-desktop-icon:hover,.os-desktop-icon:focus-visible{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.14);transform:translateY(-3px);outline:none}
+.os-icon-visual{display:grid;place-items:center;height:73px;width:86px;filter:drop-shadow(0 10px 12px rgba(0,0,0,.24))}
+.os-folder-art{width:75px;height:69px;filter:drop-shadow(0 8px 5px rgba(0,0,0,.15))}
+.os-folder-blue{color:#91baff}.os-folder-coral{color:#fa9e93}.os-folder-mint{color:#79d9c6}
+.os-desktop-icon strong{max-width:100%;font-size:13px;font-weight:800;overflow-wrap:anywhere;line-height:1.2}
+.os-desktop-icon small{width:100%;max-width:122px;color:#95aaca;font-size:10px;line-height:1.35}
+.os-game-art{display:grid;width:60px;height:60px;place-items:center;border-radius:17px;box-shadow:0 7px 16px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.3)}
+.os-sudoku-art{grid-template-columns:repeat(2,1fr);padding:11px;gap:3px;color:#fff;background:linear-gradient(145deg,#ae8af8,#7551c7)}
+.os-sudoku-art span{display:grid;place-items:center;width:100%;height:100%;border-radius:3px;background:rgba(255,255,255,.15);font-size:14px;font-weight:750}
+.os-tetris-art{display:flex;align-items:center;justify-content:center;gap:2px;flex-wrap:wrap;width:60px;padding:11px;background:linear-gradient(145deg,#ffbf73,#e58c5a)}
+.os-tetris-art i{flex:0 0 11px;height:11px;border-radius:2px;background:#fff7d3;box-shadow:inset 0 -2px rgba(153,80,36,.22)}
+.os-tetris-art i:nth-child(3),.os-tetris-art i:nth-child(6){background:#a7d7f6}
+.os-invaders-art{display:flex;align-items:center;justify-content:center;color:#9ff4b4;background:linear-gradient(145deg,#264d73,#152d53);font-size:25px;font-weight:900}
+.os-invaders-art span{font-size:14px;color:#ffbfc7;margin:0 -5px}
+.os-desktop-stamp{position:absolute;display:flex;gap:20px;left:clamp(36px,6vw,108px);bottom:114px;color:#617997;font-size:10px;font-weight:700;letter-spacing:.19em}
+.os-dock-area{position:absolute;left:0;right:0;bottom:18px;z-index:140;display:flex;justify-content:center;pointer-events:none;padding:0 12px}
+.os-dock{pointer-events:auto;height:72px;max-width:100%;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px 12px;border:1px solid rgba(222,237,255,.20);border-radius:22px;background:rgba(23,37,59,.87);backdrop-filter:blur(28px);box-shadow:0 19px 70px rgba(0,0,0,.45),inset 0 1px rgba(255,255,255,.14)}
+.os-dock-button{position:relative;flex:0 1 53px;display:grid;place-items:center;min-width:39px;height:53px;aspect-ratio:1;border:1px solid transparent;background:transparent;border-radius:14px;color:#fff;cursor:pointer;transition:background .18s,transform .18s}
+.os-dock-button:hover,.os-dock-selected{background:rgba(255,255,255,.13)}
+.os-dock-button:hover{transform:translateY(-5px)}
+.os-dock-home{font-size:28px;color:#e3ffab}
+.os-dock-separator{width:1px;height:34px;background:rgba(255,255,255,.15);margin:0 7px}
+.os-dock-glyph{width:40px;height:40px;display:grid;place-items:center}
+.os-dock-glyph .os-folder-art{width:43px;height:39px}
+.os-dock-glyph .os-game-art{transform:scale(.66);transform-origin:center;flex:none}
+.os-dock-indicator{position:absolute;width:5px;height:5px;background:#d9fcad;border-radius:50%;bottom:1px;left:calc(50% - 2.5px)}
+.os-dock-clock{display:grid;gap:3px;justify-items:end;min-width:49px;padding:0 4px}
+.os-dock-clock strong{font-size:12px}.os-dock-clock small{color:#9db0ce;font-size:10px}
+.os-launcher{position:absolute;z-index:135;bottom:103px;left:50%;transform:translateX(-50%);width:min(410px,calc(100vw - 30px));padding:18px;background:rgba(24,39,62,.97);border:1px solid rgba(255,255,255,.22);border-radius:22px;box-shadow:0 24px 80px rgba(0,0,0,.45);backdrop-filter:blur(24px)}
+.os-launcher-title{display:flex;align-items:center;gap:12px;padding:5px 10px 14px;border-bottom:1px solid rgba(255,255,255,.13);margin-bottom:10px}
+.os-launcher-title>span{color:#d3f5a3;font-size:30px}.os-launcher-title div{display:grid;gap:2px}
+.os-launcher-title strong{font-size:15px}.os-launcher-title small{color:#9eb3ce;font-size:11px}
+.os-launcher>button{width:100%;display:flex;align-items:center;gap:13px;padding:7px 12px;text-align:left;background:transparent;color:#ecf3ff;border:0;border-radius:12px;font-size:13px;cursor:pointer}
+.os-launcher>button:hover{background:rgba(255,255,255,.10)}
+.os-launcher-icon{display:grid;place-items:center;width:32px;height:32px}
+.os-launcher-icon .os-folder-art{width:36px}.os-launcher-icon .os-game-art{transform:scale(.51);flex:none}
+.os-launcher-arrow{margin-left:auto;color:#aabbd3}
