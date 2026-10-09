@@ -6,6 +6,7 @@ import { assetUrl } from '../lib/assets'
 import { PracticumDocument } from './document/PracticumDocument'
 import { CheckpointsView } from './CheckpointsView'
 import { ZipFileViewer } from './ZipFileViewer'
+import { PdfViewer } from './PdfViewer'
 import { checkpointMarkdown, downloadFolderZip, downloadText, practicumMarkdown, type DownloadEntry } from './courseDownloads'
 
 type FileKind='folder'|'practicum'|'section'|'checkpoints'|'pdf'|'zip'
@@ -217,11 +218,7 @@ export function ErsCourseFiles({course}:{course:Course}){
               <PracticumDocument practicum={course.practicum}/>
             </div> :
             viewing.kind==='checkpoints'?<div className="ers-checkpoint-document"><CheckpointsView checkpoints={course.checkpoints}/></div>:
-            pdfViewing?<div className="ers-pdf-viewer">
-              <div className="ers-pdf-header"><span>PDF VIEWER</span><strong>{viewing.name}</strong><small>{viewing.pages?viewing.pages+' strana':''}</small>
-                <a href={assetUrl(viewing.source!)} download={viewing.name}>↓ PDF</a></div>
-              <iframe title={'PDF Viewer: '+viewing.name} src={assetUrl(viewing.source!)+'#view=FitH'} loading="lazy" />
-            </div>:
+            pdfViewing?<PdfViewer file={viewing.source!} name={viewing.name}/>:
             viewing.kind==='zip'&&viewing.source?<ZipFileViewer file={viewing.source} title={viewing.name}/>:
             <p>Fajl nije dostupan za prikaz.</p>}
         </div> : <div className="ers-directory">
