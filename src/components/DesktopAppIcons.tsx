@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-export type AppIconId = 'finder' | 'ers' | 'oib' | 'odp' | 'sudoku' | 'tetris' | 'invaders' | 'notes' | 'readme' | 'trash'
+export type AppIconId = 'finder' | 'ers' | 'oib' | 'odp' | 'sudoku' | 'tetris' | 'invaders' | 'snake' | 'merge' | 'notes' | 'readme' | 'trash'
 
 function Symbol({ id }: { id: AppIconId }): ReactNode {
   switch (id) {
@@ -57,6 +57,21 @@ function Symbol({ id }: { id: AppIconId }): ReactNode {
       </>
     case 'invaders':
       return <path d="M13 7v3h10V7h3v3h3v3h2v12h-4v-4h-4v4h-3v3h-4v-3h-3v-4H9v4H5V13h2v-3h3V7zm-1 10h4v4h-4zm8 0h4v4h-4z" fill="#b8f4d7" fillRule="evenodd"/>
+    case 'snake':
+      return <>
+        <path d="M10 7h7v5h5v5h-5v5H9v-5H6v-5h4V7Z" fill="#d5ffc7"/>
+        <rect x="12.2" y="9.4" width="2.5" height="2.5" rx="1" fill="#307a5a"/>
+        <path d="M12 22v4H7v-4" fill="none" stroke="#d5ffc7" strokeWidth="3.5" strokeLinecap="round"/>
+        <circle cx="23" cy="24" r="3.5" fill="#ffac85"/>
+      </>
+    case 'merge':
+      return <>
+        <rect x="5.5" y="5.5" width="11.5" height="11.5" rx="2.4" fill="#fff0d2"/>
+        <rect x="19" y="5.5" width="11.5" height="11.5" rx="2.4" fill="#ffe1ad"/>
+        <rect x="5.5" y="19" width="11.5" height="11.5" rx="2.4" fill="#ffbe77"/>
+        <rect x="19" y="19" width="11.5" height="11.5" rx="2.4" fill="#ef895a"/>
+        <g fill="#815334" fontSize="8" fontWeight="bold" textAnchor="middle"><text x="11.25" y="13.7">2</text><text x="24.7" y="13.7">4</text><text x="11.25" y="27.3">8</text><text x="24.7" y="27.3">16</text></g>
+      </>
     case 'notes':
       return <>
         <rect x="7" y="6" width="22" height="25" rx="3.4" fill="#fffaf0"/>
@@ -65,9 +80,9 @@ function Symbol({ id }: { id: AppIconId }): ReactNode {
       </>
     case 'readme':
       return <>
-        <path d="M10 5h12l6 6v19H10z" fill="#fff" stroke="#d2dbe9" strokeWidth="1.1"/>
-        <path d="M22 5v6h6" fill="#e3ebf6"/>
-        <path d="M14 16h10m-10 4h10m-10 4h7" stroke="#799cc8" strokeWidth="1.3" strokeLinecap="round"/>
+        <circle cx="18" cy="18" r="12" fill="rgba(255,255,255,.93)"/>
+        <circle cx="18" cy="11" r="2" fill="#53749e"/>
+        <path d="M18 16v8" stroke="#53749e" strokeWidth="2.6" strokeLinecap="round"/>
       </>
     case 'trash':
       return <>
