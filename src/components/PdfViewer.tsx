@@ -28,22 +28,27 @@ function library():Promise<PdfLibrary>{
   return pending
 }
 const clamp=(value:number,min:number,max:number)=>Math.max(min,Math.min(value,max))
+const MIN_SCALE=.1
+const MAX_SCALE=3
 export function PdfViewer({file,name}:{file:string;name:string}){
   const [pdf,setPdf]=useState<PDFDocument|null>(null)
   const [page,setPage]=useState(1)
+  const [zoom,setZoom]=useState<number|null>(null)
   const [scale,setScale]=useState(1)
+  const [size,setSize]=useState({width:0,height:0})
   const [total,setTotal]=useState(0)
   const [error,setError]=useState('')
   const [busy,setBusy]=useState(true)
   const [full,setFull]=useState(false)
   const canvas=useRef<HTMLCanvasElement>(null)
   const host=useRef<HTMLDivElement>(null)
+  const scroll=useRef<HTMLDivElement>(null)
   const renderId=useRef(0)
   const url=assetUrl(file)
   useEffect(()=>{
     let cancelled=false
     let document:PDFDocument|null=null
-    setPdf(null);setPage(1);setTotal(0);setBusy(true);setError('')
+    setPdf(null);setPage(1);setZoom(null);setTotal(0);setBusy(true);setError('')
     void library().then(async lib=>{
       const loaded=await lib.getDocument(url).promise
       if(cancelled){await loaded.destroy();return}
@@ -57,26 +62,46 @@ export function PdfViewer({file,name}:{file:string;name:string}){
     }
   },[url])
   useEffect(()=>{
-    if(!pdf||!canvas.current)return
+    const element=scroll.current
+    if(!element)return
+    const measure=()=>{
+      const styles=getComputedStyle(element)
+      const width=element.clientWidth-parseFloat(styles.paddingLeft)-parseFloat(styles.paddingRight)
+      const height=element.clientHeight-parseFloat(styles.paddingTop)-parseFloat(styles.paddingBottom)
+      setSize(previous=>previous.width===width&&previous.height===height?previous:{width,height})
+    }
+    measure()
+    const observer=new ResizeObserver(measure)
+    observer.observe(element)
+    return()=>observer.disconnect()
+  },[])
+  useEffect(()=>{
+    if(!pdf||!canvas.current||size.width<=2||size.height<=2)return
     let canceled=false
     let task:ReturnType<PDFPage['render']>|null=null
     const id=++renderId.current
     void pdf.getPage(page).then(pg=>{
       if(canceled||renderId.current!==id)return
-      const viewport=pg.getViewport({scale:Math.min(window.devicePixelRatio||1,2)*scale*1.4})
+      const natural=pg.getViewport({scale:1})
+      const fitted=Math.min((size.width-2)/natural.width,(size.height-2)/natural.height)
+      const displayScale=zoom??fitted
+      const pixelRatio=Math.min(window.devicePixelRatio||1,2)
+      const viewport=pg.getViewport({scale:pixelRatio*displayScale})
       const el=canvas.current,ctx=el?.getContext('2d')
       if(!el||!ctx)return
+      setScale(displayScale)
       el.width=Math.floor(viewport.width)
       el.height=Math.floor(viewport.height)
-      el.style.width=(viewport.width/Math.min(window.devicePixelRatio||1,2))+'px'
-      el.style.height=(viewport.height/Math.min(window.devicePixelRatio||1,2))+'px'
+      el.style.width=(viewport.width/pixelRatio)+'px'
+      el.style.height=(viewport.height/pixelRatio)+'px'
+      if(zoom===null&&scroll.current){scroll.current.scrollTop=0;scroll.current.scrollLeft=0}
       task=pg.render({canvasContext:ctx,viewport,canvas:el})
       return task.promise
     }).catch(err=>{
       if(!canceled && err?.name!=='RenderingCancelledException')setError('Stranica ne može da se prikaže.')
     })
     return()=>{canceled=true;task?.cancel()}
-  },[pdf,page,scale])
+  },[pdf,page,zoom,size])
   useEffect(()=>{
     const changed=()=>setFull(document.fullscreenElement===host.current)
     document.addEventListener('fullscreenchange',changed)
@@ -92,14 +117,14 @@ export function PdfViewer({file,name}:{file:string;name:string}){
         <button title="Sledeća strana" aria-label="Sledeća strana" onClick={()=>setPage(p=>clamp(p+1,1,total))} disabled={page>=total}>›</button>
       </div>
       <div className="ftn-pdf-zoom">
-        <button aria-label="Umanji" onClick={()=>setScale(s=>clamp(Number((s-.15).toFixed(2)),.5,2.5))} disabled={scale<=.5}>−</button>
-        <button title="Vrati uvećanje" onClick={()=>setScale(1)}>{Math.round(scale*100)}%</button>
-        <button aria-label="Uvećaj" onClick={()=>setScale(s=>clamp(Number((s+.15).toFixed(2)),.5,2.5))} disabled={scale>=2.5}>+</button>
+        <button aria-label="Umanji" onClick={()=>setZoom(clamp(Number((scale-.15).toFixed(2)),MIN_SCALE,MAX_SCALE))} disabled={scale<=MIN_SCALE}>−</button>
+        <button title="Uklopi celu stranicu" aria-label="Uklopi celu stranicu" onClick={()=>setZoom(null)}>{Math.round(scale*100)}%</button>
+        <button aria-label="Uvećaj" onClick={()=>setZoom(clamp(Number((scale+.15).toFixed(2)),MIN_SCALE,MAX_SCALE))} disabled={scale>=MAX_SCALE}>+</button>
       </div>
       <button className="ftn-pdf-action" onClick={()=>{if(!host.current)return;if(full)void document.exitFullscreen();else void host.current.requestFullscreen()}} aria-label={full?'Izađi iz celog ekrana':'Ceo ekran'} title="Ceo ekran">⛶</button>
       <a className="ftn-pdf-action ftn-pdf-download" href={url} download={name} title="Preuzmi PDF">↓ <span>Preuzmi</span></a>
     </div>
-    <div className="ftn-pdf-scroll" aria-label="PDF dokument">
+    <div className="ftn-pdf-scroll" aria-label="PDF dokument" ref={scroll}>
       {busy?<div className="ftn-pdf-message">Učitavanje dokumenta…</div>:error?
         <div className="ftn-pdf-message ftn-pdf-error"><strong>{error}</strong><p>PDF možeš preuzeti ili otvoriti u sistemskom prikazu.</p>
           <a href={url} target="_blank" rel="noopener noreferrer">Otvori PDF ↗</a></div>:
