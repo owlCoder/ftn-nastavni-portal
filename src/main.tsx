@@ -15,4 +15,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 )
 
 import './styles/desktop.css'
+import './styles/desktop-windows.css'
 import './styles/desktop-games.css'
