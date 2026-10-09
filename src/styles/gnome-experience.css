@@ -1,0 +1,167 @@
+/* FTN Portal / GNOME desktop experience - persistent dock, drawer and login */
+.gn-shell .gn-wallpaper{background:var(--gn-wallpaper)!important;transition:background .35s ease,filter .28s}
+.gn-shell:not(.gn-wallpaper-default) .gn-wallpaper::before,.gn-shell:not(.gn-wallpaper-default) .gn-wallpaper::after{opacity:.14}
+.gn-desktop{bottom:0;padding-bottom:92px}
+.gn-desktop-items{row-gap:17px;column-gap:18px}
+.gn-bottom-dock{
+  position:absolute;z-index:225;bottom:12px;left:50%;transform:translateX(-50%);
+  max-width:min(96vw,940px);width:max-content;min-height:68px;
+  display:flex;align-items:center;justify-content:flex-start;gap:5px;
+  padding:7px 10px;border-radius:22px;
+  color:#f6f5f4;border:1px solid rgba(255,255,255,.17);
+  background:rgba(27,25,43,.75);
+  -webkit-backdrop-filter:blur(36px) saturate(160%);
+  backdrop-filter:blur(36px) saturate(160%);
+  box-shadow:0 12px 43px rgba(5,5,23,.32),inset 0 1px rgba(255,255,255,.08);
+  overflow-x:auto;scrollbar-width:none;
+  animation:gn-dock-rise .33s cubic-bezier(.22,1,.36,1) both;
+}
+.gn-bottom-dock::-webkit-scrollbar{display:none}
+.gn-bottom-dock button{
+  position:relative;flex:none;width:54px;height:54px;
+  border:0;border-radius:13px;display:grid;place-items:center;
+  color:inherit;background:transparent;padding:3px;
+  transition:transform .18s cubic-bezier(.22,1,.36,1),background .16s;
+}
+.gn-bottom-dock button:hover,.gn-bottom-dock button.gn-dock-current{background:rgba(255,255,255,.15)}
+.gn-bottom-dock button:hover{transform:translateY(-4px) scale(1.05)}
+.gn-bottom-dock button:active{transform:scale(.95)}
+.gn-bottom-dock .gn-app-art{width:47px;height:47px}
+.gn-bottom-dock .os-appicon{width:46px;height:46px;border-radius:12px}
+.gn-bottom-dock .gn-file-svg{width:49px;height:49px}
+.gn-bottom-dock .gn-dock-apps{background:rgba(255,255,255,.1)}
+.gn-bottom-separator{flex:none;width:1px;height:36px;margin:0 4px;background:rgba(255,255,255,.2)}
+.gn-bottom-dock .gn-running-dot{position:absolute;bottom:-1px;width:5px;height:5px;border-radius:50%;background:#e1f0ff;box-shadow:0 0 5px rgba(255,255,255,.25)}
+.gn-bottom-dock button:focus-visible{outline:2px solid #b5d7ff;outline-offset:-2px}
+.gn-drawer-scrim{position:fixed;inset:34px 0 0;z-index:172;background:rgba(8,7,28,.40);border:0;cursor:default;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:gn-activity-fade .22s both}
+.gn-overview{
+  position:absolute;z-index:180;
+  inset:auto;top:50%;left:50%;
+  transform:translate(-50%,-52%);
+  width:min(1060px,calc(100vw - 90px));
+  height:min(720px,calc(100dvh - 170px));
+  min-height:335px;
+  overflow:hidden;border:1px solid rgba(255,255,255,.19);border-radius:25px;
+  background:rgba(37,31,66,.78);
+  -webkit-backdrop-filter:blur(43px) saturate(128%);
+  backdrop-filter:blur(43px) saturate(128%);
+  box-shadow:0 28px 105px rgba(6,6,25,.42),inset 0 1px rgba(255,255,255,.09);
+  animation:gn-drawer-pop .26s cubic-bezier(.22,1,.36,1) both;
+}
+.gn-overview-dismiss{inset:0;opacity:0;pointer-events:none}
+.gn-overview-close{
+  position:absolute;z-index:4;top:14px;right:15px;width:33px;height:33px;
+  border:1px solid rgba(255,255,255,.11);border-radius:50%;
+  display:grid;place-items:center;background:rgba(255,255,255,.13);color:white;
+  transition:background .14s,transform .18s;
+}
+.gn-overview-close:hover{background:rgba(255,255,255,.26);transform:rotate(90deg)}
+.gn-overview-body{padding:24px 28px 18px;height:100%;overflow:hidden}
+.gn-overview-top{width:min(450px,calc(100% - 50px));height:45px}
+.gn-apps-overview{padding:26px 12px 10px;gap:16px;width:100%;margin:0 auto}
+.gn-apps-overview-heading{max-width:890px;padding-bottom:11px}
+.gn-app-grid{max-width:890px;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px 13px}
+.gn-app-grid>button{min-height:110px;gap:5px;padding:7px 4px 6px}
+.gn-app-grid .gn-app-art{width:66px;height:66px}
+.gn-app-grid .os-appicon{width:63px;height:63px;border-radius:16px}
+.gn-app-grid .gn-file-svg{width:65px;height:65px}
+.gn-apps-overview-heading h2{font-size:19px}
+.gn-apps-overview-heading .gn-apps-eyebrow{font-size:9px}
+.gn-overview-dash{display:none!important}
+@keyframes gn-drawer-pop{from{opacity:0;transform:translate(-50%,-49%) scale(.974)}to{opacity:1;transform:translate(-50%,-52%) scale(1)}}
+@keyframes gn-dock-rise{from{opacity:0;transform:translate(-50%,16px)}to{opacity:1;transform:translate(-50%,0)}}
+.gn-quick-menu{
+  width:400px;max-height:calc(100dvh - 150px);overflow:auto;scrollbar-width:thin;
+  background:rgba(43,41,65,.92);
+  -webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);
+}
+.gn-wallpaper-setting{margin-top:16px;padding:15px 0 10px;border-top:1px solid rgba(255,255,255,.13)}
+.gn-wallpaper-setting-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.gn-wallpaper-setting-heading strong{font-size:12px}
+.gn-wallpaper-setting-heading>span{color:#d3d0e4;font-size:11px}
+.gn-wallpaper-options{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.gn-wallpaper-option{
+  aspect-ratio:1.25;min-height:48px;display:grid;place-items:center;
+  padding:0;border-radius:10px;border:2px solid transparent;
+  outline:1px solid rgba(255,255,255,.2);color:#fff;
+  box-shadow:inset 0 0 14px rgba(0,0,0,.1);
+  transition:transform .15s,border-color .15s,box-shadow .2s;
+}
+.gn-wallpaper-option:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.68)}
+.gn-wallpaper-option.gn-wallpaper-selected{border-color:#fff;box-shadow:0 0 0 2px #3584e4}
+.gn-light .gn-wallpaper-setting{border-top-color:rgba(0,0,0,.12)}
+.gn-light .gn-wallpaper-setting-heading>span{color:#646373}
+.gn-quick-footer{padding-top:13px}
+/* Widgets: consistent hierarchy without distracting labels */
+.gn-widget-rail .os-widgets{gap:11px}
+.gn-widget-rail .os-widgets .widget{
+  border-radius:19px;padding-left:14px;padding-right:14px;
+  background:rgba(31,28,56,.65);
+  border-color:rgba(255,255,255,.12);
+  box-shadow:0 9px 25px rgba(11,7,38,.15),inset 0 1px rgba(255,255,255,.06);
+}
+.gn-widget-rail .os-widgets .widget:hover{background:rgba(31,28,56,.78)}
+.gn-widget-rail .widget-weather-location{font-weight:760}
+.gn-widget-rail .weather-temp{font-size:51px;font-weight:360}
+.gn-widget-rail .weather-divider{opacity:.72}
+.gn-widget-rail .usage-header strong{font-size:11.5px}
+.gn-widget-rail .usage-chart{gap:4px}
+.gn-widget-rail .usage-chart-column{border-radius:3px 3px 1px 1px}
+.gn-widget-rail .usage-disclaimer,.gn-widget-rail .usage-header>span{display:none}
+.gn-widget-rail .system-widget .system-ring{box-shadow:0 0 0 4px rgba(153,193,241,.08)}
+/* Login */
+.gn-login{position:fixed;inset:0;overflow:auto;display:grid;place-items:center;padding:80px 16px 24px;isolation:isolate;background:radial-gradient(ellipse at 20% 95%,#9b66c5,transparent 55%),radial-gradient(ellipse at 90% 3%,#476bc1,transparent 53%),linear-gradient(140deg,#1c234f,#473178 55%,#211b46);font:13px/1.45 "Adwaita Sans","Cantarell","Inter","Segoe UI",sans-serif;color:#f6f5f4}
+.gn-login-glow{position:absolute;z-index:-1;inset:0;background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.09),transparent 58%);pointer-events:none}
+.gn-login-clock{position:absolute;top:26px;left:30px;right:30px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;font-weight:700}
+.gn-login-clock span:last-child{opacity:.65;font-weight:500}
+.gn-login-card{width:min(380px,100%);padding:28px 30px 24px;display:flex;flex-direction:column;border:1px solid rgba(255,255,255,.16);border-radius:24px;background:rgba(35,32,59,.68);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);box-shadow:0 30px 85px rgba(7,5,31,.26);animation:gn-about-enter .45s ease both}
+.gn-login-avatar{width:92px;height:92px;display:grid;place-items:center;align-self:center;margin:0 0 17px;border-radius:50%;background:linear-gradient(135deg,#aac6ff,#637abf);color:#243359;box-shadow:0 7px 20px rgba(9,10,37,.28)}
+.gn-login-card h1{text-align:center;font-size:25px;letter-spacing:-.035em;margin:0 0 4px;color:#fff;font-weight:780}
+.gn-login-card p{text-align:center;margin:0 0 26px;color:#d1cfe1}
+.gn-login-card label{font-weight:680;font-size:11px;margin:0 0 7px}
+.gn-login-card input{width:100%;height:44px;padding:0 13px;margin:0 0 16px;background:rgba(10,12,36,.36);border:1px solid rgba(255,255,255,.20);border-radius:11px;outline:none;color:white}
+.gn-login-card input:focus{border-color:#99c1f1;box-shadow:0 0 0 3px rgba(75,145,230,.25)}
+.gn-login-card input::placeholder{color:#b5b3c9}
+.gn-login-error{background:rgba(225,75,73,.2);border:1px solid rgba(255,142,142,.4);padding:9px 11px;margin-bottom:14px;border-radius:10px;font-size:12px;color:#ffd4d0}
+.gn-login-submit{height:45px;display:flex;justify-content:center;align-items:center;gap:12px;border:0;border-radius:11px;background:#3584e4;color:#fff;font-weight:750;margin:3px 0 16px;transition:background .16s,transform .16s}
+.gn-login-submit:hover{background:#4e97ef;transform:translateY(-1px)}
+.gn-login-submit:active{transform:scale(.985)}
+.gn-login-submit>span{font-size:18px}
+.gn-login-submit:disabled{opacity:.7}
+.gn-login-card>small{text-align:center;color:#b3b0c9;font-size:10px}
+@media(max-width:1100px){
+ .gn-bottom-dock{gap:2px;padding:6px}
+ .gn-bottom-dock button{width:48px;height:49px}
+ .gn-bottom-dock .gn-app-art{width:43px;height:43px}
+ .gn-bottom-dock .os-appicon{width:42px;height:42px;border-radius:11px}
+ .gn-bottom-dock .gn-file-svg{width:42px;height:42px}
+}
+@media(max-width:760px){
+ .gn-drawer-scrim{inset:34px 0 0}
+ .gn-overview{width:calc(100vw - 20px);height:min(650px,calc(100dvh - 126px));min-height:270px;top:calc(50% - 12px);border-radius:17px}
+ .gn-overview-body{padding:19px 11px 12px}
+ .gn-apps-overview{padding:17px 2px 7px}
+ .gn-app-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+ .gn-app-grid>button{min-height:105px}
+ .gn-app-grid .gn-app-art{width:59px;height:59px}
+ .gn-app-grid .os-appicon{width:56px;height:56px}
+ .gn-bottom-dock{width:calc(100vw - 12px);max-width:none;bottom:6px;min-height:58px;border-radius:17px;justify-content:flex-start;padding:5px}
+ .gn-bottom-dock button{width:43px;height:44px}
+ .gn-bottom-dock .gn-app-art{width:38px;height:38px}
+ .gn-bottom-dock .os-appicon{width:37px;height:37px;border-radius:10px}
+ .gn-bottom-dock .gn-file-svg{width:38px;height:38px}
+ .gn-bottom-separator{margin:0 2px;height:30px}
+ .gn-quick-menu{max-height:calc(100dvh - 90px)}
+ .gn-widget-rail{padding-bottom:10px}
+ .gn-desktop{padding-bottom:72px}
+ .gn-desktop-items{gap:10px 3px}
+}
+@media(max-height:620px){
+ .gn-overview{height:calc(100dvh - 125px);min-height:230px;top:calc(50% - 12px)}
+ .gn-apps-overview{padding-top:12px}
+ .gn-app-grid>button{min-height:90px}
+}
+@media(prefers-reduced-motion:reduce){
+ .gn-bottom-dock,.gn-overview,.gn-drawer-scrim,.gn-login-card{animation:none}
+ .gn-wallpaper-option,.gn-dock-icon,.gn-dock-apps{transition:none}
+}
