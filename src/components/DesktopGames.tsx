@@ -19,14 +19,14 @@ export function Sudoku({ active }: { active: boolean }) {
   const won = game.cells.every((value, i) => value === game.solution[i])
 
   const input = useCallback((value: number) => {
-    setGame((previous) => {
-      if (selected === null || previous.given[selected]) return previous
-      if (value !== 0 && value !== previous.solution[selected]) setErrors((count) => count + 1)
+    if (selected === null || game.given[selected]) return
+    if (value !== 0 && value !== game.solution[selected] && game.cells[selected] !== value) setErrors(count => count + 1)
+    setGame(previous => {
       const cells = [...previous.cells]
       cells[selected] = value
       return { ...previous, cells }
     })
-  }, [selected])
+  }, [selected, game])
 
   useEffect(() => {
     if (!active) return
@@ -101,14 +101,15 @@ function moveTetris(state: TetrisState, action: 'left' | 'right' | 'down' | 'rot
   if (action === 'left') moved.x--
   if (action === 'right') moved.x++
   if (action === 'rotate') moved.shape = state.piece.shape[0].map((_, x) => state.piece.shape.map(row => row[x]).reverse())
-  if (action === 'down' || action === 'drop') moved.y++
+  if (action === 'down') moved.y++
   if (action === 'drop') while (!collides(state.board, { ...moved, y: moved.y + 1 })) moved.y++
-  if (!collides(state.board, moved)) return { ...state, piece: moved, score: state.score + (action === 'drop' ? 2 : 0) }
+  if (action !== 'drop' && !collides(state.board, moved)) return { ...state, piece: moved }
   if (action !== 'down' && action !== 'drop') return state
 
+  const landed = action === 'drop' ? moved : state.piece
   const board = state.board.map(row => [...row])
-  state.piece.shape.forEach((row, y) => row.forEach((cell, x) => {
-    if (cell && state.piece.y + y >= 0) board[state.piece.y + y][state.piece.x + x] = cell
+  landed.shape.forEach((row, y) => row.forEach((cell, x) => {
+    if (cell && landed.y + y >= 0) board[landed.y + y][landed.x + x] = cell
   }))
   const kept = board.filter(row => row.some(cell => cell === 0))
   const cleared = 18 - kept.length
