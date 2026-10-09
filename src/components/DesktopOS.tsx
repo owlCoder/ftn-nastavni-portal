@@ -21,15 +21,15 @@ const initialWindows = (): WindowState[] => {
   return id ? [{ id, x: 180, y: 90, z: 2, minimized: false, maximized: false }] : []
 }
 
-function FolderGlyph({ color = 'blue' }: { color?: string }) {
+function FolderGlyph({ color = 'mac' }: { color?: string }) {
   return <svg className={`os-folder-art os-folder-${color}`} viewBox="0 0 90 80" fill="none" aria-hidden="true">
-    <path d="M8 17a7 7 0 0 1 7-7h21l9 10h30a7 7 0 0 1 7 7v36a8 8 0 0 1-8 8H15a8 8 0 0 1-8-8V17Z" fill="currentColor" opacity=".67"/>
-    <path d="M8 30a8 8 0 0 1 8-8h60a8 8 0 0 1 8 8l-5 34a8 8 0 0 1-8 7H16a8 8 0 0 1-8-8V30Z" fill="currentColor"/>
-    <path d="M17 31h51" stroke="#fff" strokeWidth="3" strokeLinecap="round" opacity=".48"/>
-    <path d="M18 58h50" stroke="#fff" strokeWidth="2" strokeLinecap="round" opacity=".18"/>
+    <path d="M10 15.5c0-4 3.2-7.2 7.2-7.2h18.4c2.5 0 4 .8 5.7 2.8l5 6H74c4 0 7 3 7 7.1v37.5c0 4.5-3.5 8-8 8H16.8c-4.5 0-7.8-3.5-7.8-8V15.5Z" fill="#3D9CD1"/>
+    <path d="M9 25c0-4.4 3.6-8 8-8h57c4.4 0 8 3.6 8 8v38c0 4.4-3.6 8-8 8H17c-4.4 0-8-3.6-8-8V25Z" fill="#54B7E9"/>
+    <path d="M9 26c0-4.4 3.6-8 8-8h57c4.4 0 8 3.6 8 8v4H9v-4Z" fill="#78CEF3"/>
+    <path d="M18 23.5h55" stroke="white" strokeOpacity=".52" strokeWidth="1.6" strokeLinecap="round"/>
+    <path d="M11 63h69" stroke="#1687C3" strokeOpacity=".20" strokeWidth="1.3"/>
   </svg>
 }
-
 
 function AppGlyph({ id }: { id: AppId }) {
   return isCourse(id) ? <FolderGlyph color="mac" /> : <DockAppIcon id={id} />
@@ -334,7 +334,7 @@ export function DesktopOS() {
     <footer className="os-dock-area">
       <nav className="os-dock" aria-label="Dock">
         <button className={'os-dock-button os-dock-home' + (launcher ? ' os-dock-selected' : '')}
-          onClick={() => setLauncher(value => !value)} title="Finder / Aplikacije" aria-label="Finder / Aplikacije">
+          onClick={() => setLauncher(value => !value)} title="Finder / Aplikacije" data-tooltip="Finder" aria-label="Finder / Aplikacije">
           <DockAppIcon id="finder" />
         </button>
         <span className="os-dock-separator" />
@@ -347,7 +347,7 @@ export function DesktopOS() {
           </button>
         })}
         <span className="os-dock-separator" />
-        <button className="os-dock-button" onClick={() => open('trash')} aria-label="Korpa" title="Korpa"><span className="os-dock-glyph"><DockAppIcon id="trash" /></span>{windows.some(w => w.id === 'trash') && <span className="os-dock-indicator" />}</button>
+        <button className="os-dock-button" onClick={() => open('trash')} aria-label="Korpa" title="Korpa" data-tooltip="Korpa"><span className="os-dock-glyph"><DockAppIcon id="trash" /></span>{windows.some(w => w.id === 'trash') && <span className="os-dock-indicator" />}</button>
       </nav>
     </footer>
   </div>
