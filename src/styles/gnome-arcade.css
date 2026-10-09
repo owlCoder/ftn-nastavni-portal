@@ -1,0 +1,161 @@
+/* Keyboard-first arcade / compact Adwaita game windows */
+.gn-window-body .game-screen{
+  max-width:940px;min-height:100%;padding:24px clamp(18px,4vw,37px) 26px;
+  color:#2b344a;background:#f6f5f4;
+}
+.gn-window-body .game-intro{margin-bottom:18px}
+.gn-window-body .game-intro h2,
+.gn-window-body .arcade-heading h2{
+  font-size:clamp(29px,4vw,43px);line-height:1.1;
+  font-weight:790;letter-spacing:-.047em;margin:5px 0 7px;color:#273651;
+}
+.gn-window-body .game-kicker{font-size:10px;color:#6b7c9d;letter-spacing:.16em}
+.gn-window-body .game-accent{color:#8064c8}
+.gn-window-body .game-intro p,
+.gn-window-body .arcade-heading p{
+  color:#7989a5;font-size:12px;line-height:1.6;margin:0 0 3px;
+}
+.gn-window-body .game-stat{
+  border-radius:13px;padding:13px 16px;gap:5px;
+  border:1px solid #e4e7f0;box-shadow:none;background:#fff;
+}
+.gn-window-body .game-stat>span{font-size:9.5px;color:#8b9bb2}
+.gn-window-body .game-stat strong{font-size:23px}
+.gn-window-body .game-secondary,.gn-window-body .game-primary{
+  padding:10px 14px;border-radius:9px;font-size:12px;
+}
+.gn-window-body .game-footnote{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  margin-top:15px;padding:11px 14px;border-radius:10px;
+  background:#e9eef7;color:#58708f;font-size:11px;font-weight:570;line-height:1.5;
+}
+.gn-window-body .sudoku-layout{gap:clamp(18px,4vw,36px)}
+.gn-window-body .sudoku-board{
+  width:min(490px,63%);max-width:100%;flex-shrink:1;aspect-ratio:1;border-width:2px;
+  box-shadow:0 7px 21px rgba(31,43,71,.1);
+}
+.gn-window-body .sudoku-cell{font-size:clamp(13px,2vw,19px)}
+.gn-window-body .sudoku-sidebar{display:grid;gap:11px;min-width:135px}
+.gn-window-body .sudoku-numpad{grid-template-columns:repeat(3,1fr);gap:5px}
+.gn-window-body .sudoku-numpad button{
+  aspect-ratio:1;border-radius:8px;font-size:15px;border-color:#e0e5ee;
+}
+.gn-window-body .tetris-layout{gap:clamp(16px,5vw,46px)}
+.gn-window-body .tetris-board{
+  width:min(294px,51%);max-height:min(555px,calc(100dvh - 190px));border-width:6px;
+  border-radius:11px;box-shadow:0 10px 26px rgba(18,28,50,.14);
+}
+.gn-window-body .tetris-sidebar{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:9px;min-width:165px}
+.gn-window-body .tetris-sidebar .game-secondary,
+.gn-window-body .tetris-sidebar .game-primary{grid-column:span 2}
+.gn-window-body .tetris-buttons{display:none}
+.gn-window-body .invaders-screen{max-width:970px}
+.gn-window-body .invaders-hud{gap:20px;margin:0 0 12px}
+.gn-window-body .invaders-hud strong{font-size:17px}
+.gn-window-body .invaders-canvas{max-width:760px;border-width:6px;border-radius:13px}
+.gn-window-body .invaders-controls{margin:11px 0 0}
+.gn-window-body .invaders-controls button:not(.game-primary){display:none}
+.gn-window-body .invaders-controls .game-primary{
+  margin-left:0;padding:9px 16px;min-width:auto;font-size:11px;
+}
+.gn-window-body .invaders-screen .game-footnote{margin-top:10px}
+.gn-window-body .arcade-screen{max-width:830px}
+.arcade-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;margin-bottom:17px}
+.arcade-heading>div{min-width:0}
+.arcade-heading p{margin:0}
+.arcade-restart{
+  display:flex;align-items:center;gap:6px;white-space:nowrap;
+  border:1px solid #cddaf0;border-radius:10px;
+  background:#fff;color:#335c95;padding:10px 13px;
+  font-size:12px;font-weight:730;transition:background .2s,transform .2s;
+}
+.arcade-restart:hover{background:#e9f1ff;transform:translateY(-2px)}
+.arcade-scorebar{
+  width:min(660px,100%);display:grid;grid-template-columns:repeat(3,1fr);
+  gap:9px;margin:0 0 16px;
+}
+.arcade-scorebar>div{
+  display:flex;flex-direction:column;gap:5px;padding:12px 15px;
+  background:#fff;border:1px solid #e1e7f1;border-radius:12px;
+}
+.arcade-scorebar span{color:#8c9ab1;font-size:9px;font-weight:850;letter-spacing:.14em}
+.arcade-scorebar strong{color:#26395a;font-size:18px;line-height:1.2;font-weight:810}
+.snake-playfield{position:relative;width:min(660px,100%);aspect-ratio:20/17;border:7px solid #203451;border-radius:14px;overflow:hidden;box-shadow:0 10px 26px rgba(13,28,53,.15)}
+.snake-board{width:100%;height:100%;display:grid;grid-template-columns:repeat(20,1fr);grid-template-rows:repeat(17,1fr);background:#101e35}
+.snake-cell{min-width:0;min-height:0;background:rgba(255,255,255,.007);border:1px solid rgba(255,255,255,.025)}
+.snake-cell.snake-body{border:2px solid rgba(11,46,40,.30);background:#5ec8a6;border-radius:5px}
+.snake-cell.snake-head{background:#a2ead1;border-radius:6px;box-shadow:inset 0 0 0 3px rgba(36,118,93,.12)}
+.snake-cell.snake-food{background:#ffb879;border-radius:50%;box-shadow:0 0 12px #ee9a68}
+.arcade-board-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(10,23,45,.84);color:#fff;text-align:center}
+.arcade-board-overlay strong{font-size:26px;font-weight:800;letter-spacing:-.03em}
+.arcade-board-overlay span{font-size:12px;color:#c6d7ef}
+.arcade-board-overlay button{border:0;border-radius:10px;background:#3584e4;color:#fff;font-weight:740;padding:10px 16px}
+.arcade-footer{width:min(660px,100%);display:flex;justify-content:space-between;align-items:center;gap:12px;margin:15px 0 0;flex-wrap:wrap}
+.arcade-keys{display:flex;flex-wrap:wrap;gap:11px}
+.arcade-hint{display:flex;align-items:center;gap:6px;font-size:10px;color:#7284a0;font-weight:580}
+.arcade-hint kbd{
+  display:inline-block;padding:5px 8px;background:#fff;
+  border:1px solid #d9e0e9;border-bottom-width:2px;border-radius:6px;
+  color:#37517c;font-size:10px;font-weight:790;white-space:nowrap;
+}
+.arcade-touch-controls{display:none;gap:5px}
+.arcade-touch-controls button{
+  width:42px;height:42px;border-radius:9px;border:1px solid #d4deeb;
+  background:#fff;color:#26395c;font-size:17px;font-weight:780;
+  touch-action:manipulation;
+}
+.merge-board-wrap{position:relative;width:min(530px,100%);aspect-ratio:1;background:#ada8b6;border-radius:16px;padding:11px;box-shadow:0 10px 30px rgba(27,30,52,.11)}
+.merge-board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(4,minmax(0,1fr));height:100%;gap:10px}
+.merge-tile{display:grid;place-items:center;min-width:0;min-height:0;border-radius:9px;background:#d5d0db;color:#635e70;font-size:clamp(20px,3.9vw,39px);font-weight:820;letter-spacing:-.06em;transition:background .12s}
+.merge-2{background:#eee8f7;color:#645577}
+.merge-4{background:#e5d9fa;color:#5f4c75}
+.merge-8{background:#d7b7f0;color:#5c367a}
+.merge-16{background:#b995e4;color:#fff}
+.merge-32{background:#a678d9;color:#fff}
+.merge-64{background:#8c62cc;color:#fff}
+.merge-128{background:#6daedb;color:#fff}
+.merge-256{background:#51a9d2;color:#fff}
+.merge-512{background:#4cbcae;color:#fff}
+.merge-1024{background:#37a58e;color:#fff;font-size:29px}
+.merge-2048{background:#ffd57c;color:#715229;font-size:29px}
+.merge-board .merge-tile:not(.merge-empty){box-shadow:inset 0 2px rgba(255,255,255,.17)}
+@media(max-width:760px){
+ .gn-window-body .game-screen{padding:17px 11px 20px}
+ .gn-window-body .game-intro h2,.gn-window-body .arcade-heading h2{font-size:31px}
+ .gn-window-body .sudoku-board{width:min(100%,440px);flex:none}
+ .gn-window-body .sudoku-layout{flex-direction:column}
+ .gn-window-body .sudoku-sidebar{grid-template-columns:repeat(2,minmax(0,1fr));width:100%}
+ .gn-window-body .sudoku-sidebar .game-secondary,.gn-window-body .sudoku-sidebar .game-primary{grid-column:span 1}
+ .gn-window-body .sudoku-sidebar .sudoku-numpad{grid-column:1/-1;grid-template-columns:repeat(9,minmax(0,1fr))}
+ .gn-window-body .sudoku-numpad button{font-size:12px}
+ .gn-window-body .tetris-board{width:min(52%,290px);max-height:none}
+ .gn-window-body .tetris-layout{gap:12px}
+ .gn-window-body .tetris-sidebar{grid-template-columns:1fr;min-width:0}
+ .gn-window-body .tetris-sidebar .game-primary,.gn-window-body .tetris-sidebar .game-secondary{grid-column:1}
+ .gn-window-body .tetris-buttons{display:grid;grid-template-columns:repeat(3,1fr);grid-column:1;gap:5px}
+ .gn-window-body .tetris-buttons button{aspect-ratio:auto;min-height:42px;border-radius:8px;font-size:15px}
+ .gn-window-body .tetris-buttons .wide{grid-column:1/-1;min-height:40px}
+ .gn-window-body .invaders-controls button:not(.game-primary){display:inline-flex;align-items:center;justify-content:center}
+ .arcade-touch-controls{display:flex}
+ .arcade-keys{gap:8px}
+ .arcade-heading{align-items:center}
+ .arcade-restart{padding:8px 10px}
+ .arcade-scorebar{gap:5px}
+ .arcade-scorebar>div{padding:9px}
+ .arcade-scorebar strong{font-size:16px}
+ .snake-playfield{border-width:4px}
+ .merge-board-wrap{padding:8px;border-radius:13px}
+ .merge-board{gap:6px}
+ .merge-tile{border-radius:6px}
+}
+@media(hover:none) and (pointer:coarse){
+ .gn-window-body .tetris-buttons{display:grid}
+ .gn-window-body .invaders-controls button:not(.game-primary){display:inline-flex}
+ .arcade-touch-controls{display:flex}
+}
+@media(min-width:761px) and (hover:hover){
+ .gn-window-body .sudoku-numpad{display:none}
+ .gn-window-body .sudoku-sidebar .game-secondary{display:none}
+ .gn-window-body .sudoku-sidebar::after{content:"1–9 unos · ↑ ↓ ← → kretanje";padding:12px;color:#7687a0;font-size:11px;line-height:1.5;background:#e9eff8;border-radius:11px}
+}
+@media(prefers-reduced-motion:reduce){.merge-tile,.arcade-restart{transition:none}}
