@@ -1,5 +1,5 @@
-import { DesktopOS } from './components/DesktopOS'
+import { GnomeDesktop } from './components/GnomeDesktop'
 
 export default function App() {
-  return <DesktopOS />
+  return <GnomeDesktop />
 }
