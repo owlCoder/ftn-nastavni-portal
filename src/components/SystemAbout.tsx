@@ -1,6 +1,4 @@
-import { courses } from '../courses'
 import { assetUrl } from '../lib/assets'
-import type { CourseId } from '../courses/types'
 
 type Specification = { label: string; value: string; detail: string }
 
@@ -20,7 +18,7 @@ function SystemMark() {
   </svg>
 }
 
-export function SystemAbout({ onOpenCourse }: { onOpenCourse: (id: CourseId) => void }) {
+export function SystemAbout() {
   return <article className="gn-about">
     <header className="gn-about-heading">
       <SystemMark/>
@@ -53,21 +51,6 @@ export function SystemAbout({ onOpenCourse }: { onOpenCourse: (id: CourseId) => 
           <div><strong>{spec.value}</strong><small>{spec.detail}</small></div>
         </div>)}
         <div className="gn-about-spec-row"><span>Interfejs</span><div><strong>FTN OS · Adwaita izgled</strong><small>React · TypeScript · Vite · Web aplikacija</small></div></div>
-      </div>
-    </section>
-
-    <section className="gn-about-section">
-      <h2>O projektu</h2>
-      <p>FTN Desktop je nastavni portal Fakulteta tehničkih nauka, organizovan kao radna površina. Folderi otvaraju predmete u pomerljivim prozorima, a pregled aktivnosti služi za pokretanje aplikacija i pretragu.</p>
-      <div className="gn-about-features">
-        <div><strong>03</strong><span>Predmeta</span></div>
-        <div><strong>05</strong><span>Mini-igre</span></div>
-        <div><strong>Live</strong><span>Vreme i datum</span></div>
-      </div>
-      <div className="gn-about-course-links">
-        {courses.map(course=><button key={course.id} onClick={()=>onOpenCourse(course.id)}>
-          <span>{course.code}</span><strong>{course.name}</strong><span>↗</span>
-        </button>)}
       </div>
     </section>
 
