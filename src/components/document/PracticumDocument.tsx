@@ -33,6 +33,7 @@ function DocumentCover({ subject }: { subject: string }) {
 export function PracticumDocument({ practicum }: { practicum: Practicum }) {
   const { prepared, toc } = useMemo(() => prepareDocument(practicum.blocks), [practicum])
   const [zoom, setZoom] = useState(1)
+  const [tocCollapsed, setTocCollapsed] = useState(false)
   const [openImage, setOpenImage] = useState<{ src: string; alt: string } | null>(null)
   const { ref: layoutRef, isFullscreen, toggle: toggleFullscreen } = useFullscreen<HTMLDivElement>()
 
@@ -48,10 +49,21 @@ export function PracticumDocument({ practicum }: { practicum: Practicum }) {
   )
 
   return (
-    <div className={`document-layout ${isFullscreen ? 'is-fullscreen' : ''}`} ref={layoutRef}>
+    <div className={`document-layout ${isFullscreen ? 'is-fullscreen' : ''} ${tocCollapsed ? 'toc-collapsed' : ''}`} ref={layoutRef}>
       <aside className="toc-panel">
-        <div className="toc-title">Sadržaj</div>
-        <nav>
+        <div className="toc-header">
+          <div className="toc-title">Sadržaj</div>
+          <button type="button" className="toc-collapse" aria-expanded={!tocCollapsed}
+            aria-controls="practicum-toc-nav" aria-label={tocCollapsed ? 'Prikaži sadržaj praktikuma' : 'Sakrij sadržaj praktikuma'}
+            title={tocCollapsed ? 'Prikaži sadržaj' : 'Sakrij sadržaj'}
+            onClick={() => setTocCollapsed(value => !value)}>
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 5h16M4 10h16M4 15h10M4 20h10"/>
+              <path d={tocCollapsed ? 'm17 16 3-4-3-4' : 'm20 8-3 4 3 4'} />
+            </svg>
+          </button>
+        </div>
+        <nav id="practicum-toc-nav" hidden={tocCollapsed}>
           {toc.map((entry) => (
             <a className={`toc-level-${entry.level}`} key={entry.id} href={`#${entry.id}`}>{entry.label}</a>
           ))}
