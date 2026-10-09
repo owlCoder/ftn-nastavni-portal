@@ -203,7 +203,7 @@ export function DesktopOS() {
         <button className="os-menu-mark" aria-label="Otvori pokretač aplikacija" title="FTN OS" onClick={() => setLauncher(value => !value)}>✦</button>
         <button className="os-menu-finder" onClick={() => setLauncher(value => !value)}>Finder</button>
         <button onClick={() => open('notes')}>File</button>
-        <button onClick={() => setWidgetsVisible(visible => !visible)}>{widgetsVisible ? 'Hide Widgets' : 'Show Widgets'}</button>
+        <button title={widgetsVisible ? 'Sakrij widgete' : 'Prikaži widgete'} onClick={() => setWidgetsVisible(visible => !visible)}>View</button>
         <button onClick={() => setLauncher(value => !value)}>Go</button>
         <button onClick={() => focused ? focus(focused) : setLauncher(true)}>Window</button>
         <button onClick={() => open('readme')}>Help</button>
