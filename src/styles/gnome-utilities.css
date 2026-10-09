@@ -267,3 +267,27 @@
 @media(prefers-reduced-motion:reduce){
   .gn-monitor-bar,.gn-monitor-track span,.gn-greeter .gn-login-card{animation:none;transition:none}
 }
+
+/* Direct links to utility apps, unobtrusive in sidebar cards. */
+.gn-widget-rail .widget-launch{
+  position:absolute;top:9px;right:9px;z-index:3;
+  display:grid;place-items:center;
+  width:23px;height:23px;padding:0;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:7px;background:rgba(255,255,255,.08);
+  color:#e8efff;font-size:14px;font-weight:650;
+  opacity:.65;transition:opacity .15s,background .15s;
+}
+.gn-widget-rail .widget-launch:hover,.gn-widget-rail .widget-launch:focus-visible{
+  opacity:1;background:rgba(255,255,255,.22);
+}
+.gn-widget-rail .calendar-widget .calendar-month{padding-right:15px}
+.gn-widget-rail .usage-widget .usage-header{padding-right:24px}
+.gn-light .gn-widget-rail .widget-launch{color:#4a6d96;background:rgba(44,91,140,.09);border-color:rgba(44,91,140,.1)}
+.gn-launch-calendar{
+  display:block;width:100%;padding:10px 13px;margin:17px 0 0;
+  color:#f6f8ff;background:#3584e4;border:0;border-radius:10px;
+  font-size:12px;font-weight:720;text-align:center;
+  transition:background .17s,transform .17s;
+}
+.gn-launch-calendar:hover{background:#1c71d8;transform:translateY(-1px)}
