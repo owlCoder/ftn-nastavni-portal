@@ -55,7 +55,7 @@ const initialHashCourse = () => {
   const match = location.hash.match(/^#(ers|oib|odp)(?:\/|$)/)
   return match ? match[1] as CourseId : null
 }
-function Icon({ name, size = 19 }: { name: 'search'|'grid'|'chevron'|'wifi'|'sound'|'battery'|'power'|'settings'|'sun'|'moon'|'layout'|'close'|'minimize'|'maximize'|'restore'|'fullscreen'|'arrow'|'check'|'bell'; size?: number }) {
+function Icon({ name, size = 19 }: { name: 'search'|'grid'|'chevron'|'wifi'|'sound'|'battery'|'power'|'settings'|'sun'|'moon'|'layout'|'close'|'minimize'|'maximize'|'restore'|'fullscreen'|'arrow'|'check'|'bell'|'more'; size?: number }) {
   const paths: Record<typeof name, ReactNode> = {
     search: <><circle cx="10.7" cy="10.7" r="6.5"/><path d="m16 16 5 5"/></>,
     grid: <>{[4,10,16].flatMap(x=>[4,10,16].map(y=><rect key={x+'-'+y} x={x} y={y} width="4" height="4" rx=".8" fill="currentColor" stroke="none"/>))}</>,
@@ -76,6 +76,7 @@ function Icon({ name, size = 19 }: { name: 'search'|'grid'|'chevron'|'wifi'|'sou
     arrow: <path d="M5 12h14m-5-5 5 5-5 5"/>,
     check: <path d="m4 12 5 5L20 6"/>,
     bell: <><path d="M5 17h14l-2-3V9a5 5 0 1 0-10 0v5z"/><path d="M10 20h4"/></>,
+    more: <><circle cx="5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.7" fill="currentColor" stroke="none"/></>,
   }
   return <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{paths[name]}</svg>
 }
@@ -103,9 +104,9 @@ function Notes() {
 }
 function Trash() { return <div className="gn-trash-empty"><AppArtwork id="trash"/><h2>Korpa je prazna</h2><p>Nema obrisanih stavki.</p></div> }
 
-function WindowFrame({ windowData: w, isFocused, gamesActive, now, otherWindows, preferences, onSettingsChange, onOpenApp, onFocus, onClose, onMinimize, onMaximize, onMove }: {
+function WindowFrame({ windowData: w, isFocused, gamesActive, now, otherWindows, preferences, onSettingsChange, onOpenApp, onWindowMenu, onFocus, onClose, onMinimize, onMaximize, onMove }: {
   windowData: WindowData; isFocused: boolean; gamesActive:boolean; now:Date; otherWindows:WindowData[]; preferences:DesktopPreferences;
-  onSettingsChange:(patch:Partial<DesktopPreferences>)=>void;onOpenApp:(id:AppId)=>void;
+  onSettingsChange:(patch:Partial<DesktopPreferences>)=>void;onOpenApp:(id:AppId)=>void;onWindowMenu:(x:number,y:number)=>void;
   onFocus:()=>void; onClose:()=>void; onMinimize:()=>void; onMaximize:()=>void;
   onMove:(x:number,y:number)=>void
 }) {
@@ -140,11 +141,12 @@ function WindowFrame({ windowData: w, isFocused, gamesActive, now, otherWindows,
   return <section ref={ref} aria-label={'Prozor: '+title} onPointerDown={onFocus}
     className={'gn-window'+(isFocused?' gn-window-focused':'')+(w.maximized?' gn-window-max':'')+(w.minimized?' gn-window-min':'')+(['calendar','monitor'].includes(w.id)?' gn-utility-window':'')+' gn-window-app-'+w.id}
     style={{left:w.x,top:w.y,zIndex:w.z,'--gn-window-y':`${w.y}px`} as CSSProperties}>
-    <div className="gn-headerbar" onDoubleClick={onMaximize} onPointerDown={onPointerDown}
+    <div className="gn-headerbar" onDoubleClick={e=>{if(!(e.target instanceof Element&&e.target.closest("button")))onMaximize()}} onContextMenu={e=>{e.preventDefault();onWindowMenu(e.clientX,e.clientY)}} onPointerDown={onPointerDown}
       onPointerMove={onPointerMove} onPointerUp={()=>dragging.current=null} onPointerCancel={()=>dragging.current=null}>
       <div className="gn-window-leading"><AppArtwork id={w.id}/></div>
       <div className="gn-header-title"><strong>{course ? course.name : title}</strong><span>{course ? 'Nastavni materijali · '+course.code : windowCategories[w.id] ?? 'Igre'}</span></div>
       <div className="gn-window-controls">
+        <button className="ftn-window-actions-trigger" title="Meni prozora" aria-label="Meni prozora" onClick={e=>{const rect=e.currentTarget.getBoundingClientRect();onWindowMenu(rect.left,rect.bottom+7)}}><Icon name="more" size={16}/></button>
         <button title="Minimizuj" aria-label="Minimizuj" onClick={onMinimize}><Icon name="minimize" size={15}/></button>
         <button title={w.maximized?'Vrati prozor':'Maksimizuj'} aria-label={w.maximized?'Vrati prozor':'Maksimizuj'} onClick={onMaximize}><Icon name={w.maximized?'restore':'maximize'} size={15}/></button>
         <button title={isFullscreen?'Izađi iz celog ekrana':'Ceo ekran'} aria-label="Ceo ekran" onClick={fullscreen}><Icon name="fullscreen" size={15}/></button>
@@ -193,7 +195,7 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
   })
   const [selected,setSelected]=useState<AppId|null>(null)
   const {shortcuts,pins,hasShortcut,addShortcut,removeShortcut,moveShortcut,pin,unpin}=useDesktopConfiguration(applicationIds)
-  const [shortcutMenu,setShortcutMenu]=useState<{id:AppId;x:number;y:number;source:'desktop'|'dock'}|null>(null)
+  const [shortcutMenu,setShortcutMenu]=useState<{id:AppId;x:number;y:number;source:'desktop'|'dock'|'window'}|null>(null)
   const [overview,setOverview]=useState(false)
   const [search,setSearch]=useState('')
   const [launcherCategory,setLauncherCategory]=useState<LauncherCategory>('all')
@@ -208,6 +210,7 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
   const [context,setContext]=useState<{x:number;y:number}|null>(null)
   const searchRef=useRef<HTMLInputElement>(null)
   const zRef=useRef(4)
+  const menuRef=useRef<HTMLDivElement>(null)
   useEffect(()=>{
     document.title='Nastavni portal | FTN'
     const timer=window.setInterval(()=>setNow(new Date()),1000)
@@ -215,6 +218,23 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
   },[])
   useEffect(()=>{savePreferences({wallpaper,dark:isDark,widgets:showWidgets,nightLight,brightness})},[wallpaper,isDark,showWidgets,nightLight,brightness])
   useEffect(()=>{if(overview)searchRef.current?.focus()},[overview])
+  useEffect(()=>{
+    const dismiss=(event:PointerEvent)=>{
+      if(event.button!==0)return
+      const target=event.target
+      if(!(target instanceof Element))return
+      if(target.closest('.ftn-shortcut-menu,.gn-context'))return
+      setShortcutMenu(null)
+      setContext(null)
+    }
+    const onEscape=(event:KeyboardEvent)=>{
+      if(event.key==='Escape'){setShortcutMenu(null);setContext(null)}
+    }
+    document.addEventListener('pointerdown',dismiss,true)
+    document.addEventListener('keydown',onEscape)
+    return()=>{document.removeEventListener('pointerdown',dismiss,true);document.removeEventListener('keydown',onEscape)}
+  },[])
+  useEffect(()=>{if(shortcutMenu)menuRef.current?.querySelector<HTMLButtonElement>('button:not([disabled])')?.focus()},[shortcutMenu])
   const focus=useCallback((id:AppId)=>{
     const z=++zRef.current
     setWindows(current=>current.map(w=>w.id===id?{...w,minimized:false,z}:w))
@@ -287,7 +307,7 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
     </header>
 
     <main className="gn-desktop" onClick={()=>{setSelected(null);setContext(null);setShortcutMenu(null);setPanel(null)}} onContextMenu={e=>{
-      if(e.target instanceof Element&&e.target.closest('button,.os-widgets'))return
+      if(e.target instanceof Element&&e.target.closest('button,.os-widgets,.gn-window'))return
       e.preventDefault();setContext({x:e.clientX,y:e.clientY})
     }}>
       {showWidgets && <div className="gn-widget-rail" onClick={e=>e.stopPropagation()}><DesktopWidgets now={now}/></div>}
@@ -303,7 +323,7 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
     {windows.map(w=><WindowFrame key={w.id} windowData={w} isFocused={activeWindow?.id===w.id} gamesActive={!overview && panel===null} now={now} otherWindows={windows} preferences={preferences} onSettingsChange={changeSettings} onOpenApp={open}
       onFocus={()=>{if(!w.minimized&&activeWindow?.id!==w.id)focus(w.id)}}
       onClose={()=>close(w.id)} onMinimize={()=>minimize(w.id)} onMaximize={()=>maximize(w.id)}
-      onMove={(x,y)=>move(w.id,x,y)}/>)}
+      onMove={(x,y)=>move(w.id,x,y)} onWindowMenu={(x,y)=>{setShortcutMenu({id:w.id,x,y,source:"window"});setContext(null)}}/>)}
 
     {panel && <><button className="gn-popover-scrim" aria-label="Zatvori meni" onClick={()=>setPanel(null)}/>
       {panel==='calendar'? <div className="gn-calendar-popover">
@@ -341,19 +361,24 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
     </>}
 
     {shortcutMenu && <><button className="ftn-shortcut-menu-scrim" onClick={()=>setShortcutMenu(null)} aria-label="Zatvori meni prečice"/>
-      <div className="ftn-shortcut-menu" role="menu" style={{left:Math.max(10,Math.min(shortcutMenu.x,window.innerWidth-238)),top:Math.max(42,Math.min(shortcutMenu.y,window.innerHeight-190))}}>
-        <strong>{short[shortcutMenu.id]}</strong>
-        <button onClick={()=>{open(shortcutMenu.id);setShortcutMenu(null)}}>Otvori</button>
-        {shortcutMenu.source==='desktop'&&!courseIds.includes(shortcutMenu.id)&&
-          <button onClick={()=>{removeShortcut(shortcutMenu.id);setShortcutMenu(null)}}>Ukloni prečicu sa desktopa</button>}
-        {shortcutMenu.source==='dock'&&!courseIds.includes(shortcutMenu.id)&&
-          <button onClick={()=>{unpin(shortcutMenu.id);setShortcutMenu(null)}}>Ukloni iz docka</button>}
-        {shortcutMenu.source==='desktop'&&!courseIds.includes(shortcutMenu.id)&&
-          <button onClick={()=>{pins.includes(shortcutMenu.id)?unpin(shortcutMenu.id):pin(shortcutMenu.id);setShortcutMenu(null)}}>
-            {pins.includes(shortcutMenu.id)?'Ukloni iz docka':'Pinuj u dock'}
-          </button>}
-        {shortcutMenu.source==='dock'&&!hasShortcut(shortcutMenu.id)&&
-          <button onClick={()=>{addShortcut(shortcutMenu.id);setShortcutMenu(null)}}>Dodaj na desktop</button>}
+      <div className="ftn-shortcut-menu" role="menu" aria-label={'Opcije: '+names[shortcutMenu.id]} ref={menuRef}
+        style={{left:Math.max(12,Math.min(shortcutMenu.x,window.innerWidth-278)),top:Math.max(44,Math.min(shortcutMenu.y,window.innerHeight-334))}}
+        onKeyDown={e=>{if(e.key==='Escape'){setShortcutMenu(null);return}if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();const buttons=Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>('button:not([disabled])'));const index=buttons.indexOf(document.activeElement as HTMLButtonElement);buttons[(index+(e.key==='ArrowDown'?1:-1)+buttons.length)%buttons.length]?.focus()}}}>
+        <div className="ftn-context-header"><span className="ftn-context-header-art"><AppArtwork id={shortcutMenu.id}/></span><div><strong>{short[shortcutMenu.id]}</strong><small>{windowCategories[shortcutMenu.id]??(courseIds.includes(shortcutMenu.id)?'Predmet':'Aplikacija')}</small></div></div>
+        <div className="ftn-menu-group">
+          <button role="menuitem" onClick={()=>{open(shortcutMenu.id);setShortcutMenu(null)}}><span className="ftn-menu-symbol">↗</span><span>Otvori aplikaciju</span><kbd>↵</kbd></button>
+          {windows.some(w=>w.id===shortcutMenu.id&&!w.minimized)&&<button role="menuitem" onClick={()=>{minimize(shortcutMenu.id);setShortcutMenu(null)}}><span className="ftn-menu-symbol">−</span><span>Minimizuj</span></button>}
+          {windows.some(w=>w.id===shortcutMenu.id)&&<button role="menuitem" onClick={()=>{maximize(shortcutMenu.id);setShortcutMenu(null)}}><span className="ftn-menu-symbol">□</span><span>{windows.find(w=>w.id===shortcutMenu.id)?.maximized?'Vrati veličinu':'Maksimizuj'}</span></button>}
+        </div>
+        {!courseIds.includes(shortcutMenu.id)&&<div className="ftn-menu-group">
+          <button role="menuitem" onClick={()=>{hasShortcut(shortcutMenu.id)?removeShortcut(shortcutMenu.id):addShortcut(shortcutMenu.id);setShortcutMenu(null)}}>
+            <span className="ftn-menu-symbol">▦</span><span>{hasShortcut(shortcutMenu.id)?'Ukloni prečicu sa desktopa':'Dodaj na desktop'}</span></button>
+          <button role="menuitem" onClick={()=>{pins.includes(shortcutMenu.id)?unpin(shortcutMenu.id):pin(shortcutMenu.id);setShortcutMenu(null)}}>
+            <span className="ftn-menu-symbol">⌁</span><span>{pins.includes(shortcutMenu.id)?'Ukloni iz docka':'Pinuj u dock'}</span><span className="ftn-menu-state">{pins.includes(shortcutMenu.id)?'✓':''}</span></button>
+        </div>}
+        {windows.some(w=>w.id===shortcutMenu.id)&&<div className="ftn-menu-group">
+          <button className="ftn-menu-danger" role="menuitem" onClick={()=>{close(shortcutMenu.id);setShortcutMenu(null)}}><span className="ftn-menu-symbol">×</span><span>Zatvori prozor</span></button>
+        </div>}
       </div></>}
     {overview && <><button className="gn-drawer-scrim" aria-label="Zatvori pregled aplikacija" onClick={()=>{setOverview(false);setSearch('')}}/>
       <div className="gn-overview">
