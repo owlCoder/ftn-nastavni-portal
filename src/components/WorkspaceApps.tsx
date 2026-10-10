@@ -189,7 +189,7 @@ export function DrawApp(){
   const save=()=>{const data=canvas.current?.toDataURL('image/png');if(!data)return;const a=document.createElement('a');a.download='ftn-crtez.png';a.href=data;a.click()}
   return <div className="ftn-tool-page"><Header eyebrow="KREATIVNO" title="Crtanje" description="Skiciraj mišem ili dodirom i sačuvaj sliku."
     actions={<><button onClick={clear}>Obriši</button><button onClick={save}>↓ PNG</button></>}/>
-    <Card className="ftn-draw-card"><div className="ftn-draw-bar"><label>Boja <input type="color" value={color} onChange={e=>setColor(e.target.value)}/></label><label>Debljina <input type="range" min="1" max="24" value={width} onChange={e=>setWidth(Number(e.target.value))}/><span>{width}px</span></label></div>
+    <Card className="ftn-draw-card"><div className="ftn-draw-bar"><label>Boja <input type="color" value={color} onChange={e=>setColor(e.target.value)}/></label><label>Debljina <input type="range" min="1" max="24" value={width} style={{'--ftn-range-fill':((width-1)/23*100)+'%'} as React.CSSProperties} onChange={e=>setWidth(Number(e.target.value))}/><span>{width}px</span></label></div>
       <canvas ref={canvas} width={900} height={480} aria-label="Platno za crtanje" onPointerDown={start} onPointerMove={move} onPointerUp={()=>drawing.current=false} onPointerCancel={()=>drawing.current=false}/></Card>
   </div>
 }
