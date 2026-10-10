@@ -51,10 +51,20 @@ Shortcuts, positions, dock pins, wallpapers, and appearance preferences persist 
 - **Project milestones:** a timeline for checkpoint dates, descriptions, and required work.
 - **Desktop apps:** calendar with local events, notes, games and ten additional utilities: Calculator, Text Editor, Terminal, Files, Tasks, Pomodoro, Unit Converter, Drawing, Stopwatch and Settings.
 - **Expanded System Monitor:** CPU/GPU/RAM/storage/network history views, simulated performance samples, actual open portal windows, browser runtime capabilities when available, pause/resume and CSV export.
-- **Personalization:** ten preset wallpapers, dark/light appearance, widgets and preferences saved to local storage.
+- **Personalization:** 22 wallpapers arranged into abstract, landscape and minimal collections, a native-style settings sidebar with live preview, dark/light appearance, widgets and controls saved to local storage.
 - **Weather and time:** Novi Sad forecast from Open-Meteo and a clock using the `Europe/Belgrade` time zone.
 
 **Data transparency:** desktop performance indicators and the hardware profile shown in *About System* are illustrative and do not read device hardware telemetry. Local notes, preferences and game scores live in the browser's `localStorage`.
+
+### Settings and wallpapers
+
+The Settings application now uses a desktop-style navigation sidebar with dedicated **Appearance**, **Wallpapers**, **Desktop** and **Shortcuts** pages. Wallpaper selection has a full-size preview and three galleries:
+
+- **Dynamic / abstract:** ten built-in gradient presets, with subtle motion (disabled for reduced-motion preferences).
+- **Landscape:** eight nature photographs loaded from Unsplash via `images.unsplash.com`; smaller thumbnail variants keep the chooser responsive. Photo layers include colour-gradient fallbacks when remote assets are unavailable.
+- **Minimal:** four solid-toned gradient wallpapers.
+
+Existing wallpaper indexes remain stable to preserve previously saved user selections. Custom-designed switches, range sliders and focus indicators improve keyboard and pointer accessibility. The theme is reflected in the settings and workspace utilities; PDF pages and practicum documents intentionally remain paper-coloured for legibility.
 
 ### Built-in desktop utilities
 
