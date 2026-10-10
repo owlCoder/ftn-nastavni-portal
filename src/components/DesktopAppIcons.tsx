@@ -4,6 +4,7 @@ export type AppIconId =
   | 'finder' | 'ers' | 'oib' | 'odp' | 'sudoku' | 'tetris' | 'invaders'
   | 'snake' | 'merge' | 'calendar' | 'monitor' | 'notes' | 'readme' | 'trash'
   | 'calculator' | 'editor' | 'terminal' | 'files' | 'tasks' | 'pomodoro' | 'converter' | 'draw' | 'stopwatch' | 'settings'
+  | 'photos' | 'colors' | 'markdown' | 'json' | 'passwords' | 'flashcards' | 'habits' | 'worldclock' | 'typing' | 'bookmarks'
 
 /**
  * Minimal two-tone application symbols. Shapes are the icons themselves:
@@ -114,6 +115,27 @@ function Symbol({ id }: { id: AppIconId }): ReactNode {
       return <><circle cx="18" cy="21" r="12" fill="#b5deee" stroke="#e6f3fc" strokeWidth="1.5"/><path d="M18 8V3m-5 0h10M18 14v8l6 3" stroke="#3d829f" strokeWidth="2.5" strokeLinecap="round"/></>
     case 'settings':
       return <><circle cx="18" cy="18" r="12" fill="#b6c2d1"/><path d="M18 5v6m0 14v6M5 18h6m14 0h6M9 9l4 4m10 10 4 4M27 9l-4 4M13 23l-4 4" stroke="#eaf1f9" strokeWidth="3" strokeLinecap="round"/><circle cx="18" cy="18" r="5" fill="#e7eef5" stroke="#7b8b9e" strokeWidth="2"/></>
+
+    case 'photos':
+      return <><rect x="4" y="7" width="28" height="24" rx="5" fill="#9fc9f0" stroke="#c6e1fc" strokeWidth="1.5"/><circle cx="23.5" cy="14" r="3.1" fill="#ffe0a2"/><path d="m6 26 7.5-9 6 6 4-4 7 8" fill="#6ba994" stroke="#438b81" strokeWidth="1.1"/></>
+    case 'colors':
+      return <><path d="M18 4C10 4 4 10.3 4 18c0 7.8 6 14 14 14 3.4 0 5.8-2.3 5.8-5.1 0-2-1.2-3.4-1.2-5.1 0-1.2 1.2-2 2.7-2h1.9a4 4 0 0 0 4-4C32 10 26 4 18 4Z" fill="#e5cee8" stroke="#eae5ee" strokeWidth="1.2"/><circle cx="12" cy="12" r="2.6" fill="#e77979"/><circle cx="21" cy="10.4" r="2.6" fill="#efc26d"/><circle cx="27" cy="17" r="2.6" fill="#75bba1"/><circle cx="12" cy="22" r="2.6" fill="#7aa9e5"/></>
+    case 'markdown':
+      return <><rect x="4" y="7" width="28" height="23" rx="4.5" fill="#a9bcdd" stroke="#e0e9f7" strokeWidth="1.2"/><path d="M8 24V14l5 5 5-5v10m3-10v10m-3-3 3 3 3-3m-3 3 3-3" stroke="#355687" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/></>
+    case 'json':
+      return <><rect x="4" y="5" width="28" height="26" rx="5" fill="#c0aeeb" stroke="#e2d9ff" strokeWidth="1.3"/><path d="M14 11c-4 0-3 3.4-3 7s-1 7-3 7m14-14c4 0 3 3.4 3 7s1 7 3 7" fill="none" stroke="#5b468e" strokeWidth="2.3" strokeLinecap="round"/><circle cx="18" cy="18" r="2" fill="#5b468e"/></>
+    case 'passwords':
+      return <><path d="M7 15V12a11 11 0 0 1 22 0v3" stroke="#6ea8c4" strokeWidth="3" strokeLinecap="round"/><rect x="6" y="14" width="24" height="18" rx="5" fill="#9cc7e0" stroke="#d7ecf4" strokeWidth="1.3"/><circle cx="18" cy="21" r="2.8" fill="#315a78"/><path d="M18 24v4" stroke="#315a78" strokeWidth="2.4" strokeLinecap="round"/></>
+    case 'flashcards':
+      return <><rect x="7" y="8" width="23" height="23" rx="4" fill="#b1c9eb" stroke="#ddeaff" strokeWidth="1.2"/><rect x="4" y="5" width="23" height="22" rx="4" fill="#f0dfa9" stroke="#fff2c8" strokeWidth="1.2"/><path d="M10 12h11m-11 5h8m-8 5h5" stroke="#bc9564" strokeWidth="2" strokeLinecap="round"/></>
+    case 'habits':
+      return <><rect x="5" y="5" width="26" height="27" rx="5" fill="#b2ddc9" stroke="#dff3e7" strokeWidth="1.2"/><path d="M11 12h14m-14 7h14m-14 7h14" stroke="#7da493" strokeWidth="2" strokeLinecap="round"/><path d="m8 12 2 2 4-5m-6 10 2 2 4-5m-6 10 2 2 4-5" stroke="#347965" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></>
+    case 'worldclock':
+      return <><circle cx="18" cy="18" r="14" fill="#a6daee" stroke="#e2f3f9" strokeWidth="1.2"/><ellipse cx="18" cy="18" rx="6" ry="13" stroke="#4e8ba5" strokeWidth="1.5"/><path d="M5 18h26M8 10h20M8 26h20" stroke="#4e8ba5" strokeWidth="1.4" strokeLinecap="round"/></>
+    case 'typing':
+      return <><rect x="3" y="10" width="30" height="20" rx="4" fill="#d6d6e6" stroke="#f1f0fa" strokeWidth="1.2"/>{[0,1,2].flatMap(row=>[0,1,2,3,4].map(col=><rect key={row+'-'+col} x={7+col*4.8} y={14+row*4.2} width="3.2" height="2.4" rx=".5" fill="#8786b2"/>))}<path d="M12 26h13" stroke="#8786b2" strokeWidth="2.4" strokeLinecap="round"/></>
+    case 'bookmarks':
+      return <><rect x="8" y="5" width="20" height="27" rx="3" fill="#edb3ba" stroke="#ffdde4" strokeWidth="1.2"/><path d="M13 5v17l5-5 5 5V5" fill="#d76a85" stroke="#aa5475" strokeWidth="1.2" strokeLinejoin="round"/></>
     case 'trash':
       return <>
         <path d="M10 10h16l-2 21H12Z" fill="#d9e1e9" stroke="#eff3f8" strokeWidth="1.4" strokeLinejoin="round"/>
