@@ -311,7 +311,12 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
       e.preventDefault();setContext({x:e.clientX,y:e.clientY})
     }}>
       {showWidgets && <div className="gn-widget-rail" onClick={e=>e.stopPropagation()}><DesktopWidgets now={now}/></div>}
-      <div className="gn-desktop-items ftn-shortcut-area" onClick={e=>e.stopPropagation()}>
+      <div className="gn-desktop-items ftn-shortcut-area" onClick={e=>{
+        e.stopPropagation()
+        if(e.target instanceof Element&&!e.target.closest('button')){
+          setSelected(null);setShortcutMenu(null);setContext(null);setPanel(null)
+        }
+      }}>
         <div className="ftn-desktop-grid-heading">RADNA POVRŠINA <span>Prevuci ikonicu da je pomeriš</span></div>
         <DesktopShortcutGrid shortcuts={shortcuts} label={id=>short[id as AppId]}
           icon={id=><AppArtwork id={id as AppId} folder={courseIds.includes(id as AppId)}/>}
