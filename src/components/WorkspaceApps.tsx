@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent, type PointerEvent as ReactPointerEvent } from 'react'
-import { WALLPAPERS, type DesktopPreferences } from './DesktopSettings'
+import type { DesktopPreferences } from './DesktopSettings'
+import { SettingsScreen } from './SettingsScreen'
 import type { CourseId } from '../courses/types'
 
 export type UtilityId = 'calculator'|'editor'|'terminal'|'files'|'tasks'|'pomodoro'|'converter'|'draw'|'stopwatch'|'settings'
@@ -57,7 +58,7 @@ export function CalculatorApp(){
     setExpr(s=>s+value)
   }
   return <div className="ftn-tool-page"><Header eyebrow="ALATI" title="Kalkulator" description="Osnovne operacije, zagrade i procenti."/>
-    <Card className="ftn-calc"><div className="ftn-calc-display"><span>{expr||'0'}</span><strong>{result}</strong></div>
+    <Card className="ftn-calc"><div className="ftn-calc-badge">STANDARDNI REŽIM</div><div className="ftn-calc-display"><span>{expr||'0'}</span><strong>{result}</strong></div>
       <div className="ftn-calc-keys">{['AC','(',')','⌫','7','8','9','/','4','5','6','*','1','2','3','-','0','.','%','+','='].map(key=>
         <button key={key} className={key==='='?'ftn-emphasis':''} onClick={()=>action(key)}>{key==='*'?'×':key==='/'?'÷':key}</button>)}</div>
       <p className="ftn-tool-hint">Proračun je lokalni i ne izvršava JavaScript kod.</p>
@@ -205,15 +206,7 @@ export function StopwatchApp(){
   </div>
 }
 export function SettingsApp({preferences,onChange}:SettingsProps){
-  const [tab,setTab]=useState<'appearance'|'desktop'>('appearance')
-  return <div className="ftn-tool-page"><Header eyebrow="PERSONALIZACIJA" title="Podešavanja" description="Izgled i ponašanje FTN radne površine."/>
-    <div className="ftn-tool-filters"><button className={tab==='appearance'?'active':''} onClick={()=>setTab('appearance')}>Izgled</button><button className={tab==='desktop'?'active':''} onClick={()=>setTab('desktop')}>Radna površina</button></div>
-    {tab==='appearance'?<Card><h3>Tema</h3><div className="ftn-settings-row"><div><strong>Tamni režim</strong><small>Svetle ili tamne površine na desktopu</small></div><input aria-label="Tamni režim" type="checkbox" checked={preferences.dark} onChange={e=>onChange({dark:e.target.checked})}/></div>
-    <h3>Pozadina</h3><div className="ftn-settings-wallpapers">{WALLPAPERS.map((wall,i)=><button key={wall.name} className={i===preferences.wallpaper?'selected':''} onClick={()=>onChange({wallpaper:i})} aria-label={wall.name} aria-pressed={i===preferences.wallpaper}><span style={{background:wall.background}}/><small>{wall.name}</small></button>)}</div></Card>:
-    <Card><h3>Radna površina</h3><div className="ftn-settings-row"><div><strong>Widgeti</strong><small>Vreme, sat i kalendar sa leve strane</small></div><input type="checkbox" checked={preferences.widgets} onChange={e=>onChange({widgets:e.target.checked})}/></div>
-      <div className="ftn-settings-row"><div><strong>Noćno svetlo</strong><small>Toplije boje pozadine</small></div><input type="checkbox" checked={preferences.nightLight} onChange={e=>onChange({nightLight:e.target.checked})}/></div>
-      <div className="ftn-settings-row"><div><strong>Osvetljenje pozadine</strong><small>{preferences.brightness}%</small></div><input type="range" min="65" max="120" value={preferences.brightness} onChange={e=>onChange({brightness:Number(e.target.value)})}/></div></Card>}
-  </div>
+  return <SettingsScreen preferences={preferences} onChange={onChange}/>
 }
 export function UtilityApp({id,onOpen,preferences,onSettingsChange}:{id:UtilityId;onOpen:(id:CourseId)=>void;preferences:DesktopPreferences;onSettingsChange:(patch:Partial<DesktopPreferences>)=>void}){
   switch(id){
