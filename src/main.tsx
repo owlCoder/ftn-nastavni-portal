@@ -23,6 +23,7 @@ import './styles/course-viewers.css'
 import './styles/workspace-apps.css'
 import './styles/lockscreen-workspace.css'
 import './styles/preferences-app-polish.css'
+import './styles/gnome-window-themes.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
