@@ -66,6 +66,25 @@ The Settings application now uses a desktop-style navigation sidebar with dedica
 
 Existing wallpaper indexes remain stable to preserve previously saved user selections. Custom-designed switches, range sliders and focus indicators improve keyboard and pointer accessibility. The theme is reflected in the settings and workspace utilities; PDF pages and practicum documents intentionally remain paper-coloured for legibility.
 
+### Ten additional desktop applications
+
+A second set of ten native-style applications is available from **Activities** without being automatically pinned or placed on the desktop. The launcher has category filters (Courses, Games, Tools, Study, Creative and System) plus search. Use **+ Desktop** or **+ Dock** to customize your workspace.
+
+| App | Function |
+| --- | --- |
+| Photos | Preview imported images in a local in-session gallery; export selected photos |
+| Color Palette | Pick colors, create reusable palettes, copy HEX values and export a text list |
+| Markdown Studio | Write Markdown, see safe text-based live previews and export `.md` files |
+| JSON Studio | Format, validate, minify, copy and download JSON documents |
+| Password Generator | Generate local cryptographically random passwords with configurable length and character sets; passwords are not saved |
+| Flashcards | Flip through editable study cards; decks persist in local storage |
+| Habits | Create daily habit checklists and inspect recent completion history |
+| World Clock | Show live time in selected international cities; selected zones persist |
+| Typing Practice | Keyboard-driven typing exercises with speed and accuracy metrics |
+| Bookmarks | Store local lists of validated HTTP/HTTPS links |
+
+These apps are client-side only. Notes, flashcards, habits, bookmarks and palettes store user-entered data in browser local storage. Photos stay in memory during the current session and are **not uploaded**. The Markdown preview intentionally renders plain text safely instead of evaluating supplied HTML or scripts.
+
 ### Built-in desktop utilities
 
 The ten additional apps all run in draggable GNOME-like windows and appear in the Activities launcher. Frequently used apps are pinned to the dock; other open apps appear there dynamically.
