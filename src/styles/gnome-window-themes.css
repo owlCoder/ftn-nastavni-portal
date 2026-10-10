@@ -1,0 +1,205 @@
+/* Theme-aware window chrome for FTN OS.
+   Keep paper-based course viewers light; theme applies to chrome and native desktop utilities. */
+
+/* Neutral GNOME window frame in both modes, with consistent focus states. */
+.gn-shell .gn-window {
+  --ftn-frame-bg:#f6f7f9;
+  --ftn-frame-edge:rgba(29,45,67,.22);
+  --ftn-frame-header:#eff0f3;
+  --ftn-frame-header-top:#f6f7f9;
+  --ftn-frame-header-bottom:#e9ebef;
+  --ftn-frame-header-muted:#778294;
+  --ftn-frame-header-text:#2d3746;
+  --ftn-frame-control:#5c6879;
+  --ftn-frame-hover:#dce3eb;
+  --ftn-frame-close:#e1e5eb;
+  --ftn-frame-close-text:#465365;
+  --ftn-frame-focus:#82afe8;
+  --ftn-frame-shadow:0 24px 65px rgba(8,16,31,.30),0 4px 13px rgba(8,16,31,.17);
+  background:var(--ftn-frame-bg);
+  color:var(--ftn-frame-header-text);
+  border-color:var(--ftn-frame-edge);
+  box-shadow:var(--ftn-frame-shadow);
+  color-scheme:light;
+  transition:opacity .21s ease,transform .24s cubic-bezier(.2,.85,.25,1),box-shadow .24s,border-color .18s ease,filter .2s;
+}
+.gn-shell .gn-window:not(.gn-window-focused) {
+  --ftn-frame-shadow:0 12px 37px rgba(9,17,31,.24),0 2px 6px rgba(9,17,31,.08);
+}
+.gn-shell .gn-window .gn-headerbar {
+  background:linear-gradient(180deg,var(--ftn-frame-header-top),var(--ftn-frame-header-bottom));
+  border-bottom:1px solid var(--ftn-frame-edge);
+  color:var(--ftn-frame-header-text);
+  transition:background-color .18s,border-color .18s;
+}
+.gn-shell .gn-window:not(.gn-window-focused) .gn-headerbar{
+  background:var(--ftn-frame-header);
+}
+.gn-shell .gn-window .gn-header-title strong{
+  color:var(--ftn-frame-header-text);
+  font-weight:730;
+  letter-spacing:-.018em;
+}
+.gn-shell .gn-window .gn-header-title span{
+  color:var(--ftn-frame-header-muted);
+  font-size:10px;
+}
+.gn-shell .gn-window .gn-window-controls button{
+  color:var(--ftn-frame-control);
+  background:transparent;
+  border:1px solid transparent;
+  border-radius:10px;
+  transition:background-color .16s ease,transform .12s ease,color .16s ease,border-color .16s ease;
+}
+.gn-shell .gn-window .gn-window-controls button:hover{
+  background:var(--ftn-frame-hover);
+  color:var(--ftn-frame-header-text);
+  border-color:var(--ftn-frame-edge);
+}
+.gn-shell .gn-window .gn-window-controls button:active{transform:scale(.92)}
+.gn-shell .gn-window .gn-window-controls button:focus-visible{
+  outline:2px solid var(--ftn-frame-focus);
+  outline-offset:2px;
+}
+.gn-shell .gn-window .gn-window-controls .gn-close{
+  background:var(--ftn-frame-close);
+  color:var(--ftn-frame-close-text);
+  border-radius:50%;
+}
+.gn-shell .gn-window .gn-window-controls .gn-close:hover,
+.gn-shell .gn-window .gn-window-controls .gn-close:focus-visible{
+  background:#e35d56;
+  color:#fff;
+  border-color:transparent;
+}
+.gn-shell .gn-window.gn-window-focused{
+  border-color:var(--ftn-frame-edge);
+}
+.gn-shell .gn-window .gn-window-leading .gn-app-art,
+.gn-shell .gn-window .gn-window-leading .gn-file-svg{
+  filter:none;
+  opacity:.94;
+}
+.gn-shell .gn-window:not(.gn-window-focused) .gn-window-leading{opacity:.7}
+.gn-shell .gn-window.gn-window-max:not(:fullscreen){
+  box-shadow:0 10px 30px rgba(13,19,34,.19);
+}
+
+/* Dark frame is a property of the desktop theme, not the opened application. */
+.gn-shell:not(.gn-light) .gn-window{
+  --ftn-frame-bg:#222630;
+  --ftn-frame-edge:#484f5d;
+  --ftn-frame-header:#282d37;
+  --ftn-frame-header-top:#343943;
+  --ftn-frame-header-bottom:#2a3039;
+  --ftn-frame-header-muted:#aab4c2;
+  --ftn-frame-header-text:#f2f5fa;
+  --ftn-frame-control:#c5cedb;
+  --ftn-frame-hover:#474f5d;
+  --ftn-frame-close:#414855;
+  --ftn-frame-close-text:#ebeff6;
+  --ftn-frame-focus:#90bfff;
+  --ftn-frame-shadow:0 24px 66px rgba(3,8,17,.46),0 4px 14px rgba(3,8,17,.26);
+  color-scheme:dark;
+}
+.gn-shell:not(.gn-light) .gn-window:not(.gn-window-focused){
+  --ftn-frame-shadow:0 12px 37px rgba(4,9,18,.38);
+  --ftn-frame-header:#242833;
+  --ftn-frame-header-muted:#8c98a9;
+}
+.gn-shell:not(.gn-light) .gn-window .gn-window-body{
+  background:#242833;
+  color:#e9edf5;
+  scrollbar-color:#626b7c #242833;
+}
+.gn-shell:not(.gn-light) .gn-window .gn-window-body.gn-course-body{
+  background:#f7f8fa;
+  color:#29364c;
+  color-scheme:light; /* A white PDF/practicum must remain a white document. */
+}
+.gn-shell:not(.gn-light) .gn-window .game-screen,
+.gn-shell:not(.gn-light) .gn-window .arcade-screen{
+  color-scheme:light;
+}
+/* Native note taking and system utilities should not be islands of bright white. */
+.gn-shell:not(.gn-light) .gn-window-app-notes .gn-notes{
+  background:#232936;color:#e5edf8;
+}
+.gn-shell:not(.gn-light) .gn-window-app-notes .gn-notes-toolbar{
+  background:#303744;border-color:#465061;color:#e8eef9;
+}
+.gn-shell:not(.gn-light) .gn-window-app-notes .gn-notes-toolbar span{color:#eff3fa}
+.gn-shell:not(.gn-light) .gn-window-app-notes .gn-notes-toolbar small{color:#aab8c9}
+.gn-shell:not(.gn-light) .gn-window-app-notes .gn-notes textarea{
+  background:#232936;color:#e8edf5;caret-color:#9bc7ff;
+}
+.gn-shell:not(.gn-light) .gn-window-app-notes .gn-notes textarea::placeholder{
+  color:#8594a7;
+}
+.gn-shell:not(.gn-light) .gn-window-app-trash .gn-trash-empty{
+  background:#242833;color:#aebbc9;
+}
+.gn-shell:not(.gn-light) .gn-window-app-trash .gn-trash-empty h2{color:#e7ebf4}
+
+/* About System: dark system app cards, while retaining dark branded hardware tiles. */
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about{color:#e7ecf5}
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-heading h1,
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-section h2{color:#f2f4fa}
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-heading p,
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-intro,
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-section>p{color:#adb9cb}
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-section{
+  background:#2e3440;border-color:#444e5e;box-shadow:0 3px 17px #0e142020;
+}
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-version{
+  background:#343e4d;color:#becbdc;border-color:#4c5768;
+}
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-specs{border-color:#485364}
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-spec-row{
+  background:#343c49;border-color:#485364;
+}
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-spec-row:nth-child(2n){background:#2e3643}
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-spec-row>span,
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-spec-row small{color:#aebccd}
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-spec-row strong{color:#edf2f9}
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-features>div{
+  background:#343d4b;border-color:#4b5667;
+}
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-features span{color:#b2bfd1}
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-course-links button{
+  background:#363e4b;color:#e5edf8;border-color:#4a5668;
+}
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-course-links button:hover{
+  background:#435773;border-color:#799dc6;
+}
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-course-links button strong{color:#e8edf6}
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-course-links button>span:first-child{
+  background:#355071;color:#a8cfff;
+}
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-section kbd{
+  color:#d9e3ef;background:#3c4554;border-color:#596375;
+}
+.gn-shell:not(.gn-light) .gn-window-app-readme .gn-about-footer{color:#a1adbf}
+
+/* Minor light-mode refinements without losing a neutral Adwaita appearance. */
+.gn-shell.gn-light .gn-window {
+  --ftn-frame-edge:rgba(35,48,71,.19);
+}
+.gn-shell.gn-light .gn-window:not(.gn-window-focused){
+  --ftn-frame-header:#f2f3f5;
+}
+.gn-shell.gn-light .gn-window-body{scrollbar-color:#b8c1ce #f6f7f9}
+.gn-shell.gn-light .gn-window-app-trash .gn-trash-empty{background:#f6f7f9}
+
+/* Compact app bars on narrow viewports, still retaining usable 32px targets. */
+@media(max-width:760px){
+  .gn-shell .gn-window .gn-headerbar{height:47px;min-height:47px;padding-inline:10px}
+  .gn-shell .gn-window .gn-header-title{top:7px;left:40px;right:137px}
+  .gn-shell .gn-window .gn-header-title strong{font-size:11.5px}
+  .gn-shell .gn-window .gn-window-controls{gap:2px}
+  .gn-shell .gn-window .gn-window-controls button{width:31px;height:31px}
+}
+@media(prefers-reduced-motion:reduce){
+  .gn-shell .gn-window,.gn-shell .gn-window .gn-headerbar,
+  .gn-shell .gn-window .gn-window-controls button{transition:none!important}
+}
