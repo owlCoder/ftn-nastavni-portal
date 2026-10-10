@@ -86,7 +86,7 @@ export function SettingsScreen({preferences,onChange}:Props){
               className={'ftn-pref-wallpaper-choice'+(preferences.wallpaper===index?' active':'')}
               aria-label={'Izaberi pozadinu '+WALLPAPERS[index].name} aria-pressed={preferences.wallpaper===index}
               onClick={()=>onChange({wallpaper:index})}>
-              <span className="ftn-pref-thumb" style={{background:WALLPAPERS[index].background}}/>
+              <span className="ftn-pref-thumb" style={{background:WALLPAPERS[index].background.replace('w=1920&q=82','w=480&q=72')}}/>
               {preferences.wallpaper===index&&<span className="ftn-pref-wall-check"><Symbol name="check" size={14}/></span>}
               <span className="ftn-pref-wall-name">{WALLPAPERS[index].name}</span>
             </button>)}
