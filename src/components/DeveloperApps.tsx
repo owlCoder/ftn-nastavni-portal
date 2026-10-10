@@ -2,8 +2,10 @@ import {useState,useEffect,type ReactNode,type FormEvent} from 'react'
 export type DevId='diff'|'regex'|'base64'|'urltools'|'hashing'|'csv'|'entities'|'timestamp'|'uuid'|'contrast'
 export const devIds:DevId[]=['diff','regex','base64','urltools','hashing','csv','entities','timestamp','uuid','contrast']
 export const devNames:Record<DevId,string>={diff:'Diff Viewer',regex:'Regex Lab',base64:'Base64',urltools:'URL Inspektor',hashing:'SHA-256 Hash',csv:'CSV Tabela',entities:'HTML Entiteti',timestamp:'Unix Time',uuid:'UUID Generator',contrast:'Kontrast boja'}
-function Page({name,info,children}:{name:string;info:string;children:ReactNode}){return <div className="ftn-suite"><header className="ftn-suite-heading"><small>DEVELOPER TOOLS</small><h2>{name}</h2><p>{info}</p></header>{children}</div>}
-function Panel({title,children}:{title?:string;children:ReactNode}){return <section className="ftn-suite-panel">{title&&<h3>{title}</h3>}{children}</section>}
+export function DevPage({category,name,description,children} :{category:string;name:string;description:string;children:ReactNode}){return <div className="ftn-suite"><header className="ftn-suite-heading"><small>{category}</small><h2>{name}</h2><p>{description}</p></header>{children}</div>}
+export function DevPanel({title,children}:{title?:string;children:ReactNode}){return <section className="ftn-suite-panel">{title&&<h3>{title}</h3>}{children}</section>}
+function Page({name,info,children}:{name:string;info:string;children:ReactNode}){return <DevPage name={name} description={info} category="RAZVOJ" >{children}</DevPage>}
+function Panel({title,children}:{title?:string;children:ReactNode}){return <DevPanel title={title}>{children}</DevPanel>}
 function Field({label,children}:{label:string;children:ReactNode}){return <label className="ftn-suite-field"><span>{label}</span>{children}</label>}
 export function usePersistent<T>(id:string,initial:T):[T,(value:T|((prev:T)=>T))=>void]{
  const [value,set]=useState<T>(()=>{try{const s=localStorage.getItem('ftn-suite-'+id);return s?JSON.parse(s) as T:initial}catch{return initial}})
