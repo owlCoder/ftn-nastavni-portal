@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerE
 
 const STORAGE_KEY='ftn-desktop-layout-v1'
 export const DEFAULT_SHORTCUTS=['ers','oib','odp','readme','settings','trash']
-export const DEFAULT_DOCK=['files','notes','calendar','calculator','settings']
+export const DEFAULT_DOCK=['files','notes','calendar','calculator','settings','trash']
 export type Shortcut={id:string;slot:number}
 type Persisted={shortcuts:Shortcut[];pins:string[]}
 const SLOT_LIMIT=120
@@ -14,15 +14,16 @@ function loadConfiguration(allowed:string[]):Persisted {
   const used=new Set<number>()
   const shortcuts:Shortcut[]=[]
   const requested=Array.isArray(parsed?.shortcuts)?parsed.shortcuts.filter((x):x is Shortcut=>typeof x?.id==='string'&&isAllowed(x.id)&&Number.isInteger(x.slot)):[]
-  const raw=[...DEFAULT_SHORTCUTS.filter(isAllowed).map(id=>requested.find(x=>x.id===id)??{id,slot:DEFAULT_SHORTCUTS.indexOf(id)}),
-    ...requested.filter(x=>!DEFAULT_SHORTCUTS.includes(x.id))]
+  const initial=parsed&&Array.isArray(parsed.shortcuts)?requested:DEFAULT_SHORTCUTS.filter(isAllowed).map(id=>({id,slot:DEFAULT_SHORTCUTS.indexOf(id)}))
+  const raw=[...['ers','oib','odp'].filter(isAllowed).map(id=>initial.find(x=>x.id===id)??{id,slot:DEFAULT_SHORTCUTS.indexOf(id)}),
+    ...initial.filter(x=>!['ers','oib','odp'].includes(x.id))]
   for(const item of raw){
     if(shortcuts.some(x=>x.id===item.id))continue
     let slot=item.slot
     if(slot<0||slot>=SLOT_LIMIT||used.has(slot)){slot=0;while(used.has(slot))slot++}
     used.add(slot);shortcuts.push({id:item.id,slot})
   }
-  const pins=Array.isArray(parsed?.pins)?parsed.pins.filter((x):x is string=>typeof x==='string'&&isAllowed(x)&&!['ers','oib','odp','trash'].includes(x)):[]
+  const pins=Array.isArray(parsed?.pins)?parsed.pins.filter((x):x is string=>typeof x==='string'&&isAllowed(x)&&!['ers','oib','odp'].includes(x)):[]
   return {shortcuts,pins:parsed?.pins?Array.from(new Set(pins)):DEFAULT_DOCK.filter(isAllowed)}
 }
 export function useDesktopConfiguration(allowed:string[]) {
@@ -54,7 +55,7 @@ export function useDesktopConfiguration(allowed:string[]) {
     })
   }
   const pin=(id:string)=>{
-    if(!allowed.includes(id)||['ers','oib','odp','trash'].includes(id))return
+    if(!allowed.includes(id)||['ers','oib','odp'].includes(id))return
     setConfig(old=>old.pins.includes(id)?old:{...old,pins:[...old.pins,id]})
   }
   const unpin=(id:string)=>setConfig(old=>({...old,pins:old.pins.filter(x=>x!==id)}))
@@ -118,6 +119,7 @@ export function DesktopShortcutGrid({shortcuts,label,icon,open,selected,onSelect
       if(slot!==null)onMove(id,slot)
       blockedClick.current=id
     }
+    if(!drag.moved&&event.pointerType==='touch')open(id)
     dragging.current=null
     setTarget(null);setDragged(null)
   }
