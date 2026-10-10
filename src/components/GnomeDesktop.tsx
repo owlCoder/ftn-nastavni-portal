@@ -25,6 +25,13 @@ const names: Record<AppId, string> = {
   sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor', ...extraNames,
 }
 const short: Record<AppId, string> = { ers: 'ERS', oib: 'OIB', odp: 'ODP', sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor', ...extraNames }
+const windowCategories: Partial<Record<AppId,string>> = {
+  notes:'Dokumenti',readme:'Informacije o sistemu',trash:'Fajlovi',
+  calendar:'Organizacija',monitor:'Performanse',
+  calculator:'Alati',editor:'Dokumenti',terminal:'FTN Shell',files:'Fajlovi',
+  tasks:'Organizacija',pomodoro:'Fokus',converter:'Alati',draw:'Kreativno',
+  stopwatch:'Vreme',settings:'Sistemske postavke',
+}
 const applicationIds: AppId[] = ['ers','oib','odp','sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme','trash',...extraIds]
 const courseIds: AppId[] = ['ers','oib','odp']
 const courseIcon: Record<CourseId, string> = { ers:'folder.svg', oib:'folder-documents.svg', odp:'folder-projects.svg' }
@@ -115,12 +122,12 @@ function WindowFrame({ windowData: w, isFocused, gamesActive, now, otherWindows,
   const course=courses.find(c=>c.id===w.id)
   const active=isFocused && !w.minimized && gamesActive
   return <section ref={ref} aria-label={'Prozor: '+title} onPointerDown={onFocus}
-    className={'gn-window'+(isFocused?' gn-window-focused':'')+(w.maximized?' gn-window-max':'')+(w.minimized?' gn-window-min':'')+(['calendar','monitor'].includes(w.id)?' gn-utility-window':'')}
+    className={'gn-window'+(isFocused?' gn-window-focused':'')+(w.maximized?' gn-window-max':'')+(w.minimized?' gn-window-min':'')+(['calendar','monitor'].includes(w.id)?' gn-utility-window':'')+' gn-window-app-'+w.id}
     style={{left:w.x,top:w.y,zIndex:w.z,'--gn-window-y':`${w.y}px`} as CSSProperties}>
     <div className="gn-headerbar" onDoubleClick={onMaximize} onPointerDown={onPointerDown}
       onPointerMove={onPointerMove} onPointerUp={()=>dragging.current=null} onPointerCancel={()=>dragging.current=null}>
       <div className="gn-window-leading"><AppArtwork id={w.id}/></div>
-      <div className="gn-header-title"><strong>{course ? course.name : title}</strong><span>{course ? 'Nastavni materijali · '+course.code : w.id==='notes' ? 'Text Editor' : w.id==='readme' ? 'Settings' : w.id==='calendar' ? 'Calendar' : w.id==='monitor' ? 'Resources' : w.id==='trash' ? 'Files' : extraIds.includes(w.id as UtilityId)?'Applications':'Igre'}</span></div>
+      <div className="gn-header-title"><strong>{course ? course.name : title}</strong><span>{course ? 'Nastavni materijali · '+course.code : windowCategories[w.id] ?? 'Igre'}</span></div>
       <div className="gn-window-controls">
         <button title="Minimizuj" aria-label="Minimizuj" onClick={onMinimize}><Icon name="minimize" size={15}/></button>
         <button title={w.maximized?'Vrati prozor':'Maksimizuj'} aria-label={w.maximized?'Vrati prozor':'Maksimizuj'} onClick={onMaximize}><Icon name={w.maximized?'restore':'maximize'} size={15}/></button>
