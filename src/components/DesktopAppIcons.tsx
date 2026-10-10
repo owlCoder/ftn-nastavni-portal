@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 export type AppIconId =
   | 'finder' | 'ers' | 'oib' | 'odp' | 'sudoku' | 'tetris' | 'invaders'
   | 'snake' | 'merge' | 'calendar' | 'monitor' | 'notes' | 'readme' | 'trash'
+  | 'calculator' | 'editor' | 'terminal' | 'files' | 'tasks' | 'pomodoro' | 'converter' | 'draw' | 'stopwatch' | 'settings'
 
 /**
  * Minimal two-tone application symbols. Shapes are the icons themselves:
@@ -93,6 +94,26 @@ function Symbol({ id }: { id: AppIconId }): ReactNode {
         <circle cx="18" cy="11" r="2" fill="#567eb8"/>
         <path d="M18 17v9" fill="none" stroke="#567eb8" strokeWidth="2.8" strokeLinecap="round"/>
       </>
+    case 'calculator':
+      return <><rect x="7" y="3" width="22" height="30" rx="4" fill="#b9d6f4" stroke="#d9e9fb" strokeWidth="1"/><rect x="11" y="8" width="14" height="5" rx="1" fill="#43698e"/>{[0,1,2].flatMap(y=>[0,1,2].map(x=><rect key={y+'-'+x} x={11+x*5.1} y={17+y*4.5} width="3.6" height="3" rx=".7" fill={x===2&&y===2?'#549dcc':'#7294b7'}/>))}</>
+    case 'editor':
+      return <><path d="M7 4h15l6 6v23H7z" fill="#e7e5ff" stroke="#c9c8ed" strokeWidth="1.3"/><path d="M22 4v7h6M11 17h13M11 22h13M11 27h10" stroke="#8e7ac1" strokeWidth="2" strokeLinecap="round"/></>
+    case 'terminal':
+      return <><rect x="3" y="6" width="30" height="24" rx="4.5" fill="#273b53" stroke="#8197b1" strokeWidth="1.1"/><path d="m9 14 5 5-5 5m9 0h8" stroke="#a4f0bd" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"/></>
+    case 'files':
+      return <><path d="M4 11V8a4 4 0 0 1 4-4h9l4 5h7a4 4 0 0 1 4 4v16H4z" fill="#529fda"/><path d="M4 14a3 3 0 0 1 3-3h22a3 3 0 0 1 3 3v15a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3z" fill="#9acbec" stroke="#c2e0f5" strokeWidth="1"/></>
+    case 'tasks':
+      return <><rect x="7" y="4" width="23" height="29" rx="3" fill="#f9f3e1" stroke="#e5dcc6" strokeWidth="1.1"/>{[12,19,26].map(y=><g key={y}><rect x="11" y={y-2} width="5" height="5" rx="1" fill="#9cc9b3"/><path d={'M19 '+y+'h7'} stroke="#8f9eaa" strokeWidth="2" strokeLinecap="round"/></g>)}</>
+    case 'pomodoro':
+      return <><circle cx="18" cy="20" r="12" fill="#f7c9a1" stroke="#ffe3cb" strokeWidth="1.6"/><path d="M18 7V3m-5 0h10M18 20v-7m0 7 6 3" stroke="#ae6f59" strokeWidth="2.3" strokeLinecap="round"/></>
+    case 'converter':
+      return <><rect x="5" y="7" width="26" height="23" rx="5" fill="#cfebd9" stroke="#b8d7c5" strokeWidth="1.1"/><path d="M11 16h14m-4-4 4 4-4 4M25 23H11m4-4-4 4 4 4" stroke="#418a6a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></>
+    case 'draw':
+      return <><path d="M6 30c9-2 7-12 19-20l5 5C22 26 15 26 6 30Z" fill="#dbb4ef" stroke="#c393dd" strokeWidth="1.2"/><path d="M24 9 28 5l4 4-4 5" fill="#ebca9f"/><path d="M6 30 4 33l8-2" fill="#82a1d9"/></>
+    case 'stopwatch':
+      return <><circle cx="18" cy="21" r="12" fill="#b5deee" stroke="#e6f3fc" strokeWidth="1.5"/><path d="M18 8V3m-5 0h10M18 14v8l6 3" stroke="#3d829f" strokeWidth="2.5" strokeLinecap="round"/></>
+    case 'settings':
+      return <><circle cx="18" cy="18" r="12" fill="#b6c2d1"/><path d="M18 5v6m0 14v6M5 18h6m14 0h6M9 9l4 4m10 10 4 4M27 9l-4 4M13 23l-4 4" stroke="#eaf1f9" strokeWidth="3" strokeLinecap="round"/><circle cx="18" cy="18" r="5" fill="#e7eef5" stroke="#7b8b9e" strokeWidth="2"/></>
     case 'trash':
       return <>
         <path d="M10 10h16l-2 21H12Z" fill="#d9e1e9" stroke="#eff3f8" strokeWidth="1.4" strokeLinejoin="round"/>
