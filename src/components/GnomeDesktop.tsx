@@ -239,7 +239,7 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
   const dateString=new Intl.DateTimeFormat('sr-RS',{weekday:'short',day:'numeric',month:'short',timeZone:'Europe/Belgrade'}).format(now)
   const timeString=new Intl.DateTimeFormat('sr-RS',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Belgrade'}).format(now)
   const panelToggle=(id:Panel)=>{setPanel(current=>current===id?null:id);setContext(null)}
-  return <div className={'gn-shell'+(!isDark?' gn-light':'')+(nightLight?' gn-nightlight':'')+(wallpaper===0?' gn-wallpaper-default':'')}
+  return <div className={'gn-shell'+(!isDark?' gn-light':'')+(nightLight?' gn-nightlight':'')+(wallpaper===0?' gn-wallpaper-default':'')+(wallpaper<10?' gn-wallpaper-dynamic':'')+(wallpaper>=10&&wallpaper<=17?' gn-wallpaper-photo':'')}
     style={{'--gn-brightness':String(brightness/100),'--gn-wallpaper':WALLPAPERS[wallpaper].background} as CSSProperties}>
     <div className="gn-wallpaper" aria-hidden="true"/>
     <header className="gn-topbar">
