@@ -270,3 +270,66 @@
 @media(prefers-reduced-motion:reduce){
   .ftn-preferences button,.ftn-switch,.ftn-switch-thumb{transition:none!important}
 }
+
+/* Photo wallpapers use a full-bleed image with a neutral fallback; abstract themes retain subtle movement. */
+.gn-shell .gn-wallpaper{background-size:cover!important;background-repeat:no-repeat!important;background-position:center!important}
+.gn-shell.gn-wallpaper-photo .gn-wallpaper::before,
+.gn-shell.gn-wallpaper-photo .gn-wallpaper::after{display:none}
+.gn-shell.gn-wallpaper-dynamic .gn-wallpaper::before{animation:ftn-ambient-shift 26s ease-in-out infinite alternate}
+.gn-shell.gn-wallpaper-dynamic .gn-wallpaper::after{animation:ftn-ambient-shift-reverse 32s ease-in-out infinite alternate}
+@keyframes ftn-ambient-shift{from{transform:translate(-2%,-2%) rotate(-24deg)}to{transform:translate(3%,1%) rotate(-18deg)}}
+@keyframes ftn-ambient-shift-reverse{from{transform:translate(2%,0) rotate(-30deg)}to{transform:translate(-3%,1%) rotate(-22deg)}}
+
+/* Dark appearance should extend to utility applications, not only to the shell. */
+.gn-shell:not(.gn-light) .ftn-tool-page,.gn-shell:not(.gn-light) .ftn-monitor-pro{background:#222731;color:#e9edf5}
+.gn-shell:not(.gn-light) .ftn-tool-heading h2,.gn-shell:not(.gn-light) .ftn-monitor-head h2{color:#f1f5fc}
+.gn-shell:not(.gn-light) .ftn-tool-heading p,.gn-shell:not(.gn-light) .ftn-monitor-head p{color:#a2b0c3}
+.gn-shell:not(.gn-light) .ftn-tool-card,.gn-shell:not(.gn-light) .ftn-monitor-detail,
+.gn-shell:not(.gn-light) .ftn-monitor-processes,.gn-shell:not(.gn-light) .ftn-monitor-system,
+.gn-shell:not(.gn-light) .ftn-monitor-resources>button{background:#2e3440;border-color:#434c5d;box-shadow:0 5px 20px #040a1620}
+.gn-shell:not(.gn-light) .ftn-tool-card h3,.gn-shell:not(.gn-light) .ftn-tool-page strong,
+.gn-shell:not(.gn-light) .ftn-monitor-detail h3,.gn-shell:not(.gn-light) .ftn-monitor-detail strong,
+.gn-shell:not(.gn-light) .ftn-monitor-resources strong,.gn-shell:not(.gn-light) .ftn-monitor-system-grid h3,
+.gn-shell:not(.gn-light) .ftn-monitor-system-grid strong{color:#e8eef7}
+.gn-shell:not(.gn-light) .ftn-tool-card small,.gn-shell:not(.gn-light) .ftn-monitor-processes p{color:#a5b0bf}
+.gn-shell:not(.gn-light) .ftn-tool-page button,.gn-shell:not(.gn-light) .ftn-monitor-pro button{
+  background:#384253;color:#e1eaf7;border-color:#515e73
+}
+.gn-shell:not(.gn-light) .ftn-tool-page button:hover:not(:disabled),
+.gn-shell:not(.gn-light) .ftn-monitor-pro button:hover:not(:disabled){background:#44536b}
+.gn-shell:not(.gn-light) .ftn-tool-page .ftn-emphasis{
+  background:#407fcb;color:#fff;border-color:#4b91df
+}
+.gn-shell:not(.gn-light) .ftn-tool-page input[type="text"],
+.gn-shell:not(.gn-light) .ftn-tool-page input[type="number"],
+.gn-shell:not(.gn-light) .ftn-tool-page select,
+.gn-shell:not(.gn-light) .ftn-tool-page textarea{
+  background:#252c38;color:#f0f3f9;border-color:#475467
+}
+.gn-shell:not(.gn-light) .ftn-tool-page input::placeholder,.gn-shell:not(.gn-light) .ftn-tool-page textarea::placeholder{color:#8e9cad}
+.gn-shell:not(.gn-light) .ftn-calc-display,.gn-shell:not(.gn-light) .ftn-converter-result,
+.gn-shell:not(.gn-light) .ftn-task-list>div,.gn-shell:not(.gn-light) .ftn-timer-progress,
+.gn-shell:not(.gn-light) .ftn-monitor-stat-grid>div{background:#252d39;border-color:#414b5c}
+.gn-shell:not(.gn-light) .ftn-calc-display strong,.gn-shell:not(.gn-light) .ftn-timer-face,
+.gn-shell:not(.gn-light) .ftn-converter-result strong,.gn-shell:not(.gn-light) .ftn-task-summary strong{color:#dbe9fa}
+.gn-shell:not(.gn-light) .ftn-tool-filters,.gn-shell:not(.gn-light) .ftn-editor-bar{
+  background:#252d39;border-color:#414b5c
+}
+.gn-shell:not(.gn-light) .ftn-tool-page .ftn-tool-filters button.active{color:#eef5ff;background:#475d7d;border-color:#5e7495}
+.gn-shell:not(.gn-light) .ftn-files-list strong,.gn-shell:not(.gn-light) .ftn-files-list small{color:#d8e1ee}
+.gn-shell:not(.gn-light) .ftn-monitor-tabs{border-color:#475161}
+.gn-shell:not(.gn-light) .ftn-monitor-resources button.selected{background:#384965;border-color:#7997bc}
+.gn-shell:not(.gn-light) .ftn-monitor-resource-symbol{box-shadow:0 0 8px #161f3260}
+.gn-shell:not(.gn-light) .ftn-monitor-chart svg line{stroke:#465064}
+.gn-shell:not(.gn-light) .ftn-monitor-table-head{background:#343e4e;color:#bcc9d8}
+.gn-shell:not(.gn-light) .ftn-monitor-process-row,.gn-shell:not(.gn-light) .ftn-monitor-system-grid section>div{border-color:#424b5b}
+.gn-shell:not(.gn-light) .ftn-monitor-system-grid section{border-color:#424b5b}
+.gn-shell:not(.gn-light) .ftn-tool-page input[type="checkbox"]{background:#30394b;border-color:#69758a}
+.gn-shell:not(.gn-light) .ftn-tool-page input[type="checkbox"]:checked{background:#5b9eea;border-color:#5b9eea}
+.gn-shell:not(.gn-light) .ftn-editor-card textarea{background:#252c38}
+.gn-shell:not(.gn-light) .ftn-tool-page .ftn-calc-keys button:last-child{background:#3b7fcf;color:#fff}
+.gn-shell:not(.gn-light) .ftn-tool-page input[type="range"],.gn-shell:not(.gn-light) .ftn-preferences input[type="range"]{background:linear-gradient(to right,#78adf1 0%,#78adf1 var(--ftn-range-fill,50%),#5e6676 var(--ftn-range-fill,50%),#5e6676 100%)}
+@media(prefers-reduced-motion:reduce){
+  .gn-shell.gn-wallpaper-dynamic .gn-wallpaper::before,
+  .gn-shell.gn-wallpaper-dynamic .gn-wallpaper::after{animation:none!important}
+}
