@@ -3,27 +3,31 @@ import { ErsCourseFiles } from './ErsCourseFiles'
 import { OtherCourseFiles } from './OtherCourseFiles'
 import { DesktopWidgets } from './DesktopWidgets'
 import { SystemAbout } from './SystemAbout'
-import { CalendarApp, SystemMonitorApp } from './DesktopUtilities'
+import { CalendarApp } from './DesktopUtilities'
+import { SystemMonitorPro } from './SystemMonitorPro'
+import { UtilityApp, type UtilityId } from './WorkspaceApps'
 import { Snake, Merge2048 } from './ExtraGames'
-import { loadPreferences, savePreferences, WALLPAPERS } from './DesktopSettings'
+import { loadPreferences, savePreferences, WALLPAPERS, type DesktopPreferences } from './DesktopSettings'
 import { DockAppIcon } from './DesktopAppIcons'
 import { Sudoku, Tetris, SpaceInvaders, type GameId } from './DesktopGames'
 import { courses } from '../courses'
 import { assetUrl } from '../lib/assets'
 import type { CourseId } from '../courses/types'
 
-type AppId = CourseId | GameId | 'snake' | 'merge' | 'notes' | 'readme' | 'trash' | 'calendar' | 'monitor'
+type AppId = CourseId | GameId | 'snake' | 'merge' | 'notes' | 'readme' | 'trash' | 'calendar' | 'monitor' | UtilityId
+const extraIds: UtilityId[] = ['calculator','editor','terminal','files','tasks','pomodoro','converter','draw','stopwatch','settings']
+const extraNames: Record<UtilityId,string> = {calculator:'Kalkulator',editor:'Tekst editor',terminal:'Terminal',files:'Fajlovi',tasks:'Zadaci',pomodoro:'Pomodoro',converter:'Konverter',draw:'Crtanje',stopwatch:'Štoperica',settings:'Podešavanja'}
 type WindowData = { id: AppId; x: number; y: number; z: number; minimized: boolean; maximized: boolean }
 type Panel = 'calendar' | 'quick' | null
 const names: Record<AppId, string> = {
   ers: 'Elementi razvoja softvera', oib: 'Osnove informacione bezbednosti', odp: 'Osnove distribuiranog programiranja',
-  sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor',
+  sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor', ...extraNames,
 }
-const short: Record<AppId, string> = { ers: 'ERS', oib: 'OIB', odp: 'ODP', sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor' }
-const applicationIds: AppId[] = ['ers','oib','odp','sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme','trash']
+const short: Record<AppId, string> = { ers: 'ERS', oib: 'OIB', odp: 'ODP', sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor', ...extraNames }
+const applicationIds: AppId[] = ['ers','oib','odp','sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme','trash',...extraIds]
 const courseIds: AppId[] = ['ers','oib','odp']
-const utilityIds: AppId[] = ['sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme','trash']
-const dashIds: AppId[] = ['sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme']
+const utilityIds: AppId[] = ['sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme',...extraIds,'trash']
+const dashIds: AppId[] = ['files','calculator','editor','tasks','sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme']
 const courseIcon: Record<CourseId, string> = { ers:'folder.svg', oib:'folder-documents.svg', odp:'folder-projects.svg' }
 const initialHashCourse = () => {
   const match = location.hash.match(/^#(ers|oib|odp)(?:\/|$)/)
@@ -77,8 +81,10 @@ function Notes() {
 }
 function Trash() { return <div className="gn-trash-empty"><AppArtwork id="trash"/><h2>Korpa je prazna</h2><p>Nema obrisanih stavki.</p></div> }
 
-function WindowFrame({ windowData: w, isFocused, gamesActive, now, onFocus, onClose, onMinimize, onMaximize, onMove }: {
-  windowData: WindowData; isFocused: boolean; gamesActive:boolean; now:Date; onFocus:()=>void; onClose:()=>void; onMinimize:()=>void; onMaximize:()=>void;
+function WindowFrame({ windowData: w, isFocused, gamesActive, now, otherWindows, preferences, onSettingsChange, onOpenApp, onFocus, onClose, onMinimize, onMaximize, onMove }: {
+  windowData: WindowData; isFocused: boolean; gamesActive:boolean; now:Date; otherWindows:WindowData[]; preferences:DesktopPreferences;
+  onSettingsChange:(patch:Partial<DesktopPreferences>)=>void;onOpenApp:(id:AppId)=>void;
+  onFocus:()=>void; onClose:()=>void; onMinimize:()=>void; onMaximize:()=>void;
   onMove:(x:number,y:number)=>void
 }) {
   const ref=useRef<HTMLElement>(null)
@@ -115,7 +121,7 @@ function WindowFrame({ windowData: w, isFocused, gamesActive, now, onFocus, onCl
     <div className="gn-headerbar" onDoubleClick={onMaximize} onPointerDown={onPointerDown}
       onPointerMove={onPointerMove} onPointerUp={()=>dragging.current=null} onPointerCancel={()=>dragging.current=null}>
       <div className="gn-window-leading"><AppArtwork id={w.id}/></div>
-      <div className="gn-header-title"><strong>{course ? course.name : title}</strong><span>{course ? 'Nastavni materijali · '+course.code : w.id==='notes' ? 'Text Editor' : w.id==='readme' ? 'Settings' : w.id==='calendar' ? 'Calendar' : w.id==='monitor' ? 'Resources' : w.id==='trash' ? 'Files' : 'Igre'}</span></div>
+      <div className="gn-header-title"><strong>{course ? course.name : title}</strong><span>{course ? 'Nastavni materijali · '+course.code : w.id==='notes' ? 'Text Editor' : w.id==='readme' ? 'Settings' : w.id==='calendar' ? 'Calendar' : w.id==='monitor' ? 'Resources' : w.id==='trash' ? 'Files' : extraIds.includes(w.id as UtilityId)?'Applications':'Igre'}</span></div>
       <div className="gn-window-controls">
         <button title="Minimizuj" aria-label="Minimizuj" onClick={onMinimize}><Icon name="minimize" size={15}/></button>
         <button title={w.maximized?'Vrati prozor':'Maksimizuj'} aria-label={w.maximized?'Vrati prozor':'Maksimizuj'} onClick={onMaximize}><Icon name={w.maximized?'restore':'maximize'} size={15}/></button>
@@ -131,7 +137,8 @@ function WindowFrame({ windowData: w, isFocused, gamesActive, now, onFocus, onCl
         w.id==='snake'?<Snake active={active}/> :
         w.id==='merge'?<Merge2048 active={active}/> :
         w.id==='calendar'?<CalendarApp now={now}/> :
-        w.id==='monitor'?<SystemMonitorApp/> :
+        w.id==='monitor'?<SystemMonitorPro apps={otherWindows.map(item=>({id:item.id,name:names[item.id],minimized:item.minimized}))} onOpen={id=>onOpenApp(id as AppId)}/> :
+        extraIds.includes(w.id as UtilityId)?<UtilityApp id={w.id as UtilityId} onOpen={id=>onOpenApp(id)} preferences={preferences} onSettingsChange={onSettingsChange}/> :
         w.id==='notes'?<Notes/> : w.id==='readme'?<SystemAbout/>:<Trash/>}
     </div>
   </section>
@@ -218,6 +225,14 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
   const maximize=(id:AppId)=>setWindows(current=>current.map(w=>w.id===id?{...w,maximized:!w.maximized}:w))
   const move=(id:AppId,x:number,y:number)=>setWindows(current=>current.map(w=>w.id===id?{...w,x,y}:w))
   const activeWindow=windows.filter(w=>!w.minimized).reduce<WindowData|null>((last,w)=>!last||w.z>last.z?w:last,null)
+  const preferences:DesktopPreferences={wallpaper,dark:isDark,widgets:showWidgets,nightLight,brightness}
+  const changeSettings=(patch:Partial<DesktopPreferences>)=>{
+    if(patch.wallpaper!==undefined)setWallpaper(patch.wallpaper)
+    if(patch.dark!==undefined)setIsDark(patch.dark)
+    if(patch.widgets!==undefined)setShowWidgets(patch.widgets)
+    if(patch.nightLight!==undefined)setNightLight(patch.nightLight)
+    if(patch.brightness!==undefined)setBrightness(patch.brightness)
+  }
   const filteredApps=applicationIds.filter(id=>short[id].toLowerCase().includes(search.toLowerCase())||names[id].toLowerCase().includes(search.toLowerCase()))
   const dateString=new Intl.DateTimeFormat('sr-RS',{weekday:'short',day:'numeric',month:'short',timeZone:'Europe/Belgrade'}).format(now)
   const timeString=new Intl.DateTimeFormat('sr-RS',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Belgrade'}).format(now)
@@ -271,7 +286,7 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
       </div>
     </main>
 
-    {windows.map(w=><WindowFrame key={w.id} windowData={w} isFocused={activeWindow?.id===w.id} gamesActive={!overview && panel===null} now={now}
+    {windows.map(w=><WindowFrame key={w.id} windowData={w} isFocused={activeWindow?.id===w.id} gamesActive={!overview && panel===null} now={now} otherWindows={windows} preferences={preferences} onSettingsChange={changeSettings} onOpenApp={open}
       onFocus={()=>{if(!w.minimized&&activeWindow?.id!==w.id)focus(w.id)}}
       onClose={()=>close(w.id)} onMinimize={()=>minimize(w.id)} onMaximize={()=>maximize(w.id)}
       onMove={(x,y)=>move(w.id,x,y)}/>)}
@@ -334,7 +349,7 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
     <nav className="gn-bottom-dock" aria-label="Traka aplikacija">
       <button className={'gn-dock-apps'+(overview?' gn-dock-current':'')} title="Sve aplikacije" aria-label="Sve aplikacije" onClick={()=>{setSearch('');setOverview(v=>!v);setPanel(null)}}><Icon name="grid" size={25}/></button>
       <span className="gn-bottom-separator"/>
-      {dashIds.map(id=><button key={id} className={'gn-dock-icon'+(activeWindow?.id===id?' gn-dock-current':'')} title={names[id]} aria-label={names[id]}
+      {[...dashIds,...windows.map(w=>w.id).filter(id=>!dashIds.includes(id) && !courseIds.includes(id) && id!=='trash')].filter((id,index,list)=>list.indexOf(id)===index).map(id=><button key={id} className={'gn-dock-icon'+(activeWindow?.id===id?' gn-dock-current':'')} title={names[id]} aria-label={names[id]}
         onClick={()=>{const w=windows.find(item=>item.id===id);if(w && !w.minimized && activeWindow?.id===id && !overview)minimize(id);else open(id)}}>
         <AppArtwork id={id}/>{windows.some(w=>w.id===id)&&<i className="gn-running-dot"/>}
       </button>)}
