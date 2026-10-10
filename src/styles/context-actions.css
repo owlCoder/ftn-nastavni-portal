@@ -1,0 +1,79 @@
+/* FTN desktop context menus and left-click action affordances. */
+.gn-shell .ftn-desktop-grid .ftn-shortcut-actions{
+ z-index:4;align-self:start;justify-self:end;position:relative;top:3px;right:6px;
+ display:grid;place-items:center;width:25px;height:24px;min-height:24px;
+ padding:0;border:1px solid rgba(255,255,255,.38);border-radius:7px;
+ color:#fff;background:rgba(16,29,54,.66);box-shadow:0 2px 9px rgba(3,12,25,.18);
+ font-size:18px;font-weight:800;line-height:.55;letter-spacing:0;
+ -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+ cursor:pointer;transition:background .14s;
+}
+.gn-shell .ftn-desktop-grid .ftn-shortcut-actions:hover{background:rgba(24,61,106,.88)}
+.gn-shell .ftn-desktop-grid .ftn-shortcut-actions:focus-visible{outline:2px solid white;outline-offset:2px}
+.gn-shell .gn-headerbar .ftn-window-actions-trigger{border-radius:9px}
+.gn-shell .ftn-shortcut-menu{
+ z-index:400;min-width:238px;width:266px;max-width:calc(100vw - 24px);
+ display:flex;flex-direction:column;gap:3px;padding:7px;
+ border:1px solid rgba(223,234,250,.20);border-radius:15px;
+ background:rgba(29,34,45,.96);color:#f4f7fb;
+ -webkit-backdrop-filter:blur(28px) saturate(1.2);backdrop-filter:blur(28px) saturate(1.2);
+ box-shadow:0 19px 52px rgba(2,8,17,.45),0 3px 12px rgba(2,8,17,.24);
+ animation:ftn-menu-pop .14s cubic-bezier(.15,.9,.3,1) both;
+}
+.gn-shell.gn-light .ftn-shortcut-menu{
+ background:rgba(246,247,250,.97);color:#2d3c50;border-color:#c6ceda;
+ box-shadow:0 15px 45px rgba(10,23,44,.24);
+}
+.gn-shell .ftn-shortcut-menu .ftn-context-header{
+ display:flex;align-items:center;gap:11px;padding:9px 9px 12px;margin-bottom:2px;
+ border-bottom:1px solid rgba(211,225,245,.16);
+}
+.gn-shell.gn-light .ftn-shortcut-menu .ftn-context-header{border-color:#dce2eb}
+.gn-shell .ftn-shortcut-menu .ftn-context-header-art{display:grid;place-items:center;flex:none;width:34px;height:34px}
+.gn-shell .ftn-shortcut-menu .ftn-context-header-art .gn-app-art{width:31px;height:31px}
+.gn-shell .ftn-shortcut-menu .ftn-context-header-art .os-appicon{width:30px;height:30px}
+.gn-shell .ftn-shortcut-menu .ftn-context-header-art .gn-file-svg,
+.gn-shell .ftn-shortcut-menu .ftn-context-header-art .gn-folder-svg{width:31px;height:31px}
+.gn-shell .ftn-shortcut-menu .ftn-context-header>div{display:flex;flex-direction:column;gap:3px;min-width:0}
+.gn-shell .ftn-shortcut-menu .ftn-context-header strong{font-size:12px;max-width:185px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0;border:0;margin:0;color:inherit}
+.gn-shell .ftn-shortcut-menu .ftn-context-header small{font-size:10px;color:#a8b3c1}
+.gn-shell.gn-light .ftn-shortcut-menu .ftn-context-header small{color:#6d7e92}
+.gn-shell .ftn-shortcut-menu .ftn-menu-group{display:flex;flex-direction:column;gap:1px;padding:3px 0}
+.gn-shell .ftn-shortcut-menu .ftn-menu-group:not(:last-child){border-bottom:1px solid rgba(215,231,250,.14);padding-bottom:6px}
+.gn-shell.gn-light .ftn-shortcut-menu .ftn-menu-group:not(:last-child){border-color:#dce2eb}
+.gn-shell .ftn-shortcut-menu .ftn-menu-group button{
+ display:flex;align-items:center;gap:11px;width:100%;min-height:36px;
+ border:0;border-radius:8px;background:transparent;color:inherit;
+ text-align:left;padding:8px 10px;font-size:12px;font-weight:550;cursor:pointer;
+ transition:background .14s,color .14s;
+}
+.gn-shell .ftn-shortcut-menu .ftn-menu-group button:hover,
+.gn-shell .ftn-shortcut-menu .ftn-menu-group button:focus-visible{
+ background:#3f74a9;color:#fff;outline:0;
+}
+.gn-shell .ftn-shortcut-menu .ftn-menu-group .ftn-menu-symbol{
+ display:grid;place-items:center;width:17px;flex:none;
+ font-size:16px;font-weight:700;line-height:1;color:#afbed0;
+}
+.gn-shell .ftn-shortcut-menu .ftn-menu-group button:hover .ftn-menu-symbol,
+.gn-shell .ftn-shortcut-menu .ftn-menu-group button:focus-visible .ftn-menu-symbol{color:#fff}
+.gn-shell .ftn-shortcut-menu .ftn-menu-group button>span:nth-child(2){flex:1}
+.gn-shell .ftn-shortcut-menu .ftn-menu-group kbd,
+.gn-shell .ftn-shortcut-menu .ftn-menu-group .ftn-menu-state{
+ font-size:10px;color:#9badc2;padding:0;background:transparent;border:0
+}
+.gn-shell .ftn-shortcut-menu .ftn-menu-group button:hover :is(kbd,.ftn-menu-state){color:#e7f0ff}
+.gn-shell .ftn-shortcut-menu .ftn-menu-danger{color:#f1a6a6!important}
+.gn-shell .ftn-shortcut-menu .ftn-menu-danger:hover{background:#a63c4a!important;color:#fff!important}
+.gn-shell .ftn-shortcut-menu-scrim{z-index:399}
+.gn-shell .gn-context{
+ border-radius:14px;padding:8px;border:1px solid rgba(232,242,255,.17);
+ background:rgba(27,34,47,.95);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);
+ box-shadow:0 16px 45px rgba(4,10,25,.35);
+}
+.gn-shell .gn-context button{min-height:35px;border-radius:8px;transition:background .15s}
+.gn-shell .gn-context button:hover{background:#427cb1;color:#fff}
+.gn-shell .gn-context hr{border:0;border-top:1px solid rgba(230,243,255,.15);margin:5px}
+@keyframes ftn-menu-pop{from{opacity:0;transform:translateY(-5px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:640px){.gn-shell .ftn-shortcut-menu{width:min(265px,calc(100vw - 25px))}}
+@media(prefers-reduced-motion:reduce){.gn-shell .ftn-shortcut-menu{animation:none!important}.gn-shell .ftn-menu-group button{transition:none!important}}
