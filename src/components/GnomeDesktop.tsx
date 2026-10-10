@@ -34,6 +34,17 @@ const windowCategories: Partial<Record<AppId,string>> = {
   stopwatch:'Vreme',settings:'Sistemske postavke',...studioCategories,
 }
 const applicationIds: AppId[] = ['ers','oib','odp','sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme','trash',...extraIds,...studioIds]
+
+type LauncherCategory = 'all'|'courses'|'games'|'tools'|'study'|'media'|'system'
+const launcherGroups: {id:LauncherCategory;title:string;apps:AppId[]}[] = [
+  {id:'all',title:'Sve',apps:[]},
+  {id:'courses',title:'Predmeti',apps:['ers','oib','odp']},
+  {id:'games',title:'Igre',apps:['sudoku','tetris','invaders','snake','merge']},
+  {id:'tools',title:'Alati',apps:['calculator','editor','terminal','converter','json','markdown','passwords']},
+  {id:'study',title:'Učenje',apps:['flashcards','habits','tasks','pomodoro','typing']},
+  {id:'media',title:'Kreativno',apps:['photos','colors','draw','bookmarks']},
+  {id:'system',title:'Sistem',apps:['files','notes','calendar','worldclock','stopwatch','monitor','settings','readme','trash']}
+]
 const courseIds: AppId[] = ['ers','oib','odp']
 const courseIcon: Record<CourseId, string> = { ers:'folder.svg', oib:'folder-documents.svg', odp:'folder-projects.svg' }
 const initialHashCourse = () => {
@@ -179,6 +190,7 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
   const [shortcutMenu,setShortcutMenu]=useState<{id:AppId;x:number;y:number;source:'desktop'|'dock'}|null>(null)
   const [overview,setOverview]=useState(false)
   const [search,setSearch]=useState('')
+  const [launcherCategory,setLauncherCategory]=useState<LauncherCategory>('all')
   const [panel,setPanel]=useState<Panel>(null)
   const [saved]=useState(loadPreferences)
   const [showWidgets,setShowWidgets]=useState(saved.widgets)
@@ -244,7 +256,11 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
     if(patch.brightness!==undefined)setBrightness(patch.brightness)
   }
   const dockIds=Array.from(new Set([...pins,...windows.map(w=>w.id).filter(id=>!pins.includes(id) && !courseIds.includes(id))])) as AppId[]
-  const filteredApps=applicationIds.filter(id=>short[id].toLowerCase().includes(search.toLowerCase())||names[id].toLowerCase().includes(search.toLowerCase()))
+  const filteredApps=applicationIds.filter(id=>{
+    const group=launcherGroups.find(group=>group.id===launcherCategory)
+    return (launcherCategory==='all'||Boolean(group?.apps.includes(id))) &&
+      (short[id].toLowerCase().includes(search.toLowerCase())||names[id].toLowerCase().includes(search.toLowerCase()))
+  })
   const dateString=new Intl.DateTimeFormat('sr-RS',{weekday:'short',day:'numeric',month:'short',timeZone:'Europe/Belgrade'}).format(now)
   const timeString=new Intl.DateTimeFormat('sr-RS',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Belgrade'}).format(now)
   const panelToggle=(id:Panel)=>{setPanel(current=>current===id?null:id);setContext(null)}
@@ -338,10 +354,15 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
       <button className="gn-overview-dismiss" aria-label="Zatvori pregled" onClick={()=>{setOverview(false);setSearch('')}}/>
       <button className="gn-overview-close" title="Zatvori aplikacije" aria-label="Zatvori aplikacije" onClick={()=>{setOverview(false);setSearch('')}}><Icon name="close" size={17}/></button>
       <div className="gn-overview-body">
-        <div className="gn-overview-top"><input ref={searchRef} value={search} onChange={e=>setSearch(e.target.value)} placeholder="Pretraži..." aria-label="Pretraži aplikacije"/>
+        <div className="gn-overview-top"><input ref={searchRef} value={search} onChange={e=>{setSearch(e.target.value);if(e.target.value)setLauncherCategory('all')}} placeholder="Pretraži aplikacije..." aria-label="Pretraži aplikacije"/>
           <Icon name="search" size={19}/></div>
         <div className="gn-apps-overview">
           <div className="gn-apps-overview-heading"><div><span className="gn-apps-eyebrow">FTN DESKTOP</span><h2>{search ? 'Rezultati pretrage' : 'Sve aplikacije'}</h2></div><span>{filteredApps.length} {filteredApps.length === 1 ? 'aplikacija' : 'aplikacija'}</span></div>
+          <nav className="ftn-launcher-categories" aria-label="Kategorije aplikacija">
+            {launcherGroups.map(group=><button type="button" key={group.id}
+              aria-pressed={launcherCategory===group.id} className={launcherCategory===group.id?'active':''}
+              onClick={()=>setLauncherCategory(group.id)}>{group.title}<span>{group.id==='all'?applicationIds.length:group.apps.length}</span></button>)}
+          </nav>
           <div className="gn-app-grid ftn-launcher-grid">
             {filteredApps.map((id,index)=><div className="ftn-launcher-cell" key={id}
               style={{'--gn-app-index':index} as CSSProperties}>
