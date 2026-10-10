@@ -176,3 +176,18 @@
 @media(max-width:780px){.ftn-suite-columns,.ftn-suite-kanban{grid-template-columns:1fr}.ftn-suite-cards{grid-template-columns:1fr}.ftn-suite-metrics{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:540px){.gn-shell .ftn-suite{padding:17px 11px 22px;gap:12px}.ftn-suite-panel{padding:14px}.ftn-suite-planner,.ftn-suite-matrixpair,.ftn-suite-matrixresults{grid-template-columns:1fr}.ftn-suite-metrics{grid-template-columns:1fr}.ftn-suite-inline{align-items:stretch}.ftn-suite-inline>*{flex:1}.ftn-suite .ftn-suite-tabs{width:100%}.ftn-suite .ftn-suite-tabs button{flex:1}.gn-shell .ftn-studio-page .ftn-studio-checklist{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.ftn-suite button,.ftn-studio-page input[type="checkbox"]{transition:none!important}}
+
+/* Password strength, calculator focus and compact utility finishing touches. */
+.gn-shell .ftn-password-strength{display:grid;gap:9px;margin-top:2px;margin-bottom:19px}
+.gn-shell .ftn-password-strength-label{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.gn-shell .ftn-password-strength-label span{font-size:11px;color:var(--studio-muted)}
+.gn-shell .ftn-password-strength-label strong{font-size:11px;color:var(--studio-text);font-weight:720}
+.gn-shell .ftn-password-meter{height:5px;border-radius:9px;background:var(--studio-line);overflow:hidden}
+.gn-shell .ftn-password-meter span{display:block;height:100%;border-radius:9px;transition:width .18s ease}
+.gn-shell .ftn-calc-page{outline:none}
+.gn-shell .ftn-calc-page:focus-visible .ftn-calc{outline:2px solid #8fbaf0;outline-offset:3px}
+.gn-shell .ftn-calc-keys button:focus-visible{outline:2px solid #7db0e9;outline-offset:2px}
+.gn-shell .ftn-studio-page>.ftn-studio-pane{box-shadow:0 6px 26px #07192a12}
+.gn-shell .ftn-suite-panel{box-shadow:0 5px 22px #0818290e}
+@media(max-width:660px){.gn-shell .ftn-studio-page:has(.ftn-studio-password)>.ftn-studio-pane{padding:16px}.gn-shell .ftn-password-strength-label{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){.gn-shell .ftn-password-meter span{transition:none!important}}
