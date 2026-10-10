@@ -3,7 +3,6 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 type Metric='cpu'|'gpu'|'ram'|'disk'|'network'
 type RecordSample={stamp:number;cpu:number;gpu:number;ram:number;disk:number;network:number}
 const labels:Record<Metric,string>={cpu:'Procesor',gpu:'Grafika',ram:'Memorija',disk:'Disk',network:'Mreža'}
-const units:Record<Metric,string>={cpu:'%',gpu:'%',ram:'%',disk:'%',network:'MB/s'}
 const base:RecordSample={stamp:Date.now(),cpu:32,gpu:23,ram:61,disk:42,network:9}
 const randomWalk=(v:number,step:number,min:number,max:number)=>Math.round(Math.min(max,Math.max(min,v+(Math.random()-.5)*step)))
 const meter=(metric:Metric,value:number)=>metric==='network'?value+' MB/s':value+'%'
@@ -57,7 +56,6 @@ export function SystemMonitorPro({apps,onOpen}:{apps:{id:string;name:string;mini
   },[paused])
   const current=history[history.length-1]
   const colors:Record<Metric,string>={cpu:'#3584e4',gpu:'#8c78c9',ram:'#2f9e8f',disk:'#dc9b42',network:'#5f8db8'}
-  const id=selected
   const values=useMemo(()=>history.map(x=>x[selected]),[history,selected])
   const processRows=[{id:'shell',name:'FTN Desktop Shell',minimized:false},...apps.filter(a=>a.id!=='monitor')]
   return <div className="ftn-monitor-pro">
