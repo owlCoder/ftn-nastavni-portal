@@ -139,5 +139,13 @@ export function DesktopShortcutGrid({shortcuts,label,icon,open,selected,onSelect
       onKeyDown={e=>{if(e.key==='Enter'){e.preventDefault();open(id)}}}>
       {icon(id)}<span>{label(id)}</span>
     </button>)}
+    {selected&&shortcuts.some(x=>x.id===selected)&&(()=>{
+      const slot=shortcuts.find(x=>x.id===selected)?.slot??0
+      return <button type="button" className="ftn-shortcut-actions" aria-label={'Opcije za '+label(selected)}
+        title="Opcije prečice" style={{gridColumn:slot%columns+1,gridRow:Math.floor(slot/columns)+1}}
+        onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.preventDefault();e.stopPropagation();const rect=e.currentTarget.getBoundingClientRect();onContextMenu(selected,rect.right-8,rect.top+30)}}>
+        ···
+      </button>
+    })()}
   </div>
 }
