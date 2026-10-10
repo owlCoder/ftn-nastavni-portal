@@ -5,6 +5,8 @@ export type AppIconId =
   | 'snake' | 'merge' | 'calendar' | 'monitor' | 'notes' | 'readme' | 'trash'
   | 'calculator' | 'editor' | 'terminal' | 'files' | 'tasks' | 'pomodoro' | 'converter' | 'draw' | 'stopwatch' | 'settings'
   | 'photos' | 'colors' | 'markdown' | 'json' | 'passwords' | 'flashcards' | 'habits' | 'worldclock' | 'typing' | 'bookmarks'
+  | 'diff' | 'regex' | 'base64' | 'urltools' | 'hashing' | 'csv' | 'entities' | 'timestamp' | 'uuid' | 'contrast'
+  | 'kanban' | 'expenses' | 'grades' | 'reading' | 'countdown' | 'planner' | 'decisions' | 'quiz' | 'matrix' | 'metronome'
 
 /**
  * Minimal two-tone application symbols. Shapes are the icons themselves:
@@ -136,6 +138,47 @@ function Symbol({ id }: { id: AppIconId }): ReactNode {
       return <><rect x="3" y="10" width="30" height="20" rx="4" fill="#d6d6e6" stroke="#f1f0fa" strokeWidth="1.2"/>{[0,1,2].flatMap(row=>[0,1,2,3,4].map(col=><rect key={row+'-'+col} x={7+col*4.8} y={14+row*4.2} width="3.2" height="2.4" rx=".5" fill="#8786b2"/>))}<path d="M12 26h13" stroke="#8786b2" strokeWidth="2.4" strokeLinecap="round"/></>
     case 'bookmarks':
       return <><rect x="8" y="5" width="20" height="27" rx="3" fill="#edb3ba" stroke="#ffdde4" strokeWidth="1.2"/><path d="M13 5v17l5-5 5 5V5" fill="#d76a85" stroke="#aa5475" strokeWidth="1.2" strokeLinejoin="round"/></>
+
+    case 'diff':
+      return <><rect x="3" y="5" width="30" height="26" rx="4" fill="#c0d8f0"/><path d="M18 8v20" stroke="#668bb2" strokeWidth="2"/><path d="M8 13h6m-6 6h8m5-7h7m-7 8h6" stroke="#457baf" strokeWidth="2" strokeLinecap="round"/></>
+    case 'regex':
+      return <><rect x="4" y="5" width="28" height="27" rx="6" fill="#d7c2ec"/><path d="M10 13h16M10 19h12m-12 6h16" stroke="#845bab" strokeWidth="2.4" strokeLinecap="round"/><circle cx="26" cy="25" r="2" fill="#63408e"/></>
+    case 'base64':
+      return <><rect x="5" y="8" width="26" height="21" rx="5" fill="#b7d7e6"/><path d="M14 14 9 19l5 5m8-10 5 5-5 5m-5-9-3 10" stroke="#367e9e" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></>
+    case 'urltools':
+      return <><path d="M11 12 8 15a6 6 0 0 0 8.5 8.5l4-4M25 24l3-3a6 6 0 0 0-8.5-8.5l-4 4" stroke="#86c6a9" strokeWidth="5" strokeLinecap="round"/><path d="m13 23 10-10" stroke="#4d947e" strokeWidth="2.3" strokeLinecap="round"/></>
+    case 'hashing':
+      return <><rect x="7" y="5" width="22" height="26" rx="5" fill="#b4bce9"/><path d="m13 11-2 14m10-14-2 14M10 16h16m-17 6h15" stroke="#555aa4" strokeWidth="2.6" strokeLinecap="round"/></>
+    case 'csv':
+      return <><rect x="5" y="5" width="26" height="26" rx="5" fill="#9ed5b7"/><path d="M14 6v25m9-25v25M6 14h24M6 23h24" stroke="#4d9472" strokeWidth="1.7"/><path d="m11 17 3 3 5-5" stroke="#f6fffa" strokeWidth="2" fill="none"/></>
+    case 'entities':
+      return <><rect x="4" y="6" width="28" height="25" rx="5" fill="#edb8aa"/><path d="m14 12-7 7 7 6m8-13 7 7-7 6" stroke="#bb6e5f" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></>
+    case 'timestamp':
+      return <><circle cx="18" cy="19" r="13" fill="#e7cd97" stroke="#f9eacd" strokeWidth="1.3"/><path d="M18 10v10l6 3" stroke="#a67b36" strokeWidth="2.6" strokeLinecap="round"/><rect x="14" y="3" width="8" height="4" rx="2" fill="#a67b36"/></>
+    case 'uuid':
+      return <><rect x="5" y="6" width="26" height="25" rx="5" fill="#b6d0e8"/>{[0,1,2].flatMap(r=>[0,1,2,3].map(c=><circle key={r+'-'+c} cx={11+c*4.6} cy={12+r*6} r="1.5" fill="#4779a8"/>))}</>
+    case 'contrast':
+      return <><circle cx="18" cy="18" r="13" fill="#f4e5ad" stroke="#faedcb" strokeWidth="1.1"/><path d="M18 5A13 13 0 0 1 18 31Z" fill="#394d69"/><circle cx="18" cy="18" r="4.5" fill="#9ebbd1"/></>
+    case 'kanban':
+      return <><rect x="4" y="6" width="28" height="25" rx="4" fill="#add4ef"/><path d="M13 7v24m10-24v24" stroke="#5f9bc3" strokeWidth="2"/><rect x="7" y="12" width="4" height="9" rx="1" fill="#e2f4fb"/><rect x="16" y="12" width="4" height="13" rx="1" fill="#e2f4fb"/><rect x="26" y="12" width="3" height="7" rx="1" fill="#e2f4fb"/></>
+    case 'expenses':
+      return <><circle cx="18" cy="18" r="14" fill="#efd6a0" stroke="#fff1c9" strokeWidth="1.1"/><path d="M23 11h-7a4 4 0 0 0 0 8h4a4 4 0 0 1 0 8h-8m6-20v22" stroke="#b48a3d" strokeWidth="2.5" strokeLinecap="round"/></>
+    case 'grades':
+      return <><rect x="6" y="5" width="24" height="26" rx="5" fill="#c5b9ed"/><path d="m11 21 4 4 11-13" stroke="#7155b9" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/><path d="M10 10h6" stroke="#8f7bc4" strokeWidth="2"/></>
+    case 'reading':
+      return <><path d="M18 10C10 5 6 7 4 9v20c6-3 10-3 14 1 4-4 8-4 14-1V9c-6-3-10-3-14 1Z" fill="#f4c2a9" stroke="#fff0dd" strokeWidth="1.2"/><path d="M18 10v20m-9-15h5m8 0h5" stroke="#c98363" strokeWidth="2" strokeLinecap="round"/></>
+    case 'countdown':
+      return <><circle cx="18" cy="20" r="12" fill="#b5d7ef" stroke="#e9f6ff" strokeWidth="1.1"/><path d="M18 20v-8m0 8 5 4M14 3h8" stroke="#5386ba" strokeWidth="2.5" strokeLinecap="round"/></>
+    case 'planner':
+      return <><rect x="5" y="7" width="26" height="24" rx="4" fill="#a8d6c7"/><path d="M11 5v5m14-5v5M6 14h24m-19 6h5m3 0h6m-14 5h13" stroke="#458e79" strokeWidth="2.4" strokeLinecap="round"/></>
+    case 'decisions':
+      return <><circle cx="18" cy="18" r="13" fill="#e3bbe0"/><path d="M13 13c0-3 2-5 5-5 7 0 7 7 0 9v3" stroke="#9d64a4" strokeWidth="3" strokeLinecap="round"/><circle cx="18" cy="26" r="1.9" fill="#9d64a4"/></>
+    case 'quiz':
+      return <><rect x="5" y="6" width="26" height="25" rx="5" fill="#d3b9f4"/><path d="M11 14h14m-14 7h14" stroke="#8e6ac1" strokeWidth="2"/><circle cx="12" cy="26" r="2" fill="#8e6ac1"/><path d="m19 25 2 2 4-5" stroke="#8e6ac1" strokeWidth="2" strokeLinecap="round"/></>
+    case 'matrix':
+      return <><rect x="5" y="5" width="26" height="26" rx="4" fill="#c5d1e8"/><path d="M15 8v20M7 17h22" stroke="#6e8bb5" strokeWidth="2.2"/>{[11,22].flatMap(x=>[12,24].map(y=><circle key={x+'-'+y} cx={x} cy={y} r="2" fill="#486b9e"/>))}</>
+    case 'metronome':
+      return <><path d="M12 6h12l8 26H4Z" fill="#e1c8a0" stroke="#f6e9ce" strokeWidth="1.2"/><path d="M18 9v17m0-17 7 7" stroke="#9a704a" strokeWidth="2.5" strokeLinecap="round"/><circle cx="18" cy="25" r="3" fill="#9a704a"/></>
     case 'trash':
       return <>
         <path d="M10 10h16l-2 21H12Z" fill="#d9e1e9" stroke="#eff3f8" strokeWidth="1.4" strokeLinejoin="round"/>
