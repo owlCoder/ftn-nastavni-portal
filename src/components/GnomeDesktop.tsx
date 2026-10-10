@@ -7,6 +7,8 @@ import { CalendarApp } from './DesktopUtilities'
 import { SystemMonitorPro } from './SystemMonitorPro'
 import { UtilityApp, type UtilityId } from './WorkspaceApps'
 import { StudioApp, studioIds, studioNames, studioCategories, type StudioAppId } from './StudioApps'
+import { DevApp, devIds, devNames, type DevId } from './DeveloperApps'
+import { LifeApp, lifeIds, lifeNames, type LifeId } from './LifeApps'
 import { Snake, Merge2048 } from './ExtraGames'
 import { loadPreferences, savePreferences, WALLPAPERS, type DesktopPreferences } from './DesktopSettings'
 import { DockAppIcon } from './DesktopAppIcons'
@@ -16,33 +18,35 @@ import { courses } from '../courses'
 import { assetUrl } from '../lib/assets'
 import type { CourseId } from '../courses/types'
 
-type AppId = CourseId | GameId | 'snake' | 'merge' | 'notes' | 'readme' | 'trash' | 'calendar' | 'monitor' | UtilityId | StudioAppId
+type AppId = CourseId | GameId | 'snake' | 'merge' | 'notes' | 'readme' | 'trash' | 'calendar' | 'monitor' | UtilityId | StudioAppId | DevId | LifeId
 const extraIds: UtilityId[] = ['calculator','editor','terminal','files','tasks','pomodoro','converter','draw','stopwatch','settings']
 const extraNames: Record<UtilityId,string> = {calculator:'Kalkulator',editor:'Tekst editor',terminal:'Terminal',files:'Fajlovi',tasks:'Zadaci',pomodoro:'Pomodoro',converter:'Konverter',draw:'Crtanje',stopwatch:'Štoperica',settings:'Podešavanja'}
 type WindowData = { id: AppId; x: number; y: number; z: number; minimized: boolean; maximized: boolean }
 type Panel = 'calendar' | 'quick' | null
 const names: Record<AppId, string> = {
   ers: 'Elementi razvoja softvera', oib: 'Osnove informacione bezbednosti', odp: 'Osnove distribuiranog programiranja',
-  sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor', ...extraNames, ...studioNames,
+  sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor', ...extraNames, ...studioNames, ...devNames, ...lifeNames,
 }
-const short: Record<AppId, string> = { ers: 'ERS', oib: 'OIB', odp: 'ODP', sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor', ...extraNames, ...studioNames }
+const short: Record<AppId, string> = { ers: 'ERS', oib: 'OIB', odp: 'ODP', sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor', ...extraNames, ...studioNames, ...devNames, ...lifeNames }
 const windowCategories: Partial<Record<AppId,string>> = {
   notes:'Dokumenti',readme:'Informacije o sistemu',trash:'Fajlovi',
   calendar:'Organizacija',monitor:'Performanse',
   calculator:'Alati',editor:'Dokumenti',terminal:'FTN Shell',files:'Fajlovi',
   tasks:'Organizacija',pomodoro:'Fokus',converter:'Alati',draw:'Kreativno',
   stopwatch:'Vreme',settings:'Sistemske postavke',...studioCategories,
+  ...Object.fromEntries(devIds.map(id=>[id,'Razvoj'])), ...Object.fromEntries(lifeIds.map(id=>[id,'Alati i učenje'])),
 }
-const applicationIds: AppId[] = ['ers','oib','odp','sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme','trash',...extraIds,...studioIds]
+const applicationIds: AppId[] = ['ers','oib','odp','sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme','trash',...extraIds,...studioIds,...devIds,...lifeIds]
 
-type LauncherCategory = 'all'|'courses'|'games'|'tools'|'study'|'media'|'system'
+type LauncherCategory = 'all'|'courses'|'games'|'tools'|'study'|'media'|'developer'|'system'
 const launcherGroups: {id:LauncherCategory;title:string;apps:AppId[]}[] = [
   {id:'all',title:'Sve',apps:[]},
   {id:'courses',title:'Predmeti',apps:['ers','oib','odp']},
   {id:'games',title:'Igre',apps:['sudoku','tetris','invaders','snake','merge']},
-  {id:'tools',title:'Alati',apps:['calculator','editor','terminal','converter','json','markdown','passwords']},
-  {id:'study',title:'Učenje',apps:['flashcards','habits','tasks','pomodoro','typing']},
+  {id:'tools',title:'Alati',apps:['calculator','editor','terminal','converter','json','markdown','passwords','contrast','matrix','metronome','decisions']},
+  {id:'study',title:'Učenje',apps:['flashcards','habits','tasks','pomodoro','typing','kanban','expenses','grades','reading','countdown','planner','quiz']},
   {id:'media',title:'Kreativno',apps:['photos','colors','draw','bookmarks']},
+  {id:'developer',title:'Razvoj',apps:['diff','regex','base64','urltools','hashing','csv','entities','timestamp','uuid']},
   {id:'system',title:'Sistem',apps:['files','notes','calendar','worldclock','stopwatch','monitor','settings','readme','trash']}
 ]
 const courseIds: AppId[] = ['ers','oib','odp']
@@ -158,6 +162,8 @@ function WindowFrame({ windowData: w, isFocused, gamesActive, now, otherWindows,
         w.id==='monitor'?<SystemMonitorPro apps={otherWindows.map(item=>({id:item.id,name:names[item.id],minimized:item.minimized}))} onOpen={id=>onOpenApp(id as AppId)}/> :
         extraIds.includes(w.id as UtilityId)?<UtilityApp id={w.id as UtilityId} onOpen={id=>onOpenApp(id)} preferences={preferences} onSettingsChange={onSettingsChange}/> :
         studioIds.includes(w.id as StudioAppId)?<StudioApp id={w.id as StudioAppId}/> :
+        devIds.includes(w.id as DevId)?<DevApp id={w.id as DevId}/> :
+        lifeIds.includes(w.id as LifeId)?<LifeApp id={w.id as LifeId}/> :
         w.id==='notes'?<Notes/> : w.id==='readme'?<SystemAbout/>:<Trash/>}
     </div>
   </section>
