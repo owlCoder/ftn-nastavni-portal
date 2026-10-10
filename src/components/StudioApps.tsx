@@ -128,6 +128,9 @@ function Passwords(){
   const chars=(Object.keys(ALPHABETS) as (keyof typeof ALPHABETS)[]).filter(k=>options[k]).map(k=>ALPHABETS[k]).join('')
   const [password,setPassword]=useState(()=>secureString(20,Object.values(ALPHABETS).join('')))
   const [message,setMessage]=useState('')
+  const entropy=Math.round(length*Math.log2(Math.max(1,chars.length)))
+  const strength=entropy>=100?'Veoma jaka':entropy>=70?'Jaka':entropy>=45?'Solidna':'Slaba'
+  const strengthWidth=Math.min(100,Math.round(entropy/110*100))
   useEffect(()=>{setPassword(secureString(length,chars))},[length,chars])
   return <div className="ftn-studio-page"><Title tag="PRIVATNOST" name="Generator lozinki" subtitle="Kriptografski nasumične lozinke koje ostaju na uređaju."/>
     <Pane title="Nova lozinka"><div className="ftn-studio-password"><output aria-label="Generisana lozinka">{password}</output><button aria-label="Kopiraj lozinku" title="Kopiraj" onClick={()=>void copy(password,setMessage)}>⧉</button></div>
@@ -137,6 +140,10 @@ function Passwords(){
       onChange={e=>setLength(Number(e.target.value))}/>
       <div className="ftn-studio-checklist">{([['lower','Mala slova'],['upper','Velika slova'],['numbers','Brojevi'],['symbols','Simboli']] as const).map(([id,label])=>
         <label key={id}><input type="checkbox" checked={options[id]} onChange={e=>{if(!e.target.checked&&Object.entries(options).filter(([key,on])=>key!==id&&on).length===0)return;setOptions(prev=>({...prev,[id]:e.target.checked}))}}/>{label}</label>)}</div>
+      <div className="ftn-password-strength" aria-label={'Procena jačine lozinke: '+strength}>
+        <div className="ftn-password-strength-label"><span>Procena jačine</span><strong>{strength} · ~{entropy} bita</strong></div>
+        <div className="ftn-password-meter"><span style={{width:strengthWidth+'%',background:entropy>=70?'#43ad87':entropy>=45?'#e5ad59':'#d76b74'}}/></div>
+      </div>
       <div className="ftn-studio-toolbar"><button className="ftn-studio-primary" onClick={()=>setPassword(secureString(length,chars))}>↻ Generiši</button><button onClick={()=>void copy(password,setMessage)}>Kopiraj</button></div>
       {message&&<p role="status" className="ftn-studio-help">{message}</p>}
       <p className="ftn-studio-help">Lozinke se ne čuvaju u localStorage. Koristi se browser Crypto API.</p>
