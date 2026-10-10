@@ -14,6 +14,12 @@ Icons within `public/gnome-icons/` are GNOME Project assets, covered by their up
 
 The FTN desktop interface is inspired by GNOME/Adwaita design principles but is not an official GNOME product.
 
+## Remote wallpaper photographs
+
+Some optional desktop wallpapers use landscape photographs served from [Unsplash](https://unsplash.com/) through `images.unsplash.com`. Images are requested directly from Unsplash at runtime, and are not copied into the application's source repository or redistributed as MIT-licensed assets. Image licensing and conditions follow the [Unsplash License](https://unsplash.com/license). Using a remote image does not imply affiliation with Unsplash or the photographers.
+
+Gradient-only wallpapers remain available for offline use.
+
 ## Logos and trademarks
 
 AMD and NVIDIA SVG marks are sourced from [Simple Icons](https://github.com/simple-icons/simple-icons), whose icon data is released under CC0. Trademark rights remain with the trademark owners. University and faculty marks remain the property of their respective owners. Their appearance does not imply sponsorship or endorsement.
