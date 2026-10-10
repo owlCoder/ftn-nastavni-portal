@@ -21,6 +21,7 @@ import './styles/ers-explorer.css'
 import './styles/desktop-workspace-polish.css'
 import './styles/course-viewers.css'
 import './styles/workspace-apps.css'
+import './styles/lockscreen-workspace.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
