@@ -25,6 +25,8 @@ import './styles/lockscreen-workspace.css'
 import './styles/preferences-app-polish.css'
 import './styles/gnome-window-themes.css'
 import './styles/studio-apps.css'
+import './styles/app-suite-polish.css'
+import './styles/context-actions.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
