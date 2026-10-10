@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
+import { AuthBackdrop } from './LockScreen'
 
 export const SESSION_KEY = 'ftn-os-session-v1'
 export type DesktopPreferences = {
@@ -44,47 +45,53 @@ export function savePreferences(preferences: DesktopPreferences) {
   try { localStorage.setItem(PREFERENCES_KEY,JSON.stringify(preferences)) } catch { /* Storage blocked by browser */ }
 }
 
-export function LoginScreen({ onLogin }: { onLogin: () => void }) {
-  const [username,setUsername] = useState('student')
-  const [password,setPassword] = useState('')
-  const [error,setError] = useState('')
-  const [busy,setBusy] = useState(false)
-  const [now,setNow] = useState(()=>new Date())
+export function LoginScreen({onLogin,onBack}:{onLogin:()=>void;onBack:()=>void}){
+  const [username,setUsername]=useState('student')
+  const [password,setPassword]=useState('')
+  const [error,setError]=useState('')
+  const [busy,setBusy]=useState(false)
   useEffect(()=>{
-    document.title='Prijava | Nastavni portal'
-    const timer=window.setInterval(()=>setNow(new Date()),1000)
-    return()=>window.clearInterval(timer)
-  },[])
-  const submit = (event:FormEvent) => {
+    document.title='Prijava · FTN OS'
+    const key=(event:KeyboardEvent)=>{
+      if(event.key==='Escape'){event.preventDefault();onBack()}
+    }
+    window.addEventListener('keydown',key)
+    return()=>window.removeEventListener('keydown',key)
+  },[onBack])
+  const submit=(event:FormEvent)=>{
     event.preventDefault()
     if(busy)return
-    if(username.trim()==='student' && password==='ftn'){
+    if(username.trim()==='student'&&password==='ftn'){
       setBusy(true)
-      try { localStorage.setItem(SESSION_KEY,'student') } catch { /* memory session still works */ }
+      try{localStorage.setItem(SESSION_KEY,'student')}catch{/* local-only demo */}
       onLogin()
-    } else {
-      setError('Pogrešno korisničko ime ili lozinka.')
+    }else{
+      setError('Korisničko ime ili lozinka nisu ispravni.')
       setPassword('')
     }
   }
-  const clock=new Intl.DateTimeFormat('sr-RS',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Belgrade'}).format(now)
-  const date=new Intl.DateTimeFormat('sr-RS',{weekday:'long',day:'numeric',month:'long',timeZone:'Europe/Belgrade'}).format(now)
-  return <main className="gn-login gn-greeter">
-    <div className="gn-login-glow" aria-hidden="true"/>
-    <div className="gn-login-clock"><span>Nastavni portal</span><span>FTN · Univerzitet u Novom Sadu</span></div>
-    <form className="gn-login-card" onSubmit={submit}>
-      <div className="gn-login-time"><time>{clock}</time><span>{date}</span></div>
-      <div className="gn-login-avatar" aria-hidden="true">
-        <svg width="47" height="47" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="16" r="9" fill="currentColor"/><path d="M8 43c0-12 6-18 16-18s16 6 16 18" fill="currentColor"/></svg>
-      </div>
-      <h1>student</h1><p>Prijavi se na nastavni portal</p>
-      <label htmlFor="gn-login-user">Korisničko ime</label>
-      <input id="gn-login-user" autoComplete="username" spellCheck={false} value={username} onChange={e=>{setUsername(e.target.value);setError('')}} placeholder="student" required />
-      <label htmlFor="gn-login-pass">Lozinka</label>
-      <input id="gn-login-pass" type="password" autoComplete="current-password" value={password} onChange={e=>{setPassword(e.target.value);setError('')}} placeholder="Lozinka" required autoFocus />
-      {error && <div className="gn-login-error" role="alert">{error}</div>}
-      <button type="submit" className="gn-login-submit" disabled={busy}>Prijavi se <span>→</span></button>
-      <small>Lokalna prijava za pristup nastavnom portalu.</small>
-    </form>
+  return <main className="ftn-auth-login">
+    <AuthBackdrop soft/>
+    <header className="ftn-auth-login-top"><span className="ftn-auth-wordmark">◈ &nbsp; FTN OS</span>
+      <span>Nastavni portal · Fakultet tehničkih nauka</span></header>
+    <div className="ftn-auth-login-layout">
+      <form className="ftn-auth-panel" onSubmit={submit}>
+        <button type="button" className="ftn-auth-back" onClick={onBack} title="Nazad na zaključani ekran">← <span>Nazad</span></button>
+        <div className="ftn-auth-user-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" width="38" height="38" fill="none"><circle cx="24" cy="17" r="8" fill="currentColor"/><path d="M10 42c0-10 5-16 14-16s14 6 14 16" fill="currentColor"/></svg>
+        </div>
+        <h1>Dobro došao nazad</h1>
+        <p>Prijavi se na svoju radnu površinu.</p>
+        <label htmlFor="ftn-login-name">Korisničko ime</label>
+        <input id="ftn-login-name" autoComplete="username" spellCheck={false}
+          value={username} onChange={e=>{setUsername(e.target.value);setError('')}} required/>
+        <label htmlFor="ftn-login-password">Lozinka</label>
+        <input id="ftn-login-password" autoFocus autoComplete="current-password" type="password"
+          value={password} onChange={e=>{setPassword(e.target.value);setError('')}} placeholder="Unesi lozinku" required/>
+        {error&&<div className="ftn-auth-error" role="alert">{error}</div>}
+        <button type="submit" className="ftn-auth-submit" disabled={busy}>{busy?'Otvaranje desktopa…':'Prijavi se'}<span aria-hidden="true">→</span></button>
+        <div className="ftn-auth-footnote">Lokalna demonstraciona prijava · Podaci ostaju na ovom uređaju</div>
+      </form>
+    </div>
   </main>
 }
