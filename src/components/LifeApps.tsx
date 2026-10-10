@@ -119,7 +119,9 @@ function Metronome(){
  },[bpm,running])
  useEffect(()=>()=>{void ctx.current?.close()},[])
  const toggle=()=>{if(!running){if(!ctx.current)ctx.current=new AudioContext();void ctx.current.resume()}setRunning(!running)}
- return <DevPage category="MUZIKA / VEŽBA" title="Metronom" description="Ravnomeran ritam pomoću Web Audio API-ja."><DevPanel><div className="ftn-suite-metronome"><span>Tempo</span><strong>{bpm} <small>BPM</small></strong><input type="range" min="40" max="220" value={bpm} onChange={e=>setBpm(Number(e.target.value))}/><div className="ftn-suite-inline"><button onClick={()=>setBpm(b=>Math.max(40,b-5))}>−5</button><button onClick={()=>setBpm(b=>Math.min(220,b+5))}>+5</button><button className="ftn-suite-primary" onClick={toggle}>{running?'Pauziraj':'Pokreni'}</button></div><p>{beats} otkucaja u ovoj sesiji</p></div><p className="ftn-suite-note">Zvuk radi nakon korisničkog klika. Nije profesionalni audio sekvencer.</p></DevPanel></DevPage>
+ return <DevPage category="MUZIKA / VEŽBA" title="Metronom" description="Ravnomeran ritam pomoću Web Audio API-ja."><DevPanel><div className="ftn-suite-metronome"><span>Tempo</span><strong>{bpm} <small>BPM</small></strong><input type="range" min="40" max="220" value={bpm}
+        aria-label="Tempo metronoma" style={{'--ftn-fill':((bpm-40)/180*100)+'%'} as React.CSSProperties}
+        onChange={e=>setBpm(Number(e.target.value))}/><div className="ftn-suite-inline"><button onClick={()=>setBpm(b=>Math.max(40,b-5))}>−5</button><button onClick={()=>setBpm(b=>Math.min(220,b+5))}>+5</button><button className="ftn-suite-primary" onClick={toggle}>{running?'Pauziraj':'Pokreni'}</button></div><p>{beats} otkucaja u ovoj sesiji</p></div><p className="ftn-suite-note">Zvuk radi nakon korisničkog klika. Nije profesionalni audio sekvencer.</p></DevPanel></DevPage>
 }
 export function LifeApp({id}:{id:LifeId}){
  switch(id){
