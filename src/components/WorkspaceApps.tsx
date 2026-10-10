@@ -57,11 +57,20 @@ export function CalculatorApp(){
     if(value==='='){try{const n=calculate(expr);setResult(String(n));setExpr(String(n))}catch(e){setResult(e instanceof Error?e.message:'Greška')}return}
     setExpr(s=>s+value)
   }
-  return <div className="ftn-tool-page"><Header eyebrow="ALATI" title="Kalkulator" description="Osnovne operacije, zagrade i procenti."/>
+  const keyboard=(event:React.KeyboardEvent<HTMLDivElement>)=>{
+    if(event.altKey||event.ctrlKey||event.metaKey)return
+    const key=event.key
+    if(key==='Enter'||key==='='){event.preventDefault();action('=')}
+    else if(key==='Escape'){event.preventDefault();action('AC')}
+    else if(key==='Backspace'){event.preventDefault();action('⌫')}
+    else if('0123456789.+-*/%()'.includes(key)&&key.length===1){event.preventDefault();action(key)}
+  }
+  return <div className="ftn-tool-page ftn-calc-page" tabIndex={0} onKeyDown={keyboard} aria-label="Kalkulator; koristi brojeve, operatore, Enter, Escape i Backspace">
+    <Header eyebrow="ALATI" title="Kalkulator" description="Osnovne operacije, zagrade i računanje tastaturom."/>
     <Card className="ftn-calc"><div className="ftn-calc-badge">STANDARDNI REŽIM</div><div className="ftn-calc-display"><span>{expr||'0'}</span><strong>{result}</strong></div>
       <div className="ftn-calc-keys">{['AC','(',')','⌫','7','8','9','/','4','5','6','*','1','2','3','-','0','.','%','+','='].map(key=>
         <button key={key} className={key==='='?'ftn-emphasis':''} onClick={()=>action(key)}>{key==='*'?'×':key==='/'?'÷':key}</button>)}</div>
-      <p className="ftn-tool-hint">Proračun je lokalni i ne izvršava JavaScript kod.</p>
+      <p className="ftn-tool-hint">Enter za rezultat · Esc za brisanje · Backspace za brisanje cifre. Proračun se izvršava lokalno.</p>
     </Card>
   </div>
 }
