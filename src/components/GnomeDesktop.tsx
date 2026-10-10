@@ -9,6 +9,7 @@ import { UtilityApp, type UtilityId } from './WorkspaceApps'
 import { Snake, Merge2048 } from './ExtraGames'
 import { loadPreferences, savePreferences, WALLPAPERS, type DesktopPreferences } from './DesktopSettings'
 import { DockAppIcon } from './DesktopAppIcons'
+import { DesktopShortcutGrid, useDesktopConfiguration } from './DesktopWorkspace'
 import { Sudoku, Tetris, SpaceInvaders, type GameId } from './DesktopGames'
 import { courses } from '../courses'
 import { assetUrl } from '../lib/assets'
@@ -26,8 +27,6 @@ const names: Record<AppId, string> = {
 const short: Record<AppId, string> = { ers: 'ERS', oib: 'OIB', odp: 'ODP', sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor', ...extraNames }
 const applicationIds: AppId[] = ['ers','oib','odp','sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme','trash',...extraIds]
 const courseIds: AppId[] = ['ers','oib','odp']
-const utilityIds: AppId[] = ['sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme',...extraIds,'trash']
-const dashIds: AppId[] = ['files','calculator','editor','tasks','sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme']
 const courseIcon: Record<CourseId, string> = { ers:'folder.svg', oib:'folder-documents.svg', odp:'folder-projects.svg' }
 const initialHashCourse = () => {
   const match = location.hash.match(/^#(ers|oib|odp)(?:\/|$)/)
@@ -167,6 +166,8 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
     return course?[{id:course,x:140,y:88,z:3,minimized:false,maximized:false}]:[]
   })
   const [selected,setSelected]=useState<AppId|null>(null)
+  const {shortcuts,pins,hasShortcut,addShortcut,removeShortcut,moveShortcut,pin,unpin}=useDesktopConfiguration(applicationIds)
+  const [shortcutMenu,setShortcutMenu]=useState<{id:AppId;x:number;y:number;source:'desktop'|'dock'}|null>(null)
   const [overview,setOverview]=useState(false)
   const [search,setSearch]=useState('')
   const [panel,setPanel]=useState<Panel>(null)
@@ -196,7 +197,7 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
     setWindows(current=>current.some(w=>w.id===id)?
       current.map(w=>w.id===id?{...w,minimized:false,z}:w):
       [...current,{id,x:125+(current.length%5)*43,y:85+(current.length%5)*27,z,minimized:false,maximized:false}])
-    setOverview(false);setSearch('');setPanel(null);setContext(null)
+    setOverview(false);setSearch('');setPanel(null);setContext(null);setShortcutMenu(null)
   },[])
   useEffect(()=>{
     const onHash=()=>{const course=initialHashCourse();if(course)open(course)}
@@ -214,7 +215,7 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
       if(target instanceof HTMLElement && (target.matches('input,textarea')||target.isContentEditable))return
       if(event.key==='Meta'||(event.ctrlKey&&event.code==='Space')){
         if(event.ctrlKey)event.preventDefault()
-        setOverview(v=>!v);setPanel(null);setContext(null)
+        setOverview(v=>!v);setPanel(null);setContext(null);setShortcutMenu(null)
       }
     }
     window.addEventListener('keydown',onKey)
@@ -233,6 +234,7 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
     if(patch.nightLight!==undefined)setNightLight(patch.nightLight)
     if(patch.brightness!==undefined)setBrightness(patch.brightness)
   }
+  const dockIds=Array.from(new Set([...pins,...windows.map(w=>w.id).filter(id=>!pins.includes(id) && !courseIds.includes(id))])) as AppId[]
   const filteredApps=applicationIds.filter(id=>short[id].toLowerCase().includes(search.toLowerCase())||names[id].toLowerCase().includes(search.toLowerCase()))
   const dateString=new Intl.DateTimeFormat('sr-RS',{weekday:'short',day:'numeric',month:'short',timeZone:'Europe/Belgrade'}).format(now)
   const timeString=new Intl.DateTimeFormat('sr-RS',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Belgrade'}).format(now)
@@ -253,36 +255,17 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
       </button>
     </header>
 
-    <main className="gn-desktop" onClick={()=>{setSelected(null);setContext(null);setPanel(null)}} onContextMenu={e=>{
+    <main className="gn-desktop" onClick={()=>{setSelected(null);setContext(null);setShortcutMenu(null);setPanel(null)}} onContextMenu={e=>{
       if(e.target instanceof Element&&e.target.closest('button,.os-widgets'))return
       e.preventDefault();setContext({x:e.clientX,y:e.clientY})
     }}>
       {showWidgets && <div className="gn-widget-rail" onClick={e=>e.stopPropagation()}><DesktopWidgets now={now}/></div>}
-      <div className="gn-desktop-items">
-        <section className="gn-shortcut-group gn-course-group" aria-label="Predmeti">
-          <div className="gn-shortcut-heading"><span>PREDMETI</span><i/></div>
-          <div className="gn-shortcut-grid gn-shortcut-courses">
-            {courseIds.map(id=><button key={id} className={'gn-desktop-item'+(selected===id?' gn-item-selected':'')}
-              onClick={e=>{e.stopPropagation();setSelected(id)}} onDoubleClick={e=>{e.stopPropagation();open(id)}}
-              onPointerUp={e=>{if(e.pointerType==='touch')open(id)}}
-              onKeyDown={e=>{if(e.key==='Enter'){e.preventDefault();open(id)}}}
-              aria-label={short[id]+', dvoklik za otvaranje'} title={names[id]}>
-              <AppArtwork id={id} folder/><span>{short[id]}</span>
-            </button>)}
-          </div>
-        </section>
-        <section className="gn-shortcut-group gn-app-group" aria-label="Aplikacije">
-          <div className="gn-shortcut-heading"><span>APLIKACIJE</span><i/></div>
-          <div className="gn-shortcut-grid gn-shortcut-apps">
-            {utilityIds.map(id=><button key={id} className={'gn-desktop-item'+(selected===id?' gn-item-selected':'')}
-              onClick={e=>{e.stopPropagation();setSelected(id)}} onDoubleClick={e=>{e.stopPropagation();open(id)}}
-              onPointerUp={e=>{if(e.pointerType==='touch')open(id)}}
-              onKeyDown={e=>{if(e.key==='Enter'){e.preventDefault();open(id)}}}
-              aria-label={short[id]+', dvoklik za otvaranje'} title={names[id]}>
-              <AppArtwork id={id} folder/><span>{short[id]}</span>
-            </button>)}
-          </div>
-        </section>
+      <div className="gn-desktop-items ftn-shortcut-area" onClick={e=>e.stopPropagation()}>
+        <div className="ftn-desktop-grid-heading">RADNA POVRŠINA <span>Prevuci ikonicu da je pomeriš</span></div>
+        <DesktopShortcutGrid shortcuts={shortcuts} label={id=>short[id as AppId]}
+          icon={id=><AppArtwork id={id as AppId} folder={courseIds.includes(id as AppId)}/>}
+          open={id=>open(id as AppId)} selected={selected} onSelect={id=>setSelected(id as AppId)}
+          onMove={moveShortcut} onContextMenu={(id,x,y)=>{setShortcutMenu({id:id as AppId,x,y,source:'desktop'});setContext(null)}}/>
       </div>
     </main>
 
@@ -326,6 +309,21 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
       </div>
     </>}
 
+    {shortcutMenu && <><button className="ftn-shortcut-menu-scrim" onClick={()=>setShortcutMenu(null)} aria-label="Zatvori meni prečice"/>
+      <div className="ftn-shortcut-menu" role="menu" style={{left:Math.max(10,Math.min(shortcutMenu.x,window.innerWidth-238)),top:Math.max(42,Math.min(shortcutMenu.y,window.innerHeight-190))}}>
+        <strong>{short[shortcutMenu.id]}</strong>
+        <button onClick={()=>{open(shortcutMenu.id);setShortcutMenu(null)}}>Otvori</button>
+        {shortcutMenu.source==='desktop'&&!courseIds.includes(shortcutMenu.id)&&
+          <button onClick={()=>{removeShortcut(shortcutMenu.id);setShortcutMenu(null)}}>Ukloni prečicu sa desktopa</button>}
+        {shortcutMenu.source==='dock'&&!courseIds.includes(shortcutMenu.id)&&
+          <button onClick={()=>{unpin(shortcutMenu.id);setShortcutMenu(null)}}>Ukloni iz docka</button>}
+        {shortcutMenu.source==='desktop'&&!courseIds.includes(shortcutMenu.id)&&
+          <button onClick={()=>{pins.includes(shortcutMenu.id)?unpin(shortcutMenu.id):pin(shortcutMenu.id);setShortcutMenu(null)}}>
+            {pins.includes(shortcutMenu.id)?'Ukloni iz docka':'Pinuj u dock'}
+          </button>}
+        {shortcutMenu.source==='dock'&&!hasShortcut(shortcutMenu.id)&&
+          <button onClick={()=>{addShortcut(shortcutMenu.id);setShortcutMenu(null)}}>Dodaj na desktop</button>}
+      </div></>}
     {overview && <><button className="gn-drawer-scrim" aria-label="Zatvori pregled aplikacija" onClick={()=>{setOverview(false);setSearch('')}}/>
       <div className="gn-overview">
       <button className="gn-overview-dismiss" aria-label="Zatvori pregled" onClick={()=>{setOverview(false);setSearch('')}}/>
@@ -335,12 +333,19 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
           <Icon name="search" size={19}/></div>
         <div className="gn-apps-overview">
           <div className="gn-apps-overview-heading"><div><span className="gn-apps-eyebrow">FTN DESKTOP</span><h2>{search ? 'Rezultati pretrage' : 'Sve aplikacije'}</h2></div><span>{filteredApps.length} {filteredApps.length === 1 ? 'aplikacija' : 'aplikacija'}</span></div>
-          <div className="gn-app-grid">
-            {filteredApps.map((id,index)=><button key={id} onClick={()=>open(id)}
-              style={{ '--gn-app-index': index } as CSSProperties} title={names[id]}>
-              <AppArtwork id={id}/>
-              <span>{short[id]}</span>
-            </button>)}
+          <div className="gn-app-grid ftn-launcher-grid">
+            {filteredApps.map((id,index)=><div className="ftn-launcher-cell" key={id}
+              style={{'--gn-app-index':index} as CSSProperties}>
+              <button className="ftn-launcher-open" onClick={()=>open(id)} title={'Otvori '+names[id]}>
+                <AppArtwork id={id}/><span>{short[id]}</span>
+              </button>
+              <div className="ftn-launcher-actions">
+                <button type="button" disabled={hasShortcut(id)} onClick={()=>addShortcut(id)}
+                  title={hasShortcut(id)?'Već je na desktopu':'Dodaj na desktop'}>{hasShortcut(id)?'✓ Desktop':'+ Desktop'}</button>
+                {!courseIds.includes(id)&&<button type="button" onClick={()=>pins.includes(id)?unpin(id):pin(id)} title={pins.includes(id)?'Ukloni iz docka':'Pinuj u dock'}>
+                  {pins.includes(id)?'− Dock':'+ Dock'}</button>}
+              </div>
+            </div>)}
           </div>
           {!filteredApps.length && <div className="gn-no-app-results"><Icon name="search" size={30}/><strong>Nema rezultata</strong><span>Probaj drugi naziv predmeta ili aplikacije.</span></div>}
         </div>
@@ -349,12 +354,13 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
     <nav className="gn-bottom-dock" aria-label="Traka aplikacija">
       <button className={'gn-dock-apps'+(overview?' gn-dock-current':'')} title="Sve aplikacije" aria-label="Sve aplikacije" onClick={()=>{setSearch('');setOverview(v=>!v);setPanel(null)}}><Icon name="grid" size={25}/></button>
       <span className="gn-bottom-separator"/>
-      {[...dashIds,...windows.map(w=>w.id).filter(id=>!dashIds.includes(id) && !courseIds.includes(id) && id!=='trash')].filter((id,index,list)=>list.indexOf(id)===index).map(id=><button key={id} className={'gn-dock-icon'+(activeWindow?.id===id?' gn-dock-current':'')} title={names[id]} aria-label={names[id]}
-        onClick={()=>{const w=windows.find(item=>item.id===id);if(w && !w.minimized && activeWindow?.id===id && !overview)minimize(id);else open(id)}}>
+      {dockIds.map(id=><button key={id} className={'gn-dock-icon'+(activeWindow?.id===id?' gn-dock-current':'')}
+        title={names[id]+(pins.includes(id)?' · pinovano':' · otvoreno')} aria-label={names[id]}
+        onContextMenu={e=>{e.preventDefault();setShortcutMenu({id,x:e.clientX,y:e.clientY,source:'dock'});setPanel(null)}}
+        onClick={()=>{const w=windows.find(item=>item.id===id);if(w&&!w.minimized&&activeWindow?.id===id&&!overview)minimize(id);else open(id)}}>
         <AppArtwork id={id}/>{windows.some(w=>w.id===id)&&<i className="gn-running-dot"/>}
+        {pins.includes(id)&&<i className="ftn-pinned-mark"/>}
       </button>)}
-      <span className="gn-bottom-separator"/>
-      <button className="gn-dock-icon" title="Korpa" aria-label="Korpa" onClick={()=>open('trash')}><AppArtwork id="trash"/></button>
     </nav>
   </div>
 }
