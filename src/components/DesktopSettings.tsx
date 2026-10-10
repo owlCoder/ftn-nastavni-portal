@@ -26,7 +26,24 @@ export const WALLPAPERS: Wallpaper[] = [
   { name: 'Ocean', detail: 'Plavi horizont', background: 'radial-gradient(ellipse at 8% 95%,#51afb7 0%,transparent 62%),radial-gradient(ellipse at 88% 8%,#3a81b8 0%,transparent 64%),linear-gradient(135deg,#073e5c,#236484 52%,#082d53)' },
   { name: 'Lavender', detail: 'Pastelna lavanda', background: 'radial-gradient(ellipse at 9% 95%,#bdb1e8 0%,transparent 59%),radial-gradient(ellipse at 92% 9%,#7f9bd1 0%,transparent 63%),linear-gradient(130deg,#5a5687,#8d78b7,#41426f)' },
   { name: 'Graphite', detail: 'Tamni grafit', background: 'radial-gradient(ellipse at 4% 100%,#5d637e 0%,transparent 59%),radial-gradient(ellipse at 85% 5%,#576c8e 0%,transparent 62%),linear-gradient(130deg,#191d2b,#32384c,#121722)' },
+  { name: 'Alpine Lake', detail: 'Alpsko jezero', background: 'linear-gradient(180deg,rgba(8,20,40,.04),rgba(8,20,40,.09)),url("https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1920&q=82"),linear-gradient(155deg,#647d96,#b0c2b9 55%,#253d59)' },
+  { name: 'Blue Ridge', detail: 'Plave planine', background: 'linear-gradient(180deg,rgba(8,20,40,.04),rgba(8,20,40,.09)),url("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=82"),linear-gradient(155deg,#a0b2c0,#586a88 65%,#23344d)' },
+  { name: 'Sequoia', detail: 'Šumsko svetlo', background: 'linear-gradient(180deg,rgba(8,20,40,.04),rgba(8,20,40,.09)),url("https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1920&q=82"),linear-gradient(155deg,#68885d,#28443c 65%,#0c2a2c)' },
+  { name: 'Golden Hour', detail: 'Zlatni čas', background: 'linear-gradient(180deg,rgba(8,20,40,.04),rgba(8,20,40,.09)),url("https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1920&q=82"),linear-gradient(165deg,#f7ca7d,#d88579 55%,#543e65)' },
+  { name: 'Still Water', detail: 'Mirna voda', background: 'linear-gradient(180deg,rgba(8,20,40,.04),rgba(8,20,40,.09)),url("https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1920&q=82"),linear-gradient(145deg,#adc4c3,#5f8b96,#283e4f)' },
+  { name: 'Night Sky', detail: 'Zvezdano nebo', background: 'linear-gradient(180deg,rgba(8,20,40,.04),rgba(8,20,40,.09)),url("https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=82"),linear-gradient(155deg,#2d385f,#111a38 60%,#060d21)' },
+  { name: 'Ocean', detail: 'Duboko plavetnilo', background: 'linear-gradient(180deg,rgba(8,20,40,.04),rgba(8,20,40,.09)),url("https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1920&q=82"),linear-gradient(140deg,#95cad7,#32728f,#0b344c)' },
+  { name: 'Desert', detail: 'Pustinjski horizont', background: 'linear-gradient(180deg,rgba(8,20,40,.04),rgba(8,20,40,.09)),url("https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1920&q=82"),linear-gradient(150deg,#bdba97,#8ca397,#304c53)' },
+  { name: 'Paper', detail: 'Neutralna svetla', background: 'linear-gradient(135deg,#f4f3ef 0%,#d6e1e8 42%,#b7c7d8 100%)' },
+  { name: 'Stone', detail: 'Kamena siva', background: 'linear-gradient(145deg,#777c85,#464d59 55%,#262b36)' },
+  { name: 'Mint', detail: 'Pastelna menta', background: 'linear-gradient(135deg,#b3e4d4,#6fbea9 45%,#347c7e)' },
+  { name: 'Cobalt', detail: 'Kobalt plava', background: 'linear-gradient(145deg,#639dea 0%,#325fb6 55%,#1d3367 100%)' },
 ]
+export const WALLPAPER_COLLECTIONS = [
+  { id: 'dynamic', title: 'Dinamičke pozadine', description: 'Apstraktne Adwaita boje i blagi prelazi', indexes: [0,1,2,3,4,5,6,7,8,9] },
+  { id: 'landscape', title: 'Pejzaži', description: 'Fotografije prirode sa Unsplasha', indexes: [10,11,12,13,14,15,16,17] },
+  { id: 'minimal', title: 'Minimalističke', description: 'Mirne boje bez detalja', indexes: [18,19,20,21] },
+] as const
 
 export function loadPreferences(): DesktopPreferences {
   try {
