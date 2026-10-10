@@ -25,9 +25,25 @@ The desktop uses a *local-only* illustrative login:
 
 These credentials are hard-coded in browser-side code and **do not authenticate or protect data**. Never use this login for private files, student records, or real access control.
 
+## Lock screen and desktop personalization
+
+On a fresh browser session, users first see a **GNOME-style lock screen** with a live Belgrade clock, a slowly animated landscape slideshow, and a swipe/click/Enter prompt. Press Enter, click the unlock prompt, or swipe up to reveal a separate sign-in panel; press Escape or the Back button to return to the lock screen. The demonstration login is still `student` / `ftn` and is **not a security boundary**.
+
+The desktop initially shows only the **ERS/OIB/ODP course folders**, **About System**, **Settings**, and **Trash**. Other applications are available from **Activities → All applications**:
+
+1. Select **+ Desktop** on an application to add a desktop shortcut.
+2. Drag a shortcut to a grid cell to move it. Dropping onto an occupied cell swaps the icons rather than overlapping them.
+3. Right-click a desktop shortcut to open it, pin/unpin it from the dock, or remove the shortcut (the three subject folders always remain on the desktop).
+4. Select **+ Dock** in the application overview to pin an app, or right-click a dock icon to unpin it.
+5. Unpinned applications appear in the dock **only while their windows are open**.
+
+Shortcuts, positions, dock pins, wallpapers, and appearance preferences persist in browser `localStorage`. All changes are local to the current browser/profile, not synced to a server.
+
+**Lock screen photo credits:** [Tobias Keller](https://unsplash.com/photos/73F4pKoUkM0) and [Patrick Untersee](https://unsplash.com/photos/j3f1lwXBuAI), via Unsplash. Background photos are requested from `images.unsplash.com` at runtime; a gradient fallback is provided when offline, and `prefers-reduced-motion` disables animation.
+
 ## Features
 
-- **Desktop workspace:** movable, minimizable and maximizable application windows; application overview; searchable launchers; persistent bottom dock; desktop course folders.
+- **Desktop workspace:** movable, minimizable and maximizable application windows, launcher search, collision-free draggable desktop shortcuts, right-click context menus, persistent dock pinning and course folders.
 - **Course file manager:** nested exercise, presentation and example folders, expandable navigation tree, breadcrumbs and file previews for ERS, OIB and ODP.
 - **Continuous practicum reader:** document-style scrolling, collapsible table of contents, links to exercises and zoom controls.
 - **Custom PDF viewer:** PDF.js-powered rendering with page navigation, zoom, fullscreen mode and downloads, rather than the browser's built-in PDF toolbar.
