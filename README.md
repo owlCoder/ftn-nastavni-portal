@@ -43,7 +43,7 @@ Shortcuts, positions, dock pins, wallpapers, and appearance preferences persist 
 
 ## Features
 
-- **Desktop workspace:** movable, minimizable and maximizable application windows, launcher search, collision-free draggable desktop shortcuts, right-click context menus, persistent dock pinning and course folders.
+- **Desktop workspace:** movable, minimizable and maximizable application windows, launcher search, collision-free draggable desktop shortcuts, right-click and left-click context actions, keyboard-accessible menus, persistent dock pinning and course folders.
 - **Course file manager:** nested exercise, presentation and example folders, expandable navigation tree, breadcrumbs and file previews for ERS, OIB and ODP.
 - **Continuous practicum reader:** document-style scrolling, collapsible table of contents, links to exercises and zoom controls.
 - **Custom PDF viewer:** PDF.js-powered rendering with page navigation, zoom, fullscreen mode and downloads, rather than the browser's built-in PDF toolbar.
@@ -65,6 +65,31 @@ The Settings application now uses a desktop-style navigation sidebar with dedica
 - **Minimal:** four solid-toned gradient wallpapers.
 
 Existing wallpaper indexes remain stable to preserve previously saved user selections. Custom-designed switches, range sliders and focus indicators improve keyboard and pointer accessibility. The theme is reflected in the settings and workspace utilities; PDF pages and practicum documents intentionally remain paper-coloured for legibility.
+
+### Twenty more desktop applications
+
+The third collection adds **20 functional applications** without automatically placing them on the desktop or pinning them to the dock. Existing and new applications share the same light/dark window frames, accessible controls, responsive layouts, and persistent shortcut management.
+
+| Developer tools | Student and productivity tools |
+| --- | --- |
+| Diff Viewer — line-by-line comparison | Kanban Board — tasks grouped by workflow status |
+| Regex Lab — test JavaScript expressions | Expenses — local RSD expense tracker with CSV export |
+| Base64 — encode/decode UTF-8 | Grade Average — ECTS-weighted grade calculator |
+| URL Inspector — parse and edit URL parameters | Reading List — save reading targets |
+| SHA-256 Hash — browser Web Crypto hashing | Countdowns — time remaining to deadlines |
+| CSV Table — safe local CSV viewer | Study Planner — weekly work sessions |
+| HTML Entities — encode/decode reserved characters | Decision Picker — random choice from user options |
+| Unix Time — local/epoch conversion | IT Quiz — eight multiple-choice questions |
+| UUID Generator — cryptographically random UUIDs | 2×2 Matrices — sum, product and determinant |
+| Color Contrast — check WCAG AA contrast ratios | Metronome — audible tempo with Web Audio |
+
+The **Password Generator** has custom switches, a filled range slider and an approximate strength/entropy estimate. The **Calculator** accepts keyboard input: `Enter` for results, `Escape` to clear, and `Backspace` to erase. Calculations remain entirely local.
+
+#### Desktop context actions
+
+A single left click selects a desktop shortcut. Double click or `Enter` launches it. Once selected, its **three-dot action button** opens the same menu available with right click or `Shift+F10`. The app titlebar also offers a three-dot menu and right-click access. Context menus expose open, minimize, maximize, pin/unpin, add/remove shortcut and close actions as applicable; clicks outside dismiss them. The desktop background has its own actions menu. A shortcut grid swaps occupied positions rather than allowing overlaps.
+
+The demonstration shell is browser-side; it cannot intercept system-level clicks outside the website. On touch devices, shortcuts support touch launch and pointer dragging.
 
 ### Ten additional desktop applications
 
