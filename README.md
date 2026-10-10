@@ -33,11 +33,31 @@ These credentials are hard-coded in browser-side code and **do not authenticate 
 - **Custom PDF viewer:** PDF.js-powered rendering with page navigation, zoom, fullscreen mode and downloads, rather than the browser's built-in PDF toolbar.
 - **ZIP explorer and downloads:** browse example archives, preview text-based source files, download individual documents or export entire folders as ZIP archives.
 - **Project milestones:** a timeline for checkpoint dates, descriptions, and required work.
-- **Desktop apps:** calendar with locally saved events, notes, system-monitor-style indicators, Sudoku, Tetris, Space Invaders, Snake and 2048.
+- **Desktop apps:** calendar with local events, notes, games and ten additional utilities: Calculator, Text Editor, Terminal, Files, Tasks, Pomodoro, Unit Converter, Drawing, Stopwatch and Settings.
+- **Expanded System Monitor:** CPU/GPU/RAM/storage/network history views, simulated performance samples, actual open portal windows, browser runtime capabilities when available, pause/resume and CSV export.
 - **Personalization:** ten preset wallpapers, dark/light appearance, widgets and preferences saved to local storage.
 - **Weather and time:** Novi Sad forecast from Open-Meteo and a clock using the `Europe/Belgrade` time zone.
 
 **Data transparency:** desktop performance indicators and the hardware profile shown in *About System* are illustrative and do not read device hardware telemetry. Local notes, preferences and game scores live in the browser's `localStorage`.
+
+### Built-in desktop utilities
+
+The ten additional apps all run in draggable GNOME-like windows and appear in the Activities launcher. Frequently used apps are pinned to the dock; other open apps appear there dynamically.
+
+| Application | What it does |
+| --- | --- |
+| Calculator | Local arithmetic parser with parentheses, decimals and operators (no `eval`) |
+| Text Editor | Write and export text files; contents and filename persist in local storage |
+| Terminal | Restricted in-app command interpreter with `help`, `ls`, `date`, `whoami`, `cat` and course launch commands; **not an OS shell** |
+| Files | Open the ERS/OIB/ODP course file managers |
+| Tasks | Persistent checklist with completion and removal |
+| Pomodoro | Focus and break countdowns with completed-session count |
+| Unit Converter | Convert length, mass, temperature and digital storage units |
+| Drawing | Pointer/touch canvas with colours, brush widths and PNG export |
+| Stopwatch | Millisecond display, pause, reset and lap tracking |
+| Settings | Shared dark/light theme, wallpaper and desktop widget preferences |
+
+**System Monitor** shows rolling metrics, summary statistics and CSV export. CPU/GPU/RAM/SSD/network activity is a **simulated FTN OS workstation profile**, not real computer telemetry. The *Applications* tab lists genuinely open in-portal windows. The *System* tab distinguishes information optionally exposed by browser APIs from the illustrative hardware profile.
 
 ### Courses
 
