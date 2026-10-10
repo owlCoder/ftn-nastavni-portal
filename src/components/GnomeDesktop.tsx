@@ -296,7 +296,11 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
     <header className="gn-topbar">
       <div className="gn-top-left">
         <button className={'gn-activities'+(overview?' gn-activities-active':'')} onClick={()=>{setOverview(v=>!v);setPanel(null)}} aria-expanded={overview}>Aktivnosti <span className="gn-activities-dot"/></button>
-        {activeWindow && <span className="gn-running-name">{short[activeWindow.id]}</span>}
+        {activeWindow && <button className="gn-running-name ftn-app-menu-top-trigger" title="Opcije aktivnog prozora"
+          aria-label={'Meni aplikacije '+names[activeWindow.id]}
+          onClick={e=>{const rect=e.currentTarget.getBoundingClientRect();setShortcutMenu({id:activeWindow.id,x:rect.left,y:rect.bottom+9,source:'window'});setPanel(null);setContext(null)}}>
+          {short[activeWindow.id]} <Icon name="chevron" size={13}/>
+        </button>}
       </div>
       <button className={'gn-top-clock'+(panel==='calendar'?' gn-top-button-active':'')} onClick={()=>panelToggle('calendar')} aria-expanded={panel==='calendar'}>
         {dateString} &nbsp; {timeString}<span className="gn-clock-dot">●</span>
