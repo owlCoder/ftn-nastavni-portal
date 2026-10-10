@@ -136,7 +136,14 @@ export function DesktopShortcutGrid({shortcuts,label,icon,open,selected,onSelect
       onPointerCancel={e=>pointerEnd(id,e)}
       onClick={e=>{e.stopPropagation();if(blockedClick.current===id){blockedClick.current=null;return}onSelect(id);if(e.detail>=2)open(id)}}
       onContextMenu={e=>{e.preventDefault();e.stopPropagation();onContextMenu(id,e.clientX,e.clientY)}}
-      onKeyDown={e=>{if(e.key==='Enter'){e.preventDefault();open(id)}}}>
+      onKeyDown={e=>{
+        if(e.key==='Enter'){e.preventDefault();open(id)}
+        if(e.key==='ContextMenu'||(e.shiftKey&&e.key==='F10')){
+          e.preventDefault()
+          const rect=e.currentTarget.getBoundingClientRect()
+          onContextMenu(id,rect.right-12,rect.top+24)
+        }
+      }}>
       {icon(id)}<span>{label(id)}</span>
     </button>)}
     {selected&&shortcuts.some(x=>x.id===selected)&&(()=>{
