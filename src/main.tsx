@@ -20,6 +20,7 @@ import './styles/gnome-icon-widget-polish.css'
 import './styles/ers-explorer.css'
 import './styles/desktop-workspace-polish.css'
 import './styles/course-viewers.css'
+import './styles/workspace-apps.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
