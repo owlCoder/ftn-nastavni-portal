@@ -85,10 +85,37 @@ function parseCsv(text:string){
 }
 function Csv(){
  const [text,setText]=useState('Predmet,ECTS,Poeni\nERS,7,90\nOIB,6,85')
- let rows:string[][]=[];let error=''
- try{rows=parseCsv(text.slice(0,50000)).slice(0,501)}catch(e){error=String(e)}
- return <Page name="CSV Tabela" info="Lokalni pregled CSV sadržaja sa navodnicima."><Panel><div className="ftn-suite-actions"><strong>{Math.max(0,rows.length-1)} redova</strong><button onClick={()=>saveText('tabela.csv',text,'text/csv')}>↓ CSV</button></div><Field label="CSV sadržaj"><textarea rows={5} spellCheck={false} value={text} onChange={e=>setText(e.target.value)}/></Field>
- {error?<p className="ftn-suite-error">{error}</p>:<div className="ftn-suite-table"><table><thead><tr>{(rows[0]??[]).map((h,i)=><th key={i}>{h}</th>)}</tr></thead><tbody>{rows.slice(1).map((r,i)=><tr key={i}>{(rows[0]??[]).map((_,j)=><td key={j}>{r[j]??''}</td>)}</tr>)}</tbody></table></div>}</Panel></Page>
+ const [message,setMessage]=useState('')
+ const [view,setView]=useState<'table'|'source'>('table')
+ let rows:string[][]=[],error=''
+ try{rows=parseCsv(text.slice(0,200000)).slice(0,501)}catch(e){error=e instanceof Error?e.message:'Neispravan CSV'}
+ const columns=rows[0]??[]
+ const importFile=async(file:File|undefined)=>{
+  if(!file)return
+  if(file.size>500000){setMessage('Datoteka je prevelika (maksimalno 500 KB).');return}
+  try{setText((await file.text()).replace(/^\uFEFF/,''));setMessage('Uvezen fajl: '+file.name);setView('table')}
+  catch{setMessage('Datoteka nije mogla da se pročita.')}
+ }
+ return <Page name="CSV Tabela" info="Pregled podataka kao tabela sa uvozom i izvozom CSV dokumenata.">
+ <Panel>
+  <div className="ftn-csv-toolbar">
+   <div className="ftn-csv-stats"><span><strong>{Math.max(0,rows.length-1)}</strong> redova</span><span><strong>{columns.length}</strong> kolona</span></div>
+   <div className="ftn-csv-controls">
+    <button type="button" className={view==='table'?'is-active':''} aria-pressed={view==='table'} onClick={()=>setView('table')}>Tabela</button>
+    <button type="button" className={view==='source'?'is-active':''} aria-pressed={view==='source'} onClick={()=>setView('source')}>Izvor</button>
+    <label className="ftn-csv-import">↥ Uvezi CSV<input type="file" accept=".csv,text/csv,text/plain" onChange={e=>{void importFile(e.target.files?.[0]);e.target.value=''}}/></label>
+    <button onClick={()=>saveText('tabela.csv',text,'text/csv;charset=utf-8')}>↓ Sačuvaj</button>
+   </div>
+  </div>
+  {view==='source'?<Field label="CSV izvor"><textarea rows={14} spellCheck={false} value={text} onChange={e=>{setText(e.target.value);setMessage('')}}/></Field>:
+   error?<p className="ftn-suite-error" role="alert">{error}</p>:
+   <div className="ftn-suite-table ftn-csv-datagrid"><table>
+    <thead><tr><th scope="col">#</th>{columns.map((h,i)=><th scope="col" key={i}>{h||'Kolona '+(i+1)}</th>)}</tr></thead>
+    <tbody>{rows.slice(1).map((r,i)=><tr key={i}><td>{i+1}</td>{columns.map((_,j)=><td key={j}>{r[j]??''}</td>)}</tr>)}</tbody>
+   </table></div>}
+  {message&&<p role="status" className="ftn-suite-note">{message}</p>}
+  <p className="ftn-suite-note">CSV se učitava lokalno. Prikazuje se do 500 redova; kompletan izvor ostaje sačuvan za preuzimanje.</p>
+ </Panel></Page>
 }
 const entities:[string,string][]=[['&','&amp;'],['<','&lt;'],['>','&gt;'],['"','&quot;'],["'",'&#39;']]
 function Entities(){
