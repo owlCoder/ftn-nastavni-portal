@@ -154,7 +154,7 @@ function WindowFrame({ windowData: w, isFocused, gamesActive, now, otherWindows,
     </div>
     <div className={'gn-window-body'+(course?' gn-course-body':'')+(course?' gn-course-files-body':'')}>
       {course ? <CourseFiles course={course} onOpenEditor={onOpenCode}/> :
-        w.id==='code'?<Suspense fallback={<div className="ftn-code-empty">Otvaranje editora…</div>}><CodeEditorApp project={codeProject} onProjectChange={onSelectCodeProject}/></Suspense> :
+        w.id==='code'?<Suspense fallback={<div className="ftn-code-empty">Otvaranje editora…</div>}><CodeEditorApp project={codeProject} dark={preferences.dark} onProjectChange={onSelectCodeProject}/></Suspense> :
         w.id==='sudoku'?<Sudoku active={active}/> :
         w.id==='tetris'?<Tetris active={active}/> :
         w.id==='invaders'?<SpaceInvaders active={active}/> :

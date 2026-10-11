@@ -17,35 +17,36 @@ import {tags} from '@lezer/highlight'
 
 export type EditorPosition={line:number;column:number;lines:number;undo:number;redo:number}
 export type CodeSurfaceApi={undo:()=>void;redo:()=>void;find:()=>void;indent:()=>void;outdent:()=>void;selectAll:()=>void;replace:(text:string)=>void}
-type Props={fileKey:string;text:string;fontSize:number;wrap:boolean;onChange:(text:string)=>void;onPosition:(position:EditorPosition)=>void;onApi:(api:CodeSurfaceApi|null)=>void}
+type Props={fileKey:string;text:string;fontSize:number;wrap:boolean;dark:boolean;onChange:(text:string)=>void;onPosition:(position:EditorPosition)=>void;onApi:(api:CodeSurfaceApi|null)=>void}
 const colors=HighlightStyle.define([
-  {tag:tags.keyword,class:'ftn-code-keyword',color:'#c586c0'},
-  {tag:[tags.string,tags.special(tags.string)],color:'#ce9178'},
-  {tag:tags.comment,color:'#7ca668',fontStyle:'italic'},
-  {tag:[tags.number,tags.bool],color:'#b5cea8'},
-  {tag:[tags.typeName,tags.className],color:'#4ec9b0'},
-  {tag:[tags.function(tags.variableName),tags.function(tags.propertyName)],color:'#dcdcaa'},
-  {tag:[tags.variableName,tags.propertyName, tags.attributeName],color:'#9cdcfe'},
-  {tag:[tags.tagName,tags.meta],color:'#569cd6'},
+  {tag:tags.keyword,class:'ftn-code-keyword',color:'var(--code-keyword)'},
+  {tag:[tags.string,tags.special(tags.string)],color:'var(--code-string)'},
+  {tag:tags.comment,color:'var(--code-comment)',fontStyle:'italic'},
+  {tag:[tags.number,tags.bool],color:'var(--code-number)'},
+  {tag:[tags.typeName,tags.className],color:'var(--code-type)'},
+  {tag:[tags.function(tags.variableName),tags.function(tags.propertyName)],color:'var(--code-function)'},
+  {tag:[tags.variableName,tags.propertyName, tags.attributeName],color:'var(--code-variable)'},
+  {tag:[tags.tagName,tags.meta],color:'var(--code-tag)'},
 ])
-const theme=EditorView.theme({
-  '&':{height:'100%',color:'#d4d4d4',backgroundColor:'#1e1e1e'},
+const themeStyles={
+  '&':{height:'100%',color:'var(--code-text)',backgroundColor:'var(--code-background)'},
   '.cm-scroller':{fontFamily:'"SFMono-Regular",Consolas,"Liberation Mono",monospace',lineHeight:'1.65',overflow:'auto'},
-  '.cm-content':{padding:'10px 0',caretColor:'#e4e4e4'},
+  '.cm-content':{padding:'10px 0',caretColor:'var(--code-caret)'},
   '.cm-line':{padding:'0 12px 0 10px'},
-  '.cm-gutters':{backgroundColor:'#1e1e1e',color:'#858585',borderRight:'1px solid #2a2a2a'},
+  '.cm-gutters':{backgroundColor:'var(--code-background)',color:'var(--code-muted)',borderRight:'1px solid var(--code-separator)'},
   '.cm-lineNumbers .cm-gutterElement':{minWidth:'38px',padding:'0 9px 0 5px'},
-  '.cm-activeLine':{backgroundColor:'#ffffff05'},
-  '.cm-activeLineGutter':{backgroundColor:'#ffffff08',color:'#c6c6c6'},
-  '.cm-cursor':{borderLeftColor:'#eeeeee'},
-  '&.cm-focused .cm-selectionBackground,.cm-selectionBackground,::selection':{backgroundColor:'#264f78'},
-  '.cm-searchMatch':{backgroundColor:'#613315',outline:'1px solid #a55b27'},
-  '.cm-searchMatch.cm-searchMatch-selected':{backgroundColor:'#734119'},
-  '.cm-panels':{color:'#cccccc',backgroundColor:'#252526'},
+  '.cm-activeLine':{backgroundColor:'var(--code-current-line)'},
+  '.cm-activeLineGutter':{backgroundColor:'var(--code-current-gutter)',color:'var(--code-secondary)'},
+  '.cm-cursor':{borderLeftColor:'var(--code-caret)'},
+  '&.cm-focused .cm-selectionBackground,.cm-selectionBackground,::selection':{backgroundColor:'var(--code-selection)'},
+  '.cm-searchMatch':{backgroundColor:'var(--code-search-match)',outline:'1px solid var(--code-search-border)'},
+  '.cm-searchMatch.cm-searchMatch-selected':{backgroundColor:'var(--code-search-selected)'},
+  '.cm-panels':{color:'var(--code-text)',backgroundColor:'var(--code-panel)'},
   '.cm-panel.cm-search':{padding:'8px',fontSize:'13px'},
-  '.cm-textfield':{backgroundColor:'#3c3c3c',color:'#eee',border:'1px solid #555'},
-  '.cm-button':{backgroundImage:'none',backgroundColor:'#343434',color:'#ddd',border:'1px solid #555',borderRadius:'3px'},
-},{dark:true})
+  '.cm-textfield':{backgroundColor:'var(--code-input)',color:'var(--code-control-text)',border:'1px solid var(--code-border)'},
+  '.cm-button':{backgroundImage:'none',backgroundColor:'var(--code-button)',color:'var(--code-control-text)',border:'1px solid var(--code-border)',borderRadius:'3px'},
+}
+const editorTheme=(dark:boolean)=>EditorView.theme(themeStyles,{dark})
 function languageForPath(path:string){
   const extension=path.split('.').pop()?.toLowerCase()
   if(extension==='cs')return StreamLanguage.define(csharp)
@@ -65,7 +66,7 @@ export function CodeSurface(props:Props){
   const parent=useRef<HTMLDivElement>(null),view=useRef<EditorView|null>(null)
   const cache=useRef(new Map<string,{state:EditorState;scrollTop:number;scrollLeft:number}>())
   const callbacks=useRef(props);callbacks.current=props
-  const font=useRef(new Compartment()),wrapping=useRef(new Compartment())
+  const font=useRef(new Compartment()),wrapping=useRef(new Compartment()),appearance=useRef(new Compartment())
   useLayoutEffect(()=>{
     if(!parent.current)return
     const key=props.fileKey,saved=cache.current.get(key)
@@ -74,7 +75,7 @@ export function CodeSurface(props:Props){
       callbacks.current.onPosition({line:line.number,column:cursor-line.from+1,lines:state.doc.lines,undo:undoDepth(state),redo:redoDepth(state)})
     }
     const editor=new EditorView({parent:parent.current,state:saved?.state??EditorState.create({doc:props.text,extensions:[
-      basicSetup,theme,syntaxHighlighting(colors),languageForPath(key),keymap.of([indentWithTab]),
+      basicSetup,appearance.current.of(editorTheme(props.dark)),syntaxHighlighting(colors),languageForPath(key),keymap.of([indentWithTab]),
       EditorState.tabSize.of(4),EditorState.lineSeparator.of(props.text.includes('\r\n')?'\r\n':'\n'),
       EditorView.contentAttributes.of({'aria-label':'Kod: '+(key.split('::').pop()??key),'spellcheck':'false','autocapitalize':'off','autocorrect':'off'}),
       font.current.of(EditorView.theme({'&':{fontSize:props.fontSize+'px'}})),
@@ -96,6 +97,6 @@ export function CodeSurface(props:Props){
     // Each document owns its selection and undo history; text changes stay in CM.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[props.fileKey])
-  useEffect(()=>{view.current?.dispatch({effects:[font.current.reconfigure(EditorView.theme({'&':{fontSize:props.fontSize+'px'}})),wrapping.current.reconfigure(props.wrap?EditorView.lineWrapping:[])]})},[props.fontSize,props.wrap,props.fileKey])
+  useEffect(()=>{view.current?.dispatch({effects:[appearance.current.reconfigure(editorTheme(props.dark)),font.current.reconfigure(EditorView.theme({'&':{fontSize:props.fontSize+'px'}})),wrapping.current.reconfigure(props.wrap?EditorView.lineWrapping:[])]})},[props.fontSize,props.wrap,props.dark,props.fileKey])
   return <div className="ftn-code-surface" ref={parent}/>
 }

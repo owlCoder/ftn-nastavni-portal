@@ -15,7 +15,7 @@ function Glyph({path}:{path:string}){
   const extension=path.split('.').pop()?.toLowerCase()
   return <span className={'ftn-code-glyph is-'+(extension==='cs'?'csharp':extension==='json'?'json':'text')} aria-hidden="true">{extension==='cs'?'C#':extension==='json'?'{}':extension==='csproj'?'<>':'≡'}</span>
 }
-export function CodeEditorApp({project,onProjectChange}:{project:CodeProject|null;onProjectChange:(project:CodeProject)=>void}){
+export function CodeEditorApp({project,dark,onProjectChange}:{project:CodeProject|null;dark:boolean;onProjectChange:(project:CodeProject)=>void}){
   const choice:CodeProject=project??codeProjects[0]
   const [data,setData]=useState<ProjectData|null>(null),dataRef=useRef<ProjectData|null>(null)
   const [active,setActive]=useState(''),[tabs,setTabs]=useState<string[]>([]),[expanded,setExpanded]=useState<Set<string>>(()=>new Set())
@@ -124,7 +124,7 @@ export function CodeEditorApp({project,onProjectChange}:{project:CodeProject|nul
   const toggleFolder=(path:string)=>setExpanded(old=>{const next=new Set(old);if(next.has(path))next.delete(path);else next.add(path);return next})
   const fullscreen=()=>{if(documentFullscreen())void globalThis.document.exitFullscreen();else if(host.current)void host.current.requestFullscreen()}
   function documentFullscreen(){return globalThis.document.fullscreenElement===host.current}
-  return <section className="ftn-code-workbench" ref={host} data-revision={revision} aria-label="Code editor">
+  return <section className="ftn-code-workbench" ref={host} data-theme={dark?'dark':'light'} data-revision={revision} aria-label="Code editor">
     <header className="ftn-code-projectbar">
       <button className="ftn-code-tool" onClick={()=>setSidebar(value=>!value)} aria-label={sidebar?'Sakrij fajlove':'Prikaži fajlove'} aria-pressed={sidebar}><CourseBrowserIcon name="folder"/></button>
       <select aria-label="Primer koda" value={choice?.file??''} onChange={event=>{const next=codeProjects.find(item=>item.file===event.target.value);if(next)onProjectChange(next)}}>
@@ -165,7 +165,7 @@ export function CodeEditorApp({project,onProjectChange}:{project:CodeProject|nul
         </div>
         {active&&<div className="ftn-code-breadcrumb" title={active}>{active.split('/').map((part,index)=><span key={index}>{index>0&&<i>›</i>}{part}</span>)}</div>}
         {error&&<div className="ftn-code-error" role="alert">{error}<button aria-label="Zatvori poruku" onClick={()=>setError('')}>×</button></div>}
-        {document&&active?<CodeSurface fileKey={data!.source+'::'+active} text={document.text} fontSize={fontSize} wrap={wrap} onChange={changed} onPosition={setPosition} onApi={value=>{api.current=value}}/>:
+        {document&&active?<CodeSurface fileKey={data!.source+'::'+active} text={document.text} dark={dark} fontSize={fontSize} wrap={wrap} onChange={changed} onPosition={setPosition} onApi={value=>{api.current=value}}/>:
           <div className="ftn-code-empty"><span>〈/〉</span><p>{loading?'Otvaranje projekta…':opening?'Otvaranje fajla…':'Izaberi fajl iz projekta.'}</p></div>}
         <footer className="ftn-code-status" aria-live="polite"><span>{saving?'Čuvanje…':dirty?'Sačuvano lokalno':'Bez lokalnih izmena'}</span><span className="ftn-code-toolbar-spacer"/><span>Ln {position.line}, Kol {position.column}</span><span>UTF-8{document?.bom?' BOM':''}</span><span>{document?.original.includes('\r\n')?'CRLF':'LF'}</span><span>{active?codeLanguageLabel(codeLanguageForFile(active)):''}</span></footer>
       </main>

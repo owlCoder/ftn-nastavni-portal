@@ -43,7 +43,7 @@ Demo prijava je `student` / `ftn`. Ona služi prikazu interfejsa i ne obezbeđuj
 
 ## Code editor
 
-Programske primere otvoriti u predmetu, pa u pregledu ZIP-a izabrati **Otvori u editoru**. Editor je dostupan i sa radne površine. Podržava stablo projekta, kartice fajlova, C# i druge jezike, pretragu, undo/redo, uvećanje teksta i **Word wrap**. Izbor jezika prati ekstenziju fajla.
+Programske primere otvoriti u predmetu, pa u pregledu ZIP-a izabrati **Otvori u editoru**. Editor je dostupan i sa radne površine. Podržava stablo projekta, kartice fajlova, C# i druge jezike, pretragu, undo/redo, uvećanje teksta i **Word wrap**. Izbor jezika prati ekstenziju fajla. Editor odmah prati svetlu ili tamnu temu iz postavki portala, uz očuvane izmene i undo istoriju.
 
 Izmene se automatski čuvaju u lokalnoj bazi tog pregledača. **Sačuvaj ZIP** izvozi ceo projekat sa izmenjenim fajlovima i zadržava ostale fajlove, putanje, UTF-8 BOM i završetke redova. **Vrati original** vraća aktivni fajl i može se poništiti kroz undo. Editor služi uređivanju i pregledu; .NET SDK nije uključen.
 
