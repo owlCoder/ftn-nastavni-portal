@@ -2,10 +2,10 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerE
 
 const STORAGE_KEY='ftn-desktop-layout-v1'
 const COURSE_SHORTCUTS=['ers','oib','odp','ibis']
-export const DEFAULT_SHORTCUTS=[...COURSE_SHORTCUTS,'readme','settings','trash']
+export const DEFAULT_SHORTCUTS=[...COURSE_SHORTCUTS,'code','readme','settings','trash']
 export const DEFAULT_DOCK=['files','notes','calendar','calculator','settings','trash']
 export type Shortcut={id:string;slot:number}
-type Persisted={shortcuts:Shortcut[];pins:string[]}
+type Persisted={shortcuts:Shortcut[];pins:string[];version?:number}
 const SLOT_LIMIT=120
 
 function loadConfiguration(allowed:string[]):Persisted {
@@ -31,8 +31,11 @@ function loadConfiguration(allowed:string[]):Persisted {
     if(slot<0||slot>=SLOT_LIMIT||used.has(slot)){slot=0;while(used.has(slot))slot++}
     used.add(slot);shortcuts.push({id:item.id,slot})
   }
+  if(parsed?.version!==2&&allowed.includes('code')&&!shortcuts.some(item=>item.id==='code')){
+    let slot=0;while(used.has(slot))slot++;shortcuts.push({id:'code',slot})
+  }
   const pins=Array.isArray(parsed?.pins)?parsed.pins.filter((x):x is string=>typeof x==='string'&&isAllowed(x)&&!COURSE_SHORTCUTS.includes(x)):[]
-  return {shortcuts,pins:parsed?.pins?Array.from(new Set(pins)):DEFAULT_DOCK.filter(isAllowed)}
+  return {version:2,shortcuts,pins:parsed?.pins?Array.from(new Set(pins)):DEFAULT_DOCK.filter(isAllowed)}
 }
 export function useDesktopConfiguration(allowed:string[]) {
   const [config,setConfig]=useState<Persisted>(()=>loadConfiguration(allowed))

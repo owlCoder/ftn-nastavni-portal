@@ -17,9 +17,12 @@ export function CourseFileIcon({ kind }: { kind: CourseFileKind }) {
   </svg>
 }
 
-export function CourseBrowserIcon({ name }: { name: 'back' | 'home' | 'list' | 'grid' | 'chevron' | 'download' }) {
+export function CourseBrowserIcon({ name }: { name: 'back' | 'home' | 'list' | 'grid' | 'chevron' | 'download' | 'folder' | 'search' | 'fullscreen' }) {
   return <svg className="ers-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    {name === 'back' ? <path d="m14 6-6 6 6 6" /> :
+    {name === 'folder' ? <path d="M3 7h7l2 3h9v10H3V7Zm0 5h18" /> :
+      name === 'search' ? <><circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/></> :
+        name === 'fullscreen' ? <path d="M9 3H3v6m12-6h6v6M3 15v6h6m12-6v6h-6"/> :
+    name === 'back' ? <path d="m14 6-6 6 6 6" /> :
       name === 'home' ? <><path d="m4 10 8-7 8 7v10H4V10Z" /><path d="M9 20v-7h6v7" /></> :
         name === 'list' ? <><path d="M9 6h11M9 12h11M9 18h11" /><path d="M4 6h.01M4 12h.01M4 18h.01" strokeWidth="3" /></> :
           name === 'grid' ? <>{[4, 14].flatMap(x => [4, 14].map(y => <rect key={x + ':' + y} x={x} y={y} width="6" height="6" rx="1" />))}</> :

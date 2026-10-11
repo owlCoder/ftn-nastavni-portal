@@ -41,6 +41,12 @@ Pregled materijala podržava listu i mrežu; izabrani prikaz ostaje sačuvan u p
 
 Demo prijava je `student` / `ftn`. Ona služi prikazu interfejsa i ne obezbeđuje autentikaciju. Beleške, događaji i podešavanja čuvaju se lokalno u pregledaču. PDF čitač podržava zoom, fullscreen i promenu stranice točkićem miša, tasterom Space ili strelicama levo/desno; Shift+Space vraća prethodnu stranicu.
 
+## Code editor
+
+Programske primere otvoriti u predmetu, pa u pregledu ZIP-a izabrati **Otvori u editoru**. Editor je dostupan i sa radne površine. Podržava stablo projekta, kartice fajlova, C# i druge jezike, pretragu, undo/redo, uvećanje teksta i **Word wrap**. Izbor jezika prati ekstenziju fajla.
+
+Izmene se automatski čuvaju u lokalnoj bazi tog pregledača. **Sačuvaj ZIP** izvozi ceo projekat sa izmenjenim fajlovima i zadržava ostale fajlove, putanje, UTF-8 BOM i završetke redova. **Vrati original** vraća aktivni fajl i može se poništiti kroz undo. Editor služi uređivanju i pregledu; .NET SDK nije uključen.
+
 ## Organizacija repozitorijuma
 
 | Putanja | Namena |

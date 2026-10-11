@@ -1,7 +1,7 @@
 import { assetUrl } from '../lib/assets'
 export { practicumMarkdown, checkpointMarkdown } from '../practicum/markdown'
 
-export type DownloadEntry={path:string;url?:string;text?:string}
+export type DownloadEntry={path:string;url?:string;text?:string;bytes?:Uint8Array}
 
 export function downloadText(name:string,text:string){
   const blob=new Blob([text],{type:'text/markdown;charset=utf-8'})
@@ -39,7 +39,8 @@ export async function downloadFolderZip(name:string,entries:DownloadEntry[],onPr
     seen.add(path)
     onProgress?.(`Preuzimanje ${i+1}/${entries.length}…`)
     let content:Uint8Array
-    if(entry.text!==undefined)content=encoder.encode(entry.text)
+    if(entry.bytes!==undefined)content=entry.bytes
+    else if(entry.text!==undefined)content=encoder.encode(entry.text)
     else if(entry.url){
       const response=await fetch(assetUrl(entry.url))
       if(!response.ok)throw Error(`Nije moguće preuzeti ${path} (HTTP ${response.status}).`)

@@ -1,6 +1,8 @@
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react'
+import { lazy,Suspense,useCallback, useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { CourseFiles } from './CourseFiles'
+import {initialCodeProject,type CodeProject} from '../lib/codeProjects'
+const CodeEditorApp=lazy(()=>import('./code/CodeEditorApp').then(module=>({default:module.CodeEditorApp})))
 import { DesktopWidgets } from './DesktopWidgets'
 import { SystemAbout } from './SystemAbout'
 import { CalendarApp } from './DesktopUtilities'
@@ -18,25 +20,25 @@ import { courses } from '../courses'
 import { assetUrl } from '../lib/assets'
 import type { CourseId } from '../courses/types'
 
-type AppId = CourseId | GameId | 'snake' | 'merge' | 'notes' | 'readme' | 'trash' | 'calendar' | 'monitor' | UtilityId | StudioAppId | DevId | LifeId
+type AppId = 'code' | CourseId | GameId | 'snake' | 'merge' | 'notes' | 'readme' | 'trash' | 'calendar' | 'monitor' | UtilityId | StudioAppId | DevId | LifeId
 const extraIds: UtilityId[] = ['calculator','editor','terminal','files','tasks','pomodoro','converter','draw','stopwatch','settings']
 const extraNames: Record<UtilityId,string> = {calculator:'Kalkulator',editor:'Tekst editor',terminal:'Terminal',files:'Fajlovi',tasks:'Zadaci',pomodoro:'Pomodoro',converter:'Konverter',draw:'Crtanje',stopwatch:'Štoperica',settings:'Podešavanja'}
 type WindowData = { id: AppId; x: number; y: number; z: number; minimized: boolean; maximized: boolean }
 type Panel = 'calendar' | 'quick' | null
 const names: Record<AppId, string> = {
-  ers: 'Elementi razvoja softvera', oib: 'Osnove informacione bezbednosti', odp: 'Osnove distribuiranog programiranja', ibis: 'Informaciona bezbednost infrastrukturnih sistema',
+  code:'Code editor', ers: 'Elementi razvoja softvera', oib: 'Osnove informacione bezbednosti', odp: 'Osnove distribuiranog programiranja', ibis: 'Informaciona bezbednost infrastrukturnih sistema',
   sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor', ...extraNames, ...studioNames, ...devNames, ...lifeNames,
 }
-const short: Record<AppId, string> = { ers: 'ERS', oib: 'OIB', odp: 'ODP', ibis: 'IBIS', sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor', ...extraNames, ...studioNames, ...devNames, ...lifeNames }
+const short: Record<AppId, string> = { code:'Code editor', ers: 'ERS', oib: 'OIB', odp: 'ODP', ibis: 'IBIS', sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor', ...extraNames, ...studioNames, ...devNames, ...lifeNames }
 const windowCategories: Partial<Record<AppId,string>> = {
-  notes:'Dokumenti',readme:'Informacije o sistemu',trash:'Fajlovi',
+  code:'Razvoj · Izvorni kod',notes:'Dokumenti',readme:'Informacije o sistemu',trash:'Fajlovi',
   calendar:'Organizacija',monitor:'Performanse',
   calculator:'Alati',editor:'Dokumenti',terminal:'FTN Shell',files:'Fajlovi',
   tasks:'Organizacija',pomodoro:'Fokus',converter:'Alati',draw:'Kreativno',
   stopwatch:'Vreme',settings:'Sistemske postavke',...studioCategories,
   ...Object.fromEntries(devIds.map(id=>[id,'Razvoj'])), ...Object.fromEntries(lifeIds.map(id=>[id,'Alati i učenje'])),
 }
-const applicationIds: AppId[] = ['ers','oib','odp','ibis','sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme','trash',...extraIds,...studioIds,...devIds,...lifeIds]
+const applicationIds: AppId[] = ['code','ers','oib','odp','ibis','sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme','trash',...extraIds,...studioIds,...devIds,...lifeIds]
 
 type LauncherCategory = 'all'|'courses'|'games'|'tools'|'study'|'media'|'developer'|'system'
 const launcherGroups: {id:LauncherCategory;title:string;apps:AppId[]}[] = [
@@ -46,7 +48,7 @@ const launcherGroups: {id:LauncherCategory;title:string;apps:AppId[]}[] = [
   {id:'tools',title:'Alati',apps:['calculator','editor','terminal','converter','json','markdown','passwords','contrast','matrix','metronome','decisions']},
   {id:'study',title:'Učenje',apps:['flashcards','habits','tasks','pomodoro','typing','kanban','expenses','grades','reading','countdown','planner','quiz']},
   {id:'media',title:'Kreativno',apps:['photos','colors','draw','bookmarks']},
-  {id:'developer',title:'Razvoj',apps:['diff','regex','base64','urltools','hashing','csv','entities','timestamp','uuid']},
+  {id:'developer',title:'Razvoj',apps:['code','diff','regex','base64','urltools','hashing','csv','entities','timestamp','uuid']},
   {id:'system',title:'Sistem',apps:['files','notes','calendar','worldclock','stopwatch','monitor','settings','readme','trash']}
 ]
 const courseIds: AppId[] = ['ers','oib','odp','ibis']
@@ -104,8 +106,9 @@ function Notes() {
 }
 function Trash() { return <div className="gn-trash-empty"><AppArtwork id="trash"/><h2>Korpa je prazna</h2><p>Nema obrisanih stavki.</p></div> }
 
-function WindowFrame({ windowData: w, isFocused, gamesActive, now, otherWindows, preferences, onSettingsChange, onOpenApp, onWindowMenu, onFocus, onClose, onMinimize, onMaximize, onMove }: {
+function WindowFrame({ windowData: w, isFocused, gamesActive, now, otherWindows, preferences, onSettingsChange, onOpenApp, codeProject, onOpenCode, onSelectCodeProject, onWindowMenu, onFocus, onClose, onMinimize, onMaximize, onMove }: {
   windowData: WindowData; isFocused: boolean; gamesActive:boolean; now:Date; otherWindows:WindowData[]; preferences:DesktopPreferences;
+  codeProject:CodeProject|null;onOpenCode:(project:CodeProject)=>void;onSelectCodeProject:(project:CodeProject)=>void;
   onSettingsChange:(patch:Partial<DesktopPreferences>)=>void;onOpenApp:(id:AppId)=>void;onWindowMenu:(x:number,y:number)=>void;
   onFocus:()=>void; onClose:()=>void; onMinimize:()=>void; onMaximize:()=>void;
   onMove:(x:number,y:number)=>void
@@ -150,7 +153,8 @@ function WindowFrame({ windowData: w, isFocused, gamesActive, now, otherWindows,
       </div>
     </div>
     <div className={'gn-window-body'+(course?' gn-course-body':'')+(course?' gn-course-files-body':'')}>
-      {course ? <CourseFiles course={course}/> :
+      {course ? <CourseFiles course={course} onOpenEditor={onOpenCode}/> :
+        w.id==='code'?<Suspense fallback={<div className="ftn-code-empty">Otvaranje editora…</div>}><CodeEditorApp project={codeProject} onProjectChange={onSelectCodeProject}/></Suspense> :
         w.id==='sudoku'?<Sudoku active={active}/> :
         w.id==='tetris'?<Tetris active={active}/> :
         w.id==='invaders'?<SpaceInvaders active={active}/> :
@@ -185,9 +189,10 @@ function Calendar({ now }: { now:Date }) {
   </div>
 }
 export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
+  const [codeProject,setCodeProject]=useState<CodeProject|null>(initialCodeProject)
   const [windows,setWindows]=useState<WindowData[]>(()=>{
     const course=initialHashCourse()
-    return course?[{id:course,x:140,y:88,z:3,minimized:false,maximized:false}]:[]
+    return course?[{id:course,x:140,y:88,z:3,minimized:false,maximized:import.meta.env.VITE_OFFLINE_APP==='true'}]:[]
   })
   const [selected,setSelected]=useState<AppId|null>(null)
   const {shortcuts,pins,hasShortcut,addShortcut,removeShortcut,moveShortcut,pin,unpin}=useDesktopConfiguration(applicationIds)
@@ -245,9 +250,10 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
     const z=++zRef.current
     setWindows(current=>current.some(w=>w.id===id)?
       current.map(w=>w.id===id?{...w,minimized:false,z}:w):
-      [...current,{id,x:125+(current.length%5)*43,y:85+(current.length%5)*27,z,minimized:false,maximized:false}])
+      [...current,{id,x:125+(current.length%5)*43,y:85+(current.length%5)*27,z,minimized:false,maximized:import.meta.env.VITE_OFFLINE_APP==='true'&&(courseIds.includes(id)||id==='code')}])
     setOverview(false);setSearch('');setPanel(null);setContext(null);setShortcutMenu(null)
   },[])
+  const openCode=(project:CodeProject)=>{setCodeProject(project);open('code')}
   useEffect(()=>{
     const onHash=()=>{const course=initialHashCourse();if(course)open(course)}
     window.addEventListener('hashchange',onHash)
@@ -342,7 +348,7 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
       </div>
     </main>
 
-    {windows.map(w=><WindowFrame key={w.id} windowData={w} isFocused={activeWindow?.id===w.id} gamesActive={!overview && panel===null} now={now} otherWindows={windows} preferences={preferences} onSettingsChange={changeSettings} onOpenApp={open}
+    {windows.map(w=><WindowFrame key={w.id} windowData={w} isFocused={activeWindow?.id===w.id} gamesActive={!overview && panel===null} now={now} otherWindows={windows} preferences={preferences} onSettingsChange={changeSettings} onOpenApp={open} codeProject={codeProject} onOpenCode={openCode} onSelectCodeProject={setCodeProject}
       onFocus={()=>{if(!w.minimized&&activeWindow?.id!==w.id)focus(w.id)}}
       onClose={()=>close(w.id)} onMinimize={()=>minimize(w.id)} onMaximize={()=>maximize(w.id)}
       onMove={(x,y)=>move(w.id,x,y)} onWindowMenu={(x,y)=>{setShortcutMenu({id:w.id,x,y,source:"window"});setContext(null)}}/>)}

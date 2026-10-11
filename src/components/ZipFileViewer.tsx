@@ -3,60 +3,10 @@ import { assetUrl } from '../lib/assets'
 import { codeLanguageForFile, codeLanguageLabel, highlightCode } from '../lib/highlight'
 import { CourseBrowserIcon, CourseFileIcon } from './CourseFileIcon'
 
-type ZipEntry = { name:string; size:number; compressedSize:number; offset:number; method:number; isDirectory:boolean }
-const MAX_ENTRIES=6000
-const MAX_FILE_SIZE=2_000_000
-const TEXT_EXTENSIONS=/\.(cs|csproj|sln|md|txt|json|xml|yaml|yml|js|jsx|ts|tsx|css|html|htm|sh|ps1|props|targets|config|editorconfig|gitignore|sql|csv|py|java|c|cpp|h|hpp|fs|fsproj|razor|dockerfile|gitkeep)$/i
+import {isTextEntry,parseZip,readZipFile,type ZipEntry} from '../lib/archive'
+import type {CodeProject} from '../lib/codeProjects'
 
-function parseZip(buffer:ArrayBuffer):ZipEntry[] {
-  const dv=new DataView(buffer)
-  const decoder=new TextDecoder()
-  let end=-1
-  for(let i=buffer.byteLength-22;i>=Math.max(0,buffer.byteLength-65557);i--){
-    if(dv.getUint32(i,true)===0x06054b50){end=i;break}
-  }
-  if(end<0)throw Error('Format arhive nije podržan.')
-  const count=dv.getUint16(end+10,true),offset=dv.getUint32(end+16,true)
-  if(count>MAX_ENTRIES)throw Error('Arhiva sadrži previše fajlova za pregled.')
-  const entries:ZipEntry[]=[]
-  let position=offset
-  for(let i=0;i<count;i++){
-    if(position+46>dv.byteLength||dv.getUint32(position,true)!==0x02014b50)throw Error('Arhiva nije ispravna.')
-    const method=dv.getUint16(position+10,true)
-    const compressedSize=dv.getUint32(position+20,true)
-    const size=dv.getUint32(position+24,true)
-    const nameSize=dv.getUint16(position+28,true)
-    const extra=dv.getUint16(position+30,true)
-    const comment=dv.getUint16(position+32,true)
-    const localOffset=dv.getUint32(position+42,true)
-    if(position+46+nameSize+extra+comment>dv.byteLength)throw Error('Oštećen spisak fajlova.')
-    const bytes=new Uint8Array(buffer,position+46,nameSize)
-    const name=decoder.decode(bytes).replaceAll('\\','/')
-    if(!name.startsWith('/')&&!name.split('/').includes('..')&&!name.includes('\0')){
-      entries.push({name,size,compressedSize,offset:localOffset,method,isDirectory:name.endsWith('/')})
-    }
-    position+=46+nameSize+extra+comment
-  }
-  return entries.sort((a,b)=>a.name.localeCompare(b.name,'sr'))
-}
-async function readZipFile(buffer:ArrayBuffer,entry:ZipEntry):Promise<string>{
-  if(entry.size>MAX_FILE_SIZE)throw Error('Fajl je prevelik za pregled. Preuzmi ZIP arhivu.')
-  const dv=new DataView(buffer)
-  if(entry.offset+30>dv.byteLength||dv.getUint32(entry.offset,true)!==0x04034b50)throw Error('Neispravan zapis u arhivi.')
-  const nameLength=dv.getUint16(entry.offset+26,true)
-  const extraLength=dv.getUint16(entry.offset+28,true)
-  const begin=entry.offset+30+nameLength+extraLength
-  if(begin+entry.compressedSize>buffer.byteLength)throw Error('Oštećen sadržaj fajla.')
-  const bytes=new Uint8Array(buffer,begin,entry.compressedSize)
-  let decoded:Uint8Array
-  if(entry.method===0)decoded=bytes
-  else if(entry.method===8 && typeof DecompressionStream!=='undefined'){
-    const stream=new Blob([new Uint8Array(bytes).buffer]).stream().pipeThrough(new DecompressionStream('deflate-raw'))
-    decoded=new Uint8Array(await new Response(stream).arrayBuffer())
-  }else throw Error('Kompresija ovog fajla nije podržana u pregledu. Preuzmi arhivu.')
-  return new TextDecoder('utf-8',{fatal:false}).decode(decoded)
-}
-export function ZipFileViewer({file,title}:{file:string;title:string}){
+export function ZipFileViewer({file,title,onOpenEditor}:{file:string;title:string;onOpenEditor?:(project:CodeProject)=>void}){
   const [archive,setArchive]=useState<{buffer:ArrayBuffer;entries:ZipEntry[]}|null>(null)
   const [loading,setLoading]=useState(true)
   const [error,setError]=useState('')
@@ -84,7 +34,7 @@ export function ZipFileViewer({file,title}:{file:string;title:string}){
   const select=async(entry:ZipEntry)=>{
     if(entry.isDirectory){setExpanded(previous=>{const next=new Set(previous);if(next.has(entry.name.replace(/\/$/,'')))next.delete(entry.name.replace(/\/$/,''));else next.add(entry.name.replace(/\/$/,''));return next});return}
     setActive(entry.name);setPreview('');setPreviewError('')
-    if(!TEXT_EXTENSIONS.test(entry.name) && !/\/Dockerfile$|\/Makefile$|\/LICENSE$/i.test(entry.name)){
+    if(!isTextEntry(entry)){
       setPreviewError('Ovaj format nema tekstualni pregled. Preuzmi ZIP arhivu za otvaranje.');return
     }
     if(!archive)return
@@ -107,6 +57,7 @@ export function ZipFileViewer({file,title}:{file:string;title:string}){
   return <section className="ers-archive">
     <header className="ers-archive-header">
       <div><span className="ers-archive-overline">ZIP ARHIVA</span><h2>{title}</h2><p>{loading?'Učitavanje…':error||`${files.filter(entry=>!entry.isDirectory).length} fajlova · izvorni kod i dokumentacija`}</p></div>
+      {onOpenEditor&&files.some(isTextEntry)&&<button className="ers-download" onClick={()=>onOpenEditor({file,title,initialFile:active||undefined})}>〈/〉 Otvori u editoru</button>}
       <a href={assetUrl(file)} download className="ers-download"><CourseBrowserIcon name="download"/> Preuzmi ZIP</a>
     </header>
     {loading?<div className="ers-empty">Učitavanje arhive…</div>:error?<p role="alert" className="ers-error">{error}</p>:

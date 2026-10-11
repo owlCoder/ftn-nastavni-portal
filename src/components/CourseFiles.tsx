@@ -5,6 +5,7 @@ import { assetUrl } from '../lib/assets'
 import { PracticumDocument } from './document/PracticumDocument'
 import { CheckpointsView } from './CheckpointsView'
 import { ZipFileViewer } from './ZipFileViewer'
+import type {CodeProject} from '../lib/codeProjects'
 import { CourseBrowserIcon, CourseFileIcon } from './CourseFileIcon'
 import { downloadFolderZip, downloadText } from './courseDownloads'
 import { buildCourseFiles, courseFileContent, courseFolderEntries, practicumExerciseHref, safeFileName, type CourseFile as Item, type CourseFileKind as FileKind } from './courseFileTree'
@@ -22,7 +23,7 @@ function PresentationBadge({item}:{item:Item}){
 }
 type Preview={kind:FileKind;item:Item}
 
-export function CourseFiles({course}:{course:Course}){
+export function CourseFiles({course,onOpenEditor}:{course:Course;onOpenEditor?:(project:CodeProject)=>void}){
   const files=useMemo(()=>buildCourseFiles(course),[course])
   const lookup=useMemo(()=>new Map(files.map(item=>[item.id,item])),[files])
   const children=(id:string)=>files.filter(item=>item.parent===id)
@@ -163,7 +164,7 @@ export function CourseFiles({course}:{course:Course}){
             </div> :
             viewing.kind==='checkpoints'?<div className="ers-checkpoint-document"><CheckpointsView checkpoints={course.checkpoints}/></div>:
             pdfViewing?<PdfViewer file={viewing.source!} name={viewing.name}/>:
-            viewing.kind==='zip'&&viewing.source?<ZipFileViewer file={viewing.source} title={viewing.name}/>:
+            viewing.kind==='zip'&&viewing.source?<ZipFileViewer file={viewing.source} title={viewing.name} onOpenEditor={onOpenEditor}/>:
             <p>Fajl nije dostupan za prikaz.</p>}
         </div> : <div className="ers-directory">
           <div className="ers-directory-heading">

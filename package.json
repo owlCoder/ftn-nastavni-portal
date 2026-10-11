@@ -1,7 +1,7 @@
 {
   "name": "ftn-nastavni-portal",
   "private": true,
-  "version": "2.1.0",
+  "version": "2.2.0",
   "type": "module",
   "engines": {
     "node": "22.x"
@@ -9,7 +9,7 @@
   "scripts": {
     "predev": "npm run generate:practicum && node scripts/generate-example-zips.mjs",
     "dev": "vite",
-    "prebuild": "npm run generate:practicum && node scripts/generate-example-zips.mjs && npm run check:course-files",
+    "prebuild": "node scripts/copy-code-editor-licenses.mjs && npm run generate:practicum && node scripts/generate-example-zips.mjs && npm run check:course-files",
     "generate:practicum": "node scripts/generate-practicum-markdown.mjs",
     "check:materials-sync": "node scripts/check-materials-sync.mjs",
     "build": "tsc -b && vite build",
@@ -17,6 +17,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@codemirror/commands": "^6.11.1",
+    "@codemirror/lang-css": "^6.3.1",
+    "@codemirror/lang-javascript": "^6.2.5",
+    "@codemirror/lang-json": "^6.0.2",
+    "@codemirror/lang-markdown": "^6.5.2",
+    "@codemirror/lang-xml": "^6.1.0",
+    "@codemirror/language": "^6.13.1",
+    "@codemirror/legacy-modes": "^6.5.5",
+    "@codemirror/search": "^6.7.2",
+    "@codemirror/state": "^6.7.6",
+    "@codemirror/view": "^6.43.14",
+    "@lezer/highlight": "^1.2.5",
+    "codemirror": "^6.0.2",
     "highlight.js": "^11.12.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
