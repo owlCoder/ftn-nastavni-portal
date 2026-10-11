@@ -297,3 +297,80 @@
 @media(prefers-reduced-motion:reduce){
   .gn-shell .gn-overview .ftn-launcher-cell,.gn-shell .gn-overview .ftn-launcher-actions button{animation:none!important;transition:none!important}
 }
+
+/* Regex and CSV: purpose-built tools instead of generic form columns. */
+.gn-shell .ftn-regex-controls>.ftn-suite-field:first-child{flex:1 1 75%}
+.gn-shell .ftn-regex-controls>.ftn-suite-field:last-child{flex:0 0 100px}
+.gn-shell .gn-window-app-regex .ftn-suite-panel{max-width:960px}
+.gn-shell .ftn-regex-results-heading{
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
+ padding:12px 0;border-top:1px solid var(--studio-line);margin-top:8px;
+}
+.gn-shell .ftn-regex-results-heading>div{display:flex;align-items:center;gap:9px}
+.gn-shell .ftn-regex-results-heading strong{font-size:12px;color:var(--studio-text)}
+.gn-shell .ftn-regex-results-heading button{font-size:10px;min-height:30px}
+.gn-shell .ftn-regex-led{width:8px;height:8px;border-radius:50%;background:#48b58c;flex:none}
+.gn-shell .ftn-regex-led.invalid{background:#d16676}
+.gn-shell .ftn-regex-preview{
+ background:var(--studio-field);border:1px solid var(--studio-line);border-radius:11px;
+ min-height:100px;max-height:195px;overflow:auto;
+}
+.gn-shell .ftn-regex-preview pre{
+ font:12px/1.9 ui-monospace,SFMono-Regular,monospace;
+ white-space:pre-wrap;overflow-wrap:anywhere;color:var(--studio-text);
+ margin:0;padding:15px 17px;
+}
+.gn-shell .ftn-regex-hit{
+ background:rgba(240,190,100,.26);border-bottom:2px solid #dfac4e;
+ border-radius:3px;color:var(--studio-text);padding:1px 0;
+}
+.gn-shell .ftn-regex-hits{display:flex;flex-wrap:wrap;gap:7px;margin:13px 0 4px}
+.gn-shell .ftn-regex-hits>div{
+ display:flex;gap:8px;align-items:center;
+ background:var(--studio-field);border:1px solid var(--studio-line);border-radius:9px;
+ padding:7px 10px;min-width:0;
+}
+.gn-shell .ftn-regex-hits>div>span{font:700 10px ui-monospace,monospace;color:var(--studio-muted)}
+.gn-shell .ftn-regex-hits code{overflow-wrap:anywhere;font-size:11px}
+.gn-shell .ftn-regex-hits small{color:var(--studio-muted);font:10px ui-monospace,monospace}
+.gn-shell .ftn-regex-hits>p{font-size:12px;color:var(--studio-muted)}
+
+.gn-shell .ftn-csv-toolbar{
+ display:flex;justify-content:space-between;align-items:center;gap:14px;
+ flex-wrap:wrap;margin:0 0 17px;
+}
+.gn-shell .ftn-csv-stats{display:flex;align-items:center;gap:8px}
+.gn-shell .ftn-csv-stats>span{
+ display:inline-flex;align-items:center;gap:5px;padding:8px 10px;
+ border-radius:9px;background:var(--studio-field);border:1px solid var(--studio-line);
+ color:var(--studio-muted);font-size:10px;
+}
+.gn-shell .ftn-csv-stats strong{font-size:13px;color:var(--studio-text);font-variant-numeric:tabular-nums}
+.gn-shell .ftn-csv-controls{display:flex;gap:6px;flex-wrap:wrap}
+.gn-shell .ftn-csv-controls button{min-height:34px}
+.gn-shell .ftn-csv-controls button.is-active{background:var(--studio-field);border-color:var(--studio-accent);color:var(--studio-accent)}
+.gn-shell .ftn-csv-import{
+ min-height:34px;display:inline-flex;align-items:center;justify-content:center;
+ gap:6px;padding:8px 12px;border:1px solid var(--studio-line);
+ border-radius:9px;background:var(--studio-field);color:var(--studio-text);
+ font-size:12px;font-weight:690;cursor:pointer;
+}
+.gn-shell .ftn-csv-import:hover{border-color:var(--studio-accent)}
+.gn-shell .ftn-csv-import:focus-within{outline:2px solid var(--studio-accent);outline-offset:2px}
+.gn-shell .ftn-csv-import input{position:absolute;opacity:0;width:1px;height:1px}
+.gn-shell .ftn-csv-datagrid{max-height:min(48vh,440px);min-height:140px;overflow:auto;scrollbar-width:thin;scrollbar-color:#8297b18a transparent}
+.gn-shell .ftn-csv-datagrid table{border-spacing:0;border-collapse:separate}
+.gn-shell .ftn-csv-datagrid th{
+ position:sticky;top:0;z-index:2;
+ background:var(--studio-field);border-bottom:1px solid var(--studio-line);
+ white-space:nowrap;font-size:11px;color:var(--studio-text);
+}
+.gn-shell .ftn-csv-datagrid td{font-variant-numeric:tabular-nums;color:var(--studio-text);max-width:270px;overflow-wrap:anywhere}
+.gn-shell .ftn-csv-datagrid td:first-child,.gn-shell .ftn-csv-datagrid th:first-child{
+ position:sticky;left:0;z-index:1;
+ width:46px;min-width:46px;background:var(--studio-field);color:var(--studio-muted);font-size:10px;
+}
+.gn-shell .ftn-csv-datagrid th:first-child{z-index:3}
+.gn-shell .ftn-csv-datagrid tr:nth-child(even) td:not(:first-child){background:color-mix(in srgb,var(--studio-card) 90%,var(--studio-field))}
+.gn-shell .ftn-csv-datagrid tr:hover td{background:var(--studio-field)}
+@media(max-width:650px){.gn-shell .ftn-csv-controls{width:100%}.gn-shell .ftn-csv-toolbar{gap:9px}}
