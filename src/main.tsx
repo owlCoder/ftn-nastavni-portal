@@ -28,6 +28,8 @@ import './styles/studio-apps.css'
 import './styles/app-suite-polish.css'
 import './styles/context-actions.css'
 import './styles/ui-modernization.css'
+import './styles/course-files-polish.css'
+import './styles/motion.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

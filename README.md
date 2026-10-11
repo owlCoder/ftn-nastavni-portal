@@ -12,13 +12,15 @@ React i TypeScript aplikacija za pregled nastavnih materijala, praktikuma i prog
 | Predmet | Sadržaj |
 |---|---|
 | ERS — Elementi razvoja softvera | Osam vežbi, prezentacije, Logger–Blogger, ECommerce, Equipment Reservation i projektna specifikacija |
-| OIB — Osnove informacione bezbednosti | Osam vežbi, prezentacije, osam .NET primera i projektna specifikacija |
+| OIB — Osnove informacione bezbednosti | Osam vežbi, prezentacije, osam .NET primera, projektna specifikacija i uputstvo za bodovanje |
 | ODP — Osnove distribuiranog programiranja | Osam vežbi, prezentacije, osam .NET primera i projektna specifikacija |
 | IBIS — Informaciona bezbednost infrastrukturnih sistema | SCADA prezentacije i specifikacije SCADALattice, RackMetria i RouteMetria |
 
 Materijali su raspoređeni u **Računarske vežbe → Vežba 01–08**. Svaka vežba povezuje prezentaciju, primer i poglavlje praktikuma. Izvoz foldera uključuje tekst zadatka u Markdown formatu. Uvodne prezentacije i ceo praktikum dostupni su na nivou predmeta; specifikacija i kontrolne tačke u folderu **Projekat**. IBIS ima zasebne foldere za prezentacije i projekte.
 
 Portal objavljuje PDF prezentacije; PPTX izvori ostaju u repozitorijumu nastavnih materijala. Primeri i tekstovi zadataka usklađeni su između oba repozitorijuma.
+
+U folderu **OIB → Projekat** nalazi se i [Bodovanje projekta](public/downloads/oib-projekat/OIB_Bodovanje_Projekta.pdf): šest strana sa kriterijumima, raspodelom poena, proširenjima i primerom zadatka R1-01.
 
 Svaki predmet u folderu **Uputstva** sadrži PDF uputstva za Tapiz LMS i Tapiz Boards, dostupna za čitanje i preuzimanje.
 
@@ -34,6 +36,8 @@ npm run preview
 ```
 
 Razvojni server koristi `http://localhost:5600`, a produkcioni izlaz je u `dist/`. `predev` i `prebuild` generišu Markdown dokumente i ZIP arhive iz izvora. Build proverava strukturu predmeta i sadržaj izvezenih vežbi.
+
+Pregled materijala podržava listu i mrežu; izabrani prikaz ostaje sačuvan u pregledaču. Numeracija prezentacija prikazana je odvojeno od naziva, uz oznaku „Uvod” za početnu prezentaciju. Preglednik ZIP arhiva i praktikum boje sintaksu za C#, JSON, XML, JavaScript, TypeScript, CSS, YAML, Markdown i shell komande. Kretanje prozora, menija i kontrola koristi zajedničke postavke iz `src/styles/motion.css` i poštuje `prefers-reduced-motion`.
 
 Demo prijava je `student` / `ftn`. Ona služi prikazu interfejsa i ne obezbeđuje autentikaciju. Beleške, događaji i podešavanja čuvaju se lokalno u pregledaču. PDF čitač podržava zoom, fullscreen i promenu stranice točkićem miša, tasterom Space ili strelicama levo/desno; Shift+Space vraća prethodnu stranicu.
 

@@ -112,6 +112,7 @@ function WindowFrame({ windowData: w, isFocused, gamesActive, now, otherWindows,
 }) {
   const ref=useRef<HTMLElement>(null)
   const dragging=useRef<{px:number;py:number;x:number;y:number}|null>(null)
+  const [isDragging,setIsDragging]=useState(false)
   const [isFullscreen,setIsFullscreen]=useState(false)
   useEffect(()=>{
     const sync=()=>setIsFullscreen(document.fullscreenElement===ref.current)
@@ -121,6 +122,7 @@ function WindowFrame({ windowData: w, isFocused, gamesActive, now, otherWindows,
   const onPointerDown=(e:ReactPointerEvent<HTMLDivElement>)=>{
     if(e.button!==0 || w.maximized || isFullscreen || (e.target instanceof Element && e.target.closest('button')))return
     dragging.current={px:e.clientX,py:e.clientY,x:w.x,y:w.y}
+    setIsDragging(true)
     e.currentTarget.setPointerCapture(e.pointerId)
     onFocus()
   }
@@ -130,13 +132,14 @@ function WindowFrame({ windowData: w, isFocused, gamesActive, now, otherWindows,
     onMove(Math.max(0,Math.min(window.innerWidth-160,d.x+e.clientX-d.px)),Math.max(35,Math.min(Math.max(35,window.innerHeight-430),d.y+e.clientY-d.py)))
   }
   const title=names[w.id]
+  const stopDragging=()=>{dragging.current=null;setIsDragging(false)}
   const course=courses.find(c=>c.id===w.id)
   const active=isFocused && !w.minimized && gamesActive
-  return <section ref={ref} id={'ftn-window-'+w.id} aria-label={'Prozor: '+title} onPointerDown={onFocus}
+  return <section ref={ref} id={'ftn-window-'+w.id} aria-label={'Prozor: '+title} onPointerDown={onFocus} data-dragging={isDragging||undefined}
     className={'gn-window'+(isFocused?' gn-window-focused':'')+(w.maximized?' gn-window-max':'')+(w.minimized?' gn-window-min':'')+(['calendar','monitor'].includes(w.id)?' gn-utility-window':'')+' gn-window-app-'+w.id}
     style={{left:w.x,top:w.y,zIndex:w.z,'--gn-window-y':`${w.y}px`} as CSSProperties}>
     <div className="gn-headerbar" onDoubleClick={e=>{if(!(e.target instanceof Element&&e.target.closest("button")))onMaximize()}} onContextMenu={e=>{e.preventDefault();onWindowMenu(e.clientX,e.clientY)}} onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove} onPointerUp={()=>dragging.current=null} onPointerCancel={()=>dragging.current=null}>
+      onPointerMove={onPointerMove} onPointerUp={stopDragging} onPointerCancel={stopDragging} onLostPointerCapture={stopDragging}>
       <div className="gn-window-leading"><AppArtwork id={w.id}/></div>
       <div className="gn-header-title"><strong>{course ? course.name : title}</strong><span>{course ? 'Nastavni materijali · '+course.code : windowCategories[w.id] ?? 'Igre'}</span></div>
       <div className="gn-window-controls">

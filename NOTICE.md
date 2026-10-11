@@ -28,6 +28,7 @@ AMD and NVIDIA SVG marks are sourced from [Simple Icons](https://github.com/simp
 
 - [React](https://react.dev/), [TypeScript](https://www.typescriptlang.org/) and [Vite](https://vite.dev/) are subject to their respective upstream licenses.
 - [Mozilla PDF.js](https://mozilla.github.io/pdf.js/) is loaded at runtime via cdnjs for the document viewer and is subject to its upstream license.
+- [Highlight.js](https://highlightjs.org/) provides syntax highlighting under the [BSD 3-Clause license](public/licenses/highlight-js.txt).
 - [Open-Meteo](https://open-meteo.com/) supplies weather information under its own terms.
 
 If you identify a missing attribution or a license concern, please open an issue or reach out to the maintainers.

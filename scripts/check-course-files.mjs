@@ -31,8 +31,9 @@ try {
 
     const slides = course.presentations.kind === 'downloads' ? course.presentations.downloads : []
     const projects = [...(course.project ? [course.project] : []), ...(course.projects ?? [])]
+    const projectSources = [...projects, ...(course.projectGuides ?? [])].map(item => item.file)
     const expectedSources = [
-      ...slides.map(item => item.file), ...projects.map(item => item.file), ...examples[course.id].map(item => item.zip),
+      ...slides.map(item => item.file), ...projectSources, ...examples[course.id].map(item => item.zip),
       ...(bundles[course.id] ? [bundles[course.id]] : []),
       ...(course.presentations.kind === 'downloads' ? [course.presentations.bundle.file] : []),
       ...sharedCourseGuides.map(item => item.file),
@@ -40,7 +41,7 @@ try {
     assert.deepEqual(files.filter(item => item.source).map(item => item.source).sort(), expectedSources.sort(),
       course.code + ': each original asset must appear exactly once')
     assert.deepEqual(files.filter(item => item.parent === 'projekat' && item.kind === 'pdf').map(item => item.source),
-      projects.map(item => item.file))
+      projectSources)
 
     const rootEntries = courseFolderEntries(course, 'root', files)
     assert.equal(new Set(rootEntries.map(item => item.path)).size, rootEntries.length, course.code + ': colliding archive paths')
@@ -48,7 +49,7 @@ try {
       files.filter(item => item.source && !item.bundle).map(item => item.source).sort(),
       course.code + ': folder export must contain original assets without collection ZIPs')
     const projectEntries = courseFolderEntries(course, 'projekat', files)
-    assert.deepEqual(projectEntries.filter(item => item.url).map(item => item.url), projects.map(item => item.file))
+    assert.deepEqual(projectEntries.filter(item => item.url).map(item => item.url), projectSources)
     assert.equal(lookup.get('uputstva')?.parent, 'root')
     assert.deepEqual(files.filter(item => item.parent === 'uputstva').map(item => item.source), sharedCourseGuides.map(item => item.file))
     assert.deepEqual(courseFolderEntries(course, 'uputstva', files), sharedCourseGuides.map(item => ({ path: item.name, url: item.file })))

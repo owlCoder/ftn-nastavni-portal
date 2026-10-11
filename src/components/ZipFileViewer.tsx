@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { assetUrl } from '../lib/assets'
+import { codeLanguageForFile, codeLanguageLabel, highlightCode } from '../lib/highlight'
+import { CourseBrowserIcon, CourseFileIcon } from './CourseFileIcon'
 
 type ZipEntry = { name:string; size:number; compressedSize:number; offset:number; method:number; isDirectory:boolean }
 const MAX_ENTRIES=6000
@@ -54,8 +56,6 @@ async function readZipFile(buffer:ArrayBuffer,entry:ZipEntry):Promise<string>{
   }else throw Error('Kompresija ovog fajla nije podržana u pregledu. Preuzmi arhivu.')
   return new TextDecoder('utf-8',{fatal:false}).decode(decoded)
 }
-const icon=(kind:'file'|'folder'|'zip')=>kind==='folder'?'▸':kind==='zip'?'▤':'≡'
-
 export function ZipFileViewer({file,title}:{file:string;title:string}){
   const [archive,setArchive]=useState<{buffer:ArrayBuffer;entries:ZipEntry[]}|null>(null)
   const [loading,setLoading]=useState(true)
@@ -64,6 +64,8 @@ export function ZipFileViewer({file,title}:{file:string;title:string}){
   const [preview,setPreview]=useState('')
   const [previewError,setPreviewError]=useState('')
   const [expanded,setExpanded]=useState<Set<string>>(()=>new Set())
+  const language=codeLanguageForFile(active)
+  const highlighted=useMemo(()=>highlightCode(preview,language),[preview,language])
   useEffect(()=>{
     const controller=new AbortController()
     setArchive(null);setLoading(true);setError('');setActive('');setPreview('')
@@ -105,7 +107,7 @@ export function ZipFileViewer({file,title}:{file:string;title:string}){
   return <section className="ers-archive">
     <header className="ers-archive-header">
       <div><span className="ers-archive-overline">ZIP ARHIVA</span><h2>{title}</h2><p>{loading?'Učitavanje…':error||`${files.filter(entry=>!entry.isDirectory).length} fajlova · izvorni kod i dokumentacija`}</p></div>
-      <a href={assetUrl(file)} download className="ers-download">↓ Preuzmi ZIP</a>
+      <a href={assetUrl(file)} download className="ers-download"><CourseBrowserIcon name="download"/> Preuzmi ZIP</a>
     </header>
     {loading?<div className="ers-empty">Učitavanje arhive…</div>:error?<p role="alert" className="ers-error">{error}</p>:
       <div className="ers-archive-content">
@@ -116,14 +118,14 @@ export function ZipFileViewer({file,title}:{file:string;title:string}){
               setExpanded(old=>{const next=new Set(old);if(next.has(row.path))next.delete(row.path);else next.add(row.path);return next}):
               row.entry&&void select(row.entry)}
             title={row.path} style={{paddingLeft:10+Math.min(row.depth,8)*15}}>
-            <span aria-hidden="true" className={row.folder?'ers-archive-folder':'ers-archive-file'}>{row.folder?(expanded.has(row.path)?'▾':'▸'):icon('file')}</span>
+            <span aria-hidden="true" className={row.folder?'ers-archive-folder':'ers-archive-file'}><CourseFileIcon kind={row.folder?'folder':'practicum-link'}/></span>
             <span>{row.name}</span>
           </button>)}
         </div>
         <div className="ers-archive-preview">
-          {active?<><div className="ers-archive-filebar"><strong>{active.split('/').pop()}</strong><small>{active}</small></div>
-              {previewError?<p className="ers-archive-notice">{previewError}</p>:<pre><code>{preview}</code></pre>}</>:
-            <div className="ers-archive-placeholder"><span>⌘</span><strong>Izaberi fajl</strong><p>Klikni na fajl sa leve strane da pregledaš njegov tekstualni sadržaj.</p></div>}
+          {active?<><div className="ers-archive-filebar"><div className="ers-archive-file-title"><strong>{active.split('/').pop()}</strong><span className="ers-code-language">{codeLanguageLabel(language)}</span></div><small>{active}</small></div>
+              {previewError?<p className="ers-archive-notice">{previewError}</p>:<pre><code className="ftn-highlight" dangerouslySetInnerHTML={{__html:highlighted}}/></pre>}</>:
+            <div className="ers-archive-placeholder"><CourseFileIcon kind="zip"/><strong>Izaberi fajl</strong><p>Klikni na fajl sa leve strane da pregledaš njegov tekstualni sadržaj.</p></div>}
         </div>
       </div>}
   </section>

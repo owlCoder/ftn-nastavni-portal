@@ -1,6 +1,6 @@
-import type { CSSProperties } from 'react'
+import { useMemo, type CSSProperties } from 'react'
 import { assetUrl } from '../../lib/assets'
-import { highlightCode } from '../../lib/highlight'
+import { codeLanguageLabel, highlightCodeLines } from '../../lib/highlight'
 import type { Accent, CalloutTone, CodeBlock, DiagramBlock, TextBlock } from '../../practicum/types'
 import { ExpandIcon } from '../icons'
 import type { PreparedBlock } from './prepareDocument'
@@ -42,14 +42,15 @@ function TextView({ block, anchor }: { block: TextBlock; anchor?: string }) {
 }
 
 function CodeView({ block, label }: { block: CodeBlock; label?: string }) {
+  const lines = useMemo(() => highlightCodeLines(block.code, block.language), [block.code, block.language])
   return (
     <figure className="code-figure keep-together">
-      <div className="code-toolbar"><span>{block.language}</span></div>
+      <div className="code-toolbar"><span>{codeLanguageLabel(block.language)}</span></div>
       <pre className="code-panel">
-        {block.code.split('\n').map((line, index) => (
+        {lines.map((line, index) => (
           <span className="code-row" key={index}>
             <span className="code-number" aria-hidden="true">{index + 1}</span>
-            <code dangerouslySetInnerHTML={{ __html: highlightCode(line || ' ', block.language) }} />
+            <code className="ftn-highlight" dangerouslySetInnerHTML={{ __html: line || ' ' }} />
           </span>
         ))}
       </pre>

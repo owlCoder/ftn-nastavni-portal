@@ -1,0 +1,64 @@
+/* Shared motion: controls 140 ms, panels 180 ms, windows 220 ms. */
+:root{
+  --ftn-motion-control:140ms;
+  --ftn-motion-panel:180ms;
+  --ftn-motion-window:220ms;
+  --ftn-motion-ease:cubic-bezier(.2,.7,.2,1);
+}
+#root :where(*,*::before,*::after){
+  transition-timing-function:var(--ftn-motion-ease);
+}
+#root :is(button,a,input,textarea,select){
+  transition-property:background-color,border-color,color,box-shadow,opacity,transform;
+  transition-duration:var(--ftn-motion-control);
+}
+#root :is(.gn-shell,.gn-wallpaper,.gn-headerbar,.gn-widget-rail .widget,
+  .gn-workspace-preview,.gn-wallpaper-option,.document-layout,.ftn-switch-thumb,
+  .usage-chart-column,.usage-meter i,.gn-monitor-bar,.gn-monitor-track span){
+  transition-duration:var(--ftn-motion-panel);
+}
+#root :is(.ers-file-row,.ftn-launcher-cell,.gn-app-art,.gn-file-svg,
+  .ftn-password-meter span,.slide-preview-card,.presentation-download-card,.subject-card){
+  transition-duration:var(--ftn-motion-control);
+}
+#root .gn-window{
+  transition-property:left,top,width,height,border-radius,opacity,transform,box-shadow,border-color,filter;
+  transition-duration:var(--ftn-motion-window);
+  transition-delay:0ms;
+  animation:ftn-window-enter var(--ftn-motion-window) var(--ftn-motion-ease) backwards;
+}
+#root .gn-window[data-dragging=true]{transition-property:none}
+#root .gn-window.gn-window-min{
+  transition-property:opacity,transform,visibility;
+  transition-duration:var(--ftn-motion-window),var(--ftn-motion-window),0ms;
+  transition-delay:0ms,0ms,var(--ftn-motion-window);
+  transform:translateY(12px);
+}
+#root :is(.gn-overview,.gn-overview-top,.gn-apps-overview-heading,.gn-overview-dash,
+  .gn-bottom-dock,.gn-context,.gn-quick-menu,.ftn-shortcut-menu,.gn-calendar-popover,
+  .gn-about-section,.gn-about-heading,.gn-login-card,.ftn-auth-panel,.ftn-lock-content,
+  .tab-panel,.tab-panel>*){
+  animation-duration:var(--ftn-motion-panel);
+  animation-timing-function:var(--ftn-motion-ease);
+  animation-delay:0ms;
+}
+#root :is(.gn-quick-menu,.gn-context,.ftn-shortcut-menu,.ftn-auth-panel,.gn-about-section,.gn-about-heading){
+  animation-name:ftn-panel-enter;
+}
+#root .gn-overview{animation-name:ftn-overview-enter}
+#root .gn-calendar-popover{animation-name:ftn-calendar-enter}
+#root .gn-drawer-scrim{animation-duration:var(--ftn-motion-panel);animation-timing-function:var(--ftn-motion-ease)}
+#root :is(.ftn-launcher-cell,.gn-app-grid>button){animation:none}
+#root .gn-bottom-dock button:hover{transform:translateY(-2px)}
+#root .gn-overview-close:hover{transform:none}
+#root .gn-app-grid>button:hover :is(.gn-app-art,.gn-file-svg){transform:none;filter:none}
+#root .gn-shell :is(.gn-topbar,.gn-headerbar,.gn-overview,.gn-bottom-dock) button:active{transform:none}
+#root .ers-directory{animation:ftn-panel-enter var(--ftn-motion-panel) var(--ftn-motion-ease)}
+#root .gn-window:not(.gn-window-focused){filter:none}
+@keyframes ftn-window-enter{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes ftn-panel-enter{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@keyframes ftn-overview-enter{from{opacity:0;transform:translate(-50%,-52%) translateY(4px)}to{opacity:1;transform:translate(-50%,-52%)}}
+@keyframes ftn-calendar-enter{from{opacity:0;transform:translateX(-50%) translateY(4px)}to{opacity:1;transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){
+  #root :where(*,*::before,*::after){animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}

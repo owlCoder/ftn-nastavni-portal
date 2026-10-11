@@ -311,13 +311,6 @@ figcaption strong { color: #425b77; }
 .code-row { display: grid; grid-template-columns: 48px minmax(0,1fr); min-height: 1.55em; }
 .code-number { padding-right: 12px; border-right: 1px solid #edf0f3; color: #a1aab7; text-align: right; user-select: none; font-variant-numeric: tabular-nums; }
 .code-row code { min-width: 0; padding: 0 16px; white-space: pre-wrap; overflow-wrap: anywhere; }
-.tok-keyword { color: #005cc5; font-weight: 650; }
-.tok-type { color: #267f99; }
-.tok-string { color: #a31515; }
-.tok-comment { color: #6a737d; font-style: italic; }
-.tok-number { color: #098658; }
-.tok-attr { color: #795e26; }
-.tok-property { color: #0451a5; }
 
 .table-scroll { overflow-x: auto; border: 1px solid #dfe5eb; border-radius: 9px; }
 table { width: 100%; border-collapse: collapse; font-size: 13.5px; line-height: 1.48; }

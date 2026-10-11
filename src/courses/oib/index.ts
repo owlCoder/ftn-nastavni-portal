@@ -1,6 +1,6 @@
 import type { Course } from '../types'
 import { oibCheckpoints } from './checkpoints'
-import { oibPresentations, oibProject } from './downloads'
+import { oibGradingGuide, oibPresentations, oibProject } from './downloads'
 import { oibPracticum } from './practicum'
 
 export const oibCourse: Course = {
@@ -10,7 +10,7 @@ export const oibCourse: Course = {
   academicYear: '2026/2027',
   semester: 'zimski',
   available: true,
-  blurb: 'Praktikum, prezentacije, nastavni primeri, projektna specifikacija i kontrolne tačke.',
+  blurb: 'Praktikum, prezentacije, nastavni primeri, projektna specifikacija, bodovanje i kontrolne tačke.',
   accent: 'linear-gradient(145deg, #dc2626 0%, #b91c1c 48%, #7f1d1d 100%)',
   accentSoft: 'rgba(220,38,38,.14)',
   accentShadow: 'rgba(220,38,38,.20)',
@@ -18,4 +18,5 @@ export const oibCourse: Course = {
   presentations: oibPresentations,
   checkpoints: oibCheckpoints,
   project: oibProject,
+  projectGuides: [oibGradingGuide],
 }

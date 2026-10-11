@@ -57,6 +57,15 @@ export type ProjectDocument = {
   highlights: string[]
 }
 
+export type CourseGuide = {
+  id: string
+  name: string
+  description: string
+  file: string
+  pages: number
+  size: string
+}
+
 export type LessonPackage = {
   number: number
   title: string
@@ -90,4 +99,5 @@ export type Course = {
   checkpoints: Checkpoint[]
   project?: ProjectDocument
   projects?: ProjectDocument[]
+  projectGuides?: CourseGuide[]
 }

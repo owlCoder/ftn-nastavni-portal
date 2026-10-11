@@ -1,4 +1,4 @@
-import type { CoursePresentations, ProjectDocument } from '../types'
+import type { CourseGuide, CoursePresentations, ProjectDocument } from '../types'
 
 export const oibPresentations: CoursePresentations = {
   kind: 'downloads',
@@ -24,4 +24,13 @@ export const oibProject: ProjectDocument = {
   pages: 95,
   size: '2,7 MB',
   highlights: ['90 projektnih celina', 'R1, R2 i R3 razvojni nivoi', 'Timovi od 6 do 10 studenata'],
+}
+
+export const oibGradingGuide: CourseGuide = {
+  id: 'bodovanje',
+  name: 'Bodovanje projekta.pdf',
+  description: 'Uputstvo za izradu i bodovanje SCUTUM projekta, sa kriterijumima i primerom zadatka R1-01.',
+  file: '/downloads/oib-projekat/OIB_Bodovanje_Projekta.pdf',
+  pages: 6,
+  size: '228 KB',
 }

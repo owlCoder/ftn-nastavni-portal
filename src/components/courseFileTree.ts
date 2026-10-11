@@ -17,6 +17,7 @@ export type CourseFile = {
   source?: string
   size?: string
   pages?: number
+  presentationNumber?: string
   exercise?: number
   anchor?: string
   /** Collections remain available separately, but are excluded from folder exports. */
@@ -63,7 +64,7 @@ export function buildCourseFiles(course: Course): CourseFile[] {
       files.push({ id: parent, parent: 'vezbe', kind: 'folder', name: 'Vežba ' + number(exercise.number), description: slide?.title ?? exercise.title })
       if (slide) files.push({
         id: parent + '/prezentacija', parent, kind: 'pdf',
-        name: slide.number + ' — ' + slide.title + '.pdf', description: 'Prezentacija za vežbu.',
+        name: slide.title + '.pdf', description: 'Prezentacija za vežbu.', presentationNumber: slide.number,
         source: slide.file, size: slide.size, pages: slide.pages,
       })
       if (example) files.push({
@@ -80,14 +81,14 @@ export function buildCourseFiles(course: Course): CourseFile[] {
     // Introductory presentations live at the course root, outside exercise folders.
     for (const slide of slides.filter(item => !exercises.some(exercise => exercise.number === Number(item.number)))) files.push({
       id: 'uvod/' + slide.number, parent: 'root', kind: 'pdf',
-      name: slide.number + ' — ' + slide.title + '.pdf', description: slide.label,
+      name: slide.title + '.pdf', description: slide.label, presentationNumber: slide.number,
       source: slide.file, size: slide.size, pages: slide.pages,
     })
   } else if (slides.length) {
     files.push({ id: 'prezentacije', parent: 'root', kind: 'folder', name: 'Prezentacije', description: 'PDF prezentacije poređane po broju.' })
     for (const slide of slides) files.push({
       id: 'prezentacije/' + slide.number, parent: 'prezentacije', kind: 'pdf',
-      name: slide.number + ' — ' + slide.title + '.pdf', description: slide.label,
+      name: slide.title + '.pdf', description: slide.label, presentationNumber: slide.number,
       source: slide.file, size: slide.size, pages: slide.pages,
     })
   }
@@ -107,15 +108,21 @@ export function buildCourseFiles(course: Course): CourseFile[] {
   }
 
   const projects = [...(course.project ? [course.project] : []), ...(course.projects ?? [])]
-  if (projects.length || course.checkpoints.length) {
+  const projectGuides = course.projectGuides ?? []
+  if (projects.length || projectGuides.length || course.checkpoints.length) {
     files.push({
       id: 'projekat', parent: 'root', kind: 'folder', name: projects.length > 1 ? 'Projekti' : 'Projekat',
-      description: course.checkpoints.length ? 'Projektna specifikacija, obaveze i rokovi.' : 'Tehničke specifikacije projekata.',
+      description: course.checkpoints.length ? 'Projektna dokumentacija i kontrolne tačke.' : 'Tehničke specifikacije projekata.',
     })
     for (const project of projects) files.push({
       id: 'projekat/' + project.code, parent: 'projekat', kind: 'pdf',
       name: project.code + ' — ' + (course.id === 'ibis' ? 'Tehnička' : 'Projektna') + ' specifikacija.pdf',
       description: project.title, source: project.file, size: project.size, pages: project.pages,
+    })
+    for (const guide of projectGuides) files.push({
+      id: 'projekat/' + guide.id, parent: 'projekat', kind: 'pdf',
+      name: guide.name, description: guide.description, source: guide.file,
+      size: guide.size, pages: guide.pages,
     })
     if (course.checkpoints.length) files.push({
       id: 'projekat/kontrolne', parent: 'projekat', kind: 'checkpoints', name: 'Kontrolne tačke',

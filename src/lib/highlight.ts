@@ -1,64 +1,57 @@
-import type { CodeLanguage } from '../practicum/types'
+import hljs from 'highlight.js/lib/core'
+import csharp from 'highlight.js/lib/languages/csharp'
+import bash from 'highlight.js/lib/languages/bash'
+import json from 'highlight.js/lib/languages/json'
+import markdown from 'highlight.js/lib/languages/markdown'
+import xml from 'highlight.js/lib/languages/xml'
+import javascript from 'highlight.js/lib/languages/javascript'
+import typescript from 'highlight.js/lib/languages/typescript'
+import css from 'highlight.js/lib/languages/css'
+import yaml from 'highlight.js/lib/languages/yaml'
 
-const esc = (value: string) => value.replace(/[&<>]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]!))
+for (const [name, grammar] of Object.entries({ csharp, bash, json, markdown, xml, javascript, typescript, css, yaml })) {
+  hljs.registerLanguage(name, grammar)
+}
 
-type TokenStash = { keep: (html: string) => string; restore: (value: string) => string }
+const escapeHtml = (value: string) => value.replace(/[&<>]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[character]!))
+const aliases: Record<string, string> = {
+  cs: 'csharp', 'c#': 'csharp', sh: 'bash', shell: 'bash', md: 'markdown',
+  csproj: 'xml', fsproj: 'xml', props: 'xml', targets: 'xml', config: 'xml', html: 'xml', htm: 'xml',
+  js: 'javascript', jsx: 'javascript', ts: 'typescript', tsx: 'typescript', yml: 'yaml',
+}
 
-function createTokenStash(): TokenStash {
-  const values: string[] = []
-  const keep = (html: string) => {
-    const index = values.push(html) - 1
-    return `\uE000${String.fromCodePoint(0xE100 + index)}\uE001`
+export function codeLanguageForFile(filename: string) {
+  const extension = filename.split('.').pop()?.toLowerCase() ?? ''
+  const language = aliases[extension] ?? extension
+  return hljs.getLanguage(language) ? language : 'text'
+}
+
+export function codeLanguageLabel(language: string) {
+  return ({ csharp: 'C#', bash: 'Shell', javascript: 'JavaScript', typescript: 'TypeScript', markdown: 'Markdown', text: 'Tekst' } as Record<string, string>)[language] ?? language.toUpperCase()
+}
+
+export function highlightCode(code: string, language: string) {
+  const name = aliases[language.toLowerCase()] ?? language.toLowerCase()
+  // Keep large archive files responsive and render unsupported formats as escaped text.
+  if (code.length > 100_000 || !hljs.getLanguage(name)) return escapeHtml(code)
+  return hljs.highlight(code, { language: name, ignoreIllegals: true }).value
+}
+
+export function highlightCodeLines(code: string, language: string): string[] {
+  const lines: string[] = []
+  const spans: string[] = []
+  let line = ''
+  // Reopen syntax spans at line boundaries so multiline strings/comments keep their colors.
+  for (const token of highlightCode(code, language).split(/(<span\b[^>]*>|<\/span>|\n)/)) {
+    if (token === '\n') {
+      lines.push(line + '</span>'.repeat(spans.length))
+      line = spans.join('')
+      continue
+    }
+    if (token.startsWith('<span')) spans.push(token)
+    else if (token === '</span>') spans.pop()
+    line += token
   }
-  const restore = (value: string) => value.replace(/\uE000([\uE100-\uF8FF])\uE001/g, (_, marker: string) => values[marker.codePointAt(0)! - 0xE100] ?? '')
-  return { keep, restore }
-}
-
-function tokeniseCSharp(code: string) {
-  let x = esc(code)
-  const stash = createTokenStash()
-  x = x.replace(/\/\/.*$/gm, (m) => stash.keep(`<span class="tok-comment">${m}</span>`))
-  x = x.replace(/(&quot;|\")[^\n]*?(&quot;|\")/g, (m) => stash.keep(`<span class="tok-string">${m}</span>`))
-  x = x.replace(/\b(public|private|protected|internal|sealed|static|readonly|class|record|interface|namespace|using|new|return|if|else|for|foreach|while|switch|case|break|continue|throw|try|catch|finally|async|await|var|void|bool|int|long|decimal|double|string|object|null|true|false|this|base|override|virtual|abstract|in|out|ref|where|get|set|init)\b/g, '<span class="tok-keyword">$1</span>')
-  x = x.replace(/\b([A-Z][A-Za-z0-9_]*)\b/g, '<span class="tok-type">$1</span>')
-  x = x.replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="tok-number">$1</span>')
-  return stash.restore(x)
-}
-
-function tokeniseBash(code: string) {
-  let x = esc(code)
-  const stash = createTokenStash()
-  x = x.replace(/#.*$/gm, (m) => stash.keep(`<span class="tok-comment">${m}</span>`))
-  x = x.replace(/(&quot;|\")[^\n]*?(&quot;|\")/g, (m) => stash.keep(`<span class="tok-string">${m}</span>`))
-  x = x.replace(/(^|\s)(--?[a-zA-Z0-9][a-zA-Z0-9-]*)/gm, (_, prefix: string, flag: string) => `${prefix}${stash.keep(`<span class="tok-attr">${flag}</span>`)}`)
-  x = x.replace(/\b(git|dotnet|npm|npx|cd|mkdir|rm|cp|mv|echo|cat|grep|find|curl|export|set|docker|node)\b/g, (m) => stash.keep(`<span class="tok-keyword">${m}</span>`))
-  return stash.restore(x)
-}
-
-function tokeniseJson(code: string) {
-  let x = esc(code)
-  x = x.replace(/(&quot;[^&]*?&quot;)(\s*:)/g, '<span class="tok-property">$1</span>$2')
-  x = x.replace(/(:\s*)(&quot;[^&]*?&quot;)/g, '$1<span class="tok-string">$2</span>')
-  x = x.replace(/\b(true|false|null)\b/g, '<span class="tok-keyword">$1</span>')
-  x = x.replace(/\b(-?\d+(?:\.\d+)?)\b/g, '<span class="tok-number">$1</span>')
-  return x
-}
-
-function tokeniseMarkdown(code: string) {
-  let x = esc(code)
-  x = x.replace(/^(#{1,6}\s.*)$/gm, '<span class="tok-keyword">$1</span>')
-  x = x.replace(/(`[^`]+`)/g, '<span class="tok-string">$1</span>')
-  x = x.replace(/(\*\*[^*]+\*\*)/g, '<span class="tok-type">$1</span>')
-  x = x.replace(/^(- |\d+\. )/gm, '<span class="tok-attr">$1</span>')
-  return x
-}
-
-export function highlightCode(code: string, language: CodeLanguage) {
-  switch (language) {
-    case 'csharp': return tokeniseCSharp(code)
-    case 'bash': return tokeniseBash(code)
-    case 'json': return tokeniseJson(code)
-    case 'markdown': return tokeniseMarkdown(code)
-    default: return esc(code)
-  }
+  lines.push(line)
+  return lines
 }

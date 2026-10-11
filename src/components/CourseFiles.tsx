@@ -5,6 +5,7 @@ import { assetUrl } from '../lib/assets'
 import { PracticumDocument } from './document/PracticumDocument'
 import { CheckpointsView } from './CheckpointsView'
 import { ZipFileViewer } from './ZipFileViewer'
+import { CourseBrowserIcon, CourseFileIcon } from './CourseFileIcon'
 import { downloadFolderZip, downloadText } from './courseDownloads'
 import { buildCourseFiles, courseFileContent, courseFolderEntries, practicumExerciseHref, safeFileName, type CourseFile as Item, type CourseFileKind as FileKind } from './courseFileTree'
 
@@ -14,21 +15,10 @@ function itemCount(count:number){
   return count+' '+word
 }
 
-function EntryIcon({kind}:{kind:FileKind}){
-  return <svg aria-hidden="true" viewBox="0 0 36 36" fill="none" className={'ers-entry-icon ers-entry-'+kind}>
-    {kind==='folder'?<>
-      <path d="M4 10a4 4 0 0 1 4-4h9l4 4h7a4 4 0 0 1 4 4v15a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#72afe1"/>
-      <path d="M4 15a3 3 0 0 1 3-3h22a3 3 0 0 1 3 3v14a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z" fill="#9bc9ed"/>
-    </>:<>
-      <path d="M8 3h13l8 8v21H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2" fill="#fff" stroke="#d4dce7" strokeWidth="1.2"/>
-      <path d="M21 3v8h8" fill="#e9edf5"/>
-      {kind==='pdf'?<><rect x="9" y="20" width="19" height="9" rx="3" fill="#e9786e"/><text x="18.5" y="26.5" fontSize="6.5" textAnchor="middle" fontWeight="800" fill="#fff">PDF</text></>:
-        kind==='zip'?<><rect x="9" y="20" width="19" height="9" rx="3" fill="#7ea5cc"/><text x="18.5" y="26.5" fontSize="6.5" textAnchor="middle" fontWeight="800" fill="#fff">ZIP</text></>:
-        kind==='practicum-link'?<><path d="M12 18h11m-7-5h7v7m0-7-11 11" stroke="#7098c5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></>:
-        kind==='checkpoints'?<><path d="m12 22 4 4 8-9" stroke="#55ad82" strokeWidth="2.5" strokeLinecap="round"/></>:
-        <><path d="M12 17h12m-12 5h9m-9 5h11" stroke="#7098c5" strokeWidth="1.6" strokeLinecap="round"/></>}
-    </>}
-  </svg>
+function PresentationBadge({item}:{item:Item}){
+  if(item.presentationNumber===undefined)return null
+  const intro=Number(item.presentationNumber)===0
+  return <span className={'ers-presentation-badge'+(intro?' is-intro':'')} aria-label={intro?'Uvodna prezentacija':'Prezentacija '+Number(item.presentationNumber)}>{intro?'Uvod':item.presentationNumber}</span>
 }
 type Preview={kind:FileKind;item:Item}
 
@@ -41,6 +31,10 @@ export function CourseFiles({course}:{course:Course}){
   const [expanded,setExpanded]=useState<Set<string>>(()=>new Set(['root']))
   const [busy,setBusy]=useState('')
   const [error,setError]=useState('')
+  const [view,setView]=useState<'list'|'grid'>(()=>{
+    try{return localStorage.getItem('ftn-course-view')==='grid'?'grid':'list'}catch{return 'list'}
+  })
+  useEffect(()=>{try{localStorage.setItem('ftn-course-view',view)}catch{/* storage unavailable */}},[view])
   useEffect(()=>{
     const openFromHash=()=>{
       const match=location.hash.match(new RegExp('^#'+course.id+'/praktikum/(\\d+)$'))
@@ -126,7 +120,7 @@ export function CourseFiles({course}:{course:Course}){
     return <div key={item.id}>
       <div className={'ers-tree-row'+(folder===item.id?' selected':'')+(preview?.item.id===item.id?' selected':'')} style={{paddingLeft:8+depth*13}}>
         {hasChildren?<button type="button" className="ers-tree-arrow" aria-label={(shown?'Sažmi ':'Proširi ')+item.name} aria-expanded={shown} onClick={()=>toggle(item.id)}>{shown?'▾':'▸'}</button>:<span className="ers-tree-spacer"/>}
-        <button className="ers-tree-select" title={item.name} onClick={()=>visit(item)}><EntryIcon kind={item.kind}/><span>{item.name}</span></button>
+        <button className="ers-tree-select" title={item.name} onClick={()=>visit(item)}><CourseFileIcon kind={item.kind}/><span className="ers-tree-name">{item.name}</span><PresentationBadge item={item}/></button>
       </div>
       {hasChildren && shown&&depth<5&&tree(item.id,depth+1)}
     </div>
@@ -136,17 +130,21 @@ export function CourseFiles({course}:{course:Course}){
   return <div className="ers-explorer">
     <header className="ers-explorer-toolbar">
       <div className="ers-files-navigation">
-        <button className="ers-nav-button" title="Nazad" aria-label="Nazad" onClick={back} disabled={folder==='root'&&!preview}>‹</button>
-        <button className="ers-nav-button" title="Početni folder" aria-label="Početni folder" onClick={()=>navigate('root')}>⌂</button>
+        <button className="ers-nav-button" title="Nazad" aria-label="Nazad" onClick={back} disabled={folder==='root'&&!preview}><CourseBrowserIcon name="back"/></button>
+        <button className="ers-nav-button" title="Početni folder" aria-label="Početni folder" onClick={()=>navigate('root')}><CourseBrowserIcon name="home"/></button>
       </div>
       <nav className="ers-breadcrumb" aria-label="Putanja">
         {breadcrumb.map(item=><button key={item.id} onClick={()=>navigate(item.id)}>{item.name}</button>)}
         {viewing&&<><span>›</span><strong>{viewing.name}</strong></>}
       </nav>
       <div className="ers-toolbar-actions">
+        {!preview&&<div className="ers-view-switch" role="group" aria-label="Prikaz materijala">
+          <button aria-label="Prikaz liste" title="Lista" aria-pressed={view==='list'} onClick={()=>setView('list')}><CourseBrowserIcon name="list"/></button>
+          <button aria-label="Prikaz mreže" title="Mreža" aria-pressed={view==='grid'} onClick={()=>setView('grid')}><CourseBrowserIcon name="grid"/></button>
+        </div>}
         <button className="ers-download" onClick={()=>void save(viewing??current??undefined)} disabled={Boolean(busy)}
           title={viewing?'Preuzmi ovaj fajl':'Preuzmi folder kao ZIP'}>
-          ↓ <span>{busy||'Preuzmi'}</span>
+          <CourseBrowserIcon name="download"/> <span>{busy||'Preuzmi'}</span>
         </button>
       </div>
     </header>
@@ -154,7 +152,7 @@ export function CourseFiles({course}:{course:Course}){
     <div className="ers-explorer-layout">
       <aside className="ers-explorer-sidebar">
         <div className="ers-tree-caption">FAJLOVI PREDMETA</div>
-        <button className={'ers-tree-root'+(folder==='root'&&!preview?' selected':'')} onClick={()=>navigate('root')}>▣ &nbsp; {course.code} · Materijali</button>
+        <button className={'ers-tree-root'+(folder==='root'&&!preview?' selected':'')} title={course.code+' · Materijali'} onClick={()=>navigate('root')}><CourseFileIcon kind="folder"/><span>{course.code} · Materijali</span></button>
         {tree('root')}
       </aside>
       <main className={'ers-explorer-main'+(preview?' is-preview':'')}>
@@ -169,21 +167,21 @@ export function CourseFiles({course}:{course:Course}){
             <p>Fajl nije dostupan za prikaz.</p>}
         </div> : <div className="ers-directory">
           <div className="ers-directory-heading">
-            <div><span className="ers-directory-eyebrow">NASTAVNI MATERIJALI · {course.code}</span><h2>{current?.name??course.name}</h2><p>{current?.description??course.blurb}</p></div>
+            <div className="ers-directory-title"><CourseFileIcon kind="folder"/><div><span className="ers-directory-eyebrow">NASTAVNI MATERIJALI · {course.code}</span><h2>{current?.name??course.name}</h2><p>{current?.description??course.blurb}</p></div></div>
             <span className="ers-directory-count">{itemCount(folderItems.length)}</span>
           </div>
-          <div className="ers-file-list" role="list" aria-label="Sadržaj foldera">
+          <div className={'ers-file-list ers-view-'+view} role="list" aria-label="Sadržaj foldera">
             {folderItems.map(item=>{
               const OpenEntry=item.kind==='practicum-link'?'a':'button'
               return <div className="ers-file-row" key={item.id} role="listitem">
               <OpenEntry className="ers-file-open" href={item.exercise?practicumExerciseHref(course,item.exercise):undefined}
                 onClick={event=>{event.preventDefault();visit(item)}} title={'Otvori '+item.name}>
-                <EntryIcon kind={item.kind}/>
-                <span className="ers-file-row-name"><strong>{item.name}</strong><small>{item.description??(item.kind==='folder'?'Folder':'Dokument')}</small></span>
+                <CourseFileIcon kind={item.kind}/>
+                <span className="ers-file-row-name"><span className="ers-file-name-line"><PresentationBadge item={item}/><strong>{item.name}</strong></span><small>{item.description??(item.kind==='folder'?'Folder':'Dokument')}</small></span>
                 <span className="ers-file-meta">{metadata(item)}</span>
-                <span className="ers-open-chevron">›</span>
+                <span className="ers-open-chevron"><CourseBrowserIcon name="chevron"/></span>
               </OpenEntry>
-              <button className="ers-download-mini" onClick={()=>void save(item)} disabled={Boolean(busy)} aria-label={'Preuzmi '+item.name} title={item.kind==='folder'?'Preuzmi folder kao ZIP':'Preuzmi fajl'}>↓</button>
+              <button className="ers-download-mini" onClick={()=>void save(item)} disabled={Boolean(busy)} aria-label={'Preuzmi '+item.name} title={item.kind==='folder'?'Preuzmi folder kao ZIP':'Preuzmi fajl'}><CourseBrowserIcon name="download"/></button>
             </div>})}
           </div>
           {folderItems.length===0&&<div className="ers-empty">Ovaj folder je prazan.</div>}
