@@ -31,13 +31,13 @@ const clamp=(value:number,min:number,max:number)=>Math.max(min,Math.min(value,ma
 const MIN_SCALE=.1
 const MAX_SCALE=3
 const MAX_CANVAS_PIXELS=16_000_000
-function PdfLoading(){
+type PageSize={width:number;height:number}
+const INITIAL_PAGE_SIZE:PageSize={width:16,height:9}
+const fitPage=(available:PageSize,page:PageSize)=>Math.max(0,Math.min((available.width-2)/page.width,(available.height-2)/page.height))
+function PdfLoading({size,pageSize,zoom}:{size:PageSize;pageSize:PageSize;zoom:number|null}){
+  const scale=zoom??fitPage(size,pageSize)
   return <div className="ftn-pdf-loading" role="status" aria-label="Učitavanje dokumenta">
-    <div className="ftn-pdf-loading-art" aria-hidden="true">
-      <span className="ftn-pdf-loading-ring"/>
-      <svg viewBox="0 0 40 48" fill="none"><path d="M7 2h18l9 9v33H7z" fill="white" stroke="currentColor" strokeWidth="1.5"/><path d="M25 2v10h9M13 21h15M13 27h15M13 33h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
-    </div>
-    <span className="ftn-pdf-loading-dots" aria-hidden="true"><i/><i/><i/></span>
+    {scale>0&&<div className="ftn-pdf-loading-page" style={{width:pageSize.width*scale,height:pageSize.height*scale}} aria-hidden="true"/>}
   </div>
 }
 export function PdfViewer({file,name}:{file:string;name:string}){
@@ -46,6 +46,7 @@ export function PdfViewer({file,name}:{file:string;name:string}){
   const [zoom,setZoom]=useState<number|null>(null)
   const [scale,setScale]=useState(1)
   const [size,setSize]=useState({width:0,height:0})
+  const [pageSize,setPageSize]=useState(INITIAL_PAGE_SIZE)
   const [total,setTotal]=useState(0)
   const [error,setError]=useState('')
   const [busy,setBusy]=useState(true)
@@ -60,7 +61,7 @@ export function PdfViewer({file,name}:{file:string;name:string}){
   useEffect(()=>{
     let cancelled=false
     let document:PDFDocument|null=null
-    setPdf(null);setPage(1);setZoom(null);setTotal(0);setBusy(true);setRendering(true);setError('')
+    setPdf(null);setPage(1);setZoom(null);setPageSize(INITIAL_PAGE_SIZE);setTotal(0);setBusy(true);setRendering(true);setError('')
     void library().then(async lib=>{
       const loaded=await lib.getDocument(url).promise
       if(cancelled){await loaded.destroy();return}
@@ -108,7 +109,8 @@ export function PdfViewer({file,name}:{file:string;name:string}){
     void pdf.getPage(page).then(pg=>{
       if(canceled||renderId.current!==id)return
       const natural=pg.getViewport({scale:1})
-      const fitted=Math.min((size.width-2)/natural.width,(size.height-2)/natural.height)
+      setPageSize(previous=>previous.width===natural.width&&previous.height===natural.height?previous:{width:natural.width,height:natural.height})
+      const fitted=fitPage(size,natural)
       const displayScale=zoom??fitted
       const viewport=pg.getViewport({scale:displayScale})
       // Supersample text and diagrams without enlarging the displayed page.
@@ -197,7 +199,7 @@ export function PdfViewer({file,name}:{file:string;name:string}){
     </div>
     <div className="ftn-pdf-scroll" aria-label="PDF dokument" aria-keyshortcuts="ArrowLeft ArrowRight Space" aria-busy={busy||rendering} tabIndex={0} ref={scroll}
       onPointerDown={event=>{if(!(event.target instanceof Element&&event.target.closest('a')))scroll.current?.focus({preventScroll:true})}}>
-      {!error&&(busy||rendering)&&<PdfLoading/>}
+      {!error&&(busy||rendering)&&<PdfLoading size={size} pageSize={pageSize} zoom={zoom}/>}
       {error&&
         <div className="ftn-pdf-message ftn-pdf-error"><strong>{error}</strong><p>PDF možeš preuzeti ili otvoriti u sistemskom prikazu.</p>
           <a href={url} target="_blank" rel="noopener noreferrer">Otvori PDF ↗</a></div>}
