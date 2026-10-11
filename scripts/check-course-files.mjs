@@ -7,6 +7,7 @@ import { createServer } from 'vite'
 const server = await createServer({ server: { middlewareMode: true }, appType: 'custom' })
 try {
   const { courses } = await server.ssrLoadModule('/src/courses/index.ts')
+  const { sharedCourseGuides } = await server.ssrLoadModule('/src/courses/guides.ts')
   const { buildCourseFiles, courseFolderEntries } = await server.ssrLoadModule('/src/components/courseFileTree.ts')
   const { ersStandaloneExamples, ersLessonPackages, ersProjectBundle } = await server.ssrLoadModule('/src/courses/ers/examples.ts')
   const { oibExamples, oibExamplesBundle } = await server.ssrLoadModule('/src/courses/oib/examples.ts')
@@ -34,6 +35,7 @@ try {
       ...slides.map(item => item.file), ...projects.map(item => item.file), ...examples[course.id].map(item => item.zip),
       ...(bundles[course.id] ? [bundles[course.id]] : []),
       ...(course.presentations.kind === 'downloads' ? [course.presentations.bundle.file] : []),
+      ...sharedCourseGuides.map(item => item.file),
     ]
     assert.deepEqual(files.filter(item => item.source).map(item => item.source).sort(), expectedSources.sort(),
       course.code + ': each original asset must appear exactly once')
@@ -47,6 +49,9 @@ try {
       course.code + ': folder export must contain original assets without collection ZIPs')
     const projectEntries = courseFolderEntries(course, 'projekat', files)
     assert.deepEqual(projectEntries.filter(item => item.url).map(item => item.url), projects.map(item => item.file))
+    assert.equal(lookup.get('uputstva')?.parent, 'root')
+    assert.deepEqual(files.filter(item => item.parent === 'uputstva').map(item => item.source), sharedCourseGuides.map(item => item.file))
+    assert.deepEqual(courseFolderEntries(course, 'uputstva', files), sharedCourseGuides.map(item => ({ path: item.name, url: item.file })))
     if (course.id === 'ibis') {
       assert.ok(!files.some(item => item.kind === 'practicum' || item.kind === 'practicum-link' || item.id === 'vezbe'))
       assert.deepEqual(files.filter(item => item.parent === 'prezentacije' && item.kind === 'pdf').map(item => item.source),

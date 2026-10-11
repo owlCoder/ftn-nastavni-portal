@@ -50,4 +50,9 @@ for (const course of manifest.courses) {
     ), course.id + ': project specification ' + project.materials)
   }
 }
-console.log(`Synchronized: ${manifest.examples.length} examples (${sourceFiles} files), 24 exercises, three practicums and six project specifications.`)
+for (const document of manifest.sharedDocuments) {
+  assert.ok((await fs.readFile(path.join(portalRoot, 'public', document.portal))).equals(
+    await fs.readFile(path.join(materialsRoot, document.materials)),
+  ), 'Shared document: ' + document.materials)
+}
+console.log(`Synchronized: ${manifest.examples.length} examples (${sourceFiles} files), 24 exercises, three practicums, six project specifications and ${manifest.sharedDocuments.length} shared guides.`)

@@ -1,4 +1,5 @@
 import type { Course } from '../courses/types'
+import { sharedCourseGuides } from '../courses/guides'
 import { ersLessonPackages, ersProjectBundle, ersStandaloneExamples } from '../courses/ers/examples'
 import { oibExamples, oibExamplesBundle } from '../courses/oib/examples'
 import { odpExamples, odpExamplesBundle } from '../courses/odp/examples'
@@ -121,6 +122,15 @@ export function buildCourseFiles(course: Course): CourseFile[] {
       description: 'Projektne etape, obaveze i datumi predaje.',
     })
   }
+  files.push({
+    id: 'uputstva', parent: 'root', kind: 'folder', name: 'Uputstva',
+    description: 'Uputstva za Tapiz LMS i Tapiz Boards.',
+  })
+  for (const guide of sharedCourseGuides) files.push({
+    id: 'uputstva/' + guide.id, parent: 'uputstva', kind: 'pdf',
+    name: guide.name, description: guide.description, source: guide.file,
+    size: guide.size, pages: guide.pages,
+  })
   return files
 }
 

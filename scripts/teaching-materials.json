@@ -1,4 +1,14 @@
 {
+  "sharedDocuments": [
+    {
+      "portal": "downloads/uputstva/Uputstvo_Tapiz_LMS.pdf",
+      "materials": "00 Opsti Dokumenti/PDF/Uputstvo_Tapiz_LMS.pdf"
+    },
+    {
+      "portal": "downloads/uputstva/Tapiz_Boards_Uputstvo.pdf",
+      "materials": "00 Opsti Dokumenti/PDF/Tapiz_Boards_Uputstvo.pdf"
+    }
+  ],
   "courses": [
     {
       "id": "ers",

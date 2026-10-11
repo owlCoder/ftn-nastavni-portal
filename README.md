@@ -20,6 +20,8 @@ Materijali su raspoređeni u **Računarske vežbe → Vežba 01–08**. Svaka ve
 
 Portal objavljuje PDF prezentacije; PPTX izvori ostaju u repozitorijumu nastavnih materijala. Primeri i tekstovi zadataka usklađeni su između oba repozitorijuma.
 
+Svaki predmet u folderu **Uputstva** sadrži PDF uputstva za Tapiz LMS i Tapiz Boards, dostupna za čitanje i preuzimanje.
+
 ## Pokretanje
 
 Potreban je Node.js 22 i npm.
@@ -84,7 +86,7 @@ npm run check:materials-sync
 npm run build
 ```
 
-Generisane dokumente iz `public/downloads/praktikum/<predmet>` preneti u `03 Racunarske vezbe` odgovarajućeg predmeta u repozitorijumu materijala. Mapiranje izvora primera i projektnih PDF-ova određuje `scripts/teaching-materials.json`. Provera poredi datoteke sa susednim direktorijumom `../nastava`; druga lokacija prosleđuje se kao argument: `npm run check:materials-sync -- /putanja/do/nastava`. README se održava samo u korenu repozitorijuma.
+Generisane dokumente iz `public/downloads/praktikum/<predmet>` preneti u `03 Racunarske vezbe` odgovarajućeg predmeta u repozitorijumu materijala. Mapiranje izvora primera, projektnih PDF-ova i zajedničkih uputstava određuje `scripts/teaching-materials.json`. Provera poredi datoteke sa susednim direktorijumom `../nastava`; druga lokacija prosleđuje se kao argument: `npm run check:materials-sync -- /putanja/do/nastava`. README se održava samo u korenu repozitorijuma.
 
 Za uvoz ERS i OIB PDF prezentacija iz pripremljenih arhiva:
 
