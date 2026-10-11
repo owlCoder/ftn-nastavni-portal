@@ -24,11 +24,36 @@ function Diff(){
 }
 function Regex(){
  const [pattern,setPattern]=useState('[a-z]{4,}'),[flags,setFlags]=useState('gi'),[data,setData]=useState('React Vite TypeScript GNOME')
- let hits:string[]=[],error=''
- try{if(pattern.length>150)throw Error('Predugačak obrazac');hits=Array.from(data.slice(0,4000).matchAll(new RegExp(pattern,flags))).slice(0,100).map(m=>m[0])}catch(e){error=String(e)}
- return <Page name="Regex Lab" info="Testiraj JavaScript regularne izraze nad svojim tekstom."><Panel><div className="ftn-suite-row"><Field label="Regex"><input value={pattern} onChange={e=>setPattern(e.target.value)}/></Field><Field label="Flags"><select value={flags} onChange={e=>setFlags(e.target.value)}>{['g','gi','gm','gim','gs','gis'].map(x=><option key={x}>{x}</option>)}</select></Field></div><Field label="Tekst"><textarea rows={6} value={data} onChange={e=>setData(e.target.value)}/></Field>
- {error?<p className="ftn-suite-error">{error}</p>:<><h3>{hits.length} poklapanja</h3><div className="ftn-suite-chips">{hits.map((x,i)=><code key={i}>{x||'(prazno)'}</code>)}</div></>}
- <p className="ftn-suite-note">Veoma složeni regularni izrazi mogu usporiti browser.</p></Panel></Page>
+ const [showDetails,setShowDetails]=useState(true)
+ const sample=data.slice(0,4000)
+ let matches:{start:number;end:number;text:string}[]=[],error=''
+ try{
+  if(pattern.length>150)throw Error('Predugačak obrazac (najviše 150 karaktera).')
+  const re=new RegExp(pattern,flags)
+  matches=Array.from(sample.matchAll(re)).slice(0,100).map(m=>({start:m.index??0,end:(m.index??0)+m[0].length,text:m[0]}))
+ }catch(e){error=e instanceof Error?e.message:'Neispravan regularni izraz'}
+ const preview:ReactNode[]=[]
+ if(!error){let pos=0;for(let i=0;i<matches.length;i++){const match=matches[i]
+  if(match.start<pos)continue
+  if(match.start>pos)preview.push(sample.slice(pos,match.start))
+  if(match.end>match.start){preview.push(<mark key={i} className="ftn-regex-hit" title={'Poklapanje '+(i+1)}>{sample.slice(match.start,match.end)}</mark>);pos=match.end}
+ }
+ preview.push(sample.slice(pos))
+ }
+ return <Page name="Regex Lab" info="Uređuj izraz, testiraj ga u realnom vremenu i pregledaj poklapanja.">
+ <Panel><div className="ftn-suite-row ftn-regex-controls">
+  <Field label="Regularni izraz"><input spellCheck={false} aria-label="Regularni izraz" value={pattern} onChange={e=>setPattern(e.target.value)}/></Field>
+  <Field label="Flags"><select value={flags} onChange={e=>setFlags(e.target.value)}>{['g','gi','gm','gim','gs','gis'].map(x=><option key={x}>{x}</option>)}</select></Field>
+ </div>
+ <Field label="Testni tekst"><textarea rows={6} value={data} onChange={e=>setData(e.target.value)}/></Field>
+ <div className="ftn-regex-results-heading"><div><span className={'ftn-regex-led'+(error?' invalid':'')}/><strong>{error?'Neispravan obrazac':matches.length+' poklapanja'}</strong></div><button type="button" aria-pressed={showDetails} onClick={()=>setShowDetails(x=>!x)}>{showDetails?'Sakrij detalje':'Prikaži detalje'}</button></div>
+ {error?<p className="ftn-suite-error" role="alert">{error}</p>:<>
+  <div className="ftn-regex-preview"><pre>{preview.length?preview:'—'}</pre></div>
+  {showDetails&&<div className="ftn-regex-hits">{matches.map((match,i)=><div key={i}><span>#{i+1}</span><code>{match.text||'(prazno)'}</code><small>{match.start}–{match.end}</small></div>)}
+   {!matches.length&&<p>Nema poklapanja za dati uzorak.</p>}</div>}
+ </>}
+ <p className="ftn-suite-note">Tekst za testiranje je ograničen na 4.000 karaktera. Regularni izrazi se izvršavaju lokalno.</p>
+ </Panel></Page>
 }
 function Base64(){
  const [input,setInput]=useState('FTN Portal'),[result,setResult]=useState(''),[mode,setMode]=useState<'encode'|'decode'>('encode'),[error,setError]=useState('')
