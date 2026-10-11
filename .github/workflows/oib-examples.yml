@@ -24,4 +24,7 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - name: Build and test every exercise
-        run: sh verify.sh
+        run: |
+          for solution in vezba-*/*.sln; do
+            dotnet test "$solution" --configuration Release --nologo --verbosity minimal
+          done

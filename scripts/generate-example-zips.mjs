@@ -67,7 +67,6 @@ const lessonBundles = [
       'evals/review-architecture.json',
       'evals/prompt-injection.json',
       'evals/missing-context.json',
-      'evals/README.md',
       'tests/EquipmentReservation.Tests/Guardrails/GuardrailPolicyTests.cs',
       'tests/EquipmentReservation.Tests/AiWorkflow/AiWorkflowArtifactsTests.cs',
     ],
@@ -194,7 +193,7 @@ async function createZip(bundle, sourceFiles) {
   end.writeUInt32LE(offset, 16)
   end.writeUInt16LE(0, 20)
 
-  const outputFile = path.join(outputDir, bundle.fileName)
+  const outputFile = path.join(bundle.outputDir ?? outputDir, bundle.fileName)
   await fs.writeFile(outputFile, Buffer.concat([...localParts, centralDirectory, end]))
   console.log(`Generated ${path.relative(process.cwd(), outputFile)} (${files.length} files)`)
 }
@@ -202,6 +201,13 @@ async function createZip(bundle, sourceFiles) {
 await fs.mkdir(outputDir, { recursive: true })
 const sourceFiles = await collectFiles(ersSourceRoot)
 for (const bundle of bundles) await createZip(bundle, sourceFiles)
+
+for (const [directory, fileName, archiveRoot] of [
+  ['ers-logger-blogger', 'Logger-Bloger.zip', 'Logger-Bloger'],
+  ['ers-ecommerce', 'E-Commerce.zip', 'ecommerce_net-8.0'],
+]) {
+  await createZip({ fileName, archiveRoot, outputDir: path.resolve('public') }, await collectFiles(path.resolve('examples', directory)))
+}
 
 const oibLessons = [
   ['01', 'identitet-rbac'],

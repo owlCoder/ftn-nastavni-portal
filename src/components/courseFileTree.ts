@@ -149,6 +149,10 @@ export function courseFolderEntries(course: Course, folder: string, files: Cours
       parent = ancestor.parent
     }
     if (parent !== folder) continue
+    if (item.kind === 'practicum-link' && item.exercise) entries.push({
+      path: [...parents, 'Vezba_' + number(item.exercise) + '.md'].join('/'),
+      text: practicumMarkdown(course, item.exercise),
+    })
     const file = courseFileContent(item, course)
     if (file) entries.push({ ...file, path: [...parents, safeFileName(file.path)].join('/') })
   }

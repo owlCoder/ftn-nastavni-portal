@@ -1,5 +1,6 @@
+import { oibExampleNotes } from './exampleNotes'
 import type { Accent, Block } from '../../practicum/types'
-import { callout, diagram, list, table, text } from '../../practicum/blocks'
+import { callout, code, diagram, list, table, text } from '../../practicum/blocks'
 
 type Topic = {
   number: number
@@ -294,6 +295,7 @@ const topics: Topic[] = [
 ]
 
 function blocksFor(topic: Topic): Block[] {
+  const example = oibExampleNotes[topic.number]
   return [
     text('h1', `Vežba ${topic.number} — ${topic.title}`),
     text('paragraph', topic.opening),
@@ -339,6 +341,18 @@ function blocksFor(topic: Topic): Block[] {
     list(topic.walkthroughPoints, true),
     callout('success', 'Ishod učenja', 'Student treba da ume da izabere odgovarajuća pitanja za analizu bezbednosno značajne odluke i da obrazloži redosled njihove primene.'),
     callout('task', 'Primena na projektu', `Na dodeljenoj projektnoj celini primeniti princip iz teme „${topic.title}". Identifikovati odluku sistema, implementirati je na serverskoj strani i pripremiti dokaz u obliku testa, revizijskog zapisa ili demonstracije.`),
+
+    text('h2', `${topic.number}.9. Izvršivi primer`),
+    text('paragraph', example.summary),
+    code('bash', `cd examples/oib-dotnet/${example.folder}
+dotnet run --project src/${example.project}.ConsoleUi
+dotnet test ${example.project}.sln`, 'Pokretanje iz repozitorijuma nastavnog portala; potreban je .NET 8 SDK.'),
+    table(['Provera', 'Sadržaj'], [
+      ['Scenario', example.scenario],
+      ['Testovi', example.tests],
+      ['Dokaz', example.evidence],
+    ]),
+    callout('task', 'Zadatak uz primer', example.task),
   ]
 }
 

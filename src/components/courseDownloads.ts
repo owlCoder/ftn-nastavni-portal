@@ -1,44 +1,7 @@
 import { assetUrl } from '../lib/assets'
-import type { Course } from '../courses/types'
+export { practicumMarkdown, checkpointMarkdown } from '../practicum/markdown'
 
 export type DownloadEntry={path:string;url?:string;text?:string}
-
-const escapeText=(value:string)=>value.replace(/<[^>]*>/g,'').replaceAll('&nbsp;',' ').replaceAll('&amp;','&').replaceAll('&lt;','<').replaceAll('&gt;','>')
-export function practicumMarkdown(course:Course,exercise?:number):string{
-  const blocks=course.practicum.blocks
-  let selected=false
-  const out=[`# ${course.name} — Praktikum`,'','FTN · Nastavni materijali','']
-  for(const block of blocks){
-    if(block.type==='text' && block.variant!=='paragraph'){
-      const heading=escapeText(block.html)
-      const number=heading.match(/^Vežba\s+(\d+)\b/i)
-      if(number)selected=!exercise || Number(number[1])===exercise
-      if(exercise && !selected)continue
-      out.push('#'.repeat(block.variant==='h1'?1:block.variant==='h2'?2:3)+' '+heading,'')
-    }else{
-      if(exercise && !selected)continue
-      if(block.type==='text')out.push(escapeText(block.html),'')
-      else if(block.type==='list')out.push(...block.items.map((item,i)=>(block.ordered?`${i+1}. `:'- ')+escapeText(item)),'')
-      else if(block.type==='callout')out.push(`> ${block.title}: ${escapeText(block.html)}`,'')
-      else if(block.type==='code')out.push('```'+block.language+'\n'+block.code+'\n```','')
-      else if(block.type==='table')out.push('| '+block.headers.map(escapeText).join(' | ')+' |','| '+block.headers.map(()=> '---').join(' | ')+' |',...block.rows.map(row=>'| '+row.map(escapeText).join(' | ')+' |'),'')
-      else if(block.type==='image')out.push(`![${block.alt}](${block.src})`,'',block.caption,'')
-      else if(block.type==='diagram')out.push(`### ${block.title}`,'',...block.items.map(item=>`- ${item.title}: ${item.subtitle}`),'')
-    }
-  }
-  return out.join('\n')
-}
-export function checkpointMarkdown(course:Course):string{
-  return [
-    `# ${course.name} — Kontrolne tačke`,'',
-    ...course.checkpoints.flatMap(item=>[
-      `## ${item.code} — ${item.title}`,'',
-      `Datum: ${item.date}`,'',
-      escapeText(item.summary),'',
-      ...item.items.map(i=>'- '+escapeText(i)),''
-    ])
-  ].join('\n')
-}
 
 export function downloadText(name:string,text:string){
   const blob=new Blob([text],{type:'text/markdown;charset=utf-8'})

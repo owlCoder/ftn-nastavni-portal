@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { createServer } from 'vite'
 
@@ -17,6 +17,7 @@ try {
   }
   const bundles = { ers: ersProjectBundle, oib: oibExamplesBundle, odp: odpExamplesBundle }
   const { prepareDocument } = await server.ssrLoadModule('/src/components/document/prepareDocument.ts')
+  const { practicumMarkdown, checkpointMarkdown } = await server.ssrLoadModule('/src/practicum/markdown.ts')
 
   for (const course of courses) {
     const files = buildCourseFiles(course)
@@ -71,7 +72,14 @@ try {
         assert.deepEqual(entries.filter(item => item.url).map(item => item.url), contents.filter(item => item.source).map(item => item.source))
         assert.equal(entries.filter(item => item.path.endsWith('.url')).length, 1)
         assert.ok(entries.some(item => item.text?.includes('/#' + course.id + '/praktikum/' + String(n).padStart(2, '0'))))
+        const markdown = practicumMarkdown(course, n)
+        assert.equal(entries.find(item => item.path === 'Vezba_' + String(n).padStart(2, '0') + '.md')?.text, markdown)
+        assert.equal(readFileSync(resolve('public/downloads/praktikum', course.id, 'Vezba_' + String(n).padStart(2, '0') + '.md'), 'utf8'), markdown)
+        assert.deepEqual([...markdown.matchAll(/^## Vežba (\d+)\b/gm)].map(match => Number(match[1])), [n], 'Exercise export must contain only its chapter')
+        assert.ok(!/^## (?:Sažetak|Preporučena literatura)/m.test(markdown), 'Closing material must stay outside the last exercise')
       }
+      assert.equal(readFileSync(resolve('public/downloads/praktikum', course.id, 'Praktikum.md'), 'utf8'), practicumMarkdown(course))
+      assert.equal(readFileSync(resolve('public/downloads/praktikum', course.id, 'Kontrolne_tacke.md'), 'utf8'), checkpointMarkdown(course))
       assert.equal(rootEntries.filter(item => item.path.endsWith('.url')).length, 8)
       assert.ok(rootEntries.some(item => item.path === 'Praktikum.md' && item.text))
       assert.ok(rootEntries.some(item => item.path === 'Projekat/Kontrolne_tacke.md' && item.text))

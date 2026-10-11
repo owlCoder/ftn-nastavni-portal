@@ -39,7 +39,7 @@ dotnet run --project src/EquipmentReservation.Mcp`, 'Pokretanje MCP servera iz r
 
   [
     text('h2', '7.2. Resource je čitljivi kontekst'),
-    text('paragraph', 'Projektne instrukcije i README već postoje kao verzionisani fajlovi, pa se izlažu kao resources umesto da se ručno kopiraju u svaki razgovor. Klasa zavisi od uske uloge <code>IProjectFileReader</code>, a ne od celog pristupa projektu.'),
+    text('paragraph', 'Projektne instrukcije i solution već postoje kao verzionisani fajlovi, pa se izlažu kao resources umesto da se ručno kopiraju u svaki razgovor. Klasa zavisi od uske uloge <code>IProjectFileReader</code>, a ne od celog pristupa projektu.'),
     code('csharp', `[McpServerResourceType]
 public sealed class ProjectResources(IProjectFileReader files)
 {
@@ -51,15 +51,15 @@ public sealed class ProjectResources(IProjectFileReader files)
         files.ReadText("AGENTS.md");
 
     [McpServerResource(
-        UriTemplate = "project://readme",
-        Name = "project_readme",
-        MimeType = "text/markdown")]
-    public string Readme() =>
-        files.ReadText("README.md");
+        UriTemplate = "project://solution",
+        Name = "project_solution",
+        MimeType = "text/plain")]
+    public string Solution() =>
+        files.ReadText("EquipmentReservation.sln");
 }`, 'examples/ers-ai-workflow/src/EquipmentReservation.Mcp/Resources/ProjectResources.cs'),
     table(['URI', 'Zašto resource'], [
       ['project://instructions', 'Postojeća pravila samo za čitanje; nema potrebe za izvršavanjem operacije.'],
-      ['project://readme', 'Dokumentacija projekta koju klijent može učitati kao kontekst.'],
+      ['project://solution', 'Solution sa listom projekata i konfiguracijama izgradnje.'],
     ]),
     callout('note', 'Kova koristi MCP alate', 'Kova od MCP servera preuzima samo tools; resources ne učitava. Projektna pravila zato do modela ne stižu preko resource-a <code>project://instructions</code>, već ih Kova sama učitava iz <code>AGENTS.md</code>. Resources iz ovog servera proveravaju se MCP klijentom koji ih podržava. Ugovor servera ostaje isti bez obzira na klijenta.'),
   ],

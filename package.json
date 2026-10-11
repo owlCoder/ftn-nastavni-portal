@@ -7,9 +7,11 @@
     "node": "22.x"
   },
   "scripts": {
-    "predev": "node scripts/generate-example-zips.mjs",
+    "predev": "npm run generate:practicum && node scripts/generate-example-zips.mjs",
     "dev": "vite",
-    "prebuild": "node scripts/generate-example-zips.mjs && npm run check:course-files",
+    "prebuild": "npm run generate:practicum && node scripts/generate-example-zips.mjs && npm run check:course-files",
+    "generate:practicum": "node scripts/generate-practicum-markdown.mjs",
+    "check:materials-sync": "node scripts/check-materials-sync.mjs",
     "build": "tsc -b && vite build",
     "check:course-files": "node scripts/check-course-files.mjs",
     "preview": "vite preview"

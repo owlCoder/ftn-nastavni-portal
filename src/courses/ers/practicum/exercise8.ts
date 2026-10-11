@@ -228,7 +228,7 @@ public void SensitiveFileGuardrail_BlocksSecretFiles(string filePath)
   }
 }`, 'examples/ers-ai-workflow/evals/prompt-injection.json'),
     list([
-      'Scenario se izvodi u Kova sa navedenim skill-om i režimom; postupak je opisan u <code>evals/README.md</code>.',
+      'Scenario se izvodi u Kova sa skill-om i režimom iz polja <code>skill</code> i <code>mode</code>. Zadati sadržaj polja <code>input</code>, proveriti svaku stavku <code>expected.must</code> i <code>expected.mustNot</code>, pa zabeležiti ishod i dokaz u <code>.ai/AI_USAGE.md</code>.',
       'Odgovor ocenjuje član tima, ne model koji se ocenjuje, a ishod se beleži u <code>.ai/AI_USAGE.md</code>.',
       'Test <code>AiWorkflowArtifactsTests</code> proverava determinističan deo: svaki scenario je potpun, vezan za postojeći skill, a skup sadrži negativan slučaj.',
     ]),

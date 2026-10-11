@@ -1,0 +1,130 @@
+{
+  "courses": [
+    {
+      "id": "ers",
+      "directory": "01 Elementi Razvoja Softvera",
+      "projects": [
+        {
+          "portal": "downloads/ers-projekat/ERS_Projektna_Specifikacija.pdf",
+          "materials": "01 Projekat/ERS_Projektna_Specifikacija.pdf"
+        }
+      ]
+    },
+    {
+      "id": "oib",
+      "directory": "02 Osnove Informacione Bezbednosti",
+      "projects": [
+        {
+          "portal": "downloads/oib-projekat/OIB_Projektna_Specifikacija.pdf",
+          "materials": "01 Projekat/OIB_Projektna_Specifikacija.pdf"
+        }
+      ]
+    },
+    {
+      "id": "odp",
+      "directory": "03 Osnove Distribuiranog Programiranja",
+      "projects": [
+        {
+          "portal": "downloads/odp-projekat/ODP_Projektna_Specifikacija.pdf",
+          "materials": "01 Projekat/ODP_Specifikacija.pdf"
+        }
+      ]
+    },
+    {
+      "id": "ibis",
+      "directory": "04 Informaciona Bezbednost Infrastrukturnih Sistema",
+      "projects": [
+        {
+          "portal": "downloads/ibis-projekti/SCADALattice_Tehnicka_specifikacija.pdf",
+          "materials": "02 Projekti/SCADALattice_Tehnicka_specifikacija.pdf"
+        },
+        {
+          "portal": "downloads/ibis-projekti/RackMetria_Tehnicka_specifikacija.pdf",
+          "materials": "02 Projekti/RackMetria_Tehnicka_specifikacija.pdf"
+        },
+        {
+          "portal": "downloads/ibis-projekti/RouteMetria_Tehnicka_specifikacija.pdf",
+          "materials": "02 Projekti/RouteMetria_Tehnicka_specifikacija.pdf"
+        }
+      ]
+    }
+  ],
+  "examples": [
+    {
+      "portal": "examples/oib-dotnet/vezba-01-identitet-rbac",
+      "materials": "02 Osnove Informacione Bezbednosti/04 Primeri/01 Identitet autentikacija i RBAC"
+    },
+    {
+      "portal": "examples/oib-dotnet/vezba-02-resurs-klasifikacija",
+      "materials": "02 Osnove Informacione Bezbednosti/04 Primeri/02 Resurs klasifikacija"
+    },
+    {
+      "portal": "examples/oib-dotnet/vezba-03-politike-konfiguracija",
+      "materials": "02 Osnove Informacione Bezbednosti/04 Primeri/03 Politike konfiguracija"
+    },
+    {
+      "portal": "examples/oib-dotnet/vezba-04-threat-modeling",
+      "materials": "02 Osnove Informacione Bezbednosti/04 Primeri/04 Threat modeling"
+    },
+    {
+      "portal": "examples/oib-dotnet/vezba-05-mfa-sesije-tajne",
+      "materials": "02 Osnove Informacione Bezbednosti/04 Primeri/05 MFA sesije tajne"
+    },
+    {
+      "portal": "examples/oib-dotnet/vezba-06-detekcija-incident",
+      "materials": "02 Osnove Informacione Bezbednosti/04 Primeri/06 Detekcija incident"
+    },
+    {
+      "portal": "examples/oib-dotnet/vezba-07-abac-rizik-pregled",
+      "materials": "02 Osnove Informacione Bezbednosti/04 Primeri/07 ABAC rizik pregled"
+    },
+    {
+      "portal": "examples/oib-dotnet/vezba-08-korelacija-efektivnost",
+      "materials": "02 Osnove Informacione Bezbednosti/04 Primeri/08 Korelacija efektivnost"
+    },
+    {
+      "portal": "examples/odp-dotnet/vezba-01-vlasnistvo-neizvesnost",
+      "materials": "03 Osnove Distribuiranog Programiranja/04 Primeri/01 Vlasnistvo neizvesnost"
+    },
+    {
+      "portal": "examples/odp-dotnet/vezba-02-ugovori-simulator",
+      "materials": "03 Osnove Distribuiranog Programiranja/04 Primeri/02 Ugovori simulator"
+    },
+    {
+      "portal": "examples/odp-dotnet/vezba-03-identitet-audit-konfiguracija",
+      "materials": "03 Osnove Distribuiranog Programiranja/04 Primeri/03 Identitet audit konfiguracija"
+    },
+    {
+      "portal": "examples/odp-dotnet/vezba-04-verzionisanje-failure-first",
+      "materials": "03 Osnove Distribuiranog Programiranja/04 Primeri/04 Verzionisanje failure-first"
+    },
+    {
+      "portal": "examples/odp-dotnet/vezba-05-tok-podataka-read-model",
+      "materials": "03 Osnove Distribuiranog Programiranja/04 Primeri/05 Tok podataka read model"
+    },
+    {
+      "portal": "examples/odp-dotnet/vezba-06-komande-idempotentnost",
+      "materials": "03 Osnove Distribuiranog Programiranja/04 Primeri/06 Komande idempotentnost"
+    },
+    {
+      "portal": "examples/odp-dotnet/vezba-07-rad-bez-veze-outbox",
+      "materials": "03 Osnove Distribuiranog Programiranja/04 Primeri/07 Rad bez veze outbox"
+    },
+    {
+      "portal": "examples/odp-dotnet/vezba-08-koordinacija-protok",
+      "materials": "03 Osnove Distribuiranog Programiranja/04 Primeri/08 Koordinacija protok"
+    },
+    {
+      "portal": "examples/ers-logger-blogger",
+      "materials": "01 Elementi Razvoja Softvera/04 Primeri/02 Logger Blogger"
+    },
+    {
+      "portal": "examples/ers-ecommerce",
+      "materials": "01 Elementi Razvoja Softvera/04 Primeri/03 ECommerce"
+    },
+    {
+      "portal": "examples/ers-ai-workflow",
+      "materials": "01 Elementi Razvoja Softvera/04 Primeri/ers-ai-workflow"
+    }
+  ]
+}
