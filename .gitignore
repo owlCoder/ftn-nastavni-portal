@@ -13,5 +13,7 @@ coverage/
 **/bin/
 **/obj/
 *.tsbuildinfo
+*.user
+*.suo
 .vercel
 .env*
