@@ -108,7 +108,7 @@ async function collectFiles(directory, prefix = '') {
 
   for (const entry of entries) {
     if (entry.isDirectory() && ignoredDirectories.has(entry.name)) continue
-    if (entry.name === '.DS_Store') continue
+    if (entry.name === '.DS_Store' || /\.(?:user|suo)$/i.test(entry.name)) continue
 
     const absolute = path.join(directory, entry.name)
     const relative = prefix ? `${prefix}/${entry.name}` : entry.name

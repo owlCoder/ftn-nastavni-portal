@@ -11,7 +11,7 @@ const ignored = new Set(['bin', 'obj', '.vs', '.git', 'TestResults', 'node_modul
 async function inventory(root, prefix = '') {
   const result = new Map()
   for (const entry of await fs.readdir(path.join(root, prefix), { withFileTypes: true })) {
-    if (ignored.has(entry.name) || entry.name.startsWith('.env')) continue
+    if (ignored.has(entry.name) || entry.name.startsWith('.env') || /\.(?:user|suo)$/i.test(entry.name)) continue
     const relative = path.join(prefix, entry.name)
     if (entry.isDirectory()) {
       for (const [name, digest] of await inventory(root, relative)) result.set(name, digest)
