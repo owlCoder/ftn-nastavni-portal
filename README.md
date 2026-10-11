@@ -46,7 +46,7 @@ Shortcuts, positions, dock pins, wallpapers, and appearance preferences persist 
 - **Desktop workspace:** movable, minimizable and maximizable application windows, launcher search, collision-free draggable desktop shortcuts, right-click and left-click context actions, keyboard-accessible menus, persistent dock pinning and course folders.
 - **Course file manager:** exercise folders with presentations, examples and practicum shortcuts, expandable navigation tree, breadcrumbs and file previews for ERS, OIB, ODP and IBIS. Every document has one location.
 - **Continuous practicum reader:** document-style scrolling, collapsible table of contents, links to exercises and zoom controls.
-- **Custom PDF viewer:** PDF.js-powered rendering with page navigation, zoom, fullscreen mode and downloads, rather than the browser's built-in PDF toolbar.
+- **Custom PDF viewer:** sharp canvas rendering, animated loading, mouse-wheel and keyboard page navigation, zoom, fullscreen mode and downloads. Space or Right advances a page; Shift+Space or Left goes back. Enlarged pages scroll before turning at their edges.
 - **ZIP explorer and downloads:** browse example archives, preview text-based source files, download individual documents or export entire folders as ZIP archives.
 - **Project milestones:** a timeline for checkpoint dates, descriptions, and required work.
 - **Desktop apps:** calendar with local events, notes, games and ten additional utilities: Calculator, Text Editor, Terminal, Files, Tasks, Pomodoro, Unit Converter, Drawing, Stopwatch and Settings.

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import { CourseFiles } from './CourseFiles'
 import { DesktopWidgets } from './DesktopWidgets'
 import { SystemAbout } from './SystemAbout'
@@ -128,16 +129,10 @@ function WindowFrame({ windowData: w, isFocused, gamesActive, now, otherWindows,
     const d=dragging.current
     onMove(Math.max(0,Math.min(window.innerWidth-160,d.x+e.clientX-d.px)),Math.max(35,Math.min(Math.max(35,window.innerHeight-430),d.y+e.clientY-d.py)))
   }
-  const fullscreen=async()=>{
-    try{
-      if(document.fullscreenElement===ref.current)await document.exitFullscreen()
-      else await ref.current?.requestFullscreen()
-    }catch{/* browser can deny fullscreen */}
-  }
   const title=names[w.id]
   const course=courses.find(c=>c.id===w.id)
   const active=isFocused && !w.minimized && gamesActive
-  return <section ref={ref} aria-label={'Prozor: '+title} onPointerDown={onFocus}
+  return <section ref={ref} id={'ftn-window-'+w.id} aria-label={'Prozor: '+title} onPointerDown={onFocus}
     className={'gn-window'+(isFocused?' gn-window-focused':'')+(w.maximized?' gn-window-max':'')+(w.minimized?' gn-window-min':'')+(['calendar','monitor'].includes(w.id)?' gn-utility-window':'')+' gn-window-app-'+w.id}
     style={{left:w.x,top:w.y,zIndex:w.z,'--gn-window-y':`${w.y}px`} as CSSProperties}>
     <div className="gn-headerbar" onDoubleClick={e=>{if(!(e.target instanceof Element&&e.target.closest("button")))onMaximize()}} onContextMenu={e=>{e.preventDefault();onWindowMenu(e.clientX,e.clientY)}} onPointerDown={onPointerDown}
@@ -145,10 +140,9 @@ function WindowFrame({ windowData: w, isFocused, gamesActive, now, otherWindows,
       <div className="gn-window-leading"><AppArtwork id={w.id}/></div>
       <div className="gn-header-title"><strong>{course ? course.name : title}</strong><span>{course ? 'Nastavni materijali · '+course.code : windowCategories[w.id] ?? 'Igre'}</span></div>
       <div className="gn-window-controls">
-        <button className="ftn-window-actions-trigger" title="Meni prozora" aria-label="Meni prozora" onClick={e=>{const rect=e.currentTarget.getBoundingClientRect();onWindowMenu(rect.left,rect.bottom+7)}}><Icon name="more" size={16}/></button>
+        <button className="ftn-window-actions-trigger" title="Meni prozora" aria-label="Meni prozora" aria-haspopup="menu" onClick={e=>{const rect=e.currentTarget.getBoundingClientRect();onWindowMenu(rect.left,rect.bottom+7)}}><Icon name="more" size={16}/></button>
         <button title="Minimizuj" aria-label="Minimizuj" onClick={onMinimize}><Icon name="minimize" size={15}/></button>
         <button title={w.maximized?'Vrati prozor':'Maksimizuj'} aria-label={w.maximized?'Vrati prozor':'Maksimizuj'} onClick={onMaximize}><Icon name={w.maximized?'restore':'maximize'} size={15}/></button>
-        <button title={isFullscreen?'Izađi iz celog ekrana':'Ceo ekran'} aria-label="Ceo ekran" onClick={fullscreen}><Icon name="fullscreen" size={15}/></button>
         <button className="gn-close" title="Zatvori" aria-label="Zatvori" onClick={onClose}><Icon name="close" size={15}/></button>
       </div>
     </div>
@@ -207,9 +201,15 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
   const [wallpaper,setWallpaper]=useState(saved.wallpaper)
   const [now,setNow]=useState(()=>new Date())
   const [context,setContext]=useState<{x:number;y:number}|null>(null)
+  const [fullscreenHost,setFullscreenHost]=useState<Element|null>(null)
   const searchRef=useRef<HTMLInputElement>(null)
   const zRef=useRef(4)
   const menuRef=useRef<HTMLDivElement>(null)
+  useEffect(()=>{
+    const sync=()=>setFullscreenHost(document.fullscreenElement?.matches('.gn-window')?document.fullscreenElement:null)
+    document.addEventListener('fullscreenchange',sync)
+    return()=>document.removeEventListener('fullscreenchange',sync)
+  },[])
   useEffect(()=>{
     document.title='Nastavni portal | FTN'
     const timer=window.setInterval(()=>setNow(new Date()),1000)
@@ -270,6 +270,17 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
   const close=(id:AppId)=>setWindows(current=>current.filter(w=>w.id!==id))
   const minimize=(id:AppId)=>setWindows(current=>current.map(w=>w.id===id?{...w,minimized:true}:w))
   const maximize=(id:AppId)=>setWindows(current=>current.map(w=>w.id===id?{...w,maximized:!w.maximized}:w))
+  const toggleWindowFullscreen=async(id:AppId)=>{
+    const element=document.getElementById('ftn-window-'+id)
+    if(!element)return
+    try{
+      if(document.fullscreenElement===element)await document.exitFullscreen()
+      else await element.requestFullscreen()
+      element.querySelector<HTMLElement>('.ftn-pdf-scroll')?.focus({preventScroll:true})
+    }catch{/* Browser can deny fullscreen. */}
+  }
+  // Fullscreen only displays descendants of its host, including the action menu.
+  const placeMenu=(content:ReactNode)=>fullscreenHost?createPortal(content,fullscreenHost):content
   const move=(id:AppId,x:number,y:number)=>setWindows(current=>current.map(w=>w.id===id?{...w,x,y}:w))
   const activeWindow=windows.filter(w=>!w.minimized).reduce<WindowData|null>((last,w)=>!last||w.z>last.z?w:last,null)
   const preferences:DesktopPreferences={wallpaper,dark:isDark,widgets:showWidgets,nightLight,brightness}
@@ -368,15 +379,16 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
       </div>
     </>}
 
-    {shortcutMenu && <><button className="ftn-shortcut-menu-scrim" onClick={()=>setShortcutMenu(null)} aria-label="Zatvori meni prečice"/>
+    {shortcutMenu && placeMenu(<><button className="ftn-shortcut-menu-scrim" onClick={()=>setShortcutMenu(null)} aria-label="Zatvori meni prečice"/>
       <div className="ftn-shortcut-menu" role="menu" aria-label={'Opcije: '+names[shortcutMenu.id]} ref={menuRef}
-        style={{left:Math.max(12,Math.min(shortcutMenu.x,window.innerWidth-278)),top:Math.max(44,Math.min(shortcutMenu.y,window.innerHeight-334))}}
+        style={{left:Math.max(12,Math.min(shortcutMenu.x,window.innerWidth-278)),top:Math.max(44,Math.min(shortcutMenu.y,window.innerHeight-370))}}
         onKeyDown={e=>{if(e.key==='Escape'){setShortcutMenu(null);return}if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();const buttons=Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>('button:not([disabled])'));const index=buttons.indexOf(document.activeElement as HTMLButtonElement);buttons[(index+(e.key==='ArrowDown'?1:-1)+buttons.length)%buttons.length]?.focus()}}}>
         <div className="ftn-context-header"><span className="ftn-context-header-art"><AppArtwork id={shortcutMenu.id}/></span><div><strong>{short[shortcutMenu.id]}</strong><small>{windowCategories[shortcutMenu.id]??(courseIds.includes(shortcutMenu.id)?'Predmet':'Aplikacija')}</small></div></div>
         <div className="ftn-menu-group">
           <button role="menuitem" onClick={()=>{open(shortcutMenu.id);setShortcutMenu(null)}}><span className="ftn-menu-symbol">↗</span><span>Otvori aplikaciju</span><kbd>↵</kbd></button>
           {windows.some(w=>w.id===shortcutMenu.id&&!w.minimized)&&<button role="menuitem" onClick={()=>{minimize(shortcutMenu.id);setShortcutMenu(null)}}><span className="ftn-menu-symbol">−</span><span>Minimizuj</span></button>}
           {windows.some(w=>w.id===shortcutMenu.id)&&<button role="menuitem" onClick={()=>{maximize(shortcutMenu.id);setShortcutMenu(null)}}><span className="ftn-menu-symbol">□</span><span>{windows.find(w=>w.id===shortcutMenu.id)?.maximized?'Vrati veličinu':'Maksimizuj'}</span></button>}
+          {windows.some(w=>w.id===shortcutMenu.id)&&<button role="menuitem" onClick={()=>{void toggleWindowFullscreen(shortcutMenu.id);setShortcutMenu(null)}}><span className="ftn-menu-symbol"><Icon name="fullscreen" size={16}/></span><span>{fullscreenHost?.id==='ftn-window-'+shortcutMenu.id?'Izađi iz celog ekrana':'Ceo ekran'}</span></button>}
         </div>
         {!courseIds.includes(shortcutMenu.id)&&<div className="ftn-menu-group">
           <button role="menuitem" onClick={()=>{hasShortcut(shortcutMenu.id)?removeShortcut(shortcutMenu.id):addShortcut(shortcutMenu.id);setShortcutMenu(null)}}>
@@ -387,7 +399,7 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
         {windows.some(w=>w.id===shortcutMenu.id)&&<div className="ftn-menu-group">
           <button className="ftn-menu-danger" role="menuitem" onClick={()=>{close(shortcutMenu.id);setShortcutMenu(null)}}><span className="ftn-menu-symbol">×</span><span>Zatvori prozor</span></button>
         </div>}
-      </div></>}
+      </div></>)}
     {overview && <><button className="gn-drawer-scrim" aria-label="Zatvori pregled aplikacija" onClick={()=>{setOverview(false);setSearch('')}}/>
       <div className="gn-overview">
       <button className="gn-overview-dismiss" aria-label="Zatvori pregled" onClick={()=>{setOverview(false);setSearch('')}}/>
