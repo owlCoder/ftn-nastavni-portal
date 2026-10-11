@@ -6,7 +6,7 @@
       "args": [
         "run",
         "--project",
-        "src/EquipmentReservation.Mcp",
+        "src/Mcp",
         "--configuration",
         "Release",
         "--no-build"

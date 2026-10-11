@@ -5,7 +5,7 @@ const ersSourceRoot = path.resolve('examples/ers-ai-workflow')
 const oibSourceRoot = path.resolve('examples/oib-dotnet')
 const odpSourceRoot = path.resolve('examples/odp-dotnet')
 const outputDir = path.resolve('public/downloads')
-const ignoredDirectories = new Set(['bin', 'obj', '.vs', 'TestResults'])
+const ignoredDirectories = new Set(['bin', 'obj', '.vs', '.git', 'TestResults', 'node_modules'])
 
 const lessonBundles = [
   {
@@ -15,13 +15,13 @@ const lessonBundles = [
     title: 'Integracija modula, ugovori i podaci',
     focus: [
       'EquipmentReservation.sln',
-      'src/EquipmentReservation.Domain/',
-      'src/EquipmentReservation.Application/',
-      'src/EquipmentReservation.Infrastructure/',
-      'src/EquipmentReservation.Api/',
-      'src/EquipmentReservation.ConsoleUi/',
-      'tests/EquipmentReservation.Tests/Application/CreateReservationHandlerTests.cs',
-      'tests/EquipmentReservation.Tests/Integration/ReservationFlowTests.cs',
+      'src/Domain/',
+      'src/Application/',
+      'src/Infrastructure/',
+      'src/Api/',
+      'src/ConsoleUi/',
+      'tests/Tests/Application/CreateReservationHandlerTests.cs',
+      'tests/Tests/Integration/ReservationFlowTests.cs',
     ],
   },
   {
@@ -43,11 +43,11 @@ const lessonBundles = [
     archiveRoot: 'ers-vezba-7-mcp',
     title: 'MCP: povezivanje agenata sa projektom',
     focus: [
-      'src/EquipmentReservation.Mcp/Program.cs',
-      'src/EquipmentReservation.Mcp/Resources/ProjectResources.cs',
-      'src/EquipmentReservation.Mcp/Tools/ProjectTools.cs',
-      'src/EquipmentReservation.Mcp/Workspace/ProjectPathPolicy.cs',
-      'src/EquipmentReservation.Mcp/Processes/ProjectCommand.cs',
+      'src/Mcp/Program.cs',
+      'src/Mcp/Resources/ProjectResources.cs',
+      'src/Mcp/Tools/ProjectTools.cs',
+      'src/Mcp/Workspace/ProjectPathPolicy.cs',
+      'src/Mcp/Models/ProjectCommand.cs',
       '.kova/mcp.json',
     ],
   },
@@ -57,18 +57,18 @@ const lessonBundles = [
     archiveRoot: 'ers-vezba-8-guardrails-evals',
     title: 'Hooks, guardrails i evaluacije',
     focus: [
-      'src/EquipmentReservation.Guardrails/Policies/DangerousCommandGuardrail.cs',
-      'src/EquipmentReservation.Guardrails/Policies/SensitiveFileGuardrail.cs',
-      'src/EquipmentReservation.Guardrails/Services/GuardrailEvaluator.cs',
-      'src/EquipmentReservation.Guardrails/Hosting/GuardrailHook.cs',
+      'src/Guardrails/Policies/DangerousCommandGuardrail.cs',
+      'src/Guardrails/Policies/SensitiveFileGuardrail.cs',
+      'src/Guardrails/Services/GuardrailEvaluator.cs',
+      'src/Guardrails/Hosting/GuardrailHook.cs',
       '.vscode/settings.json',
       '.kova/hooks.json',
       'scripts/kova-audit.mjs',
       'evals/review-architecture.json',
       'evals/prompt-injection.json',
       'evals/missing-context.json',
-      'tests/EquipmentReservation.Tests/Guardrails/GuardrailPolicyTests.cs',
-      'tests/EquipmentReservation.Tests/AiWorkflow/AiWorkflowArtifactsTests.cs',
+      'tests/Tests/Guardrails/GuardrailPolicyTests.cs',
+      'tests/Tests/AiWorkflow/AiWorkflowArtifactsTests.cs',
     ],
   },
 ]
@@ -108,7 +108,7 @@ async function collectFiles(directory, prefix = '') {
 
   for (const entry of entries) {
     if (entry.isDirectory() && ignoredDirectories.has(entry.name)) continue
-    if (entry.name === '.DS_Store' || /\.(?:user|suo)$/i.test(entry.name)) continue
+    if (entry.name === '.DS_Store' || entry.name.startsWith('.env') || /\.(?:user|suo)$/i.test(entry.name)) continue
 
     const absolute = path.join(directory, entry.name)
     const relative = prefix ? `${prefix}/${entry.name}` : entry.name
@@ -121,7 +121,7 @@ async function collectFiles(directory, prefix = '') {
 }
 
 function lessonReadme(lesson) {
-  return Buffer.from(`# Vežba ${lesson.number} — ${lesson.title}\n\nOvaj ZIP je samostalni paket za Vežbu ${lesson.number}. Sadrži ceo \`EquipmentReservation.sln\` da projekat može odmah da se otvori, builduje i testira.\n\n## Fajlovi na koje je fokus ove vežbe\n\n${lesson.focus.map((item) => `- \`${item}\``).join('\n')}\n\n## Pokretanje\n\n\`\`\`bash\ndotnet restore EquipmentReservation.sln\ndotnet build EquipmentReservation.sln\ndotnet test EquipmentReservation.sln --no-build\n\`\`\`\n`, 'utf8')
+  return Buffer.from(`# Vežba ${lesson.number} — ${lesson.title}\n\nOvaj ZIP je samostalni paket za Vežbu ${lesson.number}. Sadrži ceo \`EquipmentReservation.sln\` da projekat može odmah da se otvori, builduje i testira.\n\n## Fajlovi na koje je fokus ove vežbe\n\n${lesson.focus.map((item) => `- \`${item}\``).join('\n')}\n\n## Pokretanje\n\n\`\`\`bash\ndotnet restore EquipmentReservation.sln\ndotnet build EquipmentReservation.sln --configuration Release\ndotnet test EquipmentReservation.sln --configuration Release --no-build\n\`\`\`\n`, 'utf8')
 }
 
 async function createZip(bundle, sourceFiles) {

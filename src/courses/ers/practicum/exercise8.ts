@@ -4,7 +4,7 @@ import { text, list, callout, code, table, image, diagram } from '../../../pract
 export const exercise8: Block[] = [
   [
     text('h1', 'Vežba 8 — Hooks, guardrails, evaluacije i završni QA'),
-    text('paragraph', 'Poslednja oblast zatvara isti <code>EquipmentReservation.sln</code>. AI instrukcija može da kaže „ne čitaj .env“ ili „ne koristi force push“, ali obavezno pravilo treba sprovesti kodom kada je to moguće. Zato solution sadrži poseban <code>EquipmentReservation.Guardrails</code> projekat i NUnit testove njegovih politika.'),
+    text('paragraph', 'Poslednja oblast zatvara isti <code>EquipmentReservation.sln</code>. AI instrukcija može da kaže „ne čitaj .env“ ili „ne koristi force push“, ali obavezno pravilo treba sprovesti kodom kada je to moguće. Zato solution sadrži poseban <code>Guardrails</code> projekat i NUnit testove njegovih politika.'),
     image('/course-assets/hooks-evals.svg', 'Izvršive provere toka rada AI agenta: pre poziva alata, tokom izvršenja i pre prihvatanja rezultata.', 'Hooks, zaštitne politike i evaluacije'),
     diagram('Heuristika + deterministička zaštita', [
       ['AI instrukcija', 'smernica i kontekst', 'slate'],
@@ -23,11 +23,14 @@ export const exercise8: Block[] = [
     GuardrailDecision Evaluate(ToolInvocation invocation);
 }
 
-public sealed class GuardrailEvaluator(
-    IEnumerable<IToolGuardrail> guardrails) : IGuardrailEvaluator
+public sealed class GuardrailEvaluator : IGuardrailEvaluator
 {
-    private readonly IReadOnlyList<IToolGuardrail> _guardrails =
-        guardrails.ToArray();
+    private readonly IReadOnlyList<IToolGuardrail> _guardrails;
+
+    public GuardrailEvaluator(IEnumerable<IToolGuardrail> guardrails)
+    {
+        _guardrails = guardrails?.ToArray() ?? [];
+    }
 
     public GuardrailDecision Evaluate(ToolInvocation invocation)
     {
@@ -40,7 +43,7 @@ public sealed class GuardrailEvaluator(
 
         return GuardrailDecision.Allow();
     }
-}`, 'examples/ers-ai-workflow/src/EquipmentReservation.Guardrails/Services/GuardrailEvaluator.cs'),
+}`, 'examples/ers-ai-workflow/src/Guardrails/Services/GuardrailEvaluator.cs'),
     callout('info', 'OCP u tooling-u', 'Dodavanje politike za novu zaštićenu putanju ili novu klasu rizičnih operacija ne zahteva promenu evaluator-a.'),
   ],
 
@@ -98,23 +101,36 @@ public sealed class DangerousCommandGuardrail : IToolGuardrail
                 "Destructive or forceful command blocked by project policy.")
             : GuardrailDecision.Allow();
     }
-}`, 'examples/ers-ai-workflow/src/EquipmentReservation.Guardrails/Policies/'),
+}`, 'examples/ers-ai-workflow/src/Guardrails/Policies/'),
     callout('warning', 'Allowlist je još jača granica', 'Za posebno rizične sisteme često je bolje eksplicitno dozvoliti mali skup operacija nego pokušavati da nabrojimo sve moguće opasne formulacije.'),
   ],
 
   [
     text('h2', '8.3. Hook povezuje AI alat sa izvršivom politikom'),
     text('paragraph', 'Guardrail aplikacija je običan .NET projekat: čita JSON događaj sa standardnog ulaza i vraća izlazni kod <code>0</code> (dozvoljeno) ili <code>2</code> (blokirano). <code>GuardrailHook</code> je adapter prema procesu, pa se ista politika testira bez pokretanja procesa. Ulaz koji ne može da se protumači takođe se blokira.'),
-    code('csharp', `public sealed class GuardrailHook(
-    IToolInvocationParser parser,
-    IGuardrailEvaluator evaluator)
+    code('csharp', `public sealed class GuardrailHook
 {
+    private readonly IToolInvocationParser _parser;
+    private readonly IGuardrailEvaluator _evaluator;
+
+    public GuardrailHook(IToolInvocationParser parser, IGuardrailEvaluator evaluator)
+    {
+        _parser = parser;
+        _evaluator = evaluator;
+    }
+
     public async Task<int> RunAsync(TextReader input, TextWriter error)
     {
         try
         {
-            var invocation = parser.Parse(await input.ReadToEndAsync());
-            var decision = evaluator.Evaluate(invocation);
+            var invocation = _parser.Parse(await input.ReadToEndAsync());
+            if (!invocation.Valid)
+            {
+                await error.WriteLineAsync("Guardrail input could not be evaluated.");
+                return HookExitCodes.Block;
+            }
+
+            var decision = _evaluator.Evaluate(invocation);
             if (decision.Allowed)
                 return HookExitCodes.Allow;
 
@@ -123,12 +139,11 @@ public sealed class DangerousCommandGuardrail : IToolGuardrail
         }
         catch (Exception exception) when (exception is not OutOfMemoryException)
         {
-            await error.WriteLineAsync(
-                $"Guardrail input could not be evaluated: {exception.Message}");
+            await error.WriteLineAsync($"Guardrail input could not be evaluated: {exception.Message}");
             return HookExitCodes.Block;
         }
     }
-}`, 'examples/ers-ai-workflow/src/EquipmentReservation.Guardrails/Hosting/GuardrailHook.cs'),
+}`, 'examples/ers-ai-workflow/src/Guardrails/Hosting/GuardrailHook.cs'),
     text('paragraph', 'Kova se sa ovim projektom povezuje kroz dve datoteke. Postavka <code>kova.ers.guardrailsProject</code> u <code>.vscode/settings.json</code> uključuje guardrail kao završnu proveru pre svakog poziva alata, a <code>.kova/hooks.json</code> registruje hook-ove pre i posle izvršenja.'),
     code('json', `{
   "BeforeToolExecution": [
@@ -169,7 +184,7 @@ process.stdout.write(
 
   [
     text('h2', '8.4. Guardrail se testira kao običan kod'),
-    text('paragraph', 'Bez testova guardrail je samo još jedna pretpostavka. Isti <code>EquipmentReservation.Tests</code> projekat proverava da rizične komande i pristup .env datoteci zaista budu odbijeni, ali i da uobičajene komande ostanu dozvoljene.'),
+    text('paragraph', 'Bez testova guardrail je samo još jedna pretpostavka. Isti <code>Tests</code> projekat proverava da rizične komande i pristup .env datoteci zaista budu odbijeni, ali i da uobičajene komande ostanu dozvoljene.'),
     code('csharp', `[TestCase("git push --force origin main")]
 [TestCase("rm -rf ./src")]
 public void DangerousCommandGuardrail_BlocksDestructiveCommands(
@@ -194,7 +209,7 @@ public void SensitiveFileGuardrail_BlocksSecretFiles(string filePath)
         new ToolInvocation("Read", null, filePath));
 
     Assert.That(result.Allowed, Is.False);
-}`, 'examples/ers-ai-workflow/tests/EquipmentReservation.Tests/Guardrails/GuardrailPolicyTests.cs'),
+}`, 'examples/ers-ai-workflow/tests/Tests/Guardrails/GuardrailPolicyTests.cs'),
     code('bash', `dotnet test EquipmentReservation.sln --configuration Release`, 'Jedna komanda proverava poslovne i guardrail testove'),
   ],
 
@@ -253,8 +268,8 @@ dotnet test EquipmentReservation.sln --configuration Release --no-build`, 'Zavr�
       ['AGENTS.md', 'Projektna pravila koja važe za svaki AI zadatak.'],
       ['.ai/AI_USAGE.md', 'Zapisi odluka: predlog, razlog prihvatanja ili odbijanja i dokaz provere.'],
       ['.kova/skills/*/SKILL.md', 'Ponovljive procedure sa ulazima, izlazom i ograničenjima.'],
-      ['.kova/mcp.json i EquipmentReservation.Mcp', 'Uzak, pregledan pristup projektnom kontekstu.'],
-      ['.kova/hooks.json i EquipmentReservation.Guardrails', 'Pravila koja se sprovode kodom, a ne dogovorom.'],
+      ['.kova/mcp.json i src/Mcp', 'Uzak, pregledan pristup projektnom kontekstu.'],
+      ['.kova/hooks.json i src/Guardrails', 'Pravila koja se sprovode kodom, a ne dogovorom.'],
       ['evals/*.json', 'Evaluacioni scenariji, uključujući negativne.'],
     ]),
     callout('success', 'Ishod vežbe', 'Student demonstrira razvojni postupak zasnovan na definisanim granicama, preciznim ugovorima, testovima, ograničenim dozvolama i dokumentovanim odlukama.'),

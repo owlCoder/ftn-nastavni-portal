@@ -21,7 +21,11 @@ Projektna pravila za AI agente koji rade nad ovim solution-om. `AGENTS.md` u kor
 - Interfejsi ostaju mali i vezani za konkretan use-case.
 - Visoki slojevi zavise od apstrakcija, a composition root bira konkretne implementacije.
 
-## Ishodi
+## Ishodi i stil
+- Ne koristiti `throw`, `ThrowIf...` ili `return null` u produkcionom kodu. Neuspeh se vraća kao `Result` ili podrazumevani objekat (`new()`); nepostojeći ID je `Guid.Empty`.
+- HTTP DTO su klase sa sufiksom `Dto` u `Api/Dtos`. Domenski modeli i pravila su u `Domain`, use-case ugovori i zahtevi u `Application`, a `Application/Interfaces` sadrži samo interfejse. Tehnički modeli razvojnih alata ostaju u svojim slojevima, izvan poslovnog domena.
+- Ne koristiti `record` i `with`; koristiti obične klase, podrazumevane konstruktore i kopiranje kroz nove objekte gde je potrebno.
+- Potpisi metoda i konstruktora pišu se u jednoj liniji kad god su razumljive dužine, kao standardni C# kod u Visual Studio-u.
 - Očekivani poslovni neuspeh vraća se kao `Result` sa stabilnim kodom, ne kao izuzetak.
 - Novi kod neuspeha dodaje se u odgovarajuću `*ErrorCodes` klasu i pokriva testom.
 

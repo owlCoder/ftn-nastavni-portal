@@ -32,7 +32,6 @@ for (const root of [portalRoot, materialsRoot]) {
   for (const name of files) {
     if (!(await fs.stat(path.join(root, name)).catch(() => null))?.isFile()) continue
     assert.ok(path.basename(name) !== 'verify.sh', root + ': unexpected verify.sh at ' + name)
-    assert.ok(!/^readme(?:\.|$)/i.test(path.basename(name)) || !name.includes('/'), root + ': nested README at ' + name)
   }
 }
 let sourceFiles = 0

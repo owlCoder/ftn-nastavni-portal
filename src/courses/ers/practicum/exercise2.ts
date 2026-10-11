@@ -89,12 +89,26 @@ export const exercise2: Block[] = [
     text('h2', '2.6. Studija slučaja: Logger–Blogger'),
     text('paragraph', 'Logger–Blogger služi kao studija slučaja za razdvajanje poslovnog jezgra, infrastrukturnih detalja i composition root-a. Njegova svrha nije da bude šablon koji se prepisuje u projekat, već da omogući poređenje odgovornosti slojeva i načina na koji Dependency Inversion štiti unutrašnji kod od promena skladišta, logovanja ili korisničkog interfejsa.'),
     table(['Projekat', 'Sadržaj i odgovornost'], [
-      ['Domain', 'Modeli `Korisnik`, `ZapisNaSajtu`, `Objava`, `Evidencija`; nabrajanja; Result tip; ugovori za servise, repozitorijume, bazu i bezbednost. Ne zavisi ni od jednog drugog projekta.'],
-      ['Infrastructure', 'Implementacije servisa i bezbednosti: autentifikacija, blog/evidencija, file logger i SHA-256 hasher. Zavisi od Domain-a.'],
-      ['Database', 'InMemory i JSON provider, factory i repozitorijumi. Implementira ugovore koje definiše jezgro.'],
-      ['Presentation', 'Konzolni meni, `IConsoleIO`, seeder, `AppContainer` i `Program.cs`; sastavlja graf zavisnosti.'],
+      ['Domain', 'Poslovni modeli `Korisnik`, `ZapisNaSajtu`, `Objava`, `Evidencija` i nabrajanja. Ne zavisi ni od jednog drugog projekta.'],
+      ['Application', 'Registracija, prijava i objave/evidencije; Result tip i ugovori za servise, repozitorijume, logger i hasher. Zavisi samo od Domain-a.'],
+      ['Infrastructure', 'PBKDF2 hasher sa salt-om i file logger. Implementira ugovore Application sloja.'],
+      ['Database', 'InMemory i JSON provider, factory, ugovori baze i model tabela. Repozitorijumi implementiraju ugovore Application sloja.'],
+      ['Presentation', 'Konzolni meni, `IConsoleIO`, formatter, seeder, `AppContainer` i `Program.cs`; sastavlja graf zavisnosti.'],
+      ['Tests', 'NUnit/Moq provere use-case-ova, arhitekture, JSON adaptera i PBKDF2 hashera.'],
     ]),
-    code('csharp', `public interface IZapisiServis\n{\n    Result<ZapisNaSajtu> Objavi(ZapisNaSajtu zapis);\n    Result<IReadOnlyList<ZapisNaSajtu>> PregledZapisa();\n}\n\npublic interface IBazaPodataka\n{\n    TabeleBazaPodataka Tabele { get; }\n    bool SacuvajPromene();\n}`, 'Ugovori poslovnog jezgra'),
+    code('csharp', `public interface IZapisiServis
+{
+    Result<ZapisNaSajtu> Objavi(ZapisNaSajtu zapis);
+
+    Result<IReadOnlyList<ZapisNaSajtu>> PregledZapisa();
+}
+
+public interface IBazaPodataka
+{
+    TabeleBazaPodataka Tabele { get; }
+    bool IsReady { get; }
+    bool SacuvajPromene();
+}`, 'Application/Interfaces/Services/IZapisiServis.cs i Database/Interfaces/IBazaPodataka.cs'),
     callout('info', 'Ključna ideja', 'Način čuvanja podataka i način logovanja mogu da se promene bez izmene centralnog poslovnog toka. Ista ideja se prenosi u studentski projekat, ali tim bira sopstvene granice i nazive u skladu sa domenom.'),
     callout('success', 'Rešenje za preuzimanje', 'Kompletno rešenje studije slučaja dostupno je kao <a href="./Logger-Bloger.zip" download>Logger–Blogger ZIP</a>. Komande za pokretanje nalaze se u <a href="https://github.com/owlCoder/ftn-nastavni-materijali#programski-primeri">korenskom README dokumentu nastavnih materijala</a>.'),
   ],

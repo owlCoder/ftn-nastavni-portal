@@ -6,7 +6,7 @@ export const ersStandaloneExamples: StandaloneExample[] = [
   {
     exercise: 2,
     title: 'Logger–Blogger',
-    description: 'Primena SOLID principa kroz razdvajanje poslovne logike, evidentiranja događaja i infrastrukturnih odgovornosti.',
+    description: 'Primena SOLID principa kroz odvojene Domain, Application, Database, Infrastructure i Presentation slojeve, uz PBKDF2 i testove adaptera.',
     zip: '/Logger-Bloger.zip',
     tags: ['SOLID', 'SRP', 'DIP'],
   },

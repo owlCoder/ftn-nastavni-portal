@@ -57,14 +57,14 @@ Potreban je .NET 8 SDK. Komande izvršavati iz direktorijuma primera.
 |---|---|---|
 | [Logger–Blogger](examples/ers-logger-blogger) | `Loger-Bloger.sln` | `dotnet run --project Presentation` |
 | [ECommerce](examples/ers-ecommerce) | `ECommerce.sln` | `dotnet run --project WebAPI` |
-| [Equipment Reservation](examples/ers-ai-workflow) | `EquipmentReservation.sln` | `dotnet run --project src/EquipmentReservation.ConsoleUi` ili `src/EquipmentReservation.Api` |
+| [Equipment Reservation](examples/ers-ai-workflow) | `EquipmentReservation.sln` | `dotnet run --project src/ConsoleUi` ili `src/Api` |
 
 ```bash
 dotnet build <naziv-solutiona>.sln --configuration Release
 dotnet test <naziv-solutiona>.sln --configuration Release --no-build
 ```
 
-Logger–Blogger koristi demo naloge `maja` / `123` i `ana` / `123`. API primeri ispisuju adresu pri pokretanju. U [OIB](examples/oib-dotnet) i [ODP](examples/odp-dotnet) direktorijumima svaki podfolder odgovara jednoj vežbi. Za broj `NN` od `01` do `08`:
+Logger–Blogger koristi demo naloge `maja` / `demo12345` i `ana` / `demo12345`. API primeri ispisuju adresu pri pokretanju. U [OIB](examples/oib-dotnet) i [ODP](examples/odp-dotnet) direktorijumima svaki podfolder odgovara jednoj vežbi. Za broj `NN` od `01` do `08`:
 
 ```bash
 dotnet run --project src/Oib.VezbaNN.ConsoleUi
@@ -72,7 +72,7 @@ dotnet test Oib.VezbaNN.sln --configuration Release
 # ODP: zameniti Oib sa Odp u obe komande.
 ```
 
-Scenario i zadatak nalaze se u praktikumu. Equipment Reservation koristi `AGENTS.md`, `.kova/skills` i `.ai/AI_USAGE.md`; priprema je opisana u ERS vežbama 6–8. Pre pokretanja MCP-a i guardrails provera izgraditi Release konfiguraciju. MCP resursi su `project://instructions` i `project://solution`.
+Scenario i zadatak nalaze se u praktikumu. Equipment Reservation koristi `AGENTS.md`, `.kova/skills` i `.ai/AI_USAGE.md`; priprema je opisana u ERS vežbama 6–8. Pre pokretanja MCP-a i guardrails provera izgraditi Release konfiguraciju. MCP resursi su `project://instructions` i `project://readme`.
 
 Evaluacije iz `evals/*.json` sprovode se izborom `skill` i `mode`, zadavanjem `input` i proverom svih stavki `expected.must` i `expected.mustNot`. Ishod i dokaz upisati u `.ai/AI_USAGE.md`. Unit testovi proveravaju strukturu scenarija, a član tima ocenjuje odgovor agenta.
 
@@ -86,7 +86,7 @@ npm run check:materials-sync
 npm run build
 ```
 
-Generisane dokumente iz `public/downloads/praktikum/<predmet>` preneti u `03 Racunarske vezbe` odgovarajućeg predmeta u repozitorijumu materijala. Mapiranje izvora primera, projektnih PDF-ova i zajedničkih uputstava određuje `scripts/teaching-materials.json`. Provera poredi datoteke sa susednim direktorijumom `../nastava`; druga lokacija prosleđuje se kao argument: `npm run check:materials-sync -- /putanja/do/nastava`. README se održava samo u korenu repozitorijuma.
+Generisane dokumente iz `public/downloads/praktikum/<predmet>` preneti u `03 Racunarske vezbe` odgovarajućeg predmeta u repozitorijumu materijala. Mapiranje izvora primera, projektnih PDF-ova i zajedničkih uputstava određuje `scripts/teaching-materials.json`. Provera poredi datoteke sa susednim direktorijumom `../nastava`; druga lokacija prosleđuje se kao argument: `npm run check:materials-sync -- /putanja/do/nastava`. Korenski README daje pregled materijala, a README datoteke uz primere sadrže njihova uputstva za pokretanje i proveru.
 
 Za uvoz ERS i OIB PDF prezentacija iz pripremljenih arhiva:
 

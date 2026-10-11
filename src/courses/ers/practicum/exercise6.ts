@@ -154,9 +154,9 @@ Ne menjaj kod tokom review faze.`, 'Sažeta verzija procedure iz gotovog primera
     "Do not add Infrastructure dependency to Domain/Application"
   ],
   "filesToConsider": [
-    "src/EquipmentReservation.Application/Reservations/Create/CreateReservationCommandValidator.cs",
-    "src/EquipmentReservation.Application/Reservations/Create/CreateReservationErrorCodes.cs",
-    "tests/EquipmentReservation.Tests/Application/CreateReservationCommandValidatorTests.cs"
+    "src/Application/Reservations/Create/CreateReservationCommandValidator.cs",
+    "src/Application/Reservations/Create/CreateReservationErrorCodes.cs",
+    "tests/Tests/Application/CreateReservationCommandValidatorTests.cs"
   ],
   "verification": [
     "dotnet build EquipmentReservation.sln",

@@ -1,9 +1,10 @@
-name: ERS AI example
+name: ERS examples
 
 on:
   pull_request:
     paths:
       - 'examples/ers-ai-workflow/**'
+      - 'examples/ers-logger-blogger/**'
       - 'src/courses/ers/practicum/**'
       - '.github/workflows/ers-ai-example.yml'
   push:
@@ -11,23 +12,31 @@ on:
       - main
     paths:
       - 'examples/ers-ai-workflow/**'
+      - 'examples/ers-logger-blogger/**'
       - 'src/courses/ers/practicum/**'
       - '.github/workflows/ers-ai-example.yml'
 
 jobs:
   dotnet:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - directory: examples/ers-ai-workflow
+            solution: EquipmentReservation.sln
+          - directory: examples/ers-logger-blogger
+            solution: Loger-Bloger.sln
     defaults:
       run:
-        working-directory: examples/ers-ai-workflow
+        working-directory: ${{ matrix.directory }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
       - name: Restore solution
-        run: dotnet restore EquipmentReservation.sln
+        run: dotnet restore ${{ matrix.solution }}
       - name: Build solution
-        run: dotnet build EquipmentReservation.sln --configuration Release --no-restore
+        run: dotnet build ${{ matrix.solution }} --configuration Release --no-restore
       - name: Run tests
-        run: dotnet test EquipmentReservation.sln --configuration Release --no-build --verbosity minimal
+        run: dotnet test ${{ matrix.solution }} --configuration Release --no-build --verbosity minimal
