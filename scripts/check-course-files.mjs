@@ -11,18 +11,17 @@ try {
   const { ersStandaloneExamples, ersLessonPackages, ersProjectBundle } = await server.ssrLoadModule('/src/courses/ers/examples.ts')
   const { oibExamples, oibExamplesBundle } = await server.ssrLoadModule('/src/courses/oib/examples.ts')
   const { odpExamples, odpExamplesBundle } = await server.ssrLoadModule('/src/courses/odp/examples.ts')
-  const exampleSources = {
-    ers: [...ersStandaloneExamples.map(item => item.zip), ...ersLessonPackages.map(item => item.zip), ersProjectBundle],
-    oib: [...oibExamples.map(item => item.zip), oibExamplesBundle],
-    odp: [...odpExamples.map(item => item.zip), odpExamplesBundle],
-    ibis: [],
+  const examples = {
+    ers: [...ersStandaloneExamples, ...ersLessonPackages.map(item => ({ exercise: item.number, zip: item.zip }))],
+    oib: oibExamples, odp: odpExamples, ibis: [],
   }
+  const bundles = { ers: ersProjectBundle, oib: oibExamplesBundle, odp: odpExamplesBundle }
+  const { prepareDocument } = await server.ssrLoadModule('/src/components/document/prepareDocument.ts')
 
   for (const course of courses) {
     const files = buildCourseFiles(course)
     const lookup = new Map(files.map(item => [item.id, item]))
     assert.equal(lookup.size, files.length, course.code + ': duplicate tree IDs')
-    assert.ok(!files.some(item => item.id.startsWith('vezbe')), course.code + ': redundant exercise folders')
     for (const item of files) {
       if (item.parent !== 'root') assert.equal(lookup.get(item.parent)?.kind, 'folder')
       if (item.source) assert.ok(existsSync(resolve('public', item.source.slice(1))), 'Missing asset: ' + item.source)
@@ -31,13 +30,12 @@ try {
     const slides = course.presentations.kind === 'downloads' ? course.presentations.downloads : []
     const projects = [...(course.project ? [course.project] : []), ...(course.projects ?? [])]
     const expectedSources = [
-      ...slides.map(item => item.file), ...projects.map(item => item.file), ...exampleSources[course.id],
+      ...slides.map(item => item.file), ...projects.map(item => item.file), ...examples[course.id].map(item => item.zip),
+      ...(bundles[course.id] ? [bundles[course.id]] : []),
       ...(course.presentations.kind === 'downloads' ? [course.presentations.bundle.file] : []),
     ]
     assert.deepEqual(files.filter(item => item.source).map(item => item.source).sort(), expectedSources.sort(),
       course.code + ': each original asset must appear exactly once')
-    assert.deepEqual(files.filter(item => item.parent === 'prezentacije' && item.kind === 'pdf').map(item => item.source),
-      slides.map(item => item.file), course.code + ': presentations must keep their numbered order')
     assert.deepEqual(files.filter(item => item.parent === 'projekat' && item.kind === 'pdf').map(item => item.source),
       projects.map(item => item.file))
 
@@ -46,19 +44,44 @@ try {
     assert.deepEqual(rootEntries.filter(item => item.url).map(item => item.url).sort(),
       files.filter(item => item.source && !item.bundle).map(item => item.source).sort(),
       course.code + ': folder export must contain original assets without collection ZIPs')
-    for (const folder of files.filter(item => item.kind === 'folder')) {
-      const entries = courseFolderEntries(course, folder.id, files)
-      assert.deepEqual(entries.filter(item => item.url).map(item => item.url).sort(),
-        files.filter(item => item.parent === folder.id && item.source && !item.bundle).map(item => item.source).sort(),
-        course.code + ': export must stay inside ' + folder.name)
-    }
+    const projectEntries = courseFolderEntries(course, 'projekat', files)
+    assert.deepEqual(projectEntries.filter(item => item.url).map(item => item.url), projects.map(item => item.file))
     if (course.id === 'ibis') {
-      assert.ok(!files.some(item => item.kind === 'practicum' || item.kind === 'checkpoints' || item.parent === 'primeri'))
+      assert.ok(!files.some(item => item.kind === 'practicum' || item.kind === 'practicum-link' || item.id === 'vezbe'))
+      assert.deepEqual(files.filter(item => item.parent === 'prezentacije' && item.kind === 'pdf').map(item => item.source),
+        slides.map(item => item.file))
     } else {
+      assert.ok(!files.some(item => item.id === 'prezentacije' || item.id === 'primeri'), 'No parallel presentation/example folders')
+      const exerciseFolders = files.filter(item => item.parent === 'vezbe' && item.kind === 'folder')
+      assert.deepEqual(exerciseFolders.map(item => item.id), Array.from({ length: 8 }, (_, i) => 'vezbe/' + String(i + 1).padStart(2, '0')))
+      const { toc } = prepareDocument(course.practicum.blocks)
+      for (let n = 1; n <= 8; n++) {
+        const parent = 'vezbe/' + String(n).padStart(2, '0')
+        const contents = files.filter(item => item.parent === parent)
+        const slide = slides.find(item => Number(item.number) === n)
+        const example = examples[course.id].find(item => item.exercise === n)
+        assert.deepEqual(contents.filter(item => item.source).map(item => item.source),
+          [...(slide ? [slide.file] : []), ...(example ? [example.zip] : [])], course.code + ': mismatched exercise materials')
+        const links = contents.filter(item => item.kind === 'practicum-link')
+        assert.equal(links.length, 1)
+        assert.equal(links[0].exercise, n)
+        const heading = toc.find(item => item.id === links[0].anchor)
+        assert.ok(heading && new RegExp('^Vežba\\s+' + n + '(?:\\D|$)').test(heading.label), 'Shortcut must target its own chapter')
+        const entries = courseFolderEntries(course, parent, files)
+        assert.deepEqual(entries.filter(item => item.url).map(item => item.url), contents.filter(item => item.source).map(item => item.source))
+        assert.equal(entries.filter(item => item.path.endsWith('.url')).length, 1)
+        assert.ok(entries.some(item => item.text?.includes('/#' + course.id + '/praktikum/' + String(n).padStart(2, '0'))))
+      }
+      assert.equal(rootEntries.filter(item => item.path.endsWith('.url')).length, 8)
       assert.ok(rootEntries.some(item => item.path === 'Praktikum.md' && item.text))
       assert.ok(rootEntries.some(item => item.path === 'Projekat/Kontrolne_tacke.md' && item.text))
+      const lessonEntries = courseFolderEntries(course, 'vezbe', files)
+      assert.deepEqual(lessonEntries.filter(item => item.url).map(item => item.url).sort(),
+        [...slides.filter(item => Number(item.number) > 0).map(item => item.file), ...examples[course.id].map(item => item.zip)].sort())
+      assert.deepEqual(files.filter(item => item.kind === 'pdf' && item.parent === 'root').map(item => item.source),
+        slides.filter(item => Number(item.number) === 0).map(item => item.file))
     }
-    console.log(course.code + ': all assets reachable once; folder exports contain no duplicate collections.')
+    console.log(course.code + ': course hierarchy, asset uniqueness and folder exports verified.')
   }
 } finally {
   await server.close()

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { Course } from '../courses/types'
 import { PdfViewer } from './PdfViewer'
 import { assetUrl } from '../lib/assets'
@@ -6,7 +6,7 @@ import { PracticumDocument } from './document/PracticumDocument'
 import { CheckpointsView } from './CheckpointsView'
 import { ZipFileViewer } from './ZipFileViewer'
 import { downloadFolderZip, downloadText } from './courseDownloads'
-import { buildCourseFiles, courseFileContent, courseFolderEntries, safeFileName, type CourseFile as Item, type CourseFileKind as FileKind } from './courseFileTree'
+import { buildCourseFiles, courseFileContent, courseFolderEntries, practicumExerciseHref, safeFileName, type CourseFile as Item, type CourseFileKind as FileKind } from './courseFileTree'
 
 function itemCount(count:number){
   const last=count%10,ending=count%100
@@ -24,6 +24,7 @@ function EntryIcon({kind}:{kind:FileKind}){
       <path d="M21 3v8h8" fill="#e9edf5"/>
       {kind==='pdf'?<><rect x="9" y="20" width="19" height="9" rx="3" fill="#e9786e"/><text x="18.5" y="26.5" fontSize="6.5" textAnchor="middle" fontWeight="800" fill="#fff">PDF</text></>:
         kind==='zip'?<><rect x="9" y="20" width="19" height="9" rx="3" fill="#7ea5cc"/><text x="18.5" y="26.5" fontSize="6.5" textAnchor="middle" fontWeight="800" fill="#fff">ZIP</text></>:
+        kind==='practicum-link'?<><path d="M12 18h11m-7-5h7v7m0-7-11 11" stroke="#7098c5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></>:
         kind==='checkpoints'?<><path d="m12 22 4 4 8-9" stroke="#55ad82" strokeWidth="2.5" strokeLinecap="round"/></>:
         <><path d="M12 17h12m-12 5h9m-9 5h11" stroke="#7098c5" strokeWidth="1.6" strokeLinecap="round"/></>}
     </>}
@@ -40,16 +41,30 @@ export function CourseFiles({course}:{course:Course}){
   const [expanded,setExpanded]=useState<Set<string>>(()=>new Set(['root']))
   const [busy,setBusy]=useState('')
   const [error,setError]=useState('')
+  useEffect(()=>{
+    const openFromHash=()=>{
+      const match=location.hash.match(new RegExp('^#'+course.id+'/praktikum/(\\d+)$'))
+      if(!match)return
+      const item=files.find(file=>file.kind==='practicum-link'&&file.exercise===Number(match[1]))
+      if(!item)return
+      setFolder(item.parent);setPreview({kind:item.kind,item})
+      setExpanded(old=>new Set([...old,'vezbe',item.parent]))
+    }
+    openFromHash()
+    window.addEventListener('hashchange',openFromHash)
+    return()=>window.removeEventListener('hashchange',openFromHash)
+  },[course.id,files])
   const current=lookup.get(folder)
   const folderItems=children(folder)
   const metadata=(item:Item)=>{
     if(item.kind==='folder'){
       const entries=children(item.id).filter(child=>!child.bundle)
+      if(item.id==='vezbe')return entries.length+' vežbi'
       if(entries.length&&entries.every(child=>child.kind==='pdf'))return entries.length+' PDF'
       if(entries.length&&entries.every(child=>child.kind==='zip'))return entries.length+' ZIP'
       return itemCount(entries.length)
     }
-    return item.kind==='pdf'?item.pages+' str. · '+item.size:item.size??(item.kind==='zip'?'ZIP':'Dokument')
+    return item.kind==='practicum-link'?'Prečica':item.kind==='pdf'?item.pages+' str. · '+item.size:item.size??(item.kind==='zip'?'ZIP':'Dokument')
   }
   const breadcrumb=useMemo(()=>{
     const items=[{id:'root',name:course.code}],branches:Item[]=[]
@@ -64,6 +79,7 @@ export function CourseFiles({course}:{course:Course}){
   },[folder,course.code,lookup])
   const visit=(item:Item)=>{
     setError('')
+    history.replaceState(null,'',item.kind==='practicum-link'&&item.exercise?practicumExerciseHref(course,item.exercise):'#'+course.id)
     if(item.kind==='folder'){
       setFolder(item.id);setPreview(null)
       setExpanded(old=>new Set(old).add(item.id))
@@ -72,8 +88,8 @@ export function CourseFiles({course}:{course:Course}){
       setExpanded(old=>new Set(old).add(item.parent))
     }
   }
-  const navigate=(id:string)=>{setPreview(null);setFolder(id);setError('')}
-  const back=()=>preview?setPreview(null):navigate(current?.parent??'root')
+  const navigate=(id:string)=>{history.replaceState(null,'','#'+course.id);setPreview(null);setFolder(id);setError('')}
+  const back=()=>preview?navigate(folder):navigate(current?.parent??'root')
   const save=async(item?:Item)=>{
     if(busy)return
     setError('')
@@ -143,9 +159,9 @@ export function CourseFiles({course}:{course:Course}){
       </aside>
       <main className={'ers-explorer-main'+(preview?' is-preview':'')}>
         {preview&&viewing ? <div className="ers-file-preview">
-          {viewing.kind==='practicum' ?
+          {viewing.kind==='practicum' || viewing.kind==='practicum-link' ?
             <div className="ers-continuous-document">
-              <PracticumDocument practicum={course.practicum}/>
+              <PracticumDocument key={viewing.id} practicum={course.practicum} initialSection={viewing.anchor}/>
             </div> :
             viewing.kind==='checkpoints'?<div className="ers-checkpoint-document"><CheckpointsView checkpoints={course.checkpoints}/></div>:
             pdfViewing?<PdfViewer file={viewing.source!} name={viewing.name}/>:
@@ -157,15 +173,18 @@ export function CourseFiles({course}:{course:Course}){
             <span className="ers-directory-count">{itemCount(folderItems.length)}</span>
           </div>
           <div className="ers-file-list" role="list" aria-label="Sadržaj foldera">
-            {folderItems.map(item=><div className="ers-file-row" key={item.id} role="listitem">
-              <button className="ers-file-open" onClick={()=>visit(item)} title={'Otvori '+item.name}>
+            {folderItems.map(item=>{
+              const OpenEntry=item.kind==='practicum-link'?'a':'button'
+              return <div className="ers-file-row" key={item.id} role="listitem">
+              <OpenEntry className="ers-file-open" href={item.exercise?practicumExerciseHref(course,item.exercise):undefined}
+                onClick={event=>{event.preventDefault();visit(item)}} title={'Otvori '+item.name}>
                 <EntryIcon kind={item.kind}/>
                 <span className="ers-file-row-name"><strong>{item.name}</strong><small>{item.description??(item.kind==='folder'?'Folder':'Dokument')}</small></span>
                 <span className="ers-file-meta">{metadata(item)}</span>
                 <span className="ers-open-chevron">›</span>
-              </button>
+              </OpenEntry>
               <button className="ers-download-mini" onClick={()=>void save(item)} disabled={Boolean(busy)} aria-label={'Preuzmi '+item.name} title={item.kind==='folder'?'Preuzmi folder kao ZIP':'Preuzmi fajl'}>↓</button>
-            </div>)}
+            </div>})}
           </div>
           {folderItems.length===0&&<div className="ers-empty">Ovaj folder je prazan.</div>}
           <p className="ers-directory-footnote">Klikni na folder za otvaranje. Dokumenti i arhive otvaraju se unutar prozora; sve stavke mogu se preuzeti.</p>

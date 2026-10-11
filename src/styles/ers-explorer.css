@@ -81,7 +81,7 @@
 .ers-file-row{display:flex;align-items:center;min-height:70px;gap:3px;border-bottom:1px solid #eceef2;transition:background .15s}
 .ers-file-row:last-child{border-bottom:0}
 .ers-file-row:hover{background:#f1f6fc}
-.ers-file-open{display:flex;flex:1;min-width:0;align-items:center;gap:13px;padding:11px 6px 11px 16px;border:0;background:transparent;text-align:left;color:#39465a}
+.ers-file-open{display:flex;flex:1;min-width:0;align-items:center;gap:13px;padding:11px 6px 11px 16px;border:0;background:transparent;text-align:left;color:#39465a;font:inherit;text-decoration:none}
 .ers-file-open .ers-entry-icon{flex:none;width:40px;height:40px}
 .ers-entry-icon{display:block}
 .ers-file-row-name{display:flex;flex-direction:column;gap:5px;min-width:0;flex:1}

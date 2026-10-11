@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState, type CSSProperties } from 'react'
+import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { assetUrl } from '../../lib/assets'
 import { useFullscreen } from '../../lib/useFullscreen'
 import type { Practicum } from '../../practicum/types'
@@ -30,12 +30,22 @@ function DocumentCover({ subject }: { subject: string }) {
   )
 }
 
-export function PracticumDocument({ practicum }: { practicum: Practicum }) {
+export function PracticumDocument({ practicum, initialSection }: { practicum: Practicum; initialSection?: string }) {
   const { prepared, toc } = useMemo(() => prepareDocument(practicum.blocks), [practicum])
   const [zoom, setZoom] = useState(1)
   const [tocCollapsed, setTocCollapsed] = useState(false)
   const [openImage, setOpenImage] = useState<{ src: string; alt: string } | null>(null)
   const { ref: layoutRef, isFullscreen, toggle: toggleFullscreen } = useFullscreen<HTMLDivElement>()
+
+  useEffect(() => {
+    if (!initialSection) return
+    const heading = [...(layoutRef.current?.querySelectorAll<HTMLElement>('.document-body [id]') ?? [])]
+      .find(element => element.id === initialSection)
+    if (!heading) return
+    heading.scrollIntoView({ behavior: 'auto', block: 'start' })
+    heading.tabIndex = -1
+    heading.focus({ preventScroll: true })
+  }, [initialSection, practicum, layoutRef])
 
   const openLightbox = useCallback((src: string, alt: string) => setOpenImage({ src, alt }), [])
   const closeLightbox = useCallback(() => setOpenImage(null), [])
