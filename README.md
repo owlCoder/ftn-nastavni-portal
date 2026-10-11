@@ -66,6 +66,10 @@ The Settings application now uses a desktop-style navigation sidebar with dedica
 
 Existing wallpaper indexes remain stable to preserve previously saved user selections. Custom-designed switches, range sliders and focus indicators improve keyboard and pointer accessibility. The theme is reflected in the settings and workspace utilities; PDF pages and practicum documents intentionally remain paper-coloured for legibility.
 
+### Interface consistency
+
+The Activities app library has a fixed search and category header above an independently scrolling icon grid, preventing category controls from covering app tiles. The updated JSON Studio has a split source/inspector layout, JSON tree browsing, line numbers, local file import/export, and status feedback. The Markdown and text editors use the available window height; Regex Lab highlights matched spans and CSV Table offers local file import, sticky headers and an editable source view. Shared light/dark control refinements apply to existing utilities without changing the embedded white-background course documents.
+
 ### Twenty more desktop applications
 
 The third collection adds **20 functional applications** without automatically placing them on the desktop or pinning them to the dock. Existing and new applications share the same light/dark window frames, accessible controls, responsive layouts, and persistent shortcut management.
@@ -100,7 +104,7 @@ A second set of ten native-style applications is available from **Activities** w
 | Photos | Preview imported images in a local in-session gallery; export selected photos |
 | Color Palette | Pick colors, create reusable palettes, copy HEX values and export a text list |
 | Markdown Studio | Write Markdown, see safe text-based live previews and export `.md` files |
-| JSON Studio | Format, validate, minify, copy and download JSON documents |
+| JSON Studio | Full-height JSON editor with line numbers, structure inspector, live validation, format/minify, local import and export |
 | Password Generator | Generate local cryptographically random passwords with configurable length and character sets; passwords are not saved |
 | Flashcards | Flip through editable study cards; decks persist in local storage |
 | Habits | Create daily habit checklists and inspect recent completion history |
