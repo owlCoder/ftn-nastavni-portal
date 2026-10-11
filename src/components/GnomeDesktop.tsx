@@ -388,7 +388,7 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
           <button role="menuitem" onClick={()=>{open(shortcutMenu.id);setShortcutMenu(null)}}><span className="ftn-menu-symbol">↗</span><span>Otvori aplikaciju</span><kbd>↵</kbd></button>
           {windows.some(w=>w.id===shortcutMenu.id&&!w.minimized)&&<button role="menuitem" onClick={()=>{minimize(shortcutMenu.id);setShortcutMenu(null)}}><span className="ftn-menu-symbol">−</span><span>Minimizuj</span></button>}
           {windows.some(w=>w.id===shortcutMenu.id)&&<button role="menuitem" onClick={()=>{maximize(shortcutMenu.id);setShortcutMenu(null)}}><span className="ftn-menu-symbol">□</span><span>{windows.find(w=>w.id===shortcutMenu.id)?.maximized?'Vrati veličinu':'Maksimizuj'}</span></button>}
-          {windows.some(w=>w.id===shortcutMenu.id)&&<button role="menuitem" onClick={()=>{void toggleWindowFullscreen(shortcutMenu.id);setShortcutMenu(null)}}><span className="ftn-menu-symbol"><Icon name="fullscreen" size={16}/></span><span>{fullscreenHost?.id==='ftn-window-'+shortcutMenu.id?'Izađi iz celog ekrana':'Ceo ekran'}</span></button>}
+          {windows.some(w=>w.id===shortcutMenu.id&&!w.minimized)&&<button role="menuitem" onClick={()=>{void toggleWindowFullscreen(shortcutMenu.id);setShortcutMenu(null)}}><span className="ftn-menu-symbol"><Icon name="fullscreen" size={16}/></span><span>{fullscreenHost?.id==='ftn-window-'+shortcutMenu.id?'Izađi iz celog ekrana':'Ceo ekran'}</span></button>}
         </div>
         {!courseIds.includes(shortcutMenu.id)&&<div className="ftn-menu-group">
           <button role="menuitem" onClick={()=>{hasShortcut(shortcutMenu.id)?removeShortcut(shortcutMenu.id):addShortcut(shortcutMenu.id);setShortcutMenu(null)}}>
