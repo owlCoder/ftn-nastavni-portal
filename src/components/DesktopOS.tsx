@@ -12,7 +12,7 @@ const gameNames: Record<GameId, string> = { sudoku: 'Sudoku', tetris: 'Tetris', 
 const utilityNames = { readme: 'README.txt', notes: 'Beleške', trash: 'Korpa' }
 const isCourse = (id: AppId): id is CourseId => courses.some(course => course.id === id)
 const initialCourse = (): CourseId | null => {
-  const match = window.location.hash.match(/^#(ers|oib|odp)(?:\/|$)/)
+  const match = window.location.hash.match(/^#(ers|oib|odp|ibis)(?:\/|$)/)
   return match ? match[1] as CourseId : null
 }
 const appName = (id: AppId) => courses.find(course => course.id === id)?.name ?? gameNames[id as GameId] ?? utilityNames[id as keyof typeof utilityNames]
@@ -214,6 +214,7 @@ export function DesktopOS() {
       { label: 'Otvori ERS', action: () => open('ers') },
       { label: 'Otvori OIB', action: () => open('oib') },
       { label: 'Otvori ODP', action: () => open('odp') },
+      { label: 'Otvori IBIS', action: () => open('ibis') },
       { label: 'README.txt', action: () => open('readme') },
     ],
     edit: [

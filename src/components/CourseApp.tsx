@@ -93,8 +93,10 @@ const brandIcons: Partial<Record<CourseId, ReactElement>> = {
 
 function availableTabs(course: Course) {
   return tabs.filter(({ key }) => {
+    if (key === 'praktikum') return course.practicum.blocks.length > 0
+    if (key === 'kontrolne-tacke') return course.checkpoints.length > 0
     if (key === 'primeri') return course.id in examplesViews
-    if (key === 'projekat') return Boolean(course.project)
+    if (key === 'projekat') return Boolean(course.project || course.projects?.length)
     return true
   })
 }
@@ -108,6 +110,7 @@ function TabPanel({ course, tab }: { course: Course; tab: TabKey }) {
 
   if (tab === 'primeri' && ExamplesView) return <ExamplesView />
   if (tab === 'projekat' && course.project) return <ProjectDownloadView project={course.project} />
+  if (tab === 'projekat' && course.projects?.length) return <>{course.projects.map(project => <ProjectDownloadView key={project.code} project={project} />)}</>
   if (tab === 'kontrolne-tacke') return <CheckpointsView checkpoints={course.checkpoints} />
   if (tab === 'prezentacije') {
     return course.presentations.kind === 'downloads'
@@ -118,7 +121,7 @@ function TabPanel({ course, tab }: { course: Course; tab: TabKey }) {
 }
 
 export function CourseApp({ course, onBack, embedded = false }: { course: Course; onBack: () => void; embedded?: boolean }) {
-  const [active, setActive] = useState<TabKey>(() => tabFromHash(course) ?? 'praktikum')
+  const [active, setActive] = useState<TabKey>(() => tabFromHash(course) ?? availableTabs(course)[0].key)
   const visibleTabs = availableTabs(course)
 
   useEffect(() => {

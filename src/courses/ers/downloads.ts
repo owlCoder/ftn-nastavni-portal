@@ -21,7 +21,7 @@ export const ersProject: ProjectDocument = {
   title: 'Informacioni sistem za upravljanje Data centrom',
   description: 'Projektna specifikacija zajedničkog modularnog sistema za predmet Elementi razvoja softvera.',
   file: '/downloads/ers-projekat/ERS_Projektna_Specifikacija.pdf',
-  pages: 115,
-  size: '2,1 MB',
+  pages: 92,
+  size: '2,7 MB',
   highlights: ['90 projektnih celina', 'R1, R2 i R3 razvojni nivoi', 'Timovi od 6 do 10 studenata'],
 }

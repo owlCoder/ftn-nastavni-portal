@@ -245,6 +245,7 @@ const presentationBundles = [
   { directory: 'ers-prezentacije', fileName: 'ERS_sve_prezentacije.zip', archiveRoot: 'ERS_prezentacije' },
   { directory: 'oib-prezentacije', fileName: 'OIB_sve_prezentacije.zip', archiveRoot: 'OIB_prezentacije' },
   { directory: 'odp-prezentacije', fileName: 'ODP_sve_prezentacije.zip', archiveRoot: 'ODP_prezentacije' },
+  { directory: 'ibis-prezentacije', fileName: 'IBIS_sve_prezentacije.zip', archiveRoot: 'IBIS_prezentacije' },
 ]
 
 for (const presentationBundle of presentationBundles) {

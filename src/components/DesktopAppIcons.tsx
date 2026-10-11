@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 
 export type AppIconId =
-  | 'finder' | 'ers' | 'oib' | 'odp' | 'sudoku' | 'tetris' | 'invaders'
+  | 'finder' | 'ers' | 'oib' | 'odp' | 'ibis' | 'sudoku' | 'tetris' | 'invaders'
   | 'snake' | 'merge' | 'calendar' | 'monitor' | 'notes' | 'readme' | 'trash'
   | 'calculator' | 'editor' | 'terminal' | 'files' | 'tasks' | 'pomodoro' | 'converter' | 'draw' | 'stopwatch' | 'settings'
   | 'photos' | 'colors' | 'markdown' | 'json' | 'passwords' | 'flashcards' | 'habits' | 'worldclock' | 'typing' | 'bookmarks'
@@ -21,6 +21,12 @@ function Symbol({ id }: { id: AppIconId }): ReactNode {
       </>
     case 'ers':
       return <path d="m12 11-7 7 7 7m12-14 7 7-7 7M21 7l-6 22" stroke="#a4caff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+
+    case 'ibis':
+      return <>
+        <rect x="5" y="5" width="26" height="26" rx="3" fill="#f0c89a" fillOpacity=".15" stroke="#f0c89a" strokeWidth="2.2"/>
+        <path d="M11 12h14m-14 6h5m-5 6h5m5-5 3 3 5-6" stroke="#ffe2bb" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round"/>
+      </>
 
     case 'oib':
       return <>

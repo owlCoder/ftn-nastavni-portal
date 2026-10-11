@@ -3,6 +3,12 @@ import { courses } from '../courses'
 import type { Course, CourseId } from '../courses/types'
 
 const subjectIcons: Record<CourseId, ReactElement> = {
+  ibis: (
+    <svg viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M7 9h10M7 13h4m-4 4h4m4-4 2 2 3-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
   ers: (
     <svg viewBox="0 0 24 24" fill="none">
       <path d="M8 9l-4 3 4 3M16 9l4 3-4 3M13.5 6l-3 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -61,6 +67,7 @@ export function SubjectSelector({ onOpenSubject }: { onOpenSubject: (id: CourseI
 
   const winter = courses.filter((subject) => subject.semester === 'zimski')
   const summer = courses.filter((subject) => subject.semester === 'letnji')
+  const master = courses.filter((subject) => subject.studyLevel === 'master')
 
   return (
     <div
@@ -127,6 +134,12 @@ export function SubjectSelector({ onOpenSubject }: { onOpenSubject: (id: CourseI
       </header>
 
       <main className="subjects-main">
+        {master.length > 0 && <section className="subjects-section">
+          <h2>Master akademske studije</h2>
+          <div className="subjects-grid">
+            {master.map(subject => <SubjectTile key={subject.id} subject={subject} onOpen={() => onOpenSubject(subject.id)} />)}
+          </div>
+        </section>}
         <section className="subjects-section">
           <h2>Zimski semestar</h2>
           <div className="subjects-grid">

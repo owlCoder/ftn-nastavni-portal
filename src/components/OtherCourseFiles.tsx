@@ -18,18 +18,25 @@ const exNumber=(n:number)=>String(n).padStart(2,'0')
 function makeFiles(course:Course):Item[]{
   const slides=course.presentations.kind==='downloads'?course.presentations.downloads:[]
   const bundle=course.presentations.kind==='downloads'?course.presentations.bundle:null
-  const examples=course.id==='oib'?oibExamples:odpExamples
-  const exampleBundle=course.id==='oib'?oibExamplesBundle:odpExamplesBundle
+  const examples=course.id==='oib'?oibExamples:course.id==='odp'?odpExamples:[]
+  const exampleBundle=course.id==='oib'?oibExamplesBundle:course.id==='odp'?odpExamplesBundle:null
+  const hasPracticum=course.practicum.blocks.length>0
   const items:Item[]=[
-    {id:'praktikum',parent:'root',name:'Praktikum',kind:'practicum',description:'Kontinuirani nastavni dokument'},
-    {id:'vezbe',parent:'root',name:'Vežbe',kind:'folder',description:'Osam vežbi i nastavni materijali'},
     {id:'prezentacije',parent:'root',name:'Prezentacije',kind:'folder',description:'PDF slajdovi'},
-    {id:'primeri',parent:'root',name:'Primeri',kind:'folder',description:'Izvorni kod i ZIP arhive'},
-    {id:'kontrolne',parent:'root',name:'Kontrolne tačke',kind:'checkpoints',description:'Projektne etape i rokovi'},
   ]
+  if(hasPracticum)items.unshift(
+    {id:'praktikum',parent:'root',name:'Praktikum',kind:'practicum',description:'Kontinuirani nastavni dokument'},
+    {id:'vezbe',parent:'root',name:'Vežbe',kind:'folder',description:'Osam vežbi i nastavni materijali'})
+  if(examples.length)items.push({id:'primeri',parent:'root',name:'Primeri',kind:'folder',description:'Izvorni kod i ZIP arhive'})
+  if(course.checkpoints.length)items.push({id:'kontrolne',parent:'root',name:'Kontrolne tačke',kind:'checkpoints',description:'Projektne etape i rokovi'})
   if(course.project)items.push({id:'projektna-specifikacija',parent:'root',name:'Projektna specifikacija.pdf',
     kind:'pdf',source:course.project.file,size:course.project.size,pages:course.project.pages,description:course.project.title})
-  for(let n=1;n<=8;n++){
+  if(course.projects?.length){
+    items.push({id:'projekti',parent:'root',name:'Projekti',kind:'folder',description:'Tehničke specifikacije projekata'})
+    for(const project of course.projects)items.push({id:'projekti/'+project.code,parent:'projekti',name:project.code+' — Tehnička specifikacija.pdf',
+      kind:'pdf',source:project.file,size:project.size,pages:project.pages,description:project.title})
+  }
+  for(let n=1;hasPracticum&&n<=8;n++){
     const prefix='vezbe/'+exNumber(n),slide=slides.find(p=>Number(p.number)===n)
     const example=examples.find(p=>p.exercise===n)
     items.push({id:prefix,parent:'vezbe',kind:'folder',name:'Vežba '+exNumber(n),description:slide?.title??example?.title??'Nastavni materijali'})
@@ -48,7 +55,7 @@ function makeFiles(course:Course):Item[]{
     items.push({id:folder,parent:'primeri',kind:'folder',name:'Vežba '+exNumber(example.exercise),description:example.title})
     items.push({id:folder+'/zip',parent:folder,kind:'zip',name:example.title+'.zip',source:example.zip,description:example.description})
   }
-  items.push({id:'primeri/sve',parent:'primeri',kind:'zip',name:'Svi primeri.zip',source:exampleBundle})
+  if(exampleBundle)items.push({id:'primeri/sve',parent:'primeri',kind:'zip',name:'Svi primeri.zip',source:exampleBundle})
   return items
 }
 const safeName=(name:string)=>name.replaceAll(/[<>:"/\\|?*]/g,'-')

@@ -97,14 +97,14 @@ export function TerminalApp({onOpen}:{onOpen:(id:CourseId)=>void}){
     if(verb==='clear'){setEntries([]);setInput('');return}
     let out=''
     switch(verb.toLowerCase()){
-      case 'help':out='help · clear · date · whoami · pwd · ls · echo <tekst> · cat readme · open ers|oib|odp';break
+      case 'help':out='help · clear · date · whoami · pwd · ls · echo <tekst> · cat readme · open ers|oib|odp|ibis';break
       case 'date':out=new Date().toLocaleString('sr-RS',{timeZone:'Europe/Belgrade'});break
       case 'whoami':out='student';break
       case 'pwd':out='/home/student';break
-      case 'ls':out='ERS/    OIB/    ODP/    Apps/    readme';break
+      case 'ls':out='ERS/    OIB/    ODP/    IBIS/    Apps/    readme';break
       case 'echo':out=arg;break
       case 'cat':out=arg==='readme'?'FTN Teaching Portal — desktop za nastavne materijale.':'Nepoznat fajl.';break
-      case 'open':if(['ers','oib','odp'].includes(arg.toLowerCase())){onOpen(arg.toLowerCase() as CourseId);out='Otvoren predmet '+arg.toUpperCase()}else out='Koristi: open ers | open oib | open odp';break
+      case 'open':if(['ers','oib','odp','ibis'].includes(arg.toLowerCase())){onOpen(arg.toLowerCase() as CourseId);out='Otvoren predmet '+arg.toUpperCase()}else out='Koristi: open ers | open oib | open odp | open ibis';break
       default:out='Nepoznata komanda: '+verb+'. Pokušaj help.'
     }
     setEntries(prev=>[...prev.slice(-100),{cmd:'student@ftn:~$ '+cmd,out}]);setInput('')
@@ -116,7 +116,7 @@ export function TerminalApp({onOpen}:{onOpen:(id:CourseId)=>void}){
   </div>
 }
 export function FilesApp({onOpen}:{onOpen:(id:CourseId)=>void}){
-  const courses:[CourseId,string,string][]=[['ers','Elementi razvoja softvera','Praktikum, prezentacije i primeri'],['oib','Osnove informacione bezbednosti','Dokumenti i projektne kontrolne tačke'],['odp','Osnove distribuiranog programiranja','Vežbe i izvorni kod']]
+  const courses:[CourseId,string,string][]=[['ers','Elementi razvoja softvera','Praktikum, prezentacije i primeri'],['oib','Osnove informacione bezbednosti','Dokumenti i projektne kontrolne tačke'],['odp','Osnove distribuiranog programiranja','Vežbe i izvorni kod'],['ibis','Informaciona bezbednost infrastrukturnih sistema','Prezentacije i tehničke specifikacije projekata']]
   return <div className="ftn-tool-page"><Header eyebrow="NASTAVNI PORTAL" title="Fajlovi" description="Tvoja biblioteka materijala i predmeta."/>
     <div className="ftn-files-path">⌂ &nbsp; Student / Predmeti</div><Card><div className="ftn-files-list">{courses.map(([id,title,description])=>
       <button onClick={()=>onOpen(id)} key={id}><span className="ftn-files-folder">▰</span><span><strong>{title}</strong><small>{description}</small></span><span>Otvori ›</span></button>)}</div></Card>

@@ -9,7 +9,7 @@ export const odpCourse: Course = {
   name: 'Osnove distribuiranog programiranja',
   academicYear: '2026/2027',
   semester: 'letnji',
-  available: false,
+  available: true,
   blurb: 'Praktikum, prezentacije, nastavni primeri, projektna specifikacija i kontrolne tačke.',
   accent: 'linear-gradient(145deg, #059669 0%, #047857 48%, #065f46 100%)',
   accentSoft: 'rgba(5,150,105,.14)',

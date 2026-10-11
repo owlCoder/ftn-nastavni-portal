@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react'
 
 const STORAGE_KEY='ftn-desktop-layout-v1'
-export const DEFAULT_SHORTCUTS=['ers','oib','odp','readme','settings','trash']
+const COURSE_SHORTCUTS=['ers','oib','odp','ibis']
+export const DEFAULT_SHORTCUTS=[...COURSE_SHORTCUTS,'readme','settings','trash']
 export const DEFAULT_DOCK=['files','notes','calendar','calculator','settings','trash']
 export type Shortcut={id:string;slot:number}
 type Persisted={shortcuts:Shortcut[];pins:string[]}
@@ -15,15 +16,22 @@ function loadConfiguration(allowed:string[]):Persisted {
   const shortcuts:Shortcut[]=[]
   const requested=Array.isArray(parsed?.shortcuts)?parsed.shortcuts.filter((x):x is Shortcut=>typeof x?.id==='string'&&isAllowed(x.id)&&Number.isInteger(x.slot)):[]
   const initial=parsed&&Array.isArray(parsed.shortcuts)?requested:DEFAULT_SHORTCUTS.filter(isAllowed).map(id=>({id,slot:DEFAULT_SHORTCUTS.indexOf(id)}))
-  const raw=[...['ers','oib','odp'].filter(isAllowed).map(id=>initial.find(x=>x.id===id)??{id,slot:DEFAULT_SHORTCUTS.indexOf(id)}),
-    ...initial.filter(x=>!['ers','oib','odp'].includes(x.id))]
+  const reserved=new Set(initial.map(item=>item.slot))
+  const required=COURSE_SHORTCUTS.filter(isAllowed).map(id=>{
+    const existing=initial.find(item=>item.id===id)
+    if(existing)return existing
+    let slot=0;while(reserved.has(slot))slot++
+    reserved.add(slot)
+    return {id,slot}
+  })
+  const raw=[...required,...initial.filter(item=>!COURSE_SHORTCUTS.includes(item.id))]
   for(const item of raw){
     if(shortcuts.some(x=>x.id===item.id))continue
     let slot=item.slot
     if(slot<0||slot>=SLOT_LIMIT||used.has(slot)){slot=0;while(used.has(slot))slot++}
     used.add(slot);shortcuts.push({id:item.id,slot})
   }
-  const pins=Array.isArray(parsed?.pins)?parsed.pins.filter((x):x is string=>typeof x==='string'&&isAllowed(x)&&!['ers','oib','odp'].includes(x)):[]
+  const pins=Array.isArray(parsed?.pins)?parsed.pins.filter((x):x is string=>typeof x==='string'&&isAllowed(x)&&!COURSE_SHORTCUTS.includes(x)):[]
   return {shortcuts,pins:parsed?.pins?Array.from(new Set(pins)):DEFAULT_DOCK.filter(isAllowed)}
 }
 export function useDesktopConfiguration(allowed:string[]) {
@@ -42,7 +50,7 @@ export function useDesktopConfiguration(allowed:string[]) {
     })
   }
   const removeShortcut=(id:string)=>{
-    if(['ers','oib','odp'].includes(id))return
+    if(COURSE_SHORTCUTS.includes(id))return
     setConfig(old=>({...old,shortcuts:old.shortcuts.filter(x=>x.id!==id)}))
   }
   const moveShortcut=(id:string,target:number)=>{
@@ -55,7 +63,7 @@ export function useDesktopConfiguration(allowed:string[]) {
     })
   }
   const pin=(id:string)=>{
-    if(!allowed.includes(id)||['ers','oib','odp'].includes(id))return
+    if(!allowed.includes(id)||COURSE_SHORTCUTS.includes(id))return
     setConfig(old=>old.pins.includes(id)?old:{...old,pins:[...old.pins,id]})
   }
   const unpin=(id:string)=>setConfig(old=>({...old,pins:old.pins.filter(x=>x!==id)}))

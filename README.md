@@ -44,7 +44,7 @@ Shortcuts, positions, dock pins, wallpapers, and appearance preferences persist 
 ## Features
 
 - **Desktop workspace:** movable, minimizable and maximizable application windows, launcher search, collision-free draggable desktop shortcuts, right-click and left-click context actions, keyboard-accessible menus, persistent dock pinning and course folders.
-- **Course file manager:** nested exercise, presentation and example folders, expandable navigation tree, breadcrumbs and file previews for ERS, OIB and ODP.
+- **Course file manager:** nested exercise, presentation and example folders, expandable navigation tree, breadcrumbs and file previews for ERS, OIB, ODP and IBIS.
 - **Continuous practicum reader:** document-style scrolling, collapsible table of contents, links to exercises and zoom controls.
 - **Custom PDF viewer:** PDF.js-powered rendering with page navigation, zoom, fullscreen mode and downloads, rather than the browser's built-in PDF toolbar.
 - **ZIP explorer and downloads:** browse example archives, preview text-based source files, download individual documents or export entire folders as ZIP archives.
@@ -138,8 +138,9 @@ The ten additional apps all run in draggable GNOME-like windows and appear in th
 | Code | Course | Content |
 | --- | --- | --- |
 | ERS | Software Development Elements | Practicum, PDF presentations, source-code examples, checkpoints and project specification |
-| OIB | Fundamentals of Information Security | Practicum, PDF presentations, .NET examples and checkpoints |
-| ODP | Fundamentals of Distributed Programming | Practicum, PDF presentations, .NET examples and checkpoints |
+| OIB | Fundamentals of Information Security | Practicum, PDF presentations, .NET examples, checkpoints and project specification |
+| ODP | Fundamentals of Distributed Programming | Practicum, PDF presentations, .NET examples, checkpoints and project specification |
+| IBIS | Information Security of Infrastructure Systems | SCADA presentations and three technical project specifications |
 
 Exercise materials are arranged by course and exercise number. PDF and ZIP downloads are static assets; checkpoint/practicum text can also be exported as Markdown. Not all third-party or educational materials are distributed under the software license; see [Licensing](#licensing).
 
@@ -182,7 +183,7 @@ The production bundle is written to `dist/`. The `prebuild` script regenerates d
   pages.yml                 GitHub Pages publication from main
 src/
   components/               Desktop, file manager, PDF reader, games, widgets
-  courses/{ers,oib,odp}/    Course metadata, checkpoints, practicum materials
+  courses/{ers,oib,odp,ibis}/    Course metadata, checkpoints, practicum materials
   practicum/                Continuous document model and composition
   lib/                      Shared utilities and asset URL resolution
   styles/                   Desktop, Adwaita-inspired UI and document styling
@@ -197,6 +198,8 @@ scripts/
 ```
 
 ### Updating course content
+
+Published presentation and project PDFs mirror the materials repository [ftn-nastavni-materijali](https://github.com/owlCoder/ftn-nastavni-materijali). Preserve published asset paths, update page counts and file sizes in `src/courses/<course>/downloads.ts`, and regenerate presentation ZIP bundles with the standard build. The portal publishes PDFs; PPTX sources remain in the materials repository.
 
 1. Edit course metadata and practicum blocks under `src/courses/<course>/`.
 2. Keep checkpoint definitions in `src/courses/<course>/checkpoints.ts` so deadlines and related practicum references stay consistent.

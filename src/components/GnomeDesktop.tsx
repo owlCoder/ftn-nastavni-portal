@@ -24,10 +24,10 @@ const extraNames: Record<UtilityId,string> = {calculator:'Kalkulator',editor:'Te
 type WindowData = { id: AppId; x: number; y: number; z: number; minimized: boolean; maximized: boolean }
 type Panel = 'calendar' | 'quick' | null
 const names: Record<AppId, string> = {
-  ers: 'Elementi razvoja softvera', oib: 'Osnove informacione bezbednosti', odp: 'Osnove distribuiranog programiranja',
+  ers: 'Elementi razvoja softvera', oib: 'Osnove informacione bezbednosti', odp: 'Osnove distribuiranog programiranja', ibis: 'Informaciona bezbednost infrastrukturnih sistema',
   sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor', ...extraNames, ...studioNames, ...devNames, ...lifeNames,
 }
-const short: Record<AppId, string> = { ers: 'ERS', oib: 'OIB', odp: 'ODP', sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor', ...extraNames, ...studioNames, ...devNames, ...lifeNames }
+const short: Record<AppId, string> = { ers: 'ERS', oib: 'OIB', odp: 'ODP', ibis: 'IBIS', sudoku: 'Sudoku', tetris: 'Tetris', invaders: 'Space Invaders', snake: 'Snake', merge: '2048', notes: 'Beleške', readme: 'O sistemu', trash: 'Korpa', calendar: 'Kalendar', monitor: 'System Monitor', ...extraNames, ...studioNames, ...devNames, ...lifeNames }
 const windowCategories: Partial<Record<AppId,string>> = {
   notes:'Dokumenti',readme:'Informacije o sistemu',trash:'Fajlovi',
   calendar:'Organizacija',monitor:'Performanse',
@@ -36,12 +36,12 @@ const windowCategories: Partial<Record<AppId,string>> = {
   stopwatch:'Vreme',settings:'Sistemske postavke',...studioCategories,
   ...Object.fromEntries(devIds.map(id=>[id,'Razvoj'])), ...Object.fromEntries(lifeIds.map(id=>[id,'Alati i učenje'])),
 }
-const applicationIds: AppId[] = ['ers','oib','odp','sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme','trash',...extraIds,...studioIds,...devIds,...lifeIds]
+const applicationIds: AppId[] = ['ers','oib','odp','ibis','sudoku','tetris','invaders','snake','merge','notes','calendar','monitor','readme','trash',...extraIds,...studioIds,...devIds,...lifeIds]
 
 type LauncherCategory = 'all'|'courses'|'games'|'tools'|'study'|'media'|'developer'|'system'
 const launcherGroups: {id:LauncherCategory;title:string;apps:AppId[]}[] = [
   {id:'all',title:'Sve',apps:[]},
-  {id:'courses',title:'Predmeti',apps:['ers','oib','odp']},
+  {id:'courses',title:'Predmeti',apps:['ers','oib','odp','ibis']},
   {id:'games',title:'Igre',apps:['sudoku','tetris','invaders','snake','merge']},
   {id:'tools',title:'Alati',apps:['calculator','editor','terminal','converter','json','markdown','passwords','contrast','matrix','metronome','decisions']},
   {id:'study',title:'Učenje',apps:['flashcards','habits','tasks','pomodoro','typing','kanban','expenses','grades','reading','countdown','planner','quiz']},
@@ -49,10 +49,10 @@ const launcherGroups: {id:LauncherCategory;title:string;apps:AppId[]}[] = [
   {id:'developer',title:'Razvoj',apps:['diff','regex','base64','urltools','hashing','csv','entities','timestamp','uuid']},
   {id:'system',title:'Sistem',apps:['files','notes','calendar','worldclock','stopwatch','monitor','settings','readme','trash']}
 ]
-const courseIds: AppId[] = ['ers','oib','odp']
-const courseIcon: Record<CourseId, string> = { ers:'folder.svg', oib:'folder-documents.svg', odp:'folder-projects.svg' }
+const courseIds: AppId[] = ['ers','oib','odp','ibis']
+const courseIcon: Record<CourseId, string> = { ers:'folder.svg', oib:'folder-documents.svg', odp:'folder-projects.svg', ibis:'folder-projects.svg' }
 const initialHashCourse = () => {
-  const match = location.hash.match(/^#(ers|oib|odp)(?:\/|$)/)
+  const match = location.hash.match(/^#(ers|oib|odp|ibis)(?:\/|$)/)
   return match ? match[1] as CourseId : null
 }
 function Icon({ name, size = 19 }: { name: 'search'|'grid'|'chevron'|'wifi'|'sound'|'battery'|'power'|'settings'|'sun'|'moon'|'layout'|'close'|'minimize'|'maximize'|'restore'|'fullscreen'|'arrow'|'check'|'bell'|'more'; size?: number }) {
@@ -81,7 +81,7 @@ function Icon({ name, size = 19 }: { name: 'search'|'grid'|'chevron'|'wifi'|'sou
   return <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{paths[name]}</svg>
 }
 function AppArtwork({ id, folder = false }: { id: AppId; folder?: boolean }) {
-  if (id === 'ers' || id === 'oib' || id === 'odp') {
+  if (id === 'ers' || id === 'oib' || id === 'odp' || id === 'ibis') {
     if (folder) return <img className="gn-folder-svg" src={assetUrl('/gnome-icons/' + courseIcon[id])} alt="" />
     return <span className="gn-app-art"><DockAppIcon id={id}/></span>
   }

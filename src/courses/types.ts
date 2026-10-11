@@ -1,6 +1,6 @@
 import type { Practicum } from '../practicum/types'
 
-export type CourseId = 'ers' | 'oib' | 'odp'
+export type CourseId = 'ers' | 'oib' | 'odp' | 'ibis'
 
 export type Checkpoint = {
   id: string
@@ -78,7 +78,8 @@ export type Course = {
   code: string
   name: string
   academicYear: string
-  semester: 'zimski' | 'letnji'
+  semester?: 'zimski' | 'letnji'
+  studyLevel?: 'osnovne' | 'master'
   available: boolean
   blurb: string
   accent: string
@@ -88,4 +89,5 @@ export type Course = {
   presentations: CoursePresentations
   checkpoints: Checkpoint[]
   project?: ProjectDocument
+  projects?: ProjectDocument[]
 }

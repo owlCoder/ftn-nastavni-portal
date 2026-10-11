@@ -21,7 +21,7 @@ export const oibProject: ProjectDocument = {
   title: 'Platforma za upravljanje informacionom bezbednošću i digitalnim poverenjem',
   description: 'Projektna specifikacija zajedničkog informacionog sistema za predmet Osnove informacione bezbednosti.',
   file: '/downloads/oib-projekat/OIB_Projektna_Specifikacija.pdf',
-  pages: 96,
-  size: '2,0 MB',
+  pages: 95,
+  size: '2,7 MB',
   highlights: ['90 projektnih celina', 'R1, R2 i R3 razvojni nivoi', 'Timovi od 6 do 10 studenata'],
 }

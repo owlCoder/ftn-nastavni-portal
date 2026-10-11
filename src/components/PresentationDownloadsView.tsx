@@ -10,8 +10,8 @@ export function PresentationDownloadsView({ downloads, bundle }: { downloads: Pr
       <section className="download-hero">
         <div className="download-hero-copy">
           <span className="eyebrow">Materijali za nastavu</span>
-          <h1>Prezentacije za vežbe</h1>
-          <p>Prezentacije sa vežbi u PDF formatu, raspoređene prema redosledu izvođenja nastave.</p>
+          <h1>Prezentacije</h1>
+          <p>Prezentacije u PDF formatu, raspoređene prema redosledu izvođenja nastave.</p>
           <div className="download-summary" aria-label="Sadržaj paketa">
             <span><strong>{downloads.length}</strong> PDF fajlova</span>
             <span><strong>{totalPages}</strong> slajdova</span>
@@ -32,7 +32,7 @@ export function PresentationDownloadsView({ downloads, bundle }: { downloads: Pr
         <div className="download-library-heading">
           <div>
             <span className="eyebrow">Pojedinačno preuzimanje</span>
-            <h2 id="download-library-title">Prezentacije po vežbama</h2>
+            <h2 id="download-library-title">Pregled prezentacija</h2>
           </div>
           <p>PDF možete pregledati u pregledaču ili preuzeti.</p>
         </div>
