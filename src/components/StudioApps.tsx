@@ -98,16 +98,122 @@ function Markdown(){
       })}</article></Pane></div><p className="ftn-studio-help">Bezbedan tekstualni pregled bez ubacivanja HTML-a. Podaci se čuvaju lokalno.</p>
   </div>
 }
+function JsonNode({label,data,depth=0}:{label:string;data:unknown;depth?:number}){
+  if(depth>7)return <div className="ftn-json-leaf"><span>{label}</span><em>…</em></div>
+  if(data!==null&&typeof data==='object'){
+    const entries=Object.entries(data as Record<string,unknown>)
+    const isArray=Array.isArray(data)
+    return <details className="ftn-json-node" open={depth<2}>
+      <summary><span className="ftn-json-key">{label}</span><span className="ftn-json-type">{isArray?'Array':'Object'}</span><small>{entries.length} {isArray?'elemenata':'polja'}</small></summary>
+      <div className="ftn-json-children">{entries.slice(0,80).map(([key,value])=><JsonNode key={key} label={key} data={value} depth={depth+1}/>)}
+        {entries.length>80&&<div className="ftn-json-leaf">Još {entries.length-80} polja…</div>}
+      </div>
+    </details>
+  }
+  return <div className="ftn-json-leaf"><span className="ftn-json-key">{label}</span><code className={data===null?'null':typeof data}>{JSON.stringify(data)??'null'}</code></div>
+}
 function JsonStudio(){
-  const [value,setValue]=useState('{\n  "predmet": "ERS",\n  "semestar": 5,\n  "aktivan": true\n}')
-  const [error,setError]=useState('')
-  const [message,setMessage]=useState('')
-  const action=(mode:'pretty'|'minify'|'validate')=>{try{const parsed:unknown=JSON.parse(value);if(mode!=='validate')setValue(JSON.stringify(parsed,null,mode==='pretty'?2:0));setError('');setMessage('JSON je ispravan.')}catch(e){setMessage('');setError(e instanceof Error?e.message:'Neispravan JSON')}}
-  return <div className="ftn-studio-page ftn-studio-flex"><Title tag="RAZVOJ" name="JSON Studio" subtitle="Formatiranje, validacija i izvoz JSON dokumenata."/>
-    <Pane><div className="ftn-studio-toolbar ftn-studio-toolbar-top"><button className="ftn-studio-primary" onClick={()=>action('pretty')}>Formatiraj</button><button onClick={()=>action('minify')}>Minifikuj</button><button onClick={()=>action('validate')}>Validiraj</button><button onClick={()=>void copy(value,setMessage)}>Kopiraj</button><button onClick={()=>download('dokument.json',value,'application/json')}>↓ JSON</button></div>
-      <textarea className="ftn-studio-code-editor ftn-studio-json-input" spellCheck={false} aria-label="JSON sadržaj" value={value} onChange={e=>{setValue(e.target.value);setError('');setMessage('')}}/>
-      {error&&<p role="alert" className="ftn-studio-error">{error}</p>}{message&&<p role="status" className="ftn-studio-success">{message}</p>}
-    </Pane>
+  const [value,setValue]=useSaved<string>('json-document','{\n  "predmet": "ERS",\n  "semestar": 5,\n  "aktivan": true\n}')
+  const [notice,setNotice]=useState('')
+  const [selectedPane,setSelectedPane]=useState<'tree'|'source'>('tree')
+  const [cursor,setCursor]=useState({line:1,column:1})
+  const inputRef=useRef<HTMLInputElement>(null)
+  const numbersRef=useRef<HTMLDivElement>(null)
+  const editorRef=useRef<HTMLTextAreaElement>(null)
+  const lineCount=value.split('\n').length
+  let parsed:unknown=null,valid=true,error=''
+  try{
+    if(value.length>1000000)throw Error('Dokument je prevelik za pregled (najviše 1 MB).')
+    parsed=JSON.parse(value)
+  }catch(e){
+    valid=false
+    error=e instanceof Error?e.message:'Neispravan JSON'
+  }
+  const displayType=parsed===null?'Null':Array.isArray(parsed)?'Array':typeof parsed==='object'?'Object':typeof parsed
+  const propertyCount=parsed&&typeof parsed==='object'?Object.keys(parsed).length:0
+  const position=(target:HTMLTextAreaElement)=>{
+    const before=target.value.slice(0,target.selectionStart)
+    const parts=before.split('\n')
+    setCursor({line:parts.length,column:parts[parts.length-1].length+1})
+  }
+  const action=(mode:'pretty'|'minify'|'validate')=>{
+    try{
+      const document:unknown=JSON.parse(value)
+      if(mode==='pretty')setValue(JSON.stringify(document,null,2))
+      if(mode==='minify')setValue(JSON.stringify(document))
+      setNotice(mode==='validate'?'Sintaksa je ispravna.':mode==='pretty'?'Dokument je formatiran.':'Dokument je minifikovan.')
+    }catch(e){setNotice(e instanceof Error?e.message:'JSON nije ispravan.')}
+  }
+  const upload=async(file:File|undefined)=>{
+    if(!file)return
+    if(file.size>1000000){setNotice('Datoteka je prevelika (najviše 1 MB).');return}
+    try{setValue(await file.text());setNotice('Otvoren: '+file.name)}
+    catch{setNotice('Datoteka nije mogla da se učita.')}
+  }
+  const exportFile=()=>download('dokument.json',value,'application/json')
+  return <div className="ftn-studio-page ftn-json-workspace">
+    <header className="ftn-json-heading">
+      <div><span>RAZVOJNI ALATI / EDITOR</span><h2>JSON Studio</h2><p>Uređivanje, validacija i istraživanje strukture JSON dokumenata.</p></div>
+      <div className="ftn-json-document-name"><span className="ftn-json-file-icon">{'{ }'}</span><strong>dokument.json</strong><small>Čuva se lokalno</small></div>
+    </header>
+    <section className="ftn-json-shell" aria-label="JSON uređivač">
+      <div className="ftn-json-commandbar">
+        <div className="ftn-json-command-main">
+          <button className="ftn-studio-primary" onClick={()=>action('pretty')}>⌗ Formatiraj</button>
+          <button onClick={()=>action('minify')}>Minifikuj</button>
+          <button onClick={()=>action('validate')}>✓ Validiraj</button>
+        </div>
+        <div className="ftn-json-command-secondary">
+          <button onClick={()=>inputRef.current?.click()}>↥ Otvori</button>
+          <button onClick={()=>void copy(value,setNotice)}>⧉ Kopiraj</button>
+          <button onClick={exportFile}>↓ Preuzmi</button>
+        </div>
+        <input ref={inputRef} className="ftn-json-file-input" type="file" accept=".json,application/json" aria-label="Uvezi JSON datoteku"
+          onChange={e=>{void upload(e.target.files?.[0]);e.target.value=''}}/>
+      </div>
+      <div className="ftn-json-editor-layout">
+        <div className="ftn-json-editor-panel">
+          <div className="ftn-json-panelbar"><span><span className="ftn-json-led"/> dokument.json</span><small>JSON · UTF-8</small></div>
+          <div className="ftn-json-code-area">
+            <div className="ftn-json-line-numbers" ref={numbersRef} aria-hidden="true">{Array.from({length:Math.min(lineCount,15000)},(_,i)=><span key={i}>{i+1}</span>)}</div>
+            <textarea ref={editorRef} className="ftn-json-source" aria-label="Izvorni JSON dokument" spellCheck={false} value={value}
+              onChange={e=>{setValue(e.target.value);setNotice('');position(e.currentTarget)}}
+              onScroll={e=>{if(numbersRef.current)numbersRef.current.scrollTop=e.currentTarget.scrollTop}}
+              onClick={e=>position(e.currentTarget)} onKeyUp={e=>position(e.currentTarget)}
+              onKeyDown={e=>{
+                if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();exportFile()}
+                if(e.key==='Tab'){e.preventDefault();const target=e.currentTarget;const a=target.selectionStart,b=target.selectionEnd;
+                  setValue(text=>text.slice(0,a)+'  '+text.slice(b));requestAnimationFrame(()=>{target.selectionStart=target.selectionEnd=a+2})}
+              }}/>
+          </div>
+        </div>
+        <aside className="ftn-json-inspector" aria-label="Inspektor JSON strukture">
+          <div className="ftn-json-inspector-top">
+            <strong>Inspektor</strong>
+            <div role="group" aria-label="Režim pregleda">
+              <button className={selectedPane==='tree'?'active':''} aria-pressed={selectedPane==='tree'} onClick={()=>setSelectedPane('tree')}>Stablo</button>
+              <button className={selectedPane==='source'?'active':''} aria-pressed={selectedPane==='source'} onClick={()=>setSelectedPane('source')}>Pregled</button>
+            </div>
+          </div>
+          <div className="ftn-json-stats">
+            <div><span>Tip</span><strong>{valid?displayType:'—'}</strong></div>
+            <div><span>Polja</span><strong>{valid?propertyCount:'—'}</strong></div>
+            <div><span>Redovi</span><strong>{lineCount}</strong></div>
+          </div>
+          <div className="ftn-json-inspector-body">
+            {valid?(selectedPane==='tree'?<JsonNode label="root" data={parsed}/>:
+              <pre>{JSON.stringify(parsed,null,2)}</pre>):
+              <div className="ftn-json-invalid"><strong>Neispravna sintaksa</strong><p>{error}</p><span>Ispravi dokument da bi se prikazala struktura.</span></div>}
+          </div>
+        </aside>
+      </div>
+      <footer className="ftn-json-statusbar">
+        <span className={'ftn-json-status'+(valid?' valid':' invalid')}>{valid?'● Ispravan JSON':'● Greška u sintaksi'}</span>
+        <span role="status" className="ftn-json-notice">{notice}</span>
+        <span className="ftn-json-cursor">Ln {cursor.line}, Col {cursor.column}</span>
+        <span>{value.length.toLocaleString('sr-RS')} znakova</span>
+      </footer>
+    </section>
   </div>
 }
 const ALPHABETS={lower:'abcdefghijkmnopqrstuvwxyz',upper:'ABCDEFGHJKLMNPQRSTUVWXYZ',numbers:'23456789',symbols:'!@#$%^&*-_+='}
