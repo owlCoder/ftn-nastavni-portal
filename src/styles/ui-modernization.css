@@ -1,0 +1,299 @@
+/* FTN OS, October polish: fixed launcher chrome and real full-height app workspaces.
+   Loaded after all legacy styles to prevent old generic component rules from collapsing panels. */
+
+/* APP LIBRARY: one scroll owner only. Search, summary and categories never scroll over icons. */
+.gn-shell .gn-overview .gn-overview-body{
+  display:flex;flex-direction:column;min-height:0;
+  padding:22px clamp(14px,3vw,30px) 19px;
+  overflow:hidden;
+}
+.gn-shell .gn-overview .gn-overview-top{flex:0 0 46px;position:relative;z-index:2;margin:0 auto 13px}
+.gn-shell .gn-overview .gn-apps-overview{
+  flex:1 1 auto;display:flex;flex-direction:column;align-items:stretch;
+  min-height:0;min-width:0;overflow:hidden;
+  gap:0;margin:0 auto;padding:0 3px 0;
+  width:min(100%,990px);max-width:none;
+}
+.gn-shell .gn-overview .gn-apps-overview-heading{
+  flex:0 0 auto;max-width:100%;width:100%;
+  padding:7px 6px 12px;margin:0;
+  align-items:end;gap:12px;
+}
+.gn-shell .gn-overview .gn-apps-overview-heading h2{
+  margin:0;font-size:19px;letter-spacing:-.025em;line-height:1.25;
+}
+.gn-shell .gn-overview .gn-apps-overview-heading>span{
+  flex:none;font-variant-numeric:tabular-nums;font-size:10.5px;
+}
+.gn-shell .gn-overview .ftn-launcher-categories{
+  position:relative;z-index:2;flex:0 0 auto;
+  width:100%;max-width:100%;min-height:57px;
+  display:flex;flex-flow:row nowrap;justify-content:flex-start;align-items:center;
+  padding:9px 4px 11px;margin:0 0 7px;
+  overflow-x:auto;overflow-y:hidden;
+  background:transparent;
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+  scrollbar-width:thin;scrollbar-color:#97a8d84d transparent;
+}
+.gn-shell .gn-overview .ftn-launcher-categories button{
+  min-height:35px;line-height:1.2;white-space:nowrap;
+  border-radius:10px;flex:0 0 auto;
+}
+.gn-shell .gn-overview .gn-app-grid.ftn-launcher-grid{
+  flex:1 1 0;min-height:0;max-width:none;width:100%;
+  display:grid;grid-template-columns:repeat(6,minmax(0,1fr));
+  grid-auto-rows:max-content;align-content:start;align-items:stretch;
+  column-gap:10px;row-gap:12px;
+  overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;
+  padding:10px 8px 22px;scrollbar-gutter:stable;
+  scrollbar-width:thin;scrollbar-color:#abb7cf60 transparent;
+}
+.gn-shell .gn-overview .ftn-launcher-cell{
+  min-width:0;min-height:144px;padding:10px 5px 9px;
+  display:flex;align-items:center;justify-content:flex-start;
+  border-radius:13px;border-color:transparent;
+  background:transparent;
+}
+.gn-shell .gn-overview .ftn-launcher-cell:hover,
+.gn-shell .gn-overview .ftn-launcher-cell:focus-within{
+  background:rgba(255,255,255,.085);border-color:rgba(255,255,255,.13);
+}
+.gn-shell .gn-overview .ftn-launcher-cell .ftn-launcher-open{
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  width:100%;height:auto;min-height:94px;padding:0 2px 3px;
+  gap:6px;border:0;background:transparent;
+  color:#f5f6ff;
+}
+.gn-shell .gn-overview .ftn-launcher-open .gn-app-art,
+.gn-shell .gn-overview .ftn-launcher-open .gn-file-svg{
+  width:52px;height:52px;flex:none;
+}
+.gn-shell .gn-overview .ftn-launcher-open .os-appicon{width:52px;height:52px}
+.gn-shell .gn-overview .ftn-launcher-open>span:last-child{
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  line-clamp:2;overflow:hidden;overflow-wrap:anywhere;
+  font-weight:680;font-size:11px;line-height:1.32;
+  min-height:28px;max-width:100%;text-align:center;text-shadow:0 1px 2px #11152c6b;
+}
+.gn-shell .gn-overview .ftn-launcher-actions{
+  display:flex;flex-wrap:nowrap;justify-content:center;gap:4px;
+  margin:0;padding:2px 0 0;min-height:29px;max-width:100%;
+}
+.gn-shell .gn-overview .ftn-launcher-actions button{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:5px 6px;min-height:26px;min-width:0;
+  border:1px solid rgba(229,237,255,.18);
+  border-radius:7px;background:rgba(250,252,255,.10);
+  color:#eef3ff;font-size:9px;font-weight:680;line-height:1.2;
+  white-space:nowrap;transition:background .15s,border-color .15s;
+}
+.gn-shell .gn-overview .ftn-launcher-actions button:hover:not(:disabled){background:rgba(164,193,240,.25);border-color:rgba(212,232,255,.37)}
+.gn-shell .gn-overview .ftn-launcher-actions button:disabled{opacity:.46}
+.gn-shell .gn-overview .gn-no-app-results{margin:auto;min-height:210px}
+@media(max-width:1040px){
+  .gn-shell .gn-overview .gn-app-grid.ftn-launcher-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
+}
+@media(max-width:760px){
+  .gn-shell .gn-overview .gn-overview-body{padding:14px 12px 12px}
+  .gn-shell .gn-overview .gn-overview-top{flex-basis:42px;margin-bottom:9px}
+  .gn-shell .gn-overview .gn-apps-overview-heading{padding:5px 3px 9px}
+  .gn-shell .gn-overview .gn-apps-overview-heading h2{font-size:17px}
+  .gn-shell .gn-overview .ftn-launcher-categories{min-height:48px;padding:5px 2px 9px}
+  .gn-shell .gn-overview .gn-app-grid.ftn-launcher-grid{grid-template-columns:repeat(3,minmax(0,1fr));padding:8px 3px 15px;gap:8px 5px}
+  .gn-shell .gn-overview .ftn-launcher-cell{min-height:130px;padding:7px 3px}
+  .gn-shell .gn-overview .ftn-launcher-open .gn-app-art,.gn-shell .gn-overview .ftn-launcher-open .gn-file-svg{width:45px;height:45px}
+  .gn-shell .gn-overview .ftn-launcher-open .os-appicon{width:45px;height:45px}
+  .gn-shell .gn-overview .ftn-launcher-cell .ftn-launcher-open{min-height:83px}
+  .gn-shell .gn-overview .ftn-launcher-actions button{font-size:8px;padding:4px 4px;min-height:25px}
+}
+@media(max-width:390px){
+  .gn-shell .gn-overview .gn-app-grid.ftn-launcher-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* JSON STUDIO: a proper full-height document editor, not a 60px textarea in a card. */
+.gn-shell .gn-window-app-json .gn-window-body{overflow:hidden}
+.gn-shell .ftn-studio-page.ftn-json-workspace{
+  --json-chrome:var(--studio-card);--json-code:var(--studio-field);
+  height:100%;min-height:0;display:flex;flex-direction:column;
+  gap:14px;padding:clamp(16px,2.5vw,26px);
+  overflow:hidden;
+}
+.gn-shell:not(.gn-light) .ftn-json-workspace{--json-chrome:#303744;--json-code:#202631}
+.gn-shell .ftn-json-heading{
+  flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;
+  gap:18px;width:100%;min-width:0;
+}
+.gn-shell .ftn-json-heading>div:first-child{min-width:0}
+.gn-shell .ftn-json-heading>div:first-child>span{display:block;font-size:10px;font-weight:800;letter-spacing:.13em;color:var(--studio-muted)}
+.gn-shell .ftn-json-heading h2{font-size:clamp(23px,2.6vw,30px);letter-spacing:-.036em;line-height:1.16;margin:6px 0 5px;color:var(--studio-text);font-weight:750}
+.gn-shell .ftn-json-heading p{margin:0;color:var(--studio-muted);font-size:12px;line-height:1.5}
+.gn-shell .ftn-json-document-name{display:flex;align-items:center;gap:9px;border:1px solid var(--studio-line);border-radius:11px;background:var(--studio-card);padding:9px 12px;flex:none}
+.gn-shell .ftn-json-document-name .ftn-json-file-icon{color:#8d73d3;background:#8d73d323;padding:5px 6px;border-radius:7px;font-size:13px;font-weight:750;font-family:ui-monospace,monospace}
+.gn-shell .ftn-json-document-name strong{font-size:11px;color:var(--studio-text)}
+.gn-shell .ftn-json-document-name small{font-size:10px;color:var(--studio-muted)}
+.gn-shell .ftn-json-shell{
+  flex:1 1 0;display:flex;flex-direction:column;min-height:0;min-width:0;
+  border:1px solid var(--studio-line);border-radius:15px;overflow:hidden;
+  background:var(--studio-card);
+  box-shadow:0 8px 29px rgba(8,15,30,.10);
+}
+.gn-shell .ftn-json-commandbar{
+  display:flex;align-items:center;flex-wrap:wrap;justify-content:space-between;gap:10px;
+  flex:0 0 auto;min-height:59px;padding:10px 13px;
+  background:var(--json-chrome);border-bottom:1px solid var(--studio-line);
+}
+.gn-shell .ftn-json-command-main,.gn-shell .ftn-json-command-secondary{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.gn-shell .ftn-json-commandbar button{min-height:35px;font-size:11px;border-radius:8px}
+.gn-shell .ftn-json-commandbar .ftn-studio-primary{background:#3584e4;border-color:#3584e4;color:#fff}
+.gn-shell .ftn-json-commandbar .ftn-studio-primary:hover{background:#2875c9;color:#fff}
+.gn-shell .ftn-json-file-input{display:none!important}
+.gn-shell .ftn-json-editor-layout{flex:1 1 0;display:grid;grid-template-columns:minmax(0,1.65fr) minmax(250px,.85fr);min-height:0;min-width:0;overflow:hidden}
+.gn-shell .ftn-json-editor-panel{display:flex;flex-direction:column;min-height:0;min-width:0;background:var(--json-code);border-right:1px solid var(--studio-line)}
+.gn-shell .ftn-json-panelbar{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  flex:none;min-height:37px;padding:7px 14px;
+  background:var(--json-chrome);border-bottom:1px solid var(--studio-line);
+}
+.gn-shell .ftn-json-panelbar>span{font-size:11px;font-weight:720;color:var(--studio-text)}
+.gn-shell .ftn-json-panelbar>small{font-size:10px;color:var(--studio-muted)}
+.gn-shell .ftn-json-led{display:inline-block;width:7px;height:7px;background:#8e77d0;border-radius:50%;margin-right:7px}
+.gn-shell .ftn-json-code-area{flex:1 1 0;display:flex;min-height:0;min-width:0;overflow:hidden;background:var(--json-code)}
+.gn-shell .ftn-json-line-numbers{
+  flex:0 0 54px;display:flex;flex-direction:column;gap:0;
+  height:100%;overflow:hidden;padding:16px 10px 18px 5px;
+  color:var(--studio-muted);background:var(--json-chrome);text-align:right;
+  border-right:1px solid var(--studio-line);font:12.5px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;
+  pointer-events:none;user-select:none;scrollbar-width:none;
+}
+.gn-shell .ftn-json-line-numbers>span{display:block;flex:none;height:20.625px}
+.gn-shell .ftn-json-code-area .ftn-json-source{
+  display:block;flex:1 1 0;width:100%;height:100%!important;
+  max-width:none;min-width:0;min-height:0!important;max-height:none;
+  overflow:auto;resize:none;padding:16px 17px 24px;
+  background:var(--json-code);color:var(--studio-text);
+  border:0;border-radius:0;outline:none;box-shadow:none;
+  font:12.5px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:2;
+  white-space:pre;scrollbar-width:thin;scrollbar-color:#8594aa88 transparent;
+}
+.gn-shell .ftn-json-code-area .ftn-json-source:focus{border:0;outline:none;box-shadow:inset 0 0 0 1px #719dd250}
+.gn-shell .ftn-json-inspector{
+  min-height:0;min-width:0;display:flex;flex-direction:column;
+  background:var(--studio-card);
+}
+.gn-shell .ftn-json-inspector-top{
+  flex:none;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  min-height:45px;padding:7px 11px;border-bottom:1px solid var(--studio-line);
+}
+.gn-shell .ftn-json-inspector-top>strong{font-size:12px;color:var(--studio-text)}
+.gn-shell .ftn-json-inspector-top>div{display:flex;align-items:center;gap:2px;padding:3px;border:1px solid var(--studio-line);border-radius:9px;background:var(--studio-field)}
+.gn-shell .ftn-json-inspector-top button{border:0;background:transparent;font-size:10px;min-height:28px;padding:5px 9px}
+.gn-shell .ftn-json-inspector-top button.active{background:var(--studio-card);box-shadow:0 1px 4px rgba(10,21,37,.13)}
+.gn-shell .ftn-json-stats{flex:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:11px;border-bottom:1px solid var(--studio-line)}
+.gn-shell .ftn-json-stats>div{display:flex;flex-direction:column;gap:6px;padding:10px;border-radius:9px;background:var(--studio-field);min-width:0}
+.gn-shell .ftn-json-stats span{font-size:10px;color:var(--studio-muted)}
+.gn-shell .ftn-json-stats strong{font-size:14px;color:var(--studio-text);overflow-wrap:anywhere}
+.gn-shell .ftn-json-inspector-body{flex:1 1 0;min-height:0;overflow:auto;padding:16px 12px 22px;scrollbar-width:thin;scrollbar-color:#8594aa88 transparent}
+.gn-shell .ftn-json-inspector-body pre{font:11px/1.65 ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--studio-text)}
+.gn-shell .ftn-json-node{font-size:11px;margin:0 0 5px 0}
+.gn-shell .ftn-json-node summary{display:flex;align-items:center;gap:6px;cursor:pointer;min-height:31px;padding:5px 7px;border-radius:7px;color:var(--studio-text);list-style:disclosure-closed}
+.gn-shell .ftn-json-node[open]>summary{list-style:disclosure-open}
+.gn-shell .ftn-json-node summary:hover{background:var(--studio-field)}
+.gn-shell .ftn-json-key{font:11px ui-monospace,monospace;color:var(--studio-text);overflow-wrap:anywhere}
+.gn-shell .ftn-json-type{border-radius:6px;background:#9076c82b;color:#9672c9;padding:3px 6px;font-size:10px;font-weight:710}
+.gn-shell:not(.gn-light) .ftn-json-type{color:#d6b7ff}
+.gn-shell .ftn-json-node summary small{margin-left:auto;color:var(--studio-muted);font-size:10px}
+.gn-shell .ftn-json-children{border-left:1px solid var(--studio-line);margin:0 0 8px 11px;padding-left:10px}
+.gn-shell .ftn-json-leaf{display:flex;gap:9px;align-items:flex-start;padding:6px 8px;border-radius:7px;line-height:1.6;min-width:0;font-size:11px}
+.gn-shell .ftn-json-leaf:hover{background:var(--studio-field)}
+.gn-shell .ftn-json-leaf code{font-size:11px;overflow-wrap:anywhere;min-width:0}
+.gn-shell .ftn-json-leaf code.string{color:#43a27a}
+.gn-shell .ftn-json-leaf code.number{color:#cd9c48}
+.gn-shell .ftn-json-leaf code.boolean{color:#a488d1}
+.gn-shell .ftn-json-leaf code.null{color:var(--studio-muted)}
+.gn-shell .ftn-json-invalid{border:1px solid #d26c6c55;border-radius:9px;padding:14px;background:#e45b5b13}
+.gn-shell .ftn-json-invalid strong{font-size:12px;color:#d6656b}
+.gn-shell .ftn-json-invalid p{font:11px/1.65 ui-monospace,monospace;overflow-wrap:anywhere}
+.gn-shell .ftn-json-invalid span{font-size:10px;color:var(--studio-muted)}
+.gn-shell .ftn-json-statusbar{display:flex;align-items:center;gap:12px;flex:none;min-height:35px;padding:7px 12px;background:var(--json-chrome);border-top:1px solid var(--studio-line);font-size:10px;color:var(--studio-muted)}
+.gn-shell .ftn-json-status{font-weight:730;white-space:nowrap}
+.gn-shell .ftn-json-status.valid{color:#3da77c}
+.gn-shell .ftn-json-status.invalid{color:#ce646e}
+.gn-shell .ftn-json-notice{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gn-shell .ftn-json-cursor{font-variant-numeric:tabular-nums;white-space:nowrap}
+@media(max-width:950px){
+  .gn-shell .ftn-json-editor-layout{grid-template-columns:minmax(0,1.25fr) minmax(215px,.75fr)}
+  .gn-shell .ftn-json-document-name small{display:none}
+}
+@media(max-width:720px){
+  .gn-shell .ftn-json-workspace{padding:12px;gap:11px}
+  .gn-shell .ftn-json-document-name{display:none}
+  .gn-shell .ftn-json-editor-layout{grid-template-columns:1fr;grid-template-rows:minmax(230px,1fr) minmax(145px,.52fr)}
+  .gn-shell .ftn-json-editor-panel{border-right:0;border-bottom:1px solid var(--studio-line)}
+  .gn-shell .ftn-json-commandbar{padding:7px;gap:6px}
+  .gn-shell .ftn-json-commandbar button{padding:7px 8px;font-size:10px}
+  .gn-shell .ftn-json-stats{padding:7px}
+  .gn-shell .ftn-json-inspector-body{padding:8px}
+}
+@media(max-height:660px){
+  .gn-shell .ftn-json-workspace{padding:12px;gap:10px}
+  .gn-shell .ftn-json-heading p{display:none}
+}
+
+/* Harmonize other document and developer apps with real editor areas and less dead space. */
+.gn-shell .gn-window-app-markdown .gn-window-body,
+.gn-shell .gn-window-app-editor .gn-window-body,
+.gn-shell .gn-window-app-diff .gn-window-body{overflow:hidden}
+.gn-shell .gn-window-app-markdown .ftn-studio-page{height:100%;min-height:0;overflow:hidden}
+.gn-shell .gn-window-app-markdown .ftn-studio-editor-grid{flex:1 1 0;min-height:0;max-width:none}
+.gn-shell .gn-window-app-markdown .ftn-studio-editor-grid>.ftn-studio-pane{min-height:0;overflow:hidden;display:flex;flex-direction:column}
+.gn-shell .gn-window-app-markdown .ftn-studio-editor-grid>.ftn-studio-pane .ftn-studio-code-editor{
+  display:block;flex:1;height:100%!important;min-height:0!important;resize:none;overflow:auto;
+}
+.gn-shell .gn-window-app-markdown .ftn-studio-markdown-preview{flex:1 1 0;min-height:0;overflow:auto}
+.gn-shell .gn-window-app-editor .ftn-editor-card{flex:1;min-height:0}
+.gn-shell .gn-window-app-editor .ftn-editor-card textarea{flex:1;min-height:0;resize:none}
+.gn-shell .gn-window-app-diff .ftn-suite,.gn-shell .gn-window-app-regex .ftn-suite,
+.gn-shell .gn-window-app-csv .ftn-suite{gap:13px;padding:20px 26px 28px}
+.gn-shell .gn-window-app-diff .ftn-suite-panel textarea{min-height:195px}
+.gn-shell .gn-window-app-regex .ftn-suite-panel textarea{min-height:170px}
+.gn-shell .gn-window-app-csv .ftn-suite-panel textarea{min-height:150px}
+.gn-shell .gn-window-app-diff .ftn-suite-columns{max-width:none}
+
+/* Common forms across existing utilities: clearer hierarchy, consistent focus/hover and native spacing. */
+.gn-shell .ftn-tool-page{--ftn-ux-border:#dfe5ee;--ftn-ux-field:#f9fafc;--ftn-ux-txt:#2e4059;--ftn-ux-muted:#7b8ba0}
+.gn-shell:not(.gn-light) .ftn-tool-page{--ftn-ux-border:#445062;--ftn-ux-field:#252e3c;--ftn-ux-txt:#e7eef9;--ftn-ux-muted:#aab7c8}
+.gn-shell .ftn-tool-page .ftn-tool-card{border-radius:14px;border-color:var(--ftn-ux-border);box-shadow:0 5px 20px #101e3010}
+.gn-shell .ftn-tool-page .ftn-tool-card :is(input,textarea,select):not([type=checkbox]):not([type=range]):not([type=color]){
+  min-height:39px;padding:10px 12px;border:1px solid var(--ftn-ux-border);border-radius:9px;background:var(--ftn-ux-field);color:var(--ftn-ux-txt);
+}
+.gn-shell .ftn-tool-page :is(input,textarea,select,button):focus-visible{outline:2px solid #7ba9ed;outline-offset:2px}
+.gn-shell .ftn-tool-page .ftn-tool-card select{
+  appearance:none;padding-right:30px;
+  background-image:linear-gradient(45deg,transparent 50%,var(--ftn-ux-muted) 50%),linear-gradient(135deg,var(--ftn-ux-muted) 50%,transparent 50%);
+  background-position:calc(100% - 17px) 52%,calc(100% - 12px) 52%;
+  background-size:5px 5px;background-repeat:no-repeat;
+}
+.gn-shell .ftn-tool-page .ftn-tool-card input[type=checkbox]{
+  appearance:none;width:18px;height:18px;min-width:18px;
+  display:grid;place-items:center;border:1.5px solid var(--ftn-ux-muted);
+  border-radius:6px;background:var(--ftn-ux-field);cursor:pointer;padding:0;
+}
+.gn-shell .ftn-tool-page .ftn-tool-card input[type=checkbox]:checked{background:#3584e4;border-color:#3584e4}
+.gn-shell .ftn-tool-page .ftn-tool-card input[type=checkbox]:checked::after{
+  content:"";width:9px;height:5px;transform:translateY(-1px) rotate(-45deg);
+  border:solid #fff;border-width:0 0 2px 2px;
+}
+.gn-shell .ftn-tool-page button{min-height:35px;cursor:pointer}
+.gn-shell .ftn-tool-page .ftn-tool-heading{margin-bottom:17px}
+.gn-shell .ftn-tool-page .ftn-tool-heading h2{font-weight:740}
+.gn-shell .ftn-studio-page .ftn-studio-title h2,
+.gn-shell .ftn-suite .ftn-suite-heading h2{font-weight:740}
+
+/* Better mobile densities and reduced-motion safety */
+@media(max-width:720px){
+  .gn-shell .gn-window-app-markdown .ftn-studio-editor-grid{grid-template-columns:1fr;overflow:auto}
+  .gn-shell .gn-window-app-markdown .ftn-studio-editor-grid>.ftn-studio-pane{min-height:230px}
+}
+@media(prefers-reduced-motion:reduce){
+  .gn-shell .gn-overview .ftn-launcher-cell,.gn-shell .gn-overview .ftn-launcher-actions button{animation:none!important;transition:none!important}
+}
