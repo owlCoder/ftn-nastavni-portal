@@ -9,8 +9,9 @@
   "scripts": {
     "predev": "node scripts/generate-example-zips.mjs",
     "dev": "vite",
-    "prebuild": "node scripts/generate-example-zips.mjs",
+    "prebuild": "node scripts/generate-example-zips.mjs && npm run check:course-files",
     "build": "tsc -b && vite build",
+    "check:course-files": "node scripts/check-course-files.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

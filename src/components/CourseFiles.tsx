@@ -1,64 +1,19 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import type { Course } from '../courses/types'
-import { oibExamples, oibExamplesBundle } from '../courses/oib/examples'
-import { odpExamples, odpExamplesBundle } from '../courses/odp/examples'
 import { PdfViewer } from './PdfViewer'
 import { assetUrl } from '../lib/assets'
 import { PracticumDocument } from './document/PracticumDocument'
 import { CheckpointsView } from './CheckpointsView'
 import { ZipFileViewer } from './ZipFileViewer'
-import { checkpointMarkdown, downloadFolderZip, downloadText, practicumMarkdown, type DownloadEntry } from './courseDownloads'
+import { downloadFolderZip, downloadText } from './courseDownloads'
+import { buildCourseFiles, courseFileContent, courseFolderEntries, safeFileName, type CourseFile as Item, type CourseFileKind as FileKind } from './courseFileTree'
 
-type FileKind='folder'|'practicum'|'section'|'checkpoints'|'pdf'|'zip'
-type Item={
-  id:string;parent:string|null;name:string;kind:FileKind;
-  description?:string;source?:string;size?:string;pages?:number;exercise?:number
+function itemCount(count:number){
+  const last=count%10,ending=count%100
+  const word=last===1&&ending!==11?'stavka':last>=2&&last<=4&&(ending<12||ending>14)?'stavke':'stavki'
+  return count+' '+word
 }
-const exNumber=(n:number)=>String(n).padStart(2,'0')
-function makeFiles(course:Course):Item[]{
-  const slides=course.presentations.kind==='downloads'?course.presentations.downloads:[]
-  const bundle=course.presentations.kind==='downloads'?course.presentations.bundle:null
-  const examples=course.id==='oib'?oibExamples:course.id==='odp'?odpExamples:[]
-  const exampleBundle=course.id==='oib'?oibExamplesBundle:course.id==='odp'?odpExamplesBundle:null
-  const hasPracticum=course.practicum.blocks.length>0
-  const items:Item[]=[
-    {id:'prezentacije',parent:'root',name:'Prezentacije',kind:'folder',description:'PDF slajdovi'},
-  ]
-  if(hasPracticum)items.unshift(
-    {id:'praktikum',parent:'root',name:'Praktikum',kind:'practicum',description:'Kontinuirani nastavni dokument'},
-    {id:'vezbe',parent:'root',name:'Vežbe',kind:'folder',description:'Osam vežbi i nastavni materijali'})
-  if(examples.length)items.push({id:'primeri',parent:'root',name:'Primeri',kind:'folder',description:'Izvorni kod i ZIP arhive'})
-  if(course.checkpoints.length)items.push({id:'kontrolne',parent:'root',name:'Kontrolne tačke',kind:'checkpoints',description:'Projektne etape i rokovi'})
-  if(course.project)items.push({id:'projektna-specifikacija',parent:'root',name:'Projektna specifikacija.pdf',
-    kind:'pdf',source:course.project.file,size:course.project.size,pages:course.project.pages,description:course.project.title})
-  if(course.projects?.length){
-    items.push({id:'projekti',parent:'root',name:'Projekti',kind:'folder',description:'Tehničke specifikacije projekata'})
-    for(const project of course.projects)items.push({id:'projekti/'+project.code,parent:'projekti',name:project.code+' — Tehnička specifikacija.pdf',
-      kind:'pdf',source:project.file,size:project.size,pages:project.pages,description:project.title})
-  }
-  for(let n=1;hasPracticum&&n<=8;n++){
-    const prefix='vezbe/'+exNumber(n),slide=slides.find(p=>Number(p.number)===n)
-    const example=examples.find(p=>p.exercise===n)
-    items.push({id:prefix,parent:'vezbe',kind:'folder',name:'Vežba '+exNumber(n),description:slide?.title??example?.title??'Nastavni materijali'})
-    items.push({id:prefix+'/practicum',parent:prefix,kind:'section',exercise:n,name:'Tekst vežbe u praktikumu',description:'Poglavlje u kontinuiranom dokumentu'})
-    if(slide)items.push({id:prefix+'/slides',parent:prefix,kind:'pdf',
-      name:slide.number+' — '+slide.title+'.pdf',source:slide.file,size:slide.size,pages:slide.pages,description:slide.label})
-    if(example)items.push({id:prefix+'/example',parent:prefix,kind:'zip',
-      name:example.title+'.zip',source:example.zip,description:example.description})
-  }
-  for(const slide of slides)items.push({id:'prezentacije/'+slide.number,parent:'prezentacije',kind:'pdf',
-    name:slide.number+' — '+slide.title+'.pdf',source:slide.file,size:slide.size,pages:slide.pages,description:slide.label})
-  if(bundle)items.push({id:'prezentacije/sve',parent:'prezentacije',kind:'zip',
-    name:'Sve prezentacije.zip',source:bundle.file,size:bundle.size})
-  for(const example of examples){
-    const folder='primeri/'+exNumber(example.exercise)
-    items.push({id:folder,parent:'primeri',kind:'folder',name:'Vežba '+exNumber(example.exercise),description:example.title})
-    items.push({id:folder+'/zip',parent:folder,kind:'zip',name:example.title+'.zip',source:example.zip,description:example.description})
-  }
-  if(exampleBundle)items.push({id:'primeri/sve',parent:'primeri',kind:'zip',name:'Svi primeri.zip',source:exampleBundle})
-  return items
-}
-const safeName=(name:string)=>name.replaceAll(/[<>:"/\\|?*]/g,'-')
+
 function EntryIcon({kind}:{kind:FileKind}){
   return <svg aria-hidden="true" viewBox="0 0 36 36" fill="none" className={'ers-entry-icon ers-entry-'+kind}>
     {kind==='folder'?<>
@@ -74,37 +29,10 @@ function EntryIcon({kind}:{kind:FileKind}){
     </>}
   </svg>
 }
-function fileContent(item:Item,course:Course):DownloadEntry|null{
-  if(item.source)return {path:item.name,url:item.source}
-  if(item.kind==='practicum')return {path:'Praktikum.md',text:practicumMarkdown(course)}
-  if(item.kind==='checkpoints')return {path:'Kontrolne_tacke.md',text:checkpointMarkdown(course)}
-  if(item.kind==='section')return {path:'Vezba_'+exNumber(item.exercise??1)+'_praktikum.md',text:practicumMarkdown(course,item.exercise)}
-  return null
-}
-function folderEntries(course:Course,id:string,files:Item[],lookup:Map<string,Item>):DownloadEntry[]{
-  const descendant=(item:Item,folder:string)=>{
-    let parent=item.parent
-    while(parent){if(parent===folder)return true;parent=lookup.get(parent)?.parent??null}
-    return false
-  }
-  return files.filter(item=>item.kind!=='folder'&&(id==='root'||descendant(item,id)))
-    .map(item=>{
-      const file=fileContent(item,course)
-      if(!file)return null
-      const parents:string[]=[]
-      let parentId=item.parent
-      while(parentId&&parentId!==id&&parentId!=='root'){
-        const parent=lookup.get(parentId)
-        if(!parent)break
-        parents.unshift(safeName(parent.name));parentId=parent.parent
-      }
-      return {...file,path:[...parents,safeName(file.path)].join('/')}
-    }).filter((item):item is DownloadEntry=>item!==null)
-}
 type Preview={kind:FileKind;item:Item}
 
-export function OtherCourseFiles({course}:{course:Course}){
-  const files=useMemo(()=>makeFiles(course),[course])
+export function CourseFiles({course}:{course:Course}){
+  const files=useMemo(()=>buildCourseFiles(course),[course])
   const lookup=useMemo(()=>new Map(files.map(item=>[item.id,item])),[files])
   const children=(id:string)=>files.filter(item=>item.parent===id)
   const [folder,setFolder]=useState('root')
@@ -114,6 +42,15 @@ export function OtherCourseFiles({course}:{course:Course}){
   const [error,setError]=useState('')
   const current=lookup.get(folder)
   const folderItems=children(folder)
+  const metadata=(item:Item)=>{
+    if(item.kind==='folder'){
+      const entries=children(item.id).filter(child=>!child.bundle)
+      if(entries.length&&entries.every(child=>child.kind==='pdf'))return entries.length+' PDF'
+      if(entries.length&&entries.every(child=>child.kind==='zip'))return entries.length+' ZIP'
+      return itemCount(entries.length)
+    }
+    return item.kind==='pdf'?item.pages+' str. · '+item.size:item.size??(item.kind==='zip'?'ZIP':'Dokument')
+  }
   const breadcrumb=useMemo(()=>{
     const items=[{id:'root',name:course.code}],branches:Item[]=[]
     let id=folder
@@ -130,7 +67,10 @@ export function OtherCourseFiles({course}:{course:Course}){
     if(item.kind==='folder'){
       setFolder(item.id);setPreview(null)
       setExpanded(old=>new Set(old).add(item.id))
-    }else setPreview({kind:item.kind,item})
+    }else{
+      setFolder(item.parent);setPreview({kind:item.kind,item})
+      setExpanded(old=>new Set(old).add(item.parent))
+    }
   }
   const navigate=(id:string)=>{setPreview(null);setFolder(id);setError('')}
   const back=()=>preview?setPreview(null):navigate(current?.parent??'root')
@@ -138,7 +78,7 @@ export function OtherCourseFiles({course}:{course:Course}){
     if(busy)return
     setError('')
     if(item && item.kind!=='folder'){
-      const file=fileContent(item,course)
+      const file=courseFileContent(item,course)
       if(!file)return
       if(file.url){
         try{
@@ -156,10 +96,10 @@ export function OtherCourseFiles({course}:{course:Course}){
       return
     }
     const target=item?.id??folder
-    const filename=target==='root'?course.code+'-Materijali':safeName(item?.name??current?.name??'Materijali')
+    const filename=target==='root'?course.code+'-Materijali':safeFileName(item?.name??current?.name??'Materijali')
     try{
       setBusy('Priprema foldera…')
-      await downloadFolderZip(filename,folderEntries(course,target,files,lookup),setBusy)
+      await downloadFolderZip(filename,courseFolderEntries(course,target,files),setBusy)
     }catch(e){setError(e instanceof Error?e.message:'Preuzimanje foldera nije uspelo.')}
     finally{setBusy('')}
   }
@@ -169,25 +109,13 @@ export function OtherCourseFiles({course}:{course:Course}){
     const shown=expanded.has(item.id)
     return <div key={item.id}>
       <div className={'ers-tree-row'+(folder===item.id?' selected':'')+(preview?.item.id===item.id?' selected':'')} style={{paddingLeft:8+depth*13}}>
-        {hasChildren?<button type="button" className="ers-tree-arrow" aria-label={shown?'Sažmi folder':'Proširi folder'} onClick={()=>toggle(item.id)}>{shown?'▾':'▸'}</button>:<span className="ers-tree-spacer"/>}
+        {hasChildren?<button type="button" className="ers-tree-arrow" aria-label={(shown?'Sažmi ':'Proširi ')+item.name} aria-expanded={shown} onClick={()=>toggle(item.id)}>{shown?'▾':'▸'}</button>:<span className="ers-tree-spacer"/>}
         <button className="ers-tree-select" title={item.name} onClick={()=>visit(item)}><EntryIcon kind={item.kind}/><span>{item.name}</span></button>
       </div>
       {hasChildren && shown&&depth<5&&tree(item.id,depth+1)}
     </div>
   })
   const viewing=preview?.item
-  useEffect(()=>{
-    if(viewing?.kind!=='section'||!viewing.exercise)return
-    const exercise=viewing.exercise
-    const frame=window.requestAnimationFrame(()=>{
-      const toc=document.querySelector('.ers-continuous-document .toc-panel')
-      const heading=[...(toc?.querySelectorAll<HTMLAnchorElement>('a')??[])].find(link=>
-        new RegExp('^Vežba\\s+'+exercise+'(?:\\D|$)','i').test(link.textContent?.trim()??''))
-      const id=heading?.getAttribute('href')?.slice(1)
-      if(id)document.getElementById(id)?.scrollIntoView({behavior:'auto',block:'start'})
-    })
-    return()=>window.cancelAnimationFrame(frame)
-  },[viewing?.id,viewing?.kind,viewing?.exercise])
   const pdfViewing=viewing?.kind==='pdf' && viewing.source
   return <div className="ers-explorer">
     <header className="ers-explorer-toolbar">
@@ -215,9 +143,8 @@ export function OtherCourseFiles({course}:{course:Course}){
       </aside>
       <main className={'ers-explorer-main'+(preview?' is-preview':'')}>
         {preview&&viewing ? <div className="ers-file-preview">
-          {viewing.kind==='practicum' || viewing.kind==='section' ?
+          {viewing.kind==='practicum' ?
             <div className="ers-continuous-document">
-              {viewing.kind==='section'&&<div className="ers-file-info">Vežba {viewing.exercise} · Prikazan je kompletan praktikum, sa navigacijom kroz sadržaj.</div>}
               <PracticumDocument practicum={course.practicum}/>
             </div> :
             viewing.kind==='checkpoints'?<div className="ers-checkpoint-document"><CheckpointsView checkpoints={course.checkpoints}/></div>:
@@ -226,15 +153,15 @@ export function OtherCourseFiles({course}:{course:Course}){
             <p>Fajl nije dostupan za prikaz.</p>}
         </div> : <div className="ers-directory">
           <div className="ers-directory-heading">
-            <div><span className="ers-directory-eyebrow">NASTAVNI MATERIJALI · {course.code}</span><h2>{current?.name??course.name}</h2><p>{current?.description??'Odaberi folder ili fajl da pregledaš sadržaj.'}</p></div>
-            <span className="ers-directory-count">{folderItems.length} stavki</span>
+            <div><span className="ers-directory-eyebrow">NASTAVNI MATERIJALI · {course.code}</span><h2>{current?.name??course.name}</h2><p>{current?.description??course.blurb}</p></div>
+            <span className="ers-directory-count">{itemCount(folderItems.length)}</span>
           </div>
           <div className="ers-file-list" role="list" aria-label="Sadržaj foldera">
             {folderItems.map(item=><div className="ers-file-row" key={item.id} role="listitem">
               <button className="ers-file-open" onClick={()=>visit(item)} title={'Otvori '+item.name}>
                 <EntryIcon kind={item.kind}/>
                 <span className="ers-file-row-name"><strong>{item.name}</strong><small>{item.description??(item.kind==='folder'?'Folder':'Dokument')}</small></span>
-                <span className="ers-file-meta">{item.kind==='folder'?`${children(item.id).length} stavki`:item.size??(item.kind==='pdf'?'PDF':item.kind==='zip'?'ZIP':'Dokument')}</span>
+                <span className="ers-file-meta">{metadata(item)}</span>
                 <span className="ers-open-chevron">›</span>
               </button>
               <button className="ers-download-mini" onClick={()=>void save(item)} disabled={Boolean(busy)} aria-label={'Preuzmi '+item.name} title={item.kind==='folder'?'Preuzmi folder kao ZIP':'Preuzmi fajl'}>↓</button>

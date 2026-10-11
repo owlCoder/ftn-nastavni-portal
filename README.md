@@ -44,7 +44,7 @@ Shortcuts, positions, dock pins, wallpapers, and appearance preferences persist 
 ## Features
 
 - **Desktop workspace:** movable, minimizable and maximizable application windows, launcher search, collision-free draggable desktop shortcuts, right-click and left-click context actions, keyboard-accessible menus, persistent dock pinning and course folders.
-- **Course file manager:** nested exercise, presentation and example folders, expandable navigation tree, breadcrumbs and file previews for ERS, OIB, ODP and IBIS.
+- **Course file manager:** a consistent practicum, presentation, example and project layout, expandable navigation tree, breadcrumbs and file previews for ERS, OIB, ODP and IBIS. Every document has one location.
 - **Continuous practicum reader:** document-style scrolling, collapsible table of contents, links to exercises and zoom controls.
 - **Custom PDF viewer:** PDF.js-powered rendering with page navigation, zoom, fullscreen mode and downloads, rather than the browser's built-in PDF toolbar.
 - **ZIP explorer and downloads:** browse example archives, preview text-based source files, download individual documents or export entire folders as ZIP archives.
@@ -142,7 +142,9 @@ The ten additional apps all run in draggable GNOME-like windows and appear in th
 | ODP | Fundamentals of Distributed Programming | Practicum, PDF presentations, .NET examples, checkpoints and project specification |
 | IBIS | Information Security of Infrastructure Systems | SCADA presentations and three technical project specifications |
 
-Exercise materials are arranged by course and exercise number. PDF and ZIP downloads are static assets; checkpoint/practicum text can also be exported as Markdown. Not all third-party or educational materials are distributed under the software license; see [Licensing](#licensing).
+Each course groups materials by type: **Praktikum**, **Prezentacije**, **Primeri** and **Projekat**. Presentation PDFs and example ZIPs are numbered by exercise; project specifications and checkpoints share the project folder. IBIS contains presentations and project specifications. Folder exports include each original file once and leave collection ZIPs available as separate downloads.
+
+PDF and ZIP downloads are static assets; checkpoint/practicum text can also be exported as Markdown. Not all third-party or educational materials are distributed under the software license; see [Licensing](#licensing).
 
 ## Technology
 

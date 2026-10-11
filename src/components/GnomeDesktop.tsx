@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react'
-import { ErsCourseFiles } from './ErsCourseFiles'
-import { OtherCourseFiles } from './OtherCourseFiles'
+import { CourseFiles } from './CourseFiles'
 import { DesktopWidgets } from './DesktopWidgets'
 import { SystemAbout } from './SystemAbout'
 import { CalendarApp } from './DesktopUtilities'
@@ -154,7 +153,7 @@ function WindowFrame({ windowData: w, isFocused, gamesActive, now, otherWindows,
       </div>
     </div>
     <div className={'gn-window-body'+(course?' gn-course-body':'')+(course?' gn-course-files-body':'')}>
-      {course ? (course.id==='ers'?<ErsCourseFiles course={course}/>:<OtherCourseFiles course={course}/>) :
+      {course ? <CourseFiles course={course}/> :
         w.id==='sudoku'?<Sudoku active={active}/> :
         w.id==='tetris'?<Tetris active={active}/> :
         w.id==='invaders'?<SpaceInvaders active={active}/> :
