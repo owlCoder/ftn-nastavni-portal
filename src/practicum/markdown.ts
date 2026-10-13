@@ -44,13 +44,26 @@ export function practicumMarkdown(course: Course, exercise?: number): string {
     } else if (block.type === 'table') {
       const cell = (value: string) => markdownInline(value).replaceAll('|', '\\|').replaceAll('\n', '<br>')
       out.push('| ' + block.headers.map(cell).join(' | ') + ' |', '| ' + block.headers.map(() => '---').join(' | ') + ' |', ...block.rows.map(row => '| ' + row.map(cell).join(' | ') + ' |'), '')
-    } else if (block.type === 'image') out.push(`![${block.alt}](${assetLink(block.src)})`, '', block.caption, '')
+    } else if (block.type === 'image') out.push(`![${block.alt}](${block.markdownSrc ?? assetLink(block.src)})`, '', block.caption, '')
     else if (block.type === 'diagram') {
       out.push(`### ${block.title}`, '', ...block.items.map(item => `- ${item.title}: ${item.subtitle}`), '')
       if (block.footer) out.push(block.footer, '')
     }
   }
   return out.join('\n')
+}
+
+/** Companion images that must travel with an exported Markdown document. */
+export function practicumAssets(course: Course, exercise?: number): Array<{ path: string; url: string }> {
+  let selected = !exercise
+  const assets = new Map<string, string>()
+  for (const block of course.practicum.blocks) {
+    if (exercise && block.type === 'text' && block.variant === 'h1') {
+      selected = Number(markdownInline(block.html).match(/^Vežba\s+(\d+)\b/i)?.[1]) === exercise
+    }
+    if (selected && block.type === 'image' && block.markdownSrc) assets.set(block.markdownSrc, block.src)
+  }
+  return [...assets].map(([path, url]) => ({ path, url }))
 }
 
 export function checkpointMarkdown(course: Course): string {

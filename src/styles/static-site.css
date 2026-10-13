@@ -487,3 +487,6 @@ tbody tr:nth-child(even) { background: #fbfcfd; }
   .diagram-card { min-height: 25mm; }
   a { text-decoration: none; color: inherit; }
 }
+
+.practicum-pdf-download { padding: 8px 12px; border: 1px solid #dfe5eb; border-radius: 8px; color: #173b66; background: #fff; text-decoration: none; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.practicum-pdf-download:hover { background: #f1f6fb; }

@@ -87,6 +87,7 @@ export function PracticumDocument({ practicum, initialSection }: { practicum: Pr
             <button className="zoom-reset" onClick={() => setZoom(1)}>{Math.round(zoom * 100)}%</button>
             <button onClick={zoomIn} disabled={zoom >= ZOOM_STEPS[ZOOM_STEPS.length - 1]} aria-label="Uvećaj">+</button>
           </div>
+          {practicum.pdfFile && <a className="practicum-pdf-download" href={assetUrl(practicum.pdfFile)} download>Preuzmi PDF</a>}
           <FullscreenButton isFullscreen={isFullscreen} onToggle={toggleFullscreen} />
         </div>
 

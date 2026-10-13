@@ -6,7 +6,7 @@ export const list = (items: string[], ordered = false): Block => ({ type: 'list'
 export const callout = (tone: CalloutTone, title: string, body: string): Block => ({ type: 'callout', tone, title, html: inlineCode(body) })
 export const code = (language: CodeLanguage, value: string, caption?: string): Block => ({ type: 'code', language, code: value, caption })
 export const table = (headers: string[], rows: string[][]): Block => ({ type: 'table', headers: headers.map(inlineCode), rows: rows.map((row) => row.map(inlineCode)) })
-export const image = (src: string, caption: string, alt: string): Block => ({ type: 'image', src, caption, alt })
+export const image = (src: string, caption: string, alt: string, markdownSrc?: string): Block => ({ type: 'image', src, caption, alt, ...(markdownSrc ? { markdownSrc } : {}) })
 export const diagram = (title: string, items: Array<[title: string, subtitle: string, accent: Accent]>, footer?: string): Block => ({
   type: 'diagram',
   title,

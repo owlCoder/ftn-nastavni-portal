@@ -5,6 +5,7 @@ import type { Block, Practicum } from './types'
 
 type PracticumSource = {
   subject: string
+  pdfFile?: string
   intro: Block[]
   /** One entry per exercise, in order: `exercises[0]` is Vežba 1. */
   exercises: Block[][]
@@ -17,7 +18,7 @@ type PracticumSource = {
  * Assembles a practicum. Checkpoints are not written into the exercises: each one is
  * rendered from the course checkpoint list, once, after the last exercise it covers.
  */
-export function buildPracticum({ subject, intro, exercises, closing, checkpoints, checkpointSection }: PracticumSource): Practicum {
+export function buildPracticum({ subject, pdfFile, intro, exercises, closing, checkpoints, checkpointSection }: PracticumSource): Practicum {
   const unplaced = checkpoints.filter(({ exercises: [, last] }) => last < 1 || last > exercises.length)
   if (unplaced.length > 0) {
     throw new Error(`${subject}: kontrolne tačke ${unplaced.map(({ code }) => code).join(', ')} ne pripadaju nijednoj vežbi.`)
@@ -25,6 +26,7 @@ export function buildPracticum({ subject, intro, exercises, closing, checkpoints
 
   return {
     subject,
+    ...(pdfFile ? { pdfFile } : {}),
     footerText: 'Primenjeno softversko inženjerstvo',
     blocks: [
       ...intro,

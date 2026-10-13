@@ -56,6 +56,8 @@ export type ImageBlock = {
   src: string
   alt: string
   caption: string
+  /** Relative companion image path in Markdown downloads. */
+  markdownSrc?: string
 }
 
 export type Block = TextBlock | ListBlock | CodeBlock | CalloutBlock | TableBlock | DiagramBlock | ImageBlock
@@ -64,4 +66,5 @@ export type Practicum = {
   subject: string
   footerText: string
   blocks: Block[]
+  pdfFile?: string
 }

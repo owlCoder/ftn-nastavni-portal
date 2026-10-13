@@ -3,7 +3,7 @@ import { sharedCourseGuides } from '../courses/guides'
 import { ersLessonPackages, ersProjectBundle, ersStandaloneExamples } from '../courses/ers/examples'
 import { oibExamples, oibExamplesBundle } from '../courses/oib/examples'
 import { odpExamples, odpExamplesBundle } from '../courses/odp/examples'
-import { checkpointMarkdown, practicumMarkdown, type DownloadEntry } from './courseDownloads'
+import { checkpointMarkdown, practicumMarkdown, practicumAssets, type DownloadEntry } from './courseDownloads'
 import { prepareDocument } from './document/prepareDocument'
 import { assetUrl } from '../lib/assets'
 
@@ -166,10 +166,17 @@ export function courseFolderEntries(course: Course, folder: string, files: Cours
       parent = ancestor.parent
     }
     if (parent !== folder) continue
-    if (item.kind === 'practicum-link' && item.exercise) entries.push({
-      path: [...parents, 'Vezba_' + number(item.exercise) + '.md'].join('/'),
-      text: practicumMarkdown(course, item.exercise),
-    })
+    if (item.kind === 'practicum-link' && item.exercise) {
+      entries.push({
+        path: [...parents, 'Vezba_' + number(item.exercise) + '.md'].join('/'),
+        text: practicumMarkdown(course, item.exercise),
+      })
+      entries.push(...practicumAssets(course, item.exercise).map(asset => ({ ...asset, path: [...parents, asset.path].join('/') })))
+    }
+    if (item.kind === 'practicum') {
+      entries.push(...practicumAssets(course).map(asset => ({ ...asset, path: [...parents, asset.path].join('/') })))
+      if (course.practicum.pdfFile) entries.push({ path: [...parents, 'Praktikum.pdf'].join('/'), url: course.practicum.pdfFile })
+    }
     const file = courseFileContent(item, course)
     if (file) entries.push({ ...file, path: [...parents, safeFileName(file.path)].join('/') })
   }

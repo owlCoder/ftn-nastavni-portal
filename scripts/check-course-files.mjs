@@ -18,10 +18,17 @@ try {
   }
   const bundles = { ers: ersProjectBundle, oib: oibExamplesBundle, odp: odpExamplesBundle }
   const { prepareDocument } = await server.ssrLoadModule('/src/components/document/prepareDocument.ts')
-  const { practicumMarkdown, checkpointMarkdown } = await server.ssrLoadModule('/src/practicum/markdown.ts')
+  const { practicumMarkdown, checkpointMarkdown, practicumAssets } = await server.ssrLoadModule('/src/practicum/markdown.ts')
 
   for (const course of courses) {
     const files = buildCourseFiles(course)
+    const companionAssets = practicumAssets(course)
+    for (const asset of companionAssets) {
+      assert.ok(!asset.path.startsWith('/') && !asset.path.split('/').includes('..'), 'Unsafe companion path: ' + asset.path)
+      assert.ok(existsSync(resolve('public', asset.url.slice(1))), 'Missing companion image: ' + asset.url)
+      assert.ok(readFileSync(resolve('public/downloads/praktikum', course.id, asset.path)).equals(readFileSync(resolve('public', asset.url.slice(1)))))
+    }
+    if (course.practicum.pdfFile) assert.ok(existsSync(resolve('public', course.practicum.pdfFile.slice(1))), 'Missing practicum PDF')
     const lookup = new Map(files.map(item => [item.id, item]))
     assert.equal(lookup.size, files.length, course.code + ': duplicate tree IDs')
     for (const item of files) {
@@ -45,7 +52,8 @@ try {
 
     const rootEntries = courseFolderEntries(course, 'root', files)
     assert.equal(new Set(rootEntries.map(item => item.path)).size, rootEntries.length, course.code + ': colliding archive paths')
-    assert.deepEqual(rootEntries.filter(item => item.url).map(item => item.url).sort(),
+    const documentAssets = new Set([...companionAssets.map(asset => asset.url), course.practicum.pdfFile].filter(Boolean))
+    assert.deepEqual(rootEntries.filter(item => item.url && !documentAssets.has(item.url)).map(item => item.url).sort(),
       files.filter(item => item.source && !item.bundle).map(item => item.source).sort(),
       course.code + ': folder export must contain original assets without collection ZIPs')
     const projectEntries = courseFolderEntries(course, 'projekat', files)
@@ -75,10 +83,16 @@ try {
         const heading = toc.find(item => item.id === links[0].anchor)
         assert.ok(heading && new RegExp('^Vežba\\s+' + n + '(?:\\D|$)').test(heading.label), 'Shortcut must target its own chapter')
         const entries = courseFolderEntries(course, parent, files)
-        assert.deepEqual(entries.filter(item => item.url).map(item => item.url), contents.filter(item => item.source).map(item => item.source))
+        assert.deepEqual(entries.filter(item => item.url && !documentAssets.has(item.url)).map(item => item.url), contents.filter(item => item.source).map(item => item.source))
         assert.equal(entries.filter(item => item.path.endsWith('.url')).length, 1)
         assert.ok(entries.some(item => item.text?.includes('/#' + course.id + '/praktikum/' + String(n).padStart(2, '0'))))
         const markdown = practicumMarkdown(course, n)
+        for (const asset of practicumAssets(course, n)) {
+          assert.ok(markdown.includes('](' + asset.path + ')'), 'Markdown must reference its companion image')
+          assert.ok(entries.some(item => item.path === asset.path && item.url === asset.url), 'Exercise archive must include its companion image')
+          const exercisePath = 'Računarske vežbe/Vežba ' + String(n).padStart(2, '0') + '/' + asset.path
+          assert.ok(rootEntries.some(item => item.path === exercisePath && item.url === asset.url), 'Course archive must keep images beside the exercise')
+        }
         assert.equal(entries.find(item => item.path === 'Vezba_' + String(n).padStart(2, '0') + '.md')?.text, markdown)
         assert.equal(readFileSync(resolve('public/downloads/praktikum', course.id, 'Vezba_' + String(n).padStart(2, '0') + '.md'), 'utf8'), markdown)
         assert.deepEqual([...markdown.matchAll(/^## Vežba (\d+)\b/gm)].map(match => Number(match[1])), [n], 'Exercise export must contain only its chapter')
@@ -88,9 +102,11 @@ try {
       assert.equal(readFileSync(resolve('public/downloads/praktikum', course.id, 'Kontrolne_tacke.md'), 'utf8'), checkpointMarkdown(course))
       assert.equal(rootEntries.filter(item => item.path.endsWith('.url')).length, 8)
       assert.ok(rootEntries.some(item => item.path === 'Praktikum.md' && item.text))
+      for (const asset of companionAssets) assert.ok(rootEntries.some(item => item.path === asset.path && item.url === asset.url))
+      if (course.practicum.pdfFile) assert.ok(rootEntries.some(item => item.path === 'Praktikum.pdf' && item.url === course.practicum.pdfFile))
       assert.ok(rootEntries.some(item => item.path === 'Projekat/Kontrolne_tacke.md' && item.text))
       const lessonEntries = courseFolderEntries(course, 'vezbe', files)
-      assert.deepEqual(lessonEntries.filter(item => item.url).map(item => item.url).sort(),
+      assert.deepEqual(lessonEntries.filter(item => item.url && !documentAssets.has(item.url)).map(item => item.url).sort(),
         [...slides.filter(item => Number(item.number) > 0).map(item => item.file), ...examples[course.id].map(item => item.zip)].sort())
       assert.deepEqual(files.filter(item => item.kind === 'pdf' && item.parent === 'root').map(item => item.source),
         slides.filter(item => Number(item.number) === 0).map(item => item.file))

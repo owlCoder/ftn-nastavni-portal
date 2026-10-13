@@ -59,6 +59,27 @@ export const exercise1: Block[] = [
   ],
 
   [
+    text('h3', "1.2.1. Primer korisničke priče i sprinta — PYXIS AI"),
+    text('paragraph', "Sledeći ekrani prikazuju konkretan primer rada sa korisničkim pričama u Tapiz Boards-u, na projektu „PYXIS AI · R1 · simulirani sprintovi“. Na njima se vidi kako se opis potrebe povezuje sa procenom obima, checklistom, sprintom i statusom rada."),
+    text('paragraph', "<strong>Detalj korisničke priče</strong>"),
+    image("/downloads/praktikum/ers/slike/vezba-01/pyxis-01-detalj-korisnicke-price.png", "Detalj priče R102-US01: opis potrebe, plan rada i napredak checkliste.", "PYXIS AI — detalj korisničke priče R102-US01", "slike/vezba-01/pyxis-01-detalj-korisnicke-price.png"),
+    text('paragraph', "Priča „R102-US01: Kreiranje prostorija i operativnih zona“ sadrži naslov, status, dodeljenu osobu, stori poene, sprint, prioritet, rok, opis i checklistu. Opis prati obrazac „Kao [uloga], želim [funkcionalnost], kako bih [korist]“: administrator data centra želi da doda prostorije i zone pod objektom Building kako bi modelovao stvaran raspored prostora."),
+    text('paragraph', "Procena od 5 SP (Story Points) predstavlja relativnu procenu obima i složenosti rada. Visok prioritet govori o važnosti priče, dok polje „Dodeljeno“ određuje odgovornost za rad. Na ovom snimku priča je u statusu CODE REVIEW, a polje „Dodeljeno“ ima vrednost „Niko“ — tim treba da dogovori odgovornu osobu."),
+    text('paragraph', "Checklist prikazuje korake kao što su Domain / Application, Database / migration, API / contract, React UI, Tests / local verification i Docs / demo. Oznaka 6/7 znači da je označeno šest od sedam koraka. Kriterijumi prihvatanja zasebno određuju očekivano ponašanje sistema; završeni tehnički koraci sami po sebi ne potvrđuju da su ti kriterijumi ispunjeni."),
+    text('paragraph', "<strong>Lista priča i promena statusa</strong>"),
+    image("/downloads/praktikum/ers/slike/vezba-01/pyxis-02-backlog-promena-statusa.png", "Lista korisničkih priča i izbor statusa rada.", "PYXIS AI — pregled backlog-a i izbor statusa priče", "slike/vezba-01/pyxis-02-backlog-promena-statusa.png"),
+    text('paragraph', "U listi su vidljivi naslov, sažetak opisa i kriterijuma prihvatanja, autor, sprint, prioritet, procena u SP i napredak checkliste. Otvoreni meni prikazuje dogovorene statuse: BACKLOG, READY, IN PROGRESS, CODE REVIEW, VERIFY / QA i DONE. Tim bira status koji odgovara stvarnom stanju rada. Izbor statusa opisuje napredak priče, dok izbor sprinta određuje u kom ciklusu se ona planira."),
+    text('paragraph', "<strong>Sprint i njegove korisničke priče</strong>"),
+    image("/downloads/praktikum/ers/slike/vezba-01/pyxis-03-aktivni-sprint.png", "Aktivni simulirani sprint: osam priča, 31 SP i pregled statusa.", "PYXIS AI — aktivni simulirani sprint i lista korisničkih priča", "slike/vezba-01/pyxis-03-aktivni-sprint.png"),
+    text('paragraph', "Prikazan je aktivni „Sprint 1 · R1-01 · D1–D3 (simulacija)“, sa osam priča i ukupnom procenom od 31 SP. Pored svake priče nalaze se njen status, procena i pristup detaljima. Sve prikazane priče su u statusu CODE REVIEW, dok je napredak sprinta 0%: implementacija i lokalni testovi mogu da postoje, a da stručni pregled i timsko prihvatanje još nisu završeni. Oznake D1–D3 i datumi služe nastavnoj simulaciji."),
+    text('paragraph', "<strong>Radna tabla aktivnog sprinta</strong>"),
+    image("/downloads/praktikum/ers/slike/vezba-01/pyxis-04-radna-tabla.png", "Radna tabla aktivnog sprinta sa karticama raspoređenim po statusima.", "PYXIS AI — kartice korisničkih priča raspoređene po statusima", "slike/vezba-01/pyxis-04-radna-tabla.png"),
+    text('paragraph', "Radna tabla grupiše kartice po statusima BACKLOG, READY, IN PROGRESS, CODE REVIEW i VERIFY / QA; desni deo table nije u celosti obuhvaćen snimkom. Kartica objedinjuje naslov, kratak opis, oznaku sprinta, prioritet, checklistu, procenu i avatar autora. Detalji se otvaraju klikom na karticu, a promena statusa može se obaviti prevlačenjem između kolona. Veći broj kartica u CODE REVIEW ukazuje timu na posao koji čeka pregled."),
+    text('paragraph', "Snimci predstavljaju različite trenutke nastavne simulacije, pa se broj priča, njihov status i pripadnost sprintu mogu razlikovati između prikaza. Pri poređenju ekrana istu priču prepoznajemo po oznaci, na primer R102-US01."),
+    callout('task', "Rad na vežbi — od priče do table", "Za jednu priču svog projekta popuniti naslov, opis, kriterijume prihvatanja, prioritet, odgovornu osobu, procenu i checklistu. Planirati je u sprintu, otvoriti njenu karticu na tabli i obrazložiti koji dokaz je potreban za prelazak iz IN PROGRESS u CODE REVIEW, zatim u VERIFY / QA i DONE."),
+  ],
+
+  [
     text('h2', '1.3. Git kao sledljiv zapis razvoja'),
     text('paragraph', 'Git omogućava da se razvoj rekonstruiše kroz male i smislene promene. Radno stablo sadrži trenutne izmene, staging area određuje šta ulazi u naredni commit, a commit predstavlja imenovanu tačku istorije. U timskom radu posebna grana izdvaja jednu promenu od stabilne glavne grane.'),
     table(['Pojam', 'Uloga u radu tima'], [

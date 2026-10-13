@@ -1,5 +1,5 @@
 import { assetUrl } from '../lib/assets'
-export { practicumMarkdown, checkpointMarkdown } from '../practicum/markdown'
+export { practicumMarkdown, checkpointMarkdown, practicumAssets } from '../practicum/markdown'
 
 export type DownloadEntry={path:string;url?:string;text?:string;bytes?:Uint8Array}
 
