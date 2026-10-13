@@ -1,4 +1,4 @@
-import { buildPracticum, checkpointReference } from '../../practicum/build'
+import { buildPracticum, checkpointOverview, checkpointRequirements } from '../../practicum/build'
 import { text, list, callout, table } from '../../practicum/blocks'
 import type { Block } from '../../practicum/types'
 import { oibCheckpoints } from './checkpoints'
@@ -7,7 +7,7 @@ import { oibExercises } from './exercises'
 const intro: Block[] = [
   text('h1', '0.1. Kako koristiti praktikum'),
   text('paragraph', 'Praktikum prati sadržaj vežbi iz informacione bezbednosti. Svaka tema obuhvata problem, primenjene kontrole, tipične greške i način provere donete odluke. Nakon vežbe student treba da ume da obrazloži obrađeni princip i primeni ga u okviru dodeljene projektne celine.'),
-  callout('info', 'Primena na projektu', 'Svaki tim dobija projektnu celinu, kao što su identitet, autorizacija, revizijski trag ili detekcija, i obrađene principe primenjuje na sopstveni domen. Donete odluke obrazlažu se na projektnoj kontrolnoj tački.'),
+  callout('info', 'Primena na projektu', 'Svaki tim radi na svim dodeljenim projektnim celinama iz SCUTUM specifikacije i obrađene principe primenjuje na sopstveni domen. Kontrolne tačke KT1–KT4 prate napredak celog dodeljenog obuhvata; dodatni zahtevi za timove sa tri celine navedeni su posebno.'),
   table(['Faza', 'Preporučeni način rada'], [
     ['Pre vežbe', 'Pročitati temu i izdvojiti pretpostavke koje bi u informacionom sistemu mogle biti pogrešne.'],
     ['Tokom vežbe', 'Povezati pojam sa posledicama u razvoju informacionog sistema, a ne samo sa nazivom klase ili krajnje tačke API-ja.'],
@@ -25,6 +25,8 @@ const intro: Block[] = [
     'Operativna bezbednost: sesije, MFA, tajne, detekcija i incident.',
     'Napredne odluke: kontekstualna pravila, rizik, korelacija i dokaz efektivnosti.',
   ]),
+  text('paragraph', 'Kontrolne tačke se održavaju na kraju 2, 4, 6. i 8. nedelje. Teme vežbi daju podršku radu, dok redosled implementacije svih dodeljenih celina tim određuje prema specifikaciji i njihovim preduslovima.'),
+  checkpointOverview(oibCheckpoints),
 ]
 
 const closing: Block[] = [
@@ -57,5 +59,5 @@ export const oibPracticum = buildPracticum({
   exercises: oibExercises,
   closing,
   checkpoints: oibCheckpoints,
-  checkpointSection: checkpointReference,
+  checkpointSection: checkpointRequirements,
 })

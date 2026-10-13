@@ -9,8 +9,14 @@ export type Checkpoint = {
   /** First and last exercise the checkpoint covers; the practicum places it after the last one. */
   exercises: [first: number, last: number]
   date: string
+  dateLabel?: string
   summary: string
   items: string[]
+  itemsHeading?: string
+  orderedItems?: boolean
+  additionalRequirements?: Array<{ title: string; items: string[] }>
+  presentation?: string
+  notRequired?: string[]
 }
 
 export type PresentationDownload = {

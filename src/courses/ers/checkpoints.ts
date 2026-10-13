@@ -11,7 +11,7 @@ export const ersCheckpoints: Checkpoint[] = [
       'U ovoj fazi ne zahteva se završena arhitektura niti veliki obim implementacije. Tim obrazlaže problem, razlaže rad na proverljive stavke i dokumentuje početni tok zajedničkog razvoja u repozitorijumu.',
     items: [
       'Zajednički repozitorijum sa README dokumentom i pristupom svih članova tima.',
-      'Tapiz Boards sadrži backlog sa prioritetima i proverljivim kriterijumima prihvatanja.',
+      'Tapiz Boards sadrži backlog sa prioritetima; opis svake priče je jedna rečenica po šablonu „Kao [uloga], želim/hoću/mogu [radnju], kako bih [postigao cilj]“, a koraci realizacije su u zasebnoj čeklisti.',
       'Najmanje jedan zahtev za spajanje (pull request) sadrži pregled izmena i obrazložene komentare učesnika.',
       'Tim koristi dogovoreni tok Backlog → Ready → In Progress → Code Review → QA/Verify → Done.',
     ],

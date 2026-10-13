@@ -68,7 +68,13 @@ export function practicumAssets(course: Course, exercise?: number): Array<{ path
 
 export function checkpointMarkdown(course: Course): string {
   return [`# ${course.name} — Kontrolne tačke`, '', ...course.checkpoints.flatMap(item => [
-    `## ${item.code} — ${item.title}`, '', `Datum: ${item.date}`, '', markdownInline(item.summary), '',
-    ...item.items.map(value => '- ' + markdownInline(value)), '',
+    `## ${item.code} — ${item.title}`, '', `${item.dateLabel ?? 'Datum'}: ${item.date}`, '', markdownInline(item.summary), '',
+    ...(item.itemsHeading ? [`### ${item.itemsHeading}`, ''] : []),
+    ...item.items.map((value, index) => (item.orderedItems ? `${index + 1}. ` : '- ') + markdownInline(value)), '',
+    ...(item.additionalRequirements ?? []).flatMap(group => [
+      `### ${group.title}`, '', ...group.items.map((value, index) => (item.orderedItems ? `${item.items.length + index + 1}. ` : '- ') + markdownInline(value)), '',
+    ]),
+    ...(item.presentation ? ['### Prikaz', '', markdownInline(item.presentation), ''] : []),
+    ...(item.notRequired?.length ? ['### Ne tražiti u ovoj fazi', '', ...item.notRequired.map(value => '- ' + markdownInline(value)), ''] : []),
   ])].join('\n')
 }
