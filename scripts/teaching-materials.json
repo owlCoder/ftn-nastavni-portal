@@ -17,6 +17,14 @@
         {
           "portal": "downloads/ers-projekat/ERS_Projektna_Specifikacija.pdf",
           "materials": "01 Projekat/ERS_Projektna_Specifikacija.pdf"
+        },
+        {
+          "portal": "downloads/ers-projekat/ERS_Pravila_Polaganja.pdf",
+          "materials": "00 Administracija/ERS_Pravila_Polaganja.pdf"
+        },
+        {
+          "portal": "downloads/ers-projekat/ERS_Pravila_Polaganja.md",
+          "materials": "00 Administracija/ERS_Pravila_Polaganja.md"
         }
       ]
     },

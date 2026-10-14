@@ -69,6 +69,7 @@ export function practicumAssets(course: Course, exercise?: number): Array<{ path
 export function checkpointMarkdown(course: Course): string {
   return [`# ${course.name} — Kontrolne tačke`, '', ...course.checkpoints.flatMap(item => [
     `## ${item.code} — ${item.title}`, '', `${item.dateLabel ?? 'Datum'}: ${item.date}`, '', markdownInline(item.summary), '',
+    ...(item.points !== undefined ? [`Poeni: ${item.points}`, ''] : []),
     ...(item.itemsHeading ? [`### ${item.itemsHeading}`, ''] : []),
     ...item.items.map((value, index) => (item.orderedItems ? `${index + 1}. ` : '- ') + markdownInline(value)), '',
     ...(item.additionalRequirements ?? []).flatMap(group => [

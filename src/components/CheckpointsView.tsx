@@ -40,7 +40,7 @@ export function CheckpointsView({checkpoints}:{checkpoints:Checkpoint[]}){
       <article className="checkpoint-timeline-detail" key={active.id}>
         <div className="checkpoint-detail-head">
           <span className="checkpoint-detail-index">{active.code}</span>
-          <span className="checkpoint-detail-date">{active.date}</span>
+          <span className="checkpoint-detail-date">{active.date}{active.points!==undefined&&` · ${active.points} poena`}</span>
         </div>
         <h2>{active.title}</h2>
         <p className="checkpoint-detail-scope">{exerciseRange(active)}</p>

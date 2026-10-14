@@ -1,6 +1,6 @@
 import type { Course } from '../types'
 import { ersCheckpoints } from './checkpoints'
-import { ersPresentations, ersProject } from './downloads'
+import { ersPresentations, ersProject, ersExamRules } from './downloads'
 import { ersPracticum } from './practicum'
 
 export const ersCourse: Course = {
@@ -18,4 +18,5 @@ export const ersCourse: Course = {
   presentations: ersPresentations,
   checkpoints: ersCheckpoints,
   project: ersProject,
+  projectGuides: [ersExamRules],
 }

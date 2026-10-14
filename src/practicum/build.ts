@@ -48,7 +48,7 @@ export const checkpointRequirements = (checkpoint: Checkpoint): Block[] => [
   ...(checkpoint.additionalRequirements ?? []).flatMap(group => [text('h3', group.title), list(group.items)]),
   ...(checkpoint.presentation ? [callout('task', 'Prikaz', checkpoint.presentation)] : []),
   ...(checkpoint.notRequired?.length ? [callout('note', 'Ne tražiti u ovoj fazi', checkpoint.notRequired.join(' '))] : []),
-  callout('note', 'Termin i obuhvat', `${exerciseRange(checkpoint)} · ${checkpoint.dateLabel === 'Termin' ? checkpoint.date : `nedelja od ${checkpoint.date}`} Isti zahtevi prikazani su na kartici „Kontrolne tačke“.`),
+  callout('note', 'Termin i obuhvat', `${exerciseRange(checkpoint)} · ${checkpoint.dateLabel === 'Termin' ? checkpoint.date : `nedelja od ${checkpoint.date}`}${checkpoint.points !== undefined ? ` · ${checkpoint.points} poena.` : ''} Isti zahtevi prikazani su na kartici „Kontrolne tačke“.`),
 ]
 
 /** Short checkpoint marker for practicums that leave the requirements to the "Kontrolne tačke" tab. */

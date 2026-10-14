@@ -25,7 +25,7 @@ const intro: Block[] = [
   text('h1', '0.2. Tok semestra i projekta'),
   text('paragraph', 'Praktikum je organizovan u osam povezanih vežbi. Prva obrađuje zahteve, backlog, Git i timski razvojni tok. Druga povezuje objektno orijentisano programiranje i principe čistog koda sa SOLID principima i Clean Architecture. Slede poslovna logika, testiranje i integracija modula i podataka. Završne vežbe obrađuju razvoj uz podršku AI alata, Model Context Protocol (MCP) i izvršive mehanizme provere.'),
   image('/course-assets/semester-map.svg', 'Tok praktikuma: zahtevi i razvojni proces → arhitektura → poslovna logika → testiranje → integracija modula → razvoj uz AI podršku → MCP → završna provera kvaliteta.', 'Mapa semestra'),
-  text('paragraph', 'Napredak projekta proverava se na kontrolnim tačkama. Svaka je u praktikumu navedena jednom, posle poslednje vežbe na koju se oslanja, sa istim zahtevima koje prikazuje kartica „Kontrolne tačke“.'),
+  text('paragraph', 'Napredak projekta proverava se na dve kontrolne tačke: KT1 — Osnovna implementacija u terminu Vežbe 4 i KT2 — Završna demonstracija u terminu Vežbe 8. Svaka donosi najviše 10 poena, ukupno 20 poena u okviru maksimalnih 71 poena za projektni deo. Detaljni zahtevi navedeni su posle Vežbe 4 i Vežbe 8 i na kartici „Kontrolne tačke“.'),
   checkpointOverview(ersCheckpoints),
 ]
 

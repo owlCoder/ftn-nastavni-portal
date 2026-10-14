@@ -10,6 +10,7 @@ export type Checkpoint = {
   exercises: [first: number, last: number]
   date: string
   dateLabel?: string
+  points?: number
   summary: string
   items: string[]
   itemsHeading?: string

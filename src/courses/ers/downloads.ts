@@ -1,4 +1,4 @@
-import type { CoursePresentations, ProjectDocument } from '../types'
+import type { CourseGuide, CoursePresentations, ProjectDocument } from '../types'
 
 export const ersPresentations: CoursePresentations = {
   kind: 'downloads',
@@ -24,4 +24,13 @@ export const ersProject: ProjectDocument = {
   pages: 92,
   size: '2,7 MB',
   highlights: ['90 projektnih celina', 'R1, R2 i R3 razvojni nivoi', 'Timovi od 6 do 10 studenata'],
+}
+
+export const ersExamRules: CourseGuide = {
+  id: 'ers-pravila-polaganja',
+  name: 'Pravila polaganja ERS.pdf',
+  description: 'Način polaganja i bodovanje; KT1 u terminu Vežbe 4 i KT2 u terminu Vežbe 8, po 10 poena.',
+  file: '/downloads/ers-projekat/ERS_Pravila_Polaganja.pdf',
+  pages: 6,
+  size: '119 KB',
 }
