@@ -2,9 +2,9 @@ import type { CourseGuide, CoursePresentations, ProjectDocument } from '../types
 
 export const ersPresentations: CoursePresentations = {
   kind: 'downloads',
-  bundle: { file: '/downloads/ERS_sve_prezentacije.zip', size: '47,9 MB' },
+  bundle: { file: '/downloads/ERS_sve_prezentacije.zip', size: '45,4 MB' },
   downloads: [
-    { number: '00', label: 'Uvodna prezentacija', title: 'Osnovne informacije', pages: 13, size: '2,8 MB', file: '/downloads/ers-prezentacije/00_Osnovne_informacije.pdf' },
+    { number: '00', label: 'Uvodna prezentacija', title: 'Osnovne informacije', pages: 13, size: '339 KB', file: '/downloads/ers-prezentacije/00_Osnovne_informacije.pdf' },
     { number: '01', label: 'Vežba 1', title: 'Zahtevi, backlog i Git', pages: 37, size: '7,2 MB', file: '/downloads/ers-prezentacije/01_Zahtevi_backlog_i_Git.pdf' },
     { number: '02', label: 'Vežba 2', title: 'SOLID i Clean Architecture', pages: 32, size: '6,5 MB', file: '/downloads/ers-prezentacije/02_SOLID_i_Clean_Architecture.pdf' },
     { number: '03', label: 'Vežba 3', title: 'Poslovna logika i slučajevi upotrebe', pages: 27, size: '5,3 MB', file: '/downloads/ers-prezentacije/03_Poslovna_logika_i_use_case.pdf' },
