@@ -8,7 +8,7 @@ export const ibisCourse: Course = {
   academicYear: '2026/2027',
   studyLevel: 'master',
   available: true,
-  blurb: 'SCADA sistemi, javno dostupni podaci i tehničke specifikacije projekata.',
+  blurb: 'Prezentacije o SCADA sistemima, javno dostupnim podacima i tehničke specifikacije projektnih zadataka.',
   accent: 'linear-gradient(145deg, #d97706 0%, #b45309 48%, #92400e 100%)',
   accentSoft: 'rgba(217,119,6,.14)',
   accentShadow: 'rgba(217,119,6,.20)',
