@@ -13,5 +13,7 @@ const publicBasePath = environment.VERCEL ? '/' : (environment.VITE_BASE_PATH?.t
 export default defineConfig({
   base: publicBasePath,
   plugins: [react()],
+  // A single stylesheet can be embedded into the production HTML reliably.
+  build: { cssCodeSplit: false },
   server: { port: 5600 },
 })
