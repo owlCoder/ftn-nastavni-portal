@@ -46,6 +46,22 @@ function getSections(catalog: Catalog): Section[] {
   })
 }
 
+const sectionIcons: Record<Section, 'layers' | 'file' | 'code' | 'folder' | 'book'> = {
+  vezbe: 'layers',
+  prezentacije: 'file',
+  primeri: 'code',
+  projekat: 'folder',
+  uputstva: 'book',
+}
+
+function sectionCount({ course, files }: Catalog, section: Section): number {
+  if (section === 'vezbe') return files.filter(file => file.kind === 'folder' && file.parent === 'vezbe').length
+  if (section === 'prezentacije') return files.filter(file => file.presentationNumber !== undefined).length
+  if (section === 'primeri') return files.filter(file => file.kind === 'zip' && file.id.endsWith('/primer')).length
+  if (section === 'projekat') return files.filter(file => file.parent === 'projekat' && file.kind === 'pdf').length + Number(course.checkpoints.length > 0)
+  return files.filter(file => file.parent === 'uputstva' && file.kind === 'pdf').length
+}
+
 function readRoute(): Route {
   const match = window.location.hash.match(/^#(ers|oib|odp|ibis)(?:\/(vezbe|prezentacije|primeri|projekat|uputstva|praktikum|kontrolne)(?:\/(\d{1,2}))?)?$/)
   if (!match) return { courseId: null, section: 'vezbe' }
@@ -291,15 +307,31 @@ function FileCollection({ catalog, section }: { catalog: Catalog; section: Exclu
 function CoursePage({ catalog, section }: { catalog: Catalog; section: Section }) {
   const available = getSections(catalog)
   const active = available.includes(section) ? section : available[0] ?? 'uputstva'
+  const tabsRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const tabs = tabsRef.current
+    const current = tabs?.querySelector<HTMLElement>('[aria-current="page"]')
+    if (!tabs || !current || tabs.scrollWidth <= tabs.clientWidth) return
+    tabs.scrollTo({ left: current.offsetLeft - (tabs.clientWidth - current.offsetWidth) / 2, behavior: 'auto' })
+  }, [active, catalog.course.id])
+
   return <div className="course-layout">
     <CourseSidebar catalog={catalog} active={active}/>
     <div className="course-content">
       <div className="mobile-breadcrumb"><a href="#">← Svi predmeti</a><span>/ {catalog.course.code}</span></div>
       <CourseHero catalog={catalog}/>
-      <nav className="course-tabs" aria-label="Vrsta materijala">{sections.filter(item => available.includes(item.id)).map(item =>
-        <a key={item.id} href={path(catalog.course.id, item.id)} className={active === item.id ? 'is-active' : ''}
-          aria-current={active === item.id ? 'page' : undefined}>{item.label}</a>
-      )}</nav>
+      <div className="course-tabs-shell">
+        <nav ref={tabsRef} className="course-tabs" aria-label="Vrsta materijala">{sections.filter(item => available.includes(item.id)).map(item =>
+          <a key={item.id} href={path(catalog.course.id, item.id)}
+            className={'course-tab' + (active === item.id ? ' is-active' : '')}
+            aria-current={active === item.id ? 'page' : undefined}>
+            <Icon name={sectionIcons[item.id]} size={16}/>
+            <span className="course-tab-label">{item.label}</span>
+            <span className="course-tab-count" aria-hidden="true">{sectionCount(catalog, item.id)}</span>
+          </a>
+        )}</nav>
+      </div>
       <div className="course-panel">{active === 'vezbe' ? <ExerciseList catalog={catalog}/> : <FileCollection catalog={catalog} section={active}/>}</div>
     </div>
   </div>
@@ -362,7 +394,7 @@ function SearchPage({ catalogs, query, filter, setFilter, selectedCourse, setSel
     <a href="#" className="back-link" onClick={onNavigate}>← Nazad na predmete</a>
     <div className="search-heading"><span className="eyebrow">PRETRAGA KATALOGA</span><h1>Rezultati pretrage</h1><p>Za upit „{query.trim()}” pronađeno je {filtered.length} {filtered.length === 1 ? 'stavka' : 'stavki'}.</p></div>
     <div className="search-filters">
-      <div className="filter-tabs" aria-label="Tip materijala">{(['Sve', 'PDF', 'ZIP', 'Tekst'] as SearchFilter[]).map(item =>
+      <div className="filter-tabs" role="group" aria-label="Tip materijala">{(['Sve', 'PDF', 'ZIP', 'Tekst'] as SearchFilter[]).map(item =>
         <button type="button" key={item} className={filter === item ? 'is-active' : ''} aria-pressed={filter === item} onClick={() => setFilter(item)}>{item}</button>
       )}</div>
       <label className="filter-course-label">Predmet <select value={selectedCourse} onChange={event => setSelectedCourse(event.target.value as CourseId | 'all')}>
