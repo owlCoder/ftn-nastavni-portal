@@ -46,6 +46,8 @@ npm run preview
 
 Razvojni server koristi `http://localhost:5600`, a produkcioni izlaz je u `dist/`. `predev` i `prebuild` generišu Markdown dokumente i ZIP arhive iz izvora. Build proverava strukturu predmeta i sadržaj izvezenih vežbi. Novi interfejs koristi postojeće podatke iz `src/courses` i `src/components/courseFileTree.ts`; izvorni materijali nisu menjani.
 
+Produkciona izgradnja uključuje `postbuild` korak (`scripts/inline-production-css.mjs`) koji ugrađuje generisani CSS u `dist/index.html`. Time se izbegava prikaz neformatiranog interfejsa ako host ne uspe da učita zaseban CSS fajl. Vercel koristi osnovnu putanju `/`, a GitHub Pages `/ftn-nastavni-portal/`; konfiguracija je u `vite.config.ts`.
+
 ## Organizacija repozitorijuma
 
 | Putanja | Namena |
