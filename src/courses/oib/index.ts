@@ -10,7 +10,7 @@ export const oibCourse: Course = {
   academicYear: '2026/2027',
   semester: 'zimski',
   available: true,
-  blurb: 'Praktikum, prezentacije, nastavni primeri, projektna specifikacija, bodovanje i kontrolne tačke.',
+  blurb: 'Praktikum, prezentacije, programski primeri, projektna specifikacija i kriterijumi za ocenjivanje.',
   accent: 'linear-gradient(145deg, #dc2626 0%, #b91c1c 48%, #7f1d1d 100%)',
   accentSoft: 'rgba(220,38,38,.14)',
   accentShadow: 'rgba(220,38,38,.20)',
