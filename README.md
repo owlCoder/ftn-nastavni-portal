@@ -16,7 +16,7 @@ React i TypeScript aplikacija za brz pristup nastavnim materijalima. Bez prijave
 | ODP — Osnove distribuiranog programiranja | Osam vežbi, prezentacije, osam .NET primera i projektna specifikacija |
 | IBIS — Informaciona bezbednost infrastrukturnih sistema | SCADA prezentacije i specifikacije SCADALattice, RackMetria i RouteMetria |
 
-Za svaki predmet odmah su prikazane **Računarske vežbe**, sa direktnim linkovima za PDF prezentaciju, tekst vežbe u praktikumu i ZIP primer koda. Na stranici predmeta dostupne su i sve prezentacije, programski primeri, projektna dokumentacija, kontrolne tačke i uputstva. Pretraga u zaglavlju pretražuje materijale sva četiri predmeta.
+Materijali su organizovani kroz kartice predmeta i pregledne sekcije **Vežbe**, **Prezentacije**, **Primeri koda**, **Projekat** i **Uputstva**. Za svaku vežbu direktno su dostupni prezentacija (PDF), tekst zadatka i primer koda (ZIP). Bočna navigacija omogućava brz prelazak između predmeta. Globalna pretraga ima filtere po tipu fajla i predmetu; fokusira se prečicom **/** ili **Ctrl/Cmd + K**, a **Esc** briše upit.
 
 Portal objavljuje PDF prezentacije; PPTX izvori ostaju u repozitorijumu nastavnih materijala. Primeri i tekstovi zadataka usklađeni su između oba repozitorijuma.
 
@@ -29,7 +29,7 @@ Svaki predmet u folderu **Uputstva** sadrži PDF uputstva za Tapiz LMS i Tapiz B
 1. Otvori [nastavni portal](https://owlcoder.github.io/ftn-nastavni-portal/).
 2. Izaberi predmet (ERS, OIB, ODP ili IBIS), bez prijave.
 3. Kod željene vežbe klikni **Otvori PDF**, **Pročitaj** za praktikum ili **Preuzmi ZIP** za primer koda.
-4. U nastavku stranice pronađi sve prezentacije, programske primere, projekat i uputstva. Pretraga u zaglavlju pretražuje sav objavljeni sadržaj.
+4. Pređi na karticu **Prezentacije**, **Primeri koda**, **Projekat** ili **Uputstva** bez dugog skrolovanja. Pretraga u zaglavlju traži po sva četiri predmeta, uz filtere **PDF**, **ZIP** i **Tekst**.
 
 PDF-ovi se otvaraju u novoj kartici preglednika, a ZIP arhive preuzimaju direktno. Postojeće veze do poglavlja praktikuma, kao što je `#ers/praktikum/02`, i dalje su podržane.
 
