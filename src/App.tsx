@@ -316,7 +316,7 @@ function CoursePage({ catalog, section }: { catalog: Catalog; section: Section }
     tabs.scrollTo({ left: current.offsetLeft - (tabs.clientWidth - current.offsetWidth) / 2, behavior: 'auto' })
   }, [active, catalog.course.id])
 
-  return <div className="course-layout">
+  return <div className="course-layout" style={courseStyle(catalog.course.id)}>
     <CourseSidebar catalog={catalog} active={active}/>
     <div className="course-content">
       <div className="mobile-breadcrumb"><a href="#">← Svi predmeti</a><span>/ {catalog.course.code}</span></div>
