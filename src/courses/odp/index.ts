@@ -10,7 +10,7 @@ export const odpCourse: Course = {
   academicYear: '2026/2027',
   semester: 'letnji',
   available: true,
-  blurb: 'Praktikum, prezentacije, nastavni primeri, projektna specifikacija i kontrolne tačke.',
+  blurb: 'Praktikum, prezentacije, programski primeri, projektna specifikacija i kontrolne tačke iz distribuiranog programiranja.',
   accent: 'linear-gradient(145deg, #059669 0%, #047857 48%, #065f46 100%)',
   accentSoft: 'rgba(5,150,105,.14)',
   accentShadow: 'rgba(5,150,105,.20)',
