@@ -13,6 +13,7 @@
     "generate:practicum": "node scripts/generate-practicum-markdown.mjs",
     "check:materials-sync": "node scripts/check-materials-sync.mjs",
     "build": "tsc -b && vite build",
+    "postbuild": "node scripts/inline-production-css.mjs",
     "check:course-files": "node scripts/check-course-files.mjs",
     "preview": "vite preview"
   },
