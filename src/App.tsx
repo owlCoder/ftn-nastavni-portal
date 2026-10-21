@@ -120,6 +120,14 @@ function CourseMaterials({ catalog }: { catalog: Catalog }) {
       <button className="portal-quick-link" type="button" onClick={() => scrollTo(slides.length ? 'prezentacije' : 'projekat')}>Pregled svih materijala ↓</button>
     </div>
 
+    <nav className="portal-section-nav" aria-label="Odeljci predmeta">
+      {lessons.length > 0 && <button onClick={() => scrollTo('vezbe')}>Vežbe</button>}
+      {slides.length > 0 && <button onClick={() => scrollTo('prezentacije')}>Prezentacije</button>}
+      {examples.length > 0 && <button onClick={() => scrollTo('primeri')}>Primeri koda</button>}
+      {hasProject && <button onClick={() => scrollTo('projekat')}>Projekat</button>}
+      <button onClick={() => scrollTo('uputstva')}>Uputstva</button>
+    </nav>
+
     {lessons.length > 0 && <section className="portal-section" id={course.id + '-vezbe'}>
       <SectionTitle title="Računarske vežbe" subtitle="Za svaku vežbu: prezentacija, primer koda i zadatak." count={lessons.length}/>
       <div className="portal-lessons">{lessons.map((lesson, index) => {
@@ -208,7 +216,15 @@ function SearchResults({ catalogs, query, onNavigate }: { catalogs: Catalog[]; q
   const needle = normalize(query.trim())
   const all = catalogs.flatMap(({ course, files }) => files
     .filter(file => file.kind !== 'folder')
-    .filter(file => normalize([course.code, course.name, file.name, file.description || '', file.exercise ? 'vežba ' + file.exercise : ''].join(' ')).includes(needle))
+    .filter(file => {
+      const number = file.exercise ?? Number(file.id.match(/^vezbe\/(\d+)/)?.[1] ?? file.presentationNumber ?? 0)
+      const searchable = [
+        course.code, course.name, file.name, file.description || '', file.parent,
+        number ? 'vežba ' + number + ' vežba ' + String(number).padStart(2, '0') : '',
+        file.kind === 'zip' ? 'primer izvorni kod' : '',
+      ].join(' ')
+      return normalize(searchable).includes(needle)
+    })
     .map(file => ({ course, file })))
   const results = all.slice(0, 60)
   return <>
