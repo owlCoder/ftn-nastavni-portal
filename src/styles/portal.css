@@ -144,6 +144,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   -webkit-backdrop-filter: blur(14px);
 }
 .course-tabs {
+  position: relative;
   display: flex;
   gap: 5px;
   align-items: stretch;
