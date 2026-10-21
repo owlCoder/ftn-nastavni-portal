@@ -1,6 +1,6 @@
 # FTN nastavni portal
 
-React i TypeScript aplikacija za pregled nastavnih materijala, praktikuma i programskih primera. Interfejs obuhvata radnu površinu, preglednik datoteka i PDF čitač.
+React i TypeScript aplikacija za brz pristup nastavnim materijalima. Bez prijave i imitacije operativnog sistema: izbor predmeta, pregled vežbi, pretraga i direktno otvaranje PDF dokumenata i preuzimanje ZIP primera.
 
 [Nastavni portal](https://owlcoder.github.io/ftn-nastavni-portal/) · [Nastavni materijali](https://github.com/owlCoder/ftn-nastavni-materijali)
 
@@ -16,7 +16,7 @@ React i TypeScript aplikacija za pregled nastavnih materijala, praktikuma i prog
 | ODP — Osnove distribuiranog programiranja | Osam vežbi, prezentacije, osam .NET primera i projektna specifikacija |
 | IBIS — Informaciona bezbednost infrastrukturnih sistema | SCADA prezentacije i specifikacije SCADALattice, RackMetria i RouteMetria |
 
-Materijali su raspoređeni u **Računarske vežbe → Vežba 01–08**. Svaka vežba povezuje prezentaciju, primer i poglavlje praktikuma. Izvoz foldera uključuje tekst zadatka u Markdown formatu. Uvodne prezentacije i ceo praktikum dostupni su na nivou predmeta; specifikacija i kontrolne tačke u folderu **Projekat**. IBIS ima zasebne foldere za prezentacije i projekte.
+Za svaki predmet odmah su prikazane **Računarske vežbe**, sa direktnim linkovima za PDF prezentaciju, tekst vežbe u praktikumu i ZIP primer koda. Na stranici predmeta dostupne su i sve prezentacije, programski primeri, projektna dokumentacija, kontrolne tačke i uputstva. Pretraga u zaglavlju pretražuje materijale sva četiri predmeta.
 
 Portal objavljuje PDF prezentacije; PPTX izvori ostaju u repozitorijumu nastavnih materijala. Primeri i tekstovi zadataka usklađeni su između oba repozitorijuma.
 
@@ -24,7 +24,16 @@ U folderu **OIB → Projekat** nalazi se i [Bodovanje projekta](public/downloads
 
 Svaki predmet u folderu **Uputstva** sadrži PDF uputstva za Tapiz LMS i Tapiz Boards, dostupna za čitanje i preuzimanje.
 
-## Pokretanje
+## Korišćenje
+
+1. Otvori [nastavni portal](https://owlcoder.github.io/ftn-nastavni-portal/).
+2. Izaberi predmet (ERS, OIB, ODP ili IBIS), bez prijave.
+3. Kod željene vežbe klikni **Otvori PDF**, **Pročitaj** za praktikum ili **Preuzmi ZIP** za primer koda.
+4. U nastavku stranice pronađi sve prezentacije, programske primere, projekat i uputstva. Pretraga u zaglavlju pretražuje sav objavljeni sadržaj.
+
+PDF-ovi se otvaraju u novoj kartici preglednika, a ZIP arhive preuzimaju direktno. Postojeće veze do poglavlja praktikuma, kao što je `#ers/praktikum/02`, i dalje su podržane.
+
+## Lokalni razvoj
 
 Potreban je Node.js 22 i npm.
 
@@ -35,17 +44,7 @@ npm run build
 npm run preview
 ```
 
-Razvojni server koristi `http://localhost:5600`, a produkcioni izlaz je u `dist/`. `predev` i `prebuild` generišu Markdown dokumente i ZIP arhive iz izvora. Build proverava strukturu predmeta i sadržaj izvezenih vežbi.
-
-Pregled materijala podržava listu i mrežu; izabrani prikaz ostaje sačuvan u pregledaču. Numeracija prezentacija prikazana je odvojeno od naziva, uz oznaku „Uvod” za početnu prezentaciju. Preglednik ZIP arhiva i praktikum boje sintaksu za C#, JSON, XML, JavaScript, TypeScript, CSS, YAML, Markdown i shell komande. Kretanje prozora, menija i kontrola koristi zajedničke postavke iz `src/styles/motion.css` i poštuje `prefers-reduced-motion`.
-
-Demo prijava je `student` / `ftn`. Ona služi prikazu interfejsa i ne obezbeđuje autentikaciju. Beleške, događaji i podešavanja čuvaju se lokalno u pregledaču. PDF čitač podržava zoom, fullscreen i promenu stranice točkićem miša, tasterom Space ili strelicama levo/desno; Shift+Space vraća prethodnu stranicu.
-
-## Code editor
-
-Programske primere otvoriti u predmetu, pa u pregledu ZIP-a izabrati **Otvori u editoru**. Editor je dostupan i sa radne površine. Podržava stablo projekta, kartice fajlova, C# i druge jezike, pretragu, undo/redo, uvećanje teksta i **Word wrap**. Izbor jezika prati ekstenziju fajla. Editor odmah prati svetlu ili tamnu temu iz postavki portala, uz očuvane izmene i undo istoriju.
-
-Izmene se automatski čuvaju u lokalnoj bazi tog pregledača. **Sačuvaj ZIP** izvozi ceo projekat sa izmenjenim fajlovima i zadržava ostale fajlove, putanje, UTF-8 BOM i završetke redova. **Vrati original** vraća aktivni fajl i može se poništiti kroz undo. Editor služi uređivanju i pregledu; .NET SDK nije uključen.
+Razvojni server koristi `http://localhost:5600`, a produkcioni izlaz je u `dist/`. `predev` i `prebuild` generišu Markdown dokumente i ZIP arhive iz izvora. Build proverava strukturu predmeta i sadržaj izvezenih vežbi. Novi interfejs koristi postojeće podatke iz `src/courses` i `src/components/courseFileTree.ts`; izvorni materijali nisu menjani.
 
 ## Organizacija repozitorijuma
 
