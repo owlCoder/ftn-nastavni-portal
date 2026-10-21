@@ -28,6 +28,9 @@ const css = (await Promise.all(cssFiles.map(file => readFile(join(assetsDirector
   .join('\n')
   .replaceAll('</style', '<\\/style')
 const inlineStyle = '<style data-portal-critical-css>\n' + css + '\n</style>'
-const result = html.replace('</head>', '  ' + inlineStyle + '\n</head>')
+// Vite normally adds a hashed stylesheet link. The inline style replaces it,
+// so the page remains styled even if a hosting cache serves stale asset paths.
+const htmlWithoutCssLinks = html.replace(/<link\b[^>]*\brel=["']stylesheet["'][^>]*>/gi, '')
+const result = htmlWithoutCssLinks.replace('</head>', '  ' + inlineStyle + '\n</head>')
 await writeFile(indexPath, result, 'utf8')
 console.log('Embedded ' + cssFiles.length + ' generated stylesheet(s) in dist/index.html.')
