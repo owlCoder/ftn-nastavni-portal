@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { courses } from './courses'
 import type { Course, CourseId } from './courses/types'
 import { buildCourseFiles, type CourseFile } from './components/courseFileTree'
@@ -96,7 +96,7 @@ function Icon({ name, size = 20 }: { name: 'search' | 'arrow' | 'external' | 'do
 }
 
 function LinkAction({ course, file, primary = false, children, onNavigate }: {
-  course: Course; file: CourseFile; primary?: boolean; children?: React.ReactNode; onNavigate?: () => void
+  course: Course; file: CourseFile; primary?: boolean; children?: ReactNode; onNavigate?: () => void
 }) {
   const category = materialType(file)
   const isDownload = category === 'ZIP'
