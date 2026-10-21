@@ -6,9 +6,9 @@ const environment = (globalThis as typeof globalThis & {
   process?: { env?: ProcessEnv }
 }).process?.env ?? {}
 
-// Most hosts (including local development and Vercel) serve from /.
-// The GitHub Pages workflow explicitly sets VITE_BASE_PATH to /<repository>/.
-const publicBasePath = environment.VITE_BASE_PATH?.trim() || '/'
+// Vercel always serves this application from the domain root.
+// GitHub Pages explicitly supplies VITE_BASE_PATH=/<repository>/ during its build.
+const publicBasePath = environment.VERCEL ? '/' : (environment.VITE_BASE_PATH?.trim() || '/')
 
 export default defineConfig({
   base: publicBasePath,
