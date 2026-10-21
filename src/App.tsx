@@ -146,24 +146,24 @@ function Home({ catalogs, onSelect }: { catalogs: Catalog[]; onSelect: () => voi
     <section className="home-hero">
       <div className="home-hero-copy">
         <span className="eyebrow"><span className="live-dot"/> NASTAVNI PORTAL · FTN</span>
-        <h1>Sve za vežbe.<br/><span>Na jednom mestu.</span></h1>
-        <p>Prezentacije, praktikumi, programski primeri i projekti — organizovani po predmetima, bez prijave i nepotrebnih koraka.</p>
+        <h1>Nastavni materijali<br/><span>po predmetima.</span></h1>
+        <p>Prezentacije, praktikumi, primeri programskog koda i projektna dokumentacija za predmete obuhvaćene portalom.</p>
         <a href="#predmeti" className="hero-button" onClick={event => {
           event.preventDefault()
           document.getElementById('predmeti')?.scrollIntoView({ behavior: 'smooth' })
-        }}>Izaberi predmet <Icon name="arrow" size={19}/></a>
+        }}>Pregled predmeta <Icon name="arrow" size={19}/></a>
       </div>
       <div className="home-hero-panel" aria-label="Pregled kataloga">
-        <div className="hero-panel-top"><span>KATALOG MATERIJALA</span><Icon name="layers" size={19}/></div>
-        <div className="hero-stat"><strong>{catalogs.length.toString().padStart(2, '0')}</strong><span>nastavna predmeta</span></div>
+        <div className="hero-panel-top"><span>PREGLED SADRŽAJA</span><Icon name="layers" size={19}/></div>
+        <div className="hero-stat"><strong>{catalogs.length.toString().padStart(2, '0')}</strong><span>predmeta</span></div>
         <div className="hero-panel-line"/>
         <div className="hero-stat small"><strong>{totalSlides}</strong><span>PDF prezentacija</span></div>
-        <div className="hero-panel-note"><span className="live-dot"/> Materijali dostupni bez prijave</div>
+        <div className="hero-panel-note"><span className="live-dot"/> Pristup materijalima bez prijave</div>
       </div>
     </section>
 
     <section className="home-courses" id="predmeti">
-      <div className="home-heading"><div><span className="eyebrow">IZABERI PREDMET</span><h2>Šta danas učiš?</h2></div><p>Otvori predmet i odmah pristupi njegovim vežbama i dokumentima.</p></div>
+      <div className="home-heading"><div><span className="eyebrow">PREDMETI</span><h2>Nastavni predmeti</h2></div><p>Izaberite predmet za pregled vežbi, prezentacija i projektne dokumentacije.</p></div>
       <div className="course-grid">{catalogs.map(({ course, files }, index) => {
         const exercises = files.filter(file => file.kind === 'folder' && file.parent === 'vezbe').length
         const presentations = files.filter(file => file.presentationNumber !== undefined).length
@@ -175,7 +175,7 @@ function Home({ catalogs, onSelect }: { catalogs: Catalog[]; onSelect: () => voi
         </a>
       })}</div>
     </section>
-    <div className="home-help"><Icon name="search" size={19}/><span>Znaš šta tražiš? Koristi pretragu na vrhu stranice za materijale iz svih predmeta.</span></div>
+    <div className="home-help"><Icon name="search" size={19}/><span>Pretraga u zaglavlju omogućava pronalaženje materijala iz svih predmeta.</span></div>
   </div>
 }
 
@@ -184,7 +184,7 @@ function CourseSidebar({ catalog, active }: { catalog: Catalog; active: Section 
   const available = getSections(catalog)
   return <aside className="course-sidebar">
     <a className="back-link" href="#"><span>←</span> Svi predmeti</a>
-    <div className="sidebar-label">TVOJI PREDMETI</div>
+    <div className="sidebar-label">PREDMETI</div>
     <nav className="sidebar-courses" aria-label="Promeni predmet">{courses.map(item =>
       <a key={item.id} href={path(item.id)} className={'sidebar-course' + (item.id === course.id ? ' is-active' : '')} style={courseStyle(item.id)}
         aria-current={item.id === course.id ? 'page' : undefined}>
@@ -199,7 +199,7 @@ function CourseSidebar({ catalog, active }: { catalog: Catalog; active: Section 
         {section.label}<Icon name="chevron" size={15}/>
       </a>
     )}</nav>
-    <div className="sidebar-note"><Icon name="book" size={20}/><span>Materijali su javni i dostupni bez prijavljivanja.</span></div>
+    <div className="sidebar-note"><Icon name="book" size={20}/><span>Pristup i preuzimanje nastavnih materijala ne zahtevaju prijavljivanje.</span></div>
   </aside>
 }
 
@@ -221,7 +221,7 @@ function CourseHero({ catalog }: { catalog: Catalog }) {
       </div>
       <div className="subject-shortcuts">
         {practicum && <a href={path(course.id, 'praktikum')}><Icon name="book" size={17}/> Praktikum <Icon name="arrow" size={14}/></a>}
-        {bundle?.source && <a href={assetUrl(bundle.source)} download><Icon name="download" size={17}/> Sve prezentacije</a>}
+        {bundle?.source && <a href={assetUrl(bundle.source)} download><Icon name="download" size={17}/> Preuzmi prezentacije</a>}
         {!practicum && project && <a href={routeForFile(course, project)} target="_blank" rel="noopener noreferrer"><Icon name="file" size={17}/> Specifikacija <Icon name="external" size={14}/></a>}
       </div>
     </div>
@@ -232,7 +232,7 @@ function ExerciseList({ catalog }: { catalog: Catalog }) {
   const { course, files } = catalog
   const lessons = files.filter(file => file.kind === 'folder' && file.parent === 'vezbe')
   return <>
-    <PageHeading eyebrow="MATERIJALI / VEŽBE" title="Računarske vežbe" description="Izaberi vežbu. Prezentacija, zadatak i izvorni kod su odmah tu." count={lessons.length}/>
+    <PageHeading eyebrow="MATERIJALI / VEŽBE" title="Računarske vežbe" description="Prezentacije, tekstovi zadataka i programski primeri raspoređeni po vežbama." count={lessons.length}/>
     <div className="exercise-list">{lessons.map(lesson => {
       const number = Number(lesson.id.split('/').at(-1))
       const children = files.filter(file => file.parent === lesson.id)
@@ -252,7 +252,7 @@ function ExerciseList({ catalog }: { catalog: Catalog }) {
         </div>
       </article>
     })}</div>
-    <div className="tip"><Icon name="book" size={18}/><span>Želiš sve vežbe u jednom dokumentu? <a href={path(course.id, 'praktikum')}>Otvori ceo praktikum →</a></span></div>
+    <div className="tip"><Icon name="book" size={18}/><span>Tekstovi svih vežbi dostupni su u okviru praktikuma. <a href={path(course.id, 'praktikum')}>Pregledaj praktikum →</a></span></div>
   </>
 }
 
@@ -265,10 +265,10 @@ function FileCollection({ catalog, section }: { catalog: Catalog; section: Exclu
   const guides = files.filter(file => file.parent === 'uputstva' && file.kind === 'pdf')
   const collection = section === 'prezentacije' ? slides : section === 'primeri' ? examples : section === 'projekat' ? project : guides
   const config = {
-    prezentacije: { title: 'Prezentacije', description: 'PDF materijali, uredno poređani po redosledu predavanja i vežbi.' },
-    primeri: { title: 'Programski primeri', description: 'Izvorni kod i gotovi primeri za samostalno pokretanje i vežbanje.' },
-    projekat: { title: course.projects?.length ? 'Projektna dokumentacija' : 'Projekat', description: 'Specifikacije, pravila bodovanja i kontrolne tačke.' },
-    uputstva: { title: 'Uputstva', description: 'Kratka uputstva za servise koji se koriste na nastavi.' },
+    prezentacije: { title: 'Prezentacije', description: 'Prezentacije u PDF formatu, raspoređene prema redosledu predavanja i vežbi.' },
+    primeri: { title: 'Programski primeri', description: 'ZIP arhive sa izvornim kodom i primerima za vežbe.' },
+    projekat: { title: course.projects?.length ? 'Projektna dokumentacija' : 'Projekat', description: 'Projektne specifikacije, pravila ocenjivanja i kontrolne tačke.' },
+    uputstva: { title: 'Uputstva', description: 'Uputstva za korišćenje platformi koje se koriste u nastavi.' },
   }[section]
   const extras = section === 'projekat' && course.checkpoints.length > 0 ? 1 : 0
   const bundle = section === 'prezentacije' ? files.find(file => file.id === 'paketi/prezentacije') :
@@ -284,7 +284,7 @@ function FileCollection({ catalog, section }: { catalog: Catalog; section: Exclu
         description: 'Etape, datumi i obaveze za projektni rad.',
       }}/>}
     </div>
-    {collection.length === 0 && extras === 0 && <div className="empty-state">Nema objavljenih materijala u ovoj kategoriji.</div>}
+    {collection.length === 0 && extras === 0 && <div className="empty-state">Za izabranu kategoriju trenutno nema objavljenih materijala.</div>}
   </>
 }
 
@@ -312,7 +312,7 @@ function ReaderPage({ catalog, section, exercise }: { catalog: Catalog; section:
     <div className="reader-top"><a href={path(course.id)} className="back-link">← Nazad na {course.code}</a><span>{course.name}</span></div>
     {section === 'praktikum' ? <>
       <div className="reader-title"><span className="eyebrow">{course.code} / PRAKTIKUM</span><h1>{exercise ? 'Vežba ' + String(exercise).padStart(2, '0') : 'Praktikum'}</h1>
-        <p>Tekst zadataka i materijali za samostalno vežbanje.</p></div>
+        <p>Tekstovi vežbi i prateći nastavni sadržaji.</p></div>
       {course.practicum.blocks.length ? <div className="reader-document" onClickCapture={event => {
         const target = event.target
         if (!(target instanceof Element)) return
@@ -327,7 +327,7 @@ function ReaderPage({ catalog, section, exercise }: { catalog: Catalog; section:
         : <p className="empty-state">Praktikum za ovaj predmet trenutno nije dostupan.</p>}
     </> : <>
       <div className="reader-title"><span className="eyebrow">{course.code} / PROJEKAT</span><h1>Kontrolne tačke</h1>
-        <p>Etape projekta, važni datumi i zahtevi na jednom mestu.</p></div>
+        <p>Kontrolne tačke, rokovi i zahtevi projektnih etapa.</p></div>
       <div className="checkpoints-list">{course.checkpoints.map((point, index) => <article key={point.id} className="checkpoint-card">
         <div className="checkpoint-top"><span className="checkpoint-number">{String(index + 1).padStart(2, '0')}</span>
           <div><span className="eyebrow">{point.code} · {point.date}{point.points !== undefined ? ' · ' + point.points + ' poena' : ''}</span><h2>{point.title}</h2></div></div>
@@ -360,7 +360,7 @@ function SearchPage({ catalogs, query, filter, setFilter, selectedCourse, setSel
   const filtered = matches.filter(item => (filter === 'Sve' || item.category === filter) && (selectedCourse === 'all' || item.course.id === selectedCourse))
   return <div className="search-page">
     <a href="#" className="back-link" onClick={onNavigate}>← Nazad na predmete</a>
-    <div className="search-heading"><span className="eyebrow">PRETRAGA KATALOGA</span><h1>Rezultati pretrage</h1><p>Za „{query.trim()}” pronađeno je {filtered.length} {filtered.length === 1 ? 'stavka' : 'stavki'}.</p></div>
+    <div className="search-heading"><span className="eyebrow">PRETRAGA KATALOGA</span><h1>Rezultati pretrage</h1><p>Za upit „{query.trim()}” pronađeno je {filtered.length} {filtered.length === 1 ? 'stavka' : 'stavki'}.</p></div>
     <div className="search-filters">
       <div className="filter-tabs" aria-label="Tip materijala">{(['Sve', 'PDF', 'ZIP', 'Tekst'] as SearchFilter[]).map(item =>
         <button type="button" key={item} className={filter === item ? 'is-active' : ''} aria-pressed={filter === item} onClick={() => setFilter(item)}>{item}</button>
@@ -378,8 +378,8 @@ function SearchPage({ catalogs, query, filter, setFilter, selectedCourse, setSel
         </div>
         <LinkAction course={course} file={file} onNavigate={onNavigate}/>
       </div>)}
-      {filtered.length > 80 && <p className="search-more">Prikazano je prvih 80 rezultata. Preciziraj pretragu.</p>}
-    </div> : <div className="empty-state"><Icon name="search" size={27}/><h2>Nema rezultata</h2><p>Probaj drugu ključnu reč, npr. „vežba 03”, „bezbednost” ili „SOLID”.</p>
+      {filtered.length > 80 && <p className="search-more">Prikazano je prvih 80 rezultata. Precizirajte upit za uži izbor.</p>}
+    </div> : <div className="empty-state"><Icon name="search" size={27}/><h2>Nema rezultata</h2><p>Nema dokumenata koji odgovaraju upitu. Izmenite ključne reči ili filtere pretrage.</p>
       {(filter !== 'Sve' || selectedCourse !== 'all') && <button className="ui-button ui-button-quiet" onClick={() => { setFilter('Sve'); setSelectedCourse('all') }}>Ukloni filtere</button>}</div>}
   </div>
 }
