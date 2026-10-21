@@ -10,7 +10,7 @@ export const ersCourse: Course = {
   academicYear: '2026/2027',
   semester: 'zimski',
   available: true,
-  blurb: 'Praktikum, prezentacije, nastavni primeri, projektna specifikacija i kontrolne tačke.',
+  blurb: 'Praktikum, prezentacije, programski primeri, projektna specifikacija i kontrolne tačke iz razvoja softvera.',
   accent: 'linear-gradient(145deg, #2563eb 0%, #1d4ed8 48%, #3730a3 100%)',
   accentSoft: 'rgba(37,99,235,.14)',
   accentShadow: 'rgba(37,99,235,.20)',
