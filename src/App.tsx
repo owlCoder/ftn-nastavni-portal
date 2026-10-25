@@ -194,8 +194,8 @@ function CourseSidebar({ catalog, active }: { catalog: Catalog; active: Section 
     <nav className="sidebar-courses" aria-label="Promeni predmet">{courses.map(item =>
       <a key={item.id} href={path(item.id)} className={'sidebar-course' + (item.id === course.id ? ' is-active' : '')} style={courseStyle(item.id)}
         aria-current={item.id === course.id ? 'page' : undefined}>
-        <span className="sidebar-course-mark">{item.code.slice(0, 1)}</span>
-        <span><strong>{item.code}</strong><small>{item.name}</small></span>
+        <span className="sidebar-course-mark">{item.code}</span>
+        <span className="sidebar-course-name">{item.name}</span>
       </a>
     )}</nav>
     <div className="sidebar-divider"/>
@@ -226,9 +226,11 @@ function CourseHero({ catalog }: { catalog: Catalog }) {
         <span><strong>{slideCount}</strong> prezentacija</span>
       </div>
       <div className="subject-shortcuts">
-        {practicum && <a href={path(course.id, 'praktikum')}><Icon name="book" size={17}/> Praktikum <Icon name="arrow" size={14}/></a>}
+        {practicum && <a className="subject-primary-link" href={path(course.id, 'praktikum')}><Icon name="book" size={17}/> Praktikum <Icon name="arrow" size={14}/></a>}
+        {!practicum && project && (course.projects && course.projects.length > 1
+          ? <a className="subject-primary-link" href={path(course.id, 'projekat')}><Icon name="folder" size={17}/> Pregledaj projekte <Icon name="arrow" size={14}/></a>
+          : <a className="subject-primary-link" href={routeForFile(course, project)} target="_blank" rel="noopener noreferrer"><Icon name="file" size={17}/> Specifikacija <Icon name="external" size={14}/></a>)}
         {bundle?.source && <a href={assetUrl(bundle.source)} download><Icon name="download" size={17}/> Preuzmi prezentacije</a>}
-        {!practicum && project && <a href={routeForFile(course, project)} target="_blank" rel="noopener noreferrer"><Icon name="file" size={17}/> Specifikacija <Icon name="external" size={14}/></a>}
       </div>
     </div>
     {course.checkpoints.length > 0 && <a className="checkpoint-schedule" href={path(course.id, 'kontrolne')}>
@@ -253,15 +255,17 @@ function ExerciseList({ catalog }: { catalog: Catalog }) {
       return <article className="exercise-row" key={lesson.id}>
         <span className="exercise-number">{String(number).padStart(2, '0')}</span>
         <div className="exercise-content">
-          <span className="exercise-label">VEŽBA {String(number).padStart(2, '0')}</span>
-          {course.checkpoints.filter(point => point.exercises[1] === number).map(point =>
-            <a className="exercise-checkpoint" key={point.id} href={path(course.id, 'kontrolne')}>{point.code} u ovom terminu <Icon name="arrow" size={12}/></a>)}
-          <h3>{lesson.description || lesson.name}</h3>
-          <div className="exercise-actions">
-            {slide && <LinkAction course={course} file={slide} primary>Prezentacija</LinkAction>}
-            {text && <LinkAction course={course} file={text}>Tekst vežbe</LinkAction>}
-            {example && <LinkAction course={course} file={example}>Primer koda</LinkAction>}
+          <div className="exercise-topline">
+            <span className="exercise-label">VEŽBA {String(number).padStart(2, '0')}</span>
+            {course.checkpoints.filter(point => point.exercises[1] === number).map(point =>
+              <a className="exercise-checkpoint" key={point.id} href={path(course.id, 'kontrolne')}>{point.code} u ovom terminu <Icon name="arrow" size={12}/></a>)}
           </div>
+          <h3>{lesson.description || lesson.name}</h3>
+        </div>
+        <div className="exercise-actions">
+          {slide && <LinkAction course={course} file={slide} primary>Prezentacija</LinkAction>}
+          {text && <LinkAction course={course} file={text}>Tekst vežbe</LinkAction>}
+          {example && <LinkAction course={course} file={example}>Primer koda</LinkAction>}
         </div>
       </article>
     })}</div>
@@ -280,7 +284,7 @@ function FileCollection({ catalog, section }: { catalog: Catalog; section: Exclu
   const config = {
     prezentacije: { title: 'Prezentacije', description: 'Prezentacije u PDF formatu, raspoređene prema redosledu predavanja i vežbi.' },
     primeri: { title: 'Programski primeri', description: 'ZIP arhive sa izvornim kodom i primerima za vežbe.' },
-    projekat: { title: course.projects?.length ? 'Projektna dokumentacija' : 'Projekat', description: 'Projektne specifikacije, pravila ocenjivanja i kontrolne tačke.' },
+    projekat: { title: course.projects?.length ? 'Projektna dokumentacija' : 'Projekat', description: course.projects?.length ? 'Tehničke specifikacije dostupnih projektnih zadataka.' : 'Projektna specifikacija, pravila ocenjivanja i kontrolne tačke.' },
     uputstva: { title: 'Uputstva', description: 'Uputstva za korišćenje platformi koje se koriste u nastavi.' },
   }[section]
   const extras = section === 'projekat' && course.checkpoints.length > 0 ? 1 : 0
@@ -294,7 +298,7 @@ function FileCollection({ catalog, section }: { catalog: Catalog; section: Exclu
       {collection.map(file => <ResourceRow course={course} file={file} key={file.id}/>)}
       {section === 'projekat' && extras > 0 && <ResourceRow course={course} file={{
         id: 'kontrolne', parent: 'projekat', kind: 'checkpoints', name: 'Kontrolne tačke',
-        description: 'Etape, datumi i obaveze za projektni rad.',
+        description: course.checkpoints.map(point => point.code + ' · ' + point.date).join(' / ') + '. Zahtevi i obaveze za projektni rad.',
       }}/>}
     </div>
     {collection.length === 0 && extras === 0 && <div className="empty-state">Za izabranu kategoriju trenutno nema objavljenih materijala.</div>}
@@ -316,7 +320,13 @@ function CoursePage({ catalog, section }: { catalog: Catalog; section: Section }
   return <div className="course-layout" style={courseStyle(catalog.course.id)}>
     <CourseSidebar catalog={catalog} active={active}/>
     <div className="course-content">
-      <div className="mobile-breadcrumb"><a href="#">← Svi predmeti</a><span>/ {catalog.course.code}</span></div>
+      <div className="mobile-breadcrumb"><a href="#">← Svi predmeti</a>
+        <label className="mobile-course-switch"><span>Predmet</span>
+          <select value={catalog.course.id} aria-label="Promeni predmet" onChange={event => { window.location.hash = path(event.target.value as CourseId) }}>
+            {courses.map(course => <option key={course.id} value={course.id}>{course.code}</option>)}
+          </select>
+        </label>
+      </div>
       <CourseHero catalog={catalog}/>
       <div className="course-tabs-shell">
         <nav ref={tabsRef} className="course-tabs" aria-label="Vrsta materijala">{sections.filter(item => available.includes(item.id)).map(item =>
@@ -337,7 +347,7 @@ function CoursePage({ catalog, section }: { catalog: Catalog; section: Section }
 function ReaderPage({ catalog, section, exercise }: { catalog: Catalog; section: Reader; exercise?: number }) {
   const { course, files } = catalog
   const anchor = exercise ? files.find(file => file.kind === 'practicum-link' && file.exercise === exercise)?.anchor : undefined
-  return <div className="reader-page">
+  return <div className="reader-page" style={courseStyle(course.id)}>
     <div className="reader-top"><a href={path(course.id)} className="back-link">← Nazad na {course.code}</a><span>{course.name}</span></div>
     {section === 'praktikum' ? <>
       <div className="reader-title"><span className="eyebrow">{course.code} / PRAKTIKUM</span><h1>{exercise ? 'Vežba ' + String(exercise).padStart(2, '0') : 'Praktikum'}</h1>
