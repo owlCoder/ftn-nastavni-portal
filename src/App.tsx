@@ -157,27 +157,12 @@ function PageHeading({ eyebrow, title, description, count, extra }: {
 }
 
 function Home({ catalogs, onSelect }: { catalogs: Catalog[]; onSelect: () => void }) {
-  const totalSlides = catalogs.reduce((sum, item) => sum + item.files.filter(file => file.presentationNumber !== undefined).length, 0)
   return <div className="home-page">
-    <section className="home-hero" aria-labelledby="home-title">
-      <div className="home-hero-copy">
-        <span className="eyebrow">FTN / NASTAVNI PORTAL</span>
-        <h1 id="home-title">Nastavni materijali</h1>
-        <p>Vežbe, prezentacije, primeri programskog koda i projektna dokumentacija, organizovani po predmetima.</p>
-        <div className="hero-actions">
-          <a href="#predmeti" className="hero-button" onClick={event => {
-            event.preventDefault()
-            document.getElementById('predmeti')?.scrollIntoView({ behavior: 'smooth' })
-          }}>Pregledaj predmete <Icon name="arrow" size={17}/></a>
-          <span className="hero-meta">{catalogs.length} predmeta <span aria-hidden="true">·</span> {totalSlides} prezentacija <span aria-hidden="true">·</span> bez prijave</span>
-        </div>
-      </div>
-    </section>
-
     <section className="home-courses" id="predmeti" aria-labelledby="courses-title">
       <div className="home-heading">
-        <div><span className="eyebrow">KATALOG</span><h2 id="courses-title">Predmeti</h2></div>
-        <p>Izaberite predmet da otvorite vežbe, prezentacije i prateće materijale.</p>
+        <div><span className="eyebrow">NASTAVNI MATERIJALI · 2026/2027</span><h1 id="courses-title">Predmeti</h1>
+          <p>Vežbe, prezentacije i projekti na jednom mestu.</p></div>
+        <span className="catalog-count">{catalogs.length} predmeta</span>
       </div>
       <div className="course-grid">{catalogs.map(({ course, files }, index) => {
         const exercises = files.filter(file => file.kind === 'folder' && file.parent === 'vezbe').length
@@ -188,9 +173,10 @@ function Home({ catalogs, onSelect }: { catalogs: Catalog[]; onSelect: () => voi
             <span className="course-card-number">{String(index + 1).padStart(2, '0')}</span>
           </div>
           <h3>{course.name}</h3>
+          <p className="course-card-description">{course.blurb}</p>
           <div className="course-card-bottom">
             <span>{course.studyLevel === 'master' ? 'Master studije' : course.semester === 'letnji' ? 'Letnji semestar' : 'Zimski semestar'}</span>
-            <span>{exercises ? exercises + ' vežbi' : presentations + ' prezentacija'}</span>
+            <span>{exercises > 0 && exercises + ' vežbi · '}{presentations} prezentacija</span>
             <span className="course-card-go"><Icon name="arrow" size={18}/></span>
           </div>
         </a>
@@ -245,6 +231,11 @@ function CourseHero({ catalog }: { catalog: Catalog }) {
         {!practicum && project && <a href={routeForFile(course, project)} target="_blank" rel="noopener noreferrer"><Icon name="file" size={17}/> Specifikacija <Icon name="external" size={14}/></a>}
       </div>
     </div>
+    {course.checkpoints.length > 0 && <a className="checkpoint-schedule" href={path(course.id, 'kontrolne')}>
+      <span>Kontrolne tačke</span>
+      <span className="checkpoint-schedule-dates">{course.checkpoints.map(point => <span key={point.id}><strong>{point.code}</strong> {point.date}</span>)}</span>
+      <Icon name="arrow" size={17}/>
+    </a>}
   </section>
 }
 
@@ -263,6 +254,8 @@ function ExerciseList({ catalog }: { catalog: Catalog }) {
         <span className="exercise-number">{String(number).padStart(2, '0')}</span>
         <div className="exercise-content">
           <span className="exercise-label">VEŽBA {String(number).padStart(2, '0')}</span>
+          {course.checkpoints.filter(point => point.exercises[1] === number).map(point =>
+            <a className="exercise-checkpoint" key={point.id} href={path(course.id, 'kontrolne')}>{point.code} u ovom terminu <Icon name="arrow" size={12}/></a>)}
           <h3>{lesson.description || lesson.name}</h3>
           <div className="exercise-actions">
             {slide && <LinkAction course={course} file={slide} primary>Prezentacija</LinkAction>}

@@ -21,6 +21,13 @@ try {
   const { practicumMarkdown, checkpointMarkdown, practicumAssets } = await server.ssrLoadModule('/src/practicum/markdown.ts')
 
   for (const course of courses) {
+    if (course.id === 'ers' || course.id === 'oib') {
+      assert.deepEqual(course.checkpoints.map(point => ({ code: point.code, exercises: point.exercises, date: point.date, dateLabel: point.dateLabel })), [
+        { code: 'KT1', exercises: [1, 4], date: 'Vežba 4', dateLabel: 'Termin' },
+        { code: 'KT2', exercises: [5, 8], date: 'Vežba 8', dateLabel: 'Termin' },
+      ], course.code + ': two checkpoints in the exercise 4 and 8 slots')
+      for (const n of [2, 6]) assert.ok(!/Kontrolna tačka KT\d/.test(practicumMarkdown(course, n)), course.code + ': no checkpoint after exercise ' + n)
+    }
     const files = buildCourseFiles(course)
     const companionAssets = practicumAssets(course)
     for (const asset of companionAssets) {

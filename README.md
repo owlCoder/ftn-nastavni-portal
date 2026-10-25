@@ -2,6 +2,8 @@
 
 React i TypeScript aplikacija za brz pristup nastavnim materijalima. Bez prijave i imitacije operativnog sistema: izbor predmeta, pregled vežbi, pretraga i direktno otvaranje PDF dokumenata i preuzimanje ZIP primera.
 
+Za **Elemente razvoja softvera (ERS)** i **Osnove informacione bezbednosti (OIB)** postoje **dve kontrolne tačke**: **KT1 u terminu 4. vežbe** i **KT2 u terminu 8. vežbe**. Kontrolne tačke i termini odbrane projekta su odvojene obaveze.
+
 [Nastavni portal](https://owlcoder.github.io/ftn-nastavni-portal/) · [Nastavni materijali](https://github.com/owlCoder/ftn-nastavni-materijali)
 
 [![Build](https://github.com/owlCoder/ftn-nastavni-portal/actions/workflows/build.yml/badge.svg)](https://github.com/owlCoder/ftn-nastavni-portal/actions/workflows/build.yml)

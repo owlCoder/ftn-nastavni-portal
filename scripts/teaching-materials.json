@@ -26,6 +26,44 @@
           "portal": "downloads/ers-projekat/ERS_Pravila_Polaganja.md",
           "materials": "00 Administracija/ERS_Pravila_Polaganja.md"
         }
+      ],
+      "presentations": [
+        {
+          "portal": "downloads/ers-prezentacije/00_Osnovne_informacije.pdf",
+          "materials": "02 Prezentacije/PDF/00 Основне информације о предмету и пројекту.pdf"
+        },
+        {
+          "portal": "downloads/ers-prezentacije/01_Zahtevi_backlog_i_Git.pdf",
+          "materials": "02 Prezentacije/PDF/01 Захтеви, backlog, Git и тимски развој.pdf"
+        },
+        {
+          "portal": "downloads/ers-prezentacije/02_SOLID_i_Clean_Architecture.pdf",
+          "materials": "02 Prezentacije/PDF/02 SOLID принципи и Clean Architecture.pdf"
+        },
+        {
+          "portal": "downloads/ers-prezentacije/03_Poslovna_logika_i_use_case.pdf",
+          "materials": "02 Prezentacije/PDF/03 Пословна логика и слој случајева употребе.pdf"
+        },
+        {
+          "portal": "downloads/ers-prezentacije/04_Testabilni_dizajn_NUnit_i_Moq.pdf",
+          "materials": "02 Prezentacije/PDF/04 Тестабилни дизајн, NUnit, Moq и покривеност кода.pdf"
+        },
+        {
+          "portal": "downloads/ers-prezentacije/05_Integracija_modula_ugovori.pdf",
+          "materials": "02 Prezentacije/PDF/05 Интеграција модула, уговори и подаци.pdf"
+        },
+        {
+          "portal": "downloads/ers-prezentacije/06_Kontrolisan_AI_workflow.pdf",
+          "materials": "02 Prezentacije/PDF/06 Контролисан развој уз AI.pdf"
+        },
+        {
+          "portal": "downloads/ers-prezentacije/07_MCP.pdf",
+          "materials": "02 Prezentacije/PDF/07 MCP над EquipmentReservation решењем.pdf"
+        },
+        {
+          "portal": "downloads/ers-prezentacije/08_Guardrails_evaluacije_i_QA.pdf",
+          "materials": "02 Prezentacije/PDF/08 Hooks, guardrails, евалуације и завршни QA.pdf"
+        }
       ]
     },
     {
@@ -39,6 +77,52 @@
         {
           "portal": "downloads/oib-projekat/OIB_Bodovanje_Projekta.pdf",
           "materials": "01 Projekat/OIB_Bodovanje_Projekta.pdf"
+        },
+        {
+          "portal": "downloads/oib-projekat/OIB_Pravila_Polaganja.pdf",
+          "materials": "00 Administracija/OIB_Pravila_Polaganja.pdf"
+        },
+        {
+          "portal": "downloads/oib-projekat/OIB_pravila_polaganja.md",
+          "materials": "00 Administracija/OIB_pravila_polaganja.md"
+        }
+      ],
+      "presentations": [
+        {
+          "portal": "downloads/oib-prezentacije/00_Osnovne_informacije.pdf",
+          "materials": "02 Prezentacije/PDF/00_Osnovne_informacije.pdf"
+        },
+        {
+          "portal": "downloads/oib-prezentacije/01_Identitet_autentikacija_i_RBAC.pdf",
+          "materials": "02 Prezentacije/PDF/01_Identitet_autentikacija_i_RBAC.pdf"
+        },
+        {
+          "portal": "downloads/oib-prezentacije/02_Autorizacija_nad_resursom_i_klasifikacija_podataka.pdf",
+          "materials": "02 Prezentacije/PDF/02_Autorizacija_nad_resursom_i_klasifikacija_podataka.pdf"
+        },
+        {
+          "portal": "downloads/oib-prezentacije/03_Politike_konfiguracija_i_vidljivost.pdf",
+          "materials": "02 Prezentacije/PDF/03_Politike_konfiguracija_i_vidljivost.pdf"
+        },
+        {
+          "portal": "downloads/oib-prezentacije/04_Imovina_granice_poverenja_i_threat_modeling.pdf",
+          "materials": "02 Prezentacije/PDF/04_Imovina_granice_poverenja_i_threat_modeling.pdf"
+        },
+        {
+          "portal": "downloads/oib-prezentacije/05_MFA_sesije_servisi_i_tajne.pdf",
+          "materials": "02 Prezentacije/PDF/05_MFA_sesije_servisi_i_tajne.pdf"
+        },
+        {
+          "portal": "downloads/oib-prezentacije/06_Detekcija_incident_i_ranjivosti.pdf",
+          "materials": "02 Prezentacije/PDF/06_Detekcija_incident_i_ranjivosti.pdf"
+        },
+        {
+          "portal": "downloads/oib-prezentacije/07_Atributi_rizik_i_pregled_pristupa.pdf",
+          "materials": "02 Prezentacije/PDF/07_Atributi_rizik_i_pregled_pristupa.pdf"
+        },
+        {
+          "portal": "downloads/oib-prezentacije/08_Korelacija_efektivnost_i_ucenje.pdf",
+          "materials": "02 Prezentacije/PDF/08_Korelacija_efektivnost_i_ucenje.pdf"
         }
       ]
     },
@@ -49,6 +133,40 @@
         {
           "portal": "downloads/odp-projekat/ODP_Projektna_Specifikacija.pdf",
           "materials": "01 Projekat/ODP_Specifikacija.pdf"
+        }
+      ],
+      "presentations": [
+        {
+          "portal": "downloads/odp-prezentacije/01_Nacin_razmisljanja_u_distribuiranom_sistemu.pdf",
+          "materials": "02 Prezentacije/PDF/01_Nacin_razmisljanja_u_distribuiranom_sistemu.pdf"
+        },
+        {
+          "portal": "downloads/odp-prezentacije/02_Ugovori_simulatori_i_ponovljivost.pdf",
+          "materials": "02 Prezentacije/PDF/02_Ugovori_simulatori_i_ponovljivost.pdf"
+        },
+        {
+          "portal": "downloads/odp-prezentacije/03_Identitet_audit_observability_i_konfiguracija.pdf",
+          "materials": "02 Prezentacije/PDF/03_Identitet_audit_observability_i_konfiguracija.pdf"
+        },
+        {
+          "portal": "downloads/odp-prezentacije/04_Verzionisanje_i_failure_first_testiranje.pdf",
+          "materials": "02 Prezentacije/PDF/04_Verzionisanje_i_failure_first_testiranje.pdf"
+        },
+        {
+          "portal": "downloads/odp-prezentacije/05_Tok_podataka_i_read_modeli.pdf",
+          "materials": "02 Prezentacije/PDF/05_Tok_podataka_i_read_modeli.pdf"
+        },
+        {
+          "portal": "downloads/odp-prezentacije/06_Komande_poslovi_i_idempotentnost.pdf",
+          "materials": "02 Prezentacije/PDF/06_Komande_poslovi_i_idempotentnost.pdf"
+        },
+        {
+          "portal": "downloads/odp-prezentacije/07_Rad_bez_veze_i_pouzdana_isporuka.pdf",
+          "materials": "02 Prezentacije/PDF/07_Rad_bez_veze_i_pouzdana_isporuka.pdf"
+        },
+        {
+          "portal": "downloads/odp-prezentacije/08_Koordinacija_protok_i_eventualna_konzistentnost.pdf",
+          "materials": "02 Prezentacije/PDF/08_Koordinacija_protok_i_eventualna_konzistentnost.pdf"
         }
       ]
     },
@@ -67,6 +185,16 @@
         {
           "portal": "downloads/ibis-projekti/RouteMetria_Tehnicka_specifikacija.pdf",
           "materials": "02 Projekti/RouteMetria_Tehnicka_specifikacija.pdf"
+        }
+      ],
+      "presentations": [
+        {
+          "portal": "downloads/ibis-prezentacije/01_SCADA_sistemi.pdf",
+          "materials": "01 Prezentacije/01_SCADA Sistemi — Arhitektura, procesi, prikazi, konfiguracija i bezbednost.pdf"
+        },
+        {
+          "portal": "downloads/ibis-prezentacije/02_Javno_dostupni_podaci.pdf",
+          "materials": "01 Prezentacije/02_Javno dostupni podaci u bezbednosti SCADA sistema.pdf"
         }
       ]
     }

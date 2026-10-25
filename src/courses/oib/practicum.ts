@@ -7,7 +7,7 @@ import { oibExercises } from './exercises'
 const intro: Block[] = [
   text('h1', '0.1. Kako koristiti praktikum'),
   text('paragraph', 'Praktikum prati sadržaj vežbi iz informacione bezbednosti. Svaka tema obuhvata problem, primenjene kontrole, tipične greške i način provere donete odluke. Nakon vežbe student treba da ume da obrazloži obrađeni princip i primeni ga u okviru dodeljene projektne celine.'),
-  callout('info', 'Primena na projektu', 'Svaki tim radi na svim dodeljenim projektnim celinama iz SCUTUM specifikacije i obrađene principe primenjuje na sopstveni domen. Kontrolne tačke KT1–KT4 prate napredak celog dodeljenog obuhvata; dodatni zahtevi za timove sa tri celine navedeni su posebno.'),
+  callout('info', 'Primena na projektu', 'Svaki tim radi na svim dodeljenim projektnim celinama iz SCUTUM specifikacije i obrađene principe primenjuje na sopstveni domen. Dve kontrolne tačke, KT1 u terminu 4. vežbe i KT2 u terminu 8. vežbe, prate napredak celog dodeljenog obuhvata; dodatni zahtevi za timove sa tri celine navedeni su posebno.'),
   table(['Faza', 'Preporučeni način rada'], [
     ['Pre vežbe', 'Pročitati temu i izdvojiti pretpostavke koje bi u informacionom sistemu mogle biti pogrešne.'],
     ['Tokom vežbe', 'Povezati pojam sa posledicama u razvoju informacionog sistema, a ne samo sa nazivom klase ili krajnje tačke API-ja.'],
@@ -25,7 +25,7 @@ const intro: Block[] = [
     'Operativna bezbednost: sesije, MFA, tajne, detekcija i incident.',
     'Napredne odluke: kontekstualna pravila, rizik, korelacija i dokaz efektivnosti.',
   ]),
-  text('paragraph', 'Kontrolne tačke se održavaju na kraju 2, 4, 6. i 8. nedelje. Teme vežbi daju podršku radu, dok redosled implementacije svih dodeljenih celina tim određuje prema specifikaciji i njihovim preduslovima.'),
+  text('paragraph', 'Kontrolne tačke se održavaju u terminima 4. i 8. vežbe: KT1 proverava osnovnu implementaciju i bezbednosni model, a KT2 završnu demonstraciju i security QA. Kontrolne tačke i termini odbrane projekta su odvojene obaveze. Teme vežbi daju podršku radu, dok redosled implementacije svih dodeljenih celina tim određuje prema specifikaciji i njihovim preduslovima.'),
   checkpointOverview(oibCheckpoints),
 ]
 

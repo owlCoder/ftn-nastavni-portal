@@ -43,10 +43,10 @@ for (const course of manifest.courses) {
     path.join(portalRoot, 'public/downloads/praktikum', course.id),
     path.join(materialsRoot, course.directory, '03 Racunarske vezbe'), course.id + ': exercise documents',
   )
-  for (const project of course.projects) {
+  for (const project of [...course.projects, ...(course.presentations ?? [])]) {
     assert.ok((await fs.readFile(path.join(portalRoot, 'public', project.portal))).equals(
       await fs.readFile(path.join(materialsRoot, course.directory, project.materials)),
-    ), course.id + ': project document ' + project.materials)
+    ), course.id + ': teaching document ' + project.materials)
   }
 }
 for (const document of manifest.sharedDocuments) {
@@ -54,5 +54,6 @@ for (const document of manifest.sharedDocuments) {
     await fs.readFile(path.join(materialsRoot, document.materials)),
   ), 'Shared document: ' + document.materials)
 }
+const presentationDocuments = manifest.courses.reduce((total, course) => total + (course.presentations?.length ?? 0), 0)
 const projectDocuments = manifest.courses.reduce((total, course) => total + course.projects.length, 0)
-console.log(`Synchronized: ${manifest.examples.length} examples (${sourceFiles} files), 24 exercises, three practicums, ${projectDocuments} project documents and ${manifest.sharedDocuments.length} shared guides.`)
+console.log(`Synchronized: ${manifest.examples.length} examples (${sourceFiles} files), 24 exercises, three practicums, ${presentationDocuments} presentations, ${projectDocuments} project documents and ${manifest.sharedDocuments.length} shared guides.`)

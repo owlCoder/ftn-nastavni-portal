@@ -1,6 +1,6 @@
 import type { Course } from '../types'
 import { oibCheckpoints } from './checkpoints'
-import { oibGradingGuide, oibPresentations, oibProject } from './downloads'
+import { oibExamRules, oibGradingGuide, oibPresentations, oibProject } from './downloads'
 import { oibPracticum } from './practicum'
 
 export const oibCourse: Course = {
@@ -18,5 +18,5 @@ export const oibCourse: Course = {
   presentations: oibPresentations,
   checkpoints: oibCheckpoints,
   project: oibProject,
-  projectGuides: [oibGradingGuide],
+  projectGuides: [oibGradingGuide, oibExamRules],
 }
