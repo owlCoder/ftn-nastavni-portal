@@ -159,39 +159,43 @@ function PageHeading({ eyebrow, title, description, count, extra }: {
 function Home({ catalogs, onSelect }: { catalogs: Catalog[]; onSelect: () => void }) {
   const totalSlides = catalogs.reduce((sum, item) => sum + item.files.filter(file => file.presentationNumber !== undefined).length, 0)
   return <div className="home-page">
-    <section className="home-hero">
+    <section className="home-hero" aria-labelledby="home-title">
       <div className="home-hero-copy">
-        <span className="eyebrow"><span className="live-dot"/> NASTAVNI PORTAL · FTN</span>
-        <h1>Nastavni materijali<br/><span>po predmetima.</span></h1>
-        <p>Prezentacije, praktikumi, primeri programskog koda i projektna dokumentacija za predmete obuhvaćene portalom.</p>
-        <a href="#predmeti" className="hero-button" onClick={event => {
-          event.preventDefault()
-          document.getElementById('predmeti')?.scrollIntoView({ behavior: 'smooth' })
-        }}>Pregled predmeta <Icon name="arrow" size={19}/></a>
-      </div>
-      <div className="home-hero-panel" aria-label="Pregled kataloga">
-        <div className="hero-panel-top"><span>PREGLED SADRŽAJA</span><Icon name="layers" size={19}/></div>
-        <div className="hero-stat"><strong>{catalogs.length.toString().padStart(2, '0')}</strong><span>predmeta</span></div>
-        <div className="hero-panel-line"/>
-        <div className="hero-stat small"><strong>{totalSlides}</strong><span>PDF prezentacija</span></div>
-        <div className="hero-panel-note"><span className="live-dot"/> Pristup materijalima bez prijave</div>
+        <span className="eyebrow">FTN / NASTAVNI PORTAL</span>
+        <h1 id="home-title">Nastavni materijali</h1>
+        <p>Vežbe, prezentacije, primeri programskog koda i projektna dokumentacija, organizovani po predmetima.</p>
+        <div className="hero-actions">
+          <a href="#predmeti" className="hero-button" onClick={event => {
+            event.preventDefault()
+            document.getElementById('predmeti')?.scrollIntoView({ behavior: 'smooth' })
+          }}>Pregledaj predmete <Icon name="arrow" size={17}/></a>
+          <span className="hero-meta">{catalogs.length} predmeta <span aria-hidden="true">·</span> {totalSlides} prezentacija <span aria-hidden="true">·</span> bez prijave</span>
+        </div>
       </div>
     </section>
 
-    <section className="home-courses" id="predmeti">
-      <div className="home-heading"><div><span className="eyebrow">PREDMETI</span><h2>Nastavni predmeti</h2></div><p>Izaberite predmet za pregled vežbi, prezentacija i projektne dokumentacije.</p></div>
+    <section className="home-courses" id="predmeti" aria-labelledby="courses-title">
+      <div className="home-heading">
+        <div><span className="eyebrow">KATALOG</span><h2 id="courses-title">Predmeti</h2></div>
+        <p>Izaberite predmet da otvorite vežbe, prezentacije i prateće materijale.</p>
+      </div>
       <div className="course-grid">{catalogs.map(({ course, files }, index) => {
         const exercises = files.filter(file => file.kind === 'folder' && file.parent === 'vezbe').length
         const presentations = files.filter(file => file.presentationNumber !== undefined).length
         return <a key={course.id} href={path(course.id)} className="course-card" style={courseStyle(course.id)} onClick={onSelect}>
-          <div className="course-card-top"><span className="course-card-icon">{course.code.slice(0, 1)}</span><span className="course-card-number">0{index + 1} / 04</span></div>
-          <span className="course-card-code">{course.code}</span>
+          <div className="course-card-top">
+            <span className="course-card-code">{course.code}</span>
+            <span className="course-card-number">{String(index + 1).padStart(2, '0')}</span>
+          </div>
           <h3>{course.name}</h3>
-          <div className="course-card-bottom"><span>{course.studyLevel === 'master' ? 'Master studije' : course.semester === 'letnji' ? 'Letnji semestar' : 'Zimski semestar'}</span><span>{exercises ? exercises + ' vežbi' : presentations + ' prezentacije'}</span><span className="course-card-go"><Icon name="arrow" size={18}/></span></div>
+          <div className="course-card-bottom">
+            <span>{course.studyLevel === 'master' ? 'Master studije' : course.semester === 'letnji' ? 'Letnji semestar' : 'Zimski semestar'}</span>
+            <span>{exercises ? exercises + ' vežbi' : presentations + ' prezentacija'}</span>
+            <span className="course-card-go"><Icon name="arrow" size={18}/></span>
+          </div>
         </a>
       })}</div>
     </section>
-    <div className="home-help"><Icon name="search" size={19}/><span>Pretraga u zaglavlju omogućava pronalaženje materijala iz svih predmeta.</span></div>
   </div>
 }
 
