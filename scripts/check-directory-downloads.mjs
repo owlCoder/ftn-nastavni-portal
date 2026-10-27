@@ -45,7 +45,12 @@ try {
   // Exercise ZIP creation and extraction with actual Word, PowerPoint and PDF files.
   const original = { fetch: globalThis.fetch, document: globalThis.document, window: globalThis.window, create: URL.createObjectURL, revoke: URL.revokeObjectURL }
   let blob, downloadedName, clicks = 0
-  globalThis.fetch = async url => new Response(await readFile(resolve('public', String(url).replace(/^\/+/, ''))))
+  const publicFile = url => {
+    const value = String(url)
+    const base = server.config.base
+    return resolve('public', (value.startsWith(base) ? value.slice(base.length) : value.replace(/^\/+/, '')))
+  }
+  globalThis.fetch = async url => new Response(await readFile(publicFile(url)))
   globalThis.document = { body: { append() {} }, createElement() { return { style: {}, click() { downloadedName = this.download; clicks++ }, remove() {} } } }
   globalThis.window = { setTimeout() {} }
   URL.createObjectURL = value => { blob = value; return 'blob:test' }

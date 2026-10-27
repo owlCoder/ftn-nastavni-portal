@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { courses } from './courses'
 import type { Course, CourseId } from './courses/types'
-import { buildCourseFiles, type CourseFile } from './components/courseFileTree'
+import { buildCourseFiles, visibleMaterials, type CourseFile } from './components/courseFileTree'
 import { PracticumDocument } from './components/document/PracticumDocument'
 import { MaterialDirectory } from './components/MaterialDirectory'
 import { loadGithubMaterials, type MaterialsSnapshot } from './lib/githubMaterials'
@@ -23,7 +23,7 @@ function courseStyle(id: CourseId): CSSProperties {
 }
 
 function dataFor(course: Course): Catalog {
-  return { course, files: buildCourseFiles(course) }
+  return { course, files: visibleMaterials(buildCourseFiles(course)) }
 }
 
 function readRoute(): Route {
@@ -121,20 +121,18 @@ export default function App() {
 
   const current = catalogs.find(catalog => catalog.course.id === route.courseId)
   const reading = route.section === 'praktikum' || route.section === 'kontrolne'
+  const sourceStatus = materialsError ? <>GitHub nije dostupan · {snapshot ? 'prethodna verzija' : 'rezervna verzija'} <button type="button" onClick={() => setRefresh(n => n + 1)}>Pokušaj ponovo</button></>
+    : snapshot ? <>GitHub · {snapshot.revision.slice(0, 7)} <button type="button" onClick={() => setRefresh(n => n + 1)}>Osveži</button></>
+    : <>Učitavanje sa GitHub-a…</>
   return <div className="portal portal-directory">
     <a href="#content" className="skip-link" onClick={event => {
       event.preventDefault()
       document.getElementById('content')?.focus()
     }}>Preskoči na sadržaj</a>
     <main id="content" tabIndex={-1} className="site-content">
-      <div className="materials-source" role="status">
-        {materialsError ? <>GitHub nije dostupan. {snapshot ? 'Prikazana je prethodno učitana verzija.' : 'Prikazane su materijali sačuvani u portalu i mogu biti zastarele.'} <button type="button" onClick={() => setRefresh(n => n + 1)}>Pokušaj ponovo</button></>
-          : snapshot ? <>Materijali sa GitHub-a · verzija {snapshot.revision.slice(0, 7)} <button type="button" onClick={() => setRefresh(n => n + 1)}>Osveži</button></>
-          : 'Učitavanje materijala sa GitHub-a…'}
-      </div>
       {current ? reading ? <ReaderPage catalog={current} section={route.section as Reader} exercise={route.exercise}/> :
-          <MaterialDirectory catalogs={catalogs} courseId={current.course.id} folder={route.folder ?? 'root'}/> :
-          <MaterialDirectory catalogs={catalogs}/>}
+          <MaterialDirectory catalogs={catalogs} courseId={current.course.id} folder={route.folder ?? 'root'} sourceStatus={sourceStatus}/> :
+          <MaterialDirectory catalogs={catalogs} sourceStatus={sourceStatus}/>}
     </main>
 
   </div>

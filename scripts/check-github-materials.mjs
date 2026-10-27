@@ -16,6 +16,9 @@ try {
       { path: `${root}/${folder}/01 Prva tema`, type: 'tree' },
       { path: `${root}/${folder}/01 Prva tema/Test #1.pdf`, type: 'blob', size: 1024 },
       { path: `${root}/${folder}/.DS_Store`, type: 'blob' },
+      { path: `${root}/${folder}/01 Prva tema/Izvor.docx`, type: 'blob' },
+      { path: `${root}/${folder}/01 Prva tema/Izvor.pptx`, type: 'blob' },
+      { path: `${root}/${folder}/01 Prva tema/Primer.zip`, type: 'blob' },
     ]
   })
   const sha = 'a'.repeat(40)
@@ -27,7 +30,8 @@ try {
   assert.equal(file.parent, 'teme/01')
   assert.ok(file.source.includes('/' + sha + '/'))
   assert.ok(file.source.endsWith('Test%20%231.pdf'))
-  assert.ok(catalogs.every(catalog => !catalog.files.some(item => item.name === '.DS_Store')))
+  assert.ok(catalogs.every(catalog => !catalog.files.some(item => /\.(docx|pptx)$/i.test(item.name) || item.name === '.DS_Store')))
+  assert.ok(ers.files.some(item => item.name === 'Primer.zip'))
   assert.ok(catalogs.find(x => x.course.id === 'oib').files.some(file => file.id === 'vezbe/01'))
 
   const originalFetch = globalThis.fetch

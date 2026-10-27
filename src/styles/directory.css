@@ -99,3 +99,54 @@
 
 .materials-source { padding: 8px 14px; color: #536a7d; font-size: 12px; }
 .materials-source button { border: 0; padding: 2px 5px; color: #285b8d; background: transparent; text-decoration: underline; cursor: pointer; font: inherit; }
+
+/* The directory uses a calm, readable workspace for course materials. */
+.portal-directory { min-height: 100vh; background: #f3f6fa; color: #172a3e; }
+.material-directory { max-width: 1200px; padding: 32px 28px 70px; font: 14px/1.5 system-ui, -apple-system, sans-serif; }
+.directory-heading { align-items: end; margin-bottom: 26px; gap: 20px; }
+.directory-kicker { display: block; margin-bottom: 9px; color: #678879; font-size: 10px; font-weight: 800; letter-spacing: .13em; }
+.material-directory h1 { color: #172a3e; font: 750 clamp(26px, 3vw, 36px)/1.18 system-ui, sans-serif; letter-spacing: -.045em; }
+.directory-heading p { margin: 9px 0 0; color: #788a9b; font-size: 13px; }
+.directory-heading .directory-primary { border: 1px solid #203e59; border-radius: 10px; padding: 11px 16px; background: #203e59; color: white; font: 700 12px system-ui, sans-serif; }
+.directory-heading .directory-primary:hover { background: #315a79; text-decoration: none; }
+.directory-path { font: 12px/1.6 system-ui, sans-serif; padding: 0 0 16px; color: #63788a; }
+.directory-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 15px; }
+.directory-search { display: flex; align-items: center; gap: 10px; width: min(360px, 100%); min-height: 43px; padding: 0 14px; border: 1px solid #dce5ee; border-radius: 10px; background: white; color: #7c8d9e; }
+.directory-search:focus-within { border-color: #87a7bf; box-shadow: 0 0 0 3px #87a7bf22; }
+.directory-search > span[aria-hidden] { font-size: 23px; line-height: 1; }
+.directory-search input { width: 100%; border: 0; outline: 0; background: transparent; color: #203e59; font: 13px system-ui, sans-serif; }
+.directory-search input::placeholder { color: #9baab8; }
+.directory-tree-controls { gap: 8px; margin: 0; }
+.directory-tree-controls button { border: 1px solid #dce5ee; border-radius: 8px; padding: 8px 10px; background: white; color: #64788b; font-size: 11px; font-weight: 650; cursor: pointer; }
+.directory-tree-controls button:hover { background: #eef4f8; text-decoration: none; }
+.directory-table { border-collapse: separate; border-spacing: 0; border: 1px solid #e0e8ef; border-radius: 13px; overflow: hidden; background: white; font: 13px/1.5 system-ui, sans-serif; box-shadow: 0 5px 24px #25425d08; }
+.directory-table th { background: #f9fbfd; color: #8494a4; border-top: 0; border-bottom: 1px solid #e9eff4; padding: 12px 16px; font: 700 10px system-ui, sans-serif; text-transform: uppercase; letter-spacing: .07em; }
+.directory-table td { border-bottom: 1px solid #eff3f6; padding: 0 16px; height: 52px; color: #8191a0; }
+.directory-table tr:last-child td { border-bottom: 0; }
+.directory-table tr:hover td { background: #f8fbfd; }
+.directory-name { gap: 9px; }
+.directory-tree-name { padding-left: calc(var(--directory-depth) * 21px); }
+.directory-tree-name > .directory-entry-link { min-height: 50px; gap: 12px; }
+.directory-name svg { width: 19px; height: 19px; color: #7694aa; }
+.directory-folder-toggle, .material-directory a { color: #334e65; }
+.directory-folder-row .directory-entry-link { font-weight: 650; }
+.directory-toggle { color: #92a2b0; border-radius: 5px; }
+.directory-download { color: #517b98; font: 700 11px system-ui, sans-serif; }
+.directory-footer { margin-top: 16px; color: #95a5b3; font-size: 11px; }
+.directory-empty { margin: 18px 0; padding: 22px; border: 1px dashed #d5e0e9; border-radius: 12px; color: #6e8192; background: #fff; }
+@media (max-width: 660px) {
+  .material-directory { padding: 24px 16px 48px; }
+  .directory-heading { align-items: start; }
+  .directory-heading .directory-primary { padding: 10px 12px; }
+  .directory-toolbar { flex-wrap: wrap; }
+  .directory-search { width: 100%; }
+  .directory-table th, .directory-table td { padding-inline: 9px; }
+  .directory-tree-name { padding-left: calc(var(--directory-depth) * 12px); }
+}
+.pdf-back { border: 1px solid #dce5ee; border-radius: 9px; background: #fff; color: #355a75; font: 700 12px system-ui, sans-serif; padding: 10px 13px; cursor: pointer; margin-bottom: 16px; }
+.pdf-preview-shell { height: min(78vh, 900px); min-height: 480px; overflow: hidden; border: 1px solid #dce5ee; border-radius: 13px; box-shadow: 0 5px 24px #25425d08; }
+
+.directory-footer { gap: 12px; align-items: center; flex-wrap: wrap; }
+.directory-footer .materials-source { margin: 0 0 0 auto; padding: 0; color: #8a99a6; font-size: 11px; }
+.directory-footer .materials-source button { border: 0; padding: 0 2px; background: transparent; color: #728a9c; font: inherit; cursor: pointer; }
+.directory-footer .materials-source button:hover { text-decoration: underline; }

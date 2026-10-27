@@ -1,5 +1,5 @@
 import type { Course, CourseId } from '../courses/types'
-import type { CourseFile, CourseFileKind } from '../components/courseFileTree'
+import { visibleMaterials, type CourseFile, type CourseFileKind } from '../components/courseFileTree'
 import type { Catalog } from '../components/directoryModel'
 
 const repository = 'owlCoder/ftn-nastavni-materijali'
@@ -74,6 +74,7 @@ export function catalogsFromTree(courses: Course[], tree: TreeEntry[], revision:
         source: `${raw}/${revision}/${pathUrl(entry.path)}`, size: sizeLabel(entry.size),
       })
     }
+    catalog.files = visibleMaterials(catalog.files)
     catalog.files.sort((a, b) => (a.kind === 'folder' ? 0 : 1) - (b.kind === 'folder' ? 0 : 1) || a.name.localeCompare(b.name, 'sr'))
   }
   if (catalogs.some(catalog => catalog.files.length === 0)) throw new Error('Nedostaje sadržaj jednog ili više predmeta.')

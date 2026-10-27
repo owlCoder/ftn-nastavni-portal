@@ -1,8 +1,10 @@
-import { useEffect, useState, type CSSProperties } from 'react'
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react'
 import type { CourseFile } from './courseFileTree'
 import { downloadFolderZip } from './courseDownloads'
 import { directoryArchive, directoryHref, type Catalog, type DirectoryTarget } from './directoryModel'
 import { assetUrl } from '../lib/assets'
+import { PdfViewer } from './PdfViewer'
+import '../styles/course-viewers.css'
 import '../styles/directory.css'
 
 function FileIcon({ folder = false }: { folder?: boolean }) {
@@ -16,9 +18,11 @@ function fileName(file: CourseFile) {
   return file.name
 }
 
-export function MaterialDirectory({ catalogs, courseId, folder = 'root' }: { catalogs: Catalog[]; courseId?: DirectoryTarget['courseId']; folder?: string }) {
+export function MaterialDirectory({ catalogs, courseId, folder = 'root', sourceStatus }: { catalogs: Catalog[]; courseId?: DirectoryTarget['courseId']; folder?: string; sourceStatus?: ReactNode }) {
   const [progress, setProgress] = useState('')
   const [error, setError] = useState('')
+  const [search, setSearch] = useState('')
+  const [preview, setPreview] = useState<CourseFile | null>(null)
   const allFolders = () => new Set(catalogs.flatMap(item => [item.course.id + '/root', ...item.files.filter(file => file.kind === 'folder').map(file => item.course.id + '/' + file.id)]))
   const [collapsed, setCollapsed] = useState<Set<string>>(allFolders)
   useEffect(() => { setCollapsed(new Set(catalogs.flatMap(item => [item.course.id + '/root', ...item.files.filter(file => file.kind === 'folder').map(file => item.course.id + '/' + file.id)]))) }, [catalogs])
@@ -28,18 +32,22 @@ export function MaterialDirectory({ catalogs, courseId, folder = 'root' }: { cat
   const parent: DirectoryTarget = { courseId: folder === 'root' ? undefined : courseId, folder: current?.parent ?? 'root' }
   const valid = !courseId || !!catalog && (folder === 'root' || !!current)
   const rows: { catalog: Catalog; file?: CourseFile; depth: number; key: string }[] = []
+  const query = search.trim().toLocaleLowerCase('sr')
+  const matches = (item: Catalog, file: CourseFile): boolean =>
+    file.name.toLocaleLowerCase('sr').includes(query) || file.kind === 'folder' && item.files.some(child => child.parent === file.id && matches(item, child))
   const appendFiles = (item: Catalog, parentId: string, depth: number) => {
-    for (const file of item.files.filter(file => file.parent === parentId)) {
+    for (const file of item.files.filter(file => file.parent === parentId && (!query || matches(item, file)))) {
       const key = item.course.id + '/' + file.id
       rows.push({ catalog: item, file, depth, key })
-      if (file.kind === 'folder' && !collapsed.has(key)) appendFiles(item, file.id, depth + 1)
+      if (file.kind === 'folder' && (Boolean(query) || !collapsed.has(key))) appendFiles(item, file.id, depth + 1)
     }
   }
   if (catalog && valid) appendFiles(catalog, folder, 0)
   else if (!courseId) for (const item of catalogs) {
     const key = item.course.id + '/root'
+    if (query && !item.course.name.toLocaleLowerCase('sr').includes(query) && !item.course.code.toLocaleLowerCase('sr').includes(query) && !item.files.some(file => file.name.toLocaleLowerCase('sr').includes(query))) continue
     rows.push({ catalog: item, depth: 0, key })
-    if (!collapsed.has(key)) appendFiles(item, 'root', 1)
+    if (query || !collapsed.has(key)) appendFiles(item, 'root', 1)
   }
   const toggle = (key: string) => setCollapsed(previous => {
     const next = new Set(previous)
@@ -79,15 +87,22 @@ export function MaterialDirectory({ catalogs, courseId, folder = 'root' }: { cat
     if (file.kind === 'practicum-link') return '#' + courseId + '/praktikum/' + String(file.exercise).padStart(2, '0')
     return '#' + courseId + '/kontrolne'
   }
+  if (preview?.source) return <div className="material-directory pdf-preview-page">
+    <button className="pdf-back" type="button" onClick={() => setPreview(null)}>← Nazad na materijale</button>
+    <div className="pdf-preview-shell"><PdfViewer file={preview.source} name={preview.name}/></div>
+  </div>
   return <div className="material-directory">
-    <header className="directory-heading">{catalog && <h1>{catalog.course.name}</h1>}
-      {valid && <button type="button" className="directory-download" disabled={!!progress} onClick={() => void save(target)}>Preuzmi {catalog ? 'folder' : 'sve'} .zip ↓</button>}
+    <header className="directory-heading"><div><span className="directory-kicker">NASTAVNI MATERIJALI {catalog ? ' / ' + catalog.course.code : ''}</span>
+      <h1>{catalog ? catalog.course.name : 'Materijali za tvoje vežbe'}</h1>
+      <p>Prezentacije, dokumenti i primeri na jednom mestu.</p></div>
+      {valid && <button type="button" className="directory-download directory-primary" disabled={!!progress} onClick={() => void save(target)}>↓ &nbsp; Preuzmi {catalog ? 'folder' : 'sve'} kao ZIP</button>}
     </header>
     {catalog && <nav className="directory-path" aria-label="Putanja foldera">{breadcrumbs.map((crumb, index) => <span key={crumb.target.folder}>
       {index > 0 && <span className="directory-slash">/</span>}
       {index === breadcrumbs.length - 1 ? <span aria-current="page">{crumb.label}</span> : <a href={directoryHref(crumb.target)}>{crumb.label}</a>}
     </span>)}</nav>}
-    <div className="directory-tree-controls"><button type="button" onClick={() => setCollapsed(new Set())}>Proširi sve</button><button type="button" onClick={collapseAll}>Sažmi sve</button></div>
+    <div className="directory-toolbar"><label className="directory-search"><span aria-hidden="true">⌕</span><span className="sr-only">Pretraži materijale</span><input value={search} onChange={event => setSearch(event.target.value)} placeholder="Pretraži materijale…" type="search" /></label>
+    <div className="directory-tree-controls"><button type="button" onClick={() => setCollapsed(new Set())}>Proširi sve</button><button type="button" onClick={collapseAll}>Sažmi sve</button></div></div>
     {progress && <p className="directory-status" role="status">{progress}</p>}
     {error && <p className="directory-error" role="alert">{error}</p>}
     <table className="directory-table">
@@ -98,14 +113,14 @@ export function MaterialDirectory({ catalogs, courseId, folder = 'root' }: { cat
           const isFolder = !file || file.kind === 'folder'
           const label = file ? fileName(file) : item.course.name + ' (' + item.course.code + ')/'
           const destination = { courseId: item.course.id, folder: file?.id ?? 'root' }
+          const expanded = Boolean(query) || !collapsed.has(key)
           return <tr key={key} className={isFolder ? 'directory-folder-row' : undefined}>
             <td><div className="directory-name directory-tree-name" style={{ '--directory-depth': depth } as CSSProperties}>
-              {isFolder ? <button type="button" className="directory-toggle" aria-label={(collapsed.has(key) ? 'Proširi ' : 'Sažmi ') + (file?.name ?? item.course.code)} aria-expanded={!collapsed.has(key)} onClick={() => toggle(key)}>{collapsed.has(key) ? '▸' : '▾'}</button> : <span className="directory-tree-spacer"/>}
-              {isFolder ? <button type="button" className="directory-entry-link directory-folder-toggle" aria-expanded={!collapsed.has(key)} onClick={() => toggle(key)}><FileIcon folder/><span>{label}</span></button> :
-                <a className="directory-entry-link" href={hrefFor(file!, item)} target={file?.kind === 'pdf' ? '_blank' : undefined} rel={file?.kind === 'pdf' ? 'noopener noreferrer' : undefined} download={file?.source && file.kind !== 'pdf' ? '' : undefined}>
+              {isFolder ? <button type="button" className="directory-toggle" aria-label={(expanded ? 'Sažmi ' : 'Proširi ') + (file?.name ?? item.course.code)} aria-expanded={expanded} disabled={Boolean(query)} onClick={() => toggle(key)}>{expanded ? '▾' : '▸'}</button> : <span className="directory-tree-spacer"/>}
+              {isFolder ? <button type="button" className="directory-entry-link directory-folder-toggle" aria-expanded={expanded} disabled={Boolean(query)} onClick={() => toggle(key)}><FileIcon folder/><span>{label}</span></button> :
+                <a className="directory-entry-link" href={hrefFor(file!, item)} onClick={event => { if (file?.kind === 'pdf' && file.source) { event.preventDefault(); setPreview(file) } }} download={file?.source && file.kind !== 'pdf' ? '' : undefined}>
                   <FileIcon/><span>{label}</span>
                 </a>}
-              {file?.editableSource && <a className="directory-pdf" href={assetUrl(file.editableSource)} download aria-label={'Preuzmi ' + file.name.replace(/\.pdf$/i, '') + ' kao Word dokument'}>Word ↓</a>}
 
             </div></td>
             <td>{isFolder ? 'Folder' : file?.source ? file.source.split('.').pop()?.toUpperCase() : 'Online'}</td>
@@ -114,7 +129,8 @@ export function MaterialDirectory({ catalogs, courseId, folder = 'root' }: { cat
         })}
       </tbody>
     </table>
+    {valid && query && rows.length === 0 && <p className="directory-empty">Nema rezultata za „{search}”. Pokušaj sa drugim pojmom.</p>}
     {!valid && <p className="directory-note">Folder nije pronađen. <a href={directoryHref({ courseId, folder: 'root' })}>Nazad na predmet</a></p>}
-    <footer className="directory-footer"><span>{rows.length} prikazanih stavki</span></footer>
+    <footer className="directory-footer"><span>{rows.length} prikazanih stavki</span><span className="materials-source" role="status">{sourceStatus}</span></footer>
   </div>
 }

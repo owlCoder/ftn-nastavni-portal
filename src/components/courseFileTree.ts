@@ -191,3 +191,21 @@ export function courseFolderEntries(course: Course, folder: string, files: Cours
   }
   return entries
 }
+
+/** Keep only publishable PDF and ZIP documents and their nonempty ancestor folders. */
+export function visibleMaterials(files: CourseFile[]): CourseFile[] {
+  const folders = new Map(files.filter(file => file.kind === 'folder').map(file => [file.id, file]))
+  const allowed = files.filter(file => file.source && /\.(pdf|zip)$/i.test(file.source.split(/[?#]/)[0]))
+  const ancestors = new Set<string>()
+  for (const file of allowed) {
+    let parent = file.parent
+    while (parent !== 'root' && !ancestors.has(parent)) {
+      const folder = folders.get(parent)
+      if (!folder) break
+      ancestors.add(parent)
+      parent = folder.parent
+    }
+  }
+  return files.filter(file => allowed.includes(file) || file.kind === 'folder' && ancestors.has(file.id))
+    .map(file => ({ ...file, editableSource: undefined }))
+}
