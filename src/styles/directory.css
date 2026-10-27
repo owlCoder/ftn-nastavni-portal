@@ -96,3 +96,6 @@
 
 .directory-folder-toggle { border: 0; border-radius: 0; background: none; color: #265b92; font: inherit; text-align: left; cursor: pointer; }
 .directory-folder-toggle:hover { text-decoration: underline; }
+
+.materials-source { padding: 8px 14px; color: #536a7d; font-size: 12px; }
+.materials-source button { border: 0; padding: 2px 5px; color: #285b8d; background: transparent; text-decoration: underline; cursor: pointer; font: inherit; }

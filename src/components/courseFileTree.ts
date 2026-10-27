@@ -7,7 +7,7 @@ import type { DownloadEntry } from './courseDownloads'
 import { prepareDocument } from './document/prepareDocument'
 import { assetUrl } from '../lib/assets'
 
-export type CourseFileKind = 'folder' | 'practicum' | 'practicum-link' | 'checkpoints' | 'pdf' | 'docx' | 'pptx' | 'zip'
+export type CourseFileKind = 'folder' | 'practicum' | 'practicum-link' | 'checkpoints' | 'pdf' | 'docx' | 'pptx' | 'zip' | 'file'
 export type CourseFile = {
   id: string
   parent: string

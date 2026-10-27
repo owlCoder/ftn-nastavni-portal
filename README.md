@@ -9,6 +9,12 @@ Za **Elemente razvoja softvera (ERS)** i **Osnove informacione bezbednosti (OIB)
 [![Build](https://github.com/owlCoder/ftn-nastavni-portal/actions/workflows/build.yml/badge.svg)](https://github.com/owlCoder/ftn-nastavni-portal/actions/workflows/build.yml)
 [![GitHub Pages](https://github.com/owlCoder/ftn-nastavni-portal/actions/workflows/pages.yml/badge.svg)](https://github.com/owlCoder/ftn-nastavni-portal/actions/workflows/pages.yml)
 
+## Materijali sa GitHub-a
+
+Spisak foldera i fajlova portal učitava iz javnog repozitorijuma [ftn-nastavni-materijali](https://github.com/owlCoder/ftn-nastavni-materijali), sa grane `main`. Kada izmene materijala budu commitovane i poslate na tu granu, GitHub Actions osvežava indeks u repozitorijumu materijala; posetioci zatim vide izmene pri otvaranju ili klikom na **Osveži**. Osvežavanje indeksa i GitHub keša može potrajati nekoliko minuta. Nije potrebno menjati ili ponovo objavljivati portal samo zbog izmene materijala. Fajlovi se preuzimaju sa istog commita kao spisak, da se verzije ne pomešaju.
+
+Ako GitHub nije dostupan ili ograniči broj zahteva, portal prikazuje obaveštenje i prethodno učitani spisak, odnosno ugrađenu rezervnu verziju. Stari online prikazi praktikuma i kontrolnih tačaka ostaju ugrađeni u portal i ne ažuriraju se automatski; aktuelne dokumente treba otvoriti iz spiska materijala. Prikaz uključuje fajlove iz javnog repozitorijuma; tajne i privatni podaci ne pripadaju tamo. Provera povezivanja pokreće se komandom `npm run check:github-materials`.
+
 ## Direktorijum materijala
 
 Početna prikazuje stablo sa svim folderima podrazumevano skupljenim. Klik na naziv foldera ili njegovu strelicu proširuje i sažima sadržaj na istoj strani, a komande „Proširi sve“ i „Sažmi sve“ upravljaju celim prikazom. Svaki predmet koristi tabelu fajlova, putanju foldera i povratak preko `..`. Dugme **ZIP ↓** uz folder ili roditeljski direktorijum preuzima ceo taj direktorijum, sa svim podfolderima. **Preuzmi folder .zip** preuzima trenutni direktorijum, a **Preuzmi sve .zip** na početnoj sve predmete, razdvojene po direktorijumima. Arhive sadrže PDF-ove, ZIP primere, zbirne pakete, tekstove praktikuma i prateće slike. Tok i greške preuzimanja prikazuju se iznad tabele.
@@ -103,7 +109,7 @@ Evaluacije iz `evals/*.json` sprovode se izborom `skill` i `mode`, zadavanjem `i
 
 ## Izmena i usklađivanje materijala
 
-Praktikum se uređuje u `src/courses`, a programski primeri u `examples`. Objavljene PDF putanje održavati u `src/courses/<predmet>/downloads.ts`; veličine i broj stranica treba da odgovaraju stvarnim datotekama. Nakon izmene:
+Ugrađeni rezervni i stariji online prikazi praktikuma uređuju se u `src/courses`, a lokalni primeri u `examples`. Za te ugrađene prikaze PDF putanje održavati u `src/courses/<predmet>/downloads.ts`; veličine i broj stranica treba da odgovaraju stvarnim datotekama. Nakon izmene:
 
 ```bash
 npm run generate:practicum
@@ -111,7 +117,7 @@ npm run check:materials-sync
 npm run build
 ```
 
-Generisane dokumente iz `public/downloads/praktikum/<predmet>` preneti na odredišta navedena u manifestu: ceo praktikum je izdvojen, poglavlja su uz teme odnosno vežbe, a kontrolne tačke uz projekat. Mapiranje svih dokumenata, slika, ZIP paketa i izvora koda određuje `scripts/teaching-materials.json`. Provera poredi datoteke sa susednim direktorijumom `../nastava`; druga lokacija prosleđuje se kao argument: `npm run check:materials-sync -- /putanja/do/nastava`. Korenski README daje pregled materijala, a README datoteke uz primere sadrže njihova uputstva za pokretanje i proveru.
+Za ugrađenu rezervnu verziju, generisane dokumente iz `public/downloads/praktikum/<predmet>` preneti na odredišta navedena u manifestu: ceo praktikum je izdvojen, poglavlja su uz teme odnosno vežbe, a kontrolne tačke uz projekat. Mapiranje svih dokumenata, slika, ZIP paketa i izvora koda određuje `scripts/teaching-materials.json`. Provera poredi datoteke sa susednim direktorijumom `../nastava`; druga lokacija prosleđuje se kao argument: `npm run check:materials-sync -- /putanja/do/nastava`. Korenski README daje pregled materijala, a README datoteke uz primere sadrže njihova uputstva za pokretanje i proveru.
 
 Za uvoz ERS i OIB PDF prezentacija iz pripremljenih arhiva:
 
@@ -130,4 +136,4 @@ Pravila doprinosa su u [CONTRIBUTING.md](CONTRIBUTING.md), a prijava bezbednosni
 
 Pravila ERS i OIB imaju Word verziju za uređivanje i PDF za čitanje. Veza **Word ↓** nalazi se uz odgovarajući PDF, a ZIP preuzimanje foldera uključuje oba formata. Dokumenti zadržavaju dve kontrolne tačke, KT1 i KT2, i postojeće bodovanje, pragove i uslove.
 
-Za ERS su pravila u **Opštim materijalima**, a za OIB u **Projektu**. Word izvori nalaze se i u odgovarajućim folderima repozitorijuma `nastava`. Nakon izmene Word dokumenta po potrebi ručno izvesti PDF i osvežiti kopije u oba repozitorijuma, pa pokrenuti `npm run check:materials-sync` i `npm run build`.
+Za ERS su pravila u **Opštim materijalima**, a za OIB u **Projektu**. Word izvori nalaze se i u odgovarajućim folderima repozitorijuma `nastava`. Nakon izmene Word dokumenta po potrebi ručno izvesti PDF; za rezervne kopije portala pokrenuti `npm run check:materials-sync` i `npm run build`.

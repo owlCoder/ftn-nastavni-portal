@@ -9,7 +9,8 @@
   "scripts": {
     "predev": "node scripts/generate-example-zips.mjs",
     "dev": "vite",
-    "prebuild": "node scripts/copy-code-editor-licenses.mjs && node scripts/generate-example-zips.mjs && npm run check:course-files && npm run check:directory-downloads",
+    "prebuild": "node scripts/copy-code-editor-licenses.mjs && node scripts/generate-example-zips.mjs && npm run check:course-files && npm run check:directory-downloads && npm run check:github-materials",
+    "check:github-materials": "node scripts/check-github-materials.mjs",
     "check:materials-sync": "node scripts/check-materials-sync.mjs",
     "build": "tsc -b && vite build",
     "postbuild": "node scripts/inline-production-css.mjs",

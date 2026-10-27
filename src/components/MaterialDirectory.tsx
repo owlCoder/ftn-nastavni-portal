@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import type { CourseFile } from './courseFileTree'
 import { downloadFolderZip } from './courseDownloads'
 import { directoryArchive, directoryHref, type Catalog, type DirectoryTarget } from './directoryModel'
@@ -21,6 +21,7 @@ export function MaterialDirectory({ catalogs, courseId, folder = 'root' }: { cat
   const [error, setError] = useState('')
   const allFolders = () => new Set(catalogs.flatMap(item => [item.course.id + '/root', ...item.files.filter(file => file.kind === 'folder').map(file => item.course.id + '/' + file.id)]))
   const [collapsed, setCollapsed] = useState<Set<string>>(allFolders)
+  useEffect(() => { setCollapsed(new Set(catalogs.flatMap(item => [item.course.id + '/root', ...item.files.filter(file => file.kind === 'folder').map(file => item.course.id + '/' + file.id)]))) }, [catalogs])
   const catalog = catalogs.find(item => item.course.id === courseId)
   const current = catalog?.files.find(file => file.kind === 'folder' && file.id === folder)
   const target: DirectoryTarget = { courseId, folder }

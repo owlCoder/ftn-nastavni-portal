@@ -4,6 +4,7 @@ import type { Course, CourseId } from './courses/types'
 import { buildCourseFiles, type CourseFile } from './components/courseFileTree'
 import { PracticumDocument } from './components/document/PracticumDocument'
 import { MaterialDirectory } from './components/MaterialDirectory'
+import { loadGithubMaterials, type MaterialsSnapshot } from './lib/githubMaterials'
 
 type Section = 'vezbe' | 'prezentacije' | 'primeri' | 'projekat' | 'uputstva'
 type Reader = 'praktikum' | 'kontrolne'
@@ -56,6 +57,7 @@ function ReaderPage({ catalog, section, exercise }: { catalog: Catalog; section:
   return <div className="reader-page" style={courseStyle(course.id)}>
     <div className="reader-top"><a href={path(course.id)} className="back-link">← Nazad na {course.code}</a><span>{course.name}</span></div>
     {section === 'praktikum' ? <>
+      <p className="directory-note">Ovaj stariji online prikaz čuva se u portalu i ne ažurira se automatski. Najnoviji dokumenti nalaze se u <a href={path(course.id)}>materijalima predmeta</a>.</p>
       <div className="reader-title"><span className="eyebrow">{course.code} / PRAKTIKUM</span><h1>{exercise ? (course.id === 'ers' ? 'Tema ' : 'Vežba ') + String(exercise).padStart(2, '0') : 'Praktikum'}</h1>
         <p>Tekstovi vežbi i prateći nastavni sadržaji.</p></div>
       {course.practicum.blocks.length ? <div className="reader-document" onClickCapture={event => {
@@ -71,6 +73,7 @@ function ReaderPage({ catalog, section, exercise }: { catalog: Catalog; section:
       }}><PracticumDocument key={course.id + '-' + (exercise ?? 0)} practicum={course.practicum} initialSection={anchor}/></div>
         : <p className="empty-state">Praktikum za ovaj predmet trenutno nije dostupan.</p>}
     </> : <>
+      <p className="directory-note">Ovaj stariji online prikaz čuva se u portalu i ne ažurira se automatski. Najnoviji dokumenti nalaze se u <a href={path(course.id)}>materijalima predmeta</a>.</p>
       <div className="reader-title"><span className="eyebrow">{course.code} / PROJEKAT</span><h1>Kontrolne tačke</h1>
         <p>Kontrolne tačke, rokovi i zahtevi projektnih etapa.</p></div>
       <div className="checkpoints-list">{course.checkpoints.map((point, index) => <article key={point.id} className="checkpoint-card">
@@ -88,7 +91,22 @@ function ReaderPage({ catalog, section, exercise }: { catalog: Catalog; section:
 }
 
 export default function App() {
-  const catalogs = useMemo(() => courses.map(dataFor), [])
+  const fallbackCatalogs = useMemo(() => courses.map(dataFor), [])
+  const [snapshot, setSnapshot] = useState<MaterialsSnapshot | null>(null)
+  const [materialsError, setMaterialsError] = useState('')
+  const [refresh, setRefresh] = useState(0)
+  const catalogs = snapshot?.catalogs ?? fallbackCatalogs
+
+  useEffect(() => {
+    const controller = new AbortController()
+    setMaterialsError('')
+    loadGithubMaterials(courses, controller.signal)
+      .then(setSnapshot)
+      .catch(error => {
+        if (!controller.signal.aborted) setMaterialsError(error instanceof Error ? error.message : 'Preuzimanje materijala nije uspelo.')
+      })
+    return () => controller.abort()
+  }, [refresh])
   const [route, setRoute] = useState<Route>(readRoute)
 
   useEffect(() => {
@@ -109,6 +127,11 @@ export default function App() {
       document.getElementById('content')?.focus()
     }}>Preskoči na sadržaj</a>
     <main id="content" tabIndex={-1} className="site-content">
+      <div className="materials-source" role="status">
+        {materialsError ? <>GitHub nije dostupan. {snapshot ? 'Prikazana je prethodno učitana verzija.' : 'Prikazane su materijali sačuvani u portalu i mogu biti zastarele.'} <button type="button" onClick={() => setRefresh(n => n + 1)}>Pokušaj ponovo</button></>
+          : snapshot ? <>Materijali sa GitHub-a · verzija {snapshot.revision.slice(0, 7)} <button type="button" onClick={() => setRefresh(n => n + 1)}>Osveži</button></>
+          : 'Učitavanje materijala sa GitHub-a…'}
+      </div>
       {current ? reading ? <ReaderPage catalog={current} section={route.section as Reader} exercise={route.exercise}/> :
           <MaterialDirectory catalogs={catalogs} courseId={current.course.id} folder={route.folder ?? 'root'}/> :
           <MaterialDirectory catalogs={catalogs}/>}
