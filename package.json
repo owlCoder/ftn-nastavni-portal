@@ -7,15 +7,15 @@
     "node": "22.x"
   },
   "scripts": {
-    "predev": "npm run generate:practicum && node scripts/generate-example-zips.mjs",
+    "predev": "node scripts/generate-example-zips.mjs",
     "dev": "vite",
-    "prebuild": "node scripts/copy-code-editor-licenses.mjs && npm run generate:practicum && node scripts/generate-example-zips.mjs && npm run check:course-files",
-    "generate:practicum": "node scripts/generate-practicum-markdown.mjs",
+    "prebuild": "node scripts/copy-code-editor-licenses.mjs && node scripts/generate-example-zips.mjs && npm run check:course-files && npm run check:directory-downloads",
     "check:materials-sync": "node scripts/check-materials-sync.mjs",
     "build": "tsc -b && vite build",
     "postbuild": "node scripts/inline-production-css.mjs",
     "check:course-files": "node scripts/check-course-files.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "check:directory-downloads": "node scripts/check-directory-downloads.mjs"
   },
   "dependencies": {
     "@codemirror/commands": "^6.11.1",

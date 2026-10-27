@@ -2,10 +2,6 @@ import type { CoursePresentations, ProjectDocument } from '../types'
 
 export const ibisPresentations: CoursePresentations = {
   "kind": "downloads",
-  "bundle": {
-    "file": "/downloads/IBIS_sve_prezentacije.zip",
-    "size": "1,6 MB"
-  },
   "downloads": [
     {
       "number": "01",

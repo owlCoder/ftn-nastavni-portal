@@ -2,199 +2,643 @@
   "sharedDocuments": [
     {
       "portal": "downloads/uputstva/Uputstvo_Tapiz_LMS.pdf",
-      "materials": "00 Opsti Dokumenti/PDF/Uputstvo_Tapiz_LMS.pdf"
+      "materials": "Elementi razvoja softvera (ERS)/Opšti materijali/Tapiz LMS — Uputstvo.pdf"
     },
     {
       "portal": "downloads/uputstva/Tapiz_Boards_Uputstvo.pdf",
-      "materials": "00 Opsti Dokumenti/PDF/Tapiz_Boards_Uputstvo.pdf"
+      "materials": "Elementi razvoja softvera (ERS)/Opšti materijali/Tapiz Boards — Uputstvo.pdf"
     }
   ],
   "courses": [
     {
       "id": "ers",
-      "directory": "01 Elementi Razvoja Softvera",
+      "directory": "Elementi razvoja softvera (ERS)",
       "projects": [
         {
           "portal": "downloads/ers-projekat/ERS_Projektna_Specifikacija.pdf",
-          "materials": "01 Projekat/ERS_Projektna_Specifikacija.pdf"
+          "materials": "Projekat/PYXIS — Projektna specifikacija.pdf"
         },
         {
           "portal": "downloads/ers-projekat/ERS_Pravila_Polaganja.pdf",
-          "materials": "00 Administracija/ERS_Pravila_Polaganja.pdf"
-        },
-        {
-          "portal": "downloads/ers-projekat/ERS_Pravila_Polaganja.md",
-          "materials": "00 Administracija/ERS_Pravila_Polaganja.md"
+          "materials": "Opšti materijali/Pravila polaganja ERS.pdf"
         }
       ],
       "presentations": [
         {
           "portal": "downloads/ers-prezentacije/00_Osnovne_informacije.pdf",
-          "materials": "02 Prezentacije/PDF/00 Основне информације о предмету и пројекту.pdf"
+          "materials": "Opšti materijali/Osnovne informacije.pdf"
         },
         {
           "portal": "downloads/ers-prezentacije/01_Zahtevi_backlog_i_Git.pdf",
-          "materials": "02 Prezentacije/PDF/01 Захтеви, backlog, Git и тимски развој.pdf"
+          "materials": "Nastavni materijali/01 Zahtevi, backlog i Git/Zahtevi, backlog i Git.pdf"
         },
         {
           "portal": "downloads/ers-prezentacije/02_SOLID_i_Clean_Architecture.pdf",
-          "materials": "02 Prezentacije/PDF/02 SOLID принципи и Clean Architecture.pdf"
+          "materials": "Nastavni materijali/02 SOLID i Clean Architecture/SOLID i Clean Architecture.pdf"
         },
         {
           "portal": "downloads/ers-prezentacije/03_Poslovna_logika_i_use_case.pdf",
-          "materials": "02 Prezentacije/PDF/03 Пословна логика и слој случајева употребе.pdf"
+          "materials": "Nastavni materijali/03 Poslovna logika i slučajevi upotrebe/Poslovna logika i slučajevi upotrebe.pdf"
         },
         {
           "portal": "downloads/ers-prezentacije/04_Testabilni_dizajn_NUnit_i_Moq.pdf",
-          "materials": "02 Prezentacije/PDF/04 Тестабилни дизајн, NUnit, Moq и покривеност кода.pdf"
+          "materials": "Nastavni materijali/04 Testabilni dizajn, NUnit i Moq/Testabilni dizajn, NUnit i Moq.pdf"
         },
         {
           "portal": "downloads/ers-prezentacije/05_Integracija_modula_ugovori.pdf",
-          "materials": "02 Prezentacije/PDF/05 Интеграција модула, уговори и подаци.pdf"
+          "materials": "Nastavni materijali/05 Integracija modula i ugovori/Integracija modula i ugovori.pdf"
         },
         {
           "portal": "downloads/ers-prezentacije/06_Kontrolisan_AI_workflow.pdf",
-          "materials": "02 Prezentacije/PDF/06 Контролисан развој уз AI.pdf"
+          "materials": "Nastavni materijali/06 Razvoj uz podršku AI alata/Razvoj uz podršku AI alata.pdf"
         },
         {
           "portal": "downloads/ers-prezentacije/07_MCP.pdf",
-          "materials": "02 Prezentacije/PDF/07 MCP над EquipmentReservation решењем.pdf"
+          "materials": "Nastavni materijali/07 Model Context Protocol (MCP)/Model Context Protocol (MCP).pdf"
         },
         {
           "portal": "downloads/ers-prezentacije/08_Guardrails_evaluacije_i_QA.pdf",
-          "materials": "02 Prezentacije/PDF/08 Hooks, guardrails, евалуације и завршни QA.pdf"
+          "materials": "Nastavni materijali/08 Zaštitni mehanizmi i evaluacija/Zaštitni mehanizmi i evaluacija.pdf"
+        },
+        {
+          "portal": "downloads/ers-prezentacije/00_Osnovne_informacije.pptx",
+          "materials": "Opšti materijali/Osnovne informacije.pptx"
+        },
+        {
+          "portal": "downloads/ers-prezentacije/01_Zahtevi_backlog_i_Git.pptx",
+          "materials": "Nastavni materijali/01 Zahtevi, backlog i Git/Zahtevi, backlog i Git.pptx"
+        },
+        {
+          "portal": "downloads/ers-prezentacije/02_SOLID_i_Clean_Architecture.pptx",
+          "materials": "Nastavni materijali/02 SOLID i Clean Architecture/SOLID i Clean Architecture.pptx"
+        },
+        {
+          "portal": "downloads/ers-prezentacije/03_Poslovna_logika_i_use_case.pptx",
+          "materials": "Nastavni materijali/03 Poslovna logika i slučajevi upotrebe/Poslovna logika i slučajevi upotrebe.pptx"
+        },
+        {
+          "portal": "downloads/ers-prezentacije/04_Testabilni_dizajn_NUnit_i_Moq.pptx",
+          "materials": "Nastavni materijali/04 Testabilni dizajn, NUnit i Moq/Testabilni dizajn, NUnit i Moq.pptx"
+        },
+        {
+          "portal": "downloads/ers-prezentacije/05_Integracija_modula_ugovori.pptx",
+          "materials": "Nastavni materijali/05 Integracija modula i ugovori/Integracija modula i ugovori.pptx"
+        },
+        {
+          "portal": "downloads/ers-prezentacije/06_Kontrolisan_AI_workflow.pptx",
+          "materials": "Nastavni materijali/06 Razvoj uz podršku AI alata/Razvoj uz podršku AI alata.pptx"
+        },
+        {
+          "portal": "downloads/ers-prezentacije/07_MCP.pptx",
+          "materials": "Nastavni materijali/07 Model Context Protocol (MCP)/Model Context Protocol (MCP).pptx"
+        },
+        {
+          "portal": "downloads/ers-prezentacije/08_Guardrails_evaluacije_i_QA.pptx",
+          "materials": "Nastavni materijali/08 Zaštitni mehanizmi i evaluacija/Zaštitni mehanizmi i evaluacija.pptx"
+        }
+      ],
+      "documents": [
+        {
+          "portal": "Logger-Bloger.zip",
+          "materials": "Nastavni materijali/02 SOLID i Clean Architecture/Logger–Blogger.zip"
+        },
+        {
+          "portal": "E-Commerce.zip",
+          "materials": "Nastavni materijali/03 Poslovna logika i slučajevi upotrebe/ECommerce.zip"
+        },
+        {
+          "portal": "downloads/vezba-5-integracija-modula.zip",
+          "materials": "Nastavni materijali/05 Integracija modula i ugovori/Integracija modula, ugovori i podaci.zip"
+        },
+        {
+          "portal": "downloads/vezba-6-ai-workflow.zip",
+          "materials": "Nastavni materijali/06 Razvoj uz podršku AI alata/Kontrolisan razvoj uz AI.zip"
+        },
+        {
+          "portal": "downloads/vezba-7-mcp.zip",
+          "materials": "Nastavni materijali/07 Model Context Protocol (MCP)/MCP: povezivanje agenata sa projektom.zip"
+        },
+        {
+          "portal": "downloads/vezba-8-guardrails-evals.zip",
+          "materials": "Nastavni materijali/08 Zaštitni mehanizmi i evaluacija/Hooks, guardrails i evaluacije.zip"
+        },
+        {
+          "portal": "downloads/ers-ai-vezbe-5-8.zip",
+          "materials": "Nastavni materijali/EquipmentReservation — teme 05–08.zip"
+        },
+        {
+          "portal": "downloads/uputstva/Uputstvo_Tapiz_LMS.pdf",
+          "materials": "Opšti materijali/Tapiz LMS — Uputstvo.pdf"
+        },
+        {
+          "portal": "downloads/uputstva/Tapiz_Boards_Uputstvo.pdf",
+          "materials": "Opšti materijali/Tapiz Boards — Uputstvo.pdf"
+        },
+        {
+          "portal": "downloads/praktikum/ers/Vezba_01.pdf",
+          "materials": "Nastavni materijali/01 Zahtevi, backlog i Git/Tema_01.pdf"
+        },
+        {
+          "portal": "downloads/praktikum/ers/Praktikum.pdf",
+          "materials": "Nastavni materijali/Praktikum.pdf"
+        },
+        {
+          "portal": "downloads/praktikum/ers/slike/vezba-01/pyxis-01-detalj-korisnicke-price.png",
+          "materials": "Nastavni materijali/slike/vezba-01/pyxis-01-detalj-korisnicke-price.png"
+        },
+        {
+          "portal": "downloads/praktikum/ers/slike/vezba-01/pyxis-01-detalj-korisnicke-price.png",
+          "materials": "Nastavni materijali/01 Zahtevi, backlog i Git/slike/vezba-01/pyxis-01-detalj-korisnicke-price.png"
+        },
+        {
+          "portal": "downloads/praktikum/ers/slike/vezba-01/pyxis-02-backlog-promena-statusa.png",
+          "materials": "Nastavni materijali/slike/vezba-01/pyxis-02-backlog-promena-statusa.png"
+        },
+        {
+          "portal": "downloads/praktikum/ers/slike/vezba-01/pyxis-02-backlog-promena-statusa.png",
+          "materials": "Nastavni materijali/01 Zahtevi, backlog i Git/slike/vezba-01/pyxis-02-backlog-promena-statusa.png"
+        },
+        {
+          "portal": "downloads/praktikum/ers/slike/vezba-01/pyxis-03-aktivni-sprint.png",
+          "materials": "Nastavni materijali/slike/vezba-01/pyxis-03-aktivni-sprint.png"
+        },
+        {
+          "portal": "downloads/praktikum/ers/slike/vezba-01/pyxis-03-aktivni-sprint.png",
+          "materials": "Nastavni materijali/01 Zahtevi, backlog i Git/slike/vezba-01/pyxis-03-aktivni-sprint.png"
+        },
+        {
+          "portal": "downloads/praktikum/ers/slike/vezba-01/pyxis-04-radna-tabla.png",
+          "materials": "Nastavni materijali/slike/vezba-01/pyxis-04-radna-tabla.png"
+        },
+        {
+          "portal": "downloads/praktikum/ers/slike/vezba-01/pyxis-04-radna-tabla.png",
+          "materials": "Nastavni materijali/01 Zahtevi, backlog i Git/slike/vezba-01/pyxis-04-radna-tabla.png"
+        },
+        {
+          "portal": "downloads/ers-projekat/ERS_Pravila_Polaganja.docx",
+          "materials": "Opšti materijali/Pravila polaganja ERS.docx"
+        },
+        {
+          "portal": "downloads/praktikum/ers/Praktikum.docx",
+          "materials": "Nastavni materijali/Praktikum.docx"
+        },
+        {
+          "portal": "downloads/praktikum/ers/Poglavlje_01.docx",
+          "materials": "Nastavni materijali/01 Zahtevi, backlog i Git/Poglavlje_01.docx"
+        },
+        {
+          "portal": "downloads/praktikum/ers/Poglavlje_02.docx",
+          "materials": "Nastavni materijali/02 SOLID i Clean Architecture/Poglavlje_02.docx"
+        },
+        {
+          "portal": "downloads/praktikum/ers/Poglavlje_03.docx",
+          "materials": "Nastavni materijali/03 Poslovna logika i slučajevi upotrebe/Poglavlje_03.docx"
+        },
+        {
+          "portal": "downloads/praktikum/ers/Poglavlje_04.docx",
+          "materials": "Nastavni materijali/04 Testabilni dizajn, NUnit i Moq/Poglavlje_04.docx"
+        },
+        {
+          "portal": "downloads/praktikum/ers/Poglavlje_05.docx",
+          "materials": "Nastavni materijali/05 Integracija modula i ugovori/Poglavlje_05.docx"
+        },
+        {
+          "portal": "downloads/praktikum/ers/Poglavlje_06.docx",
+          "materials": "Nastavni materijali/06 Razvoj uz podršku AI alata/Poglavlje_06.docx"
+        },
+        {
+          "portal": "downloads/praktikum/ers/Poglavlje_07.docx",
+          "materials": "Nastavni materijali/07 Model Context Protocol (MCP)/Poglavlje_07.docx"
+        },
+        {
+          "portal": "downloads/praktikum/ers/Poglavlje_08.docx",
+          "materials": "Nastavni materijali/08 Zaštitni mehanizmi i evaluacija/Poglavlje_08.docx"
+        },
+        {
+          "portal": "downloads/uputstva/Tapiz_Boards_Uputstvo.docx",
+          "materials": "Opšti materijali/Tapiz Boards — Uputstvo.docx"
+        },
+        {
+          "portal": "downloads/praktikum/ers/Kontrolne_tacke.docx",
+          "materials": "Projekat/Kontrolne_tacke.docx"
+        },
+        {
+          "portal": "downloads/ers-projekat/ERS_Projektna_Specifikacija.docx",
+          "materials": "Projekat/PYXIS — Projektna specifikacija.docx"
+        },
+        {
+          "portal": "downloads/ers-projekat/ERS_Teorijska_Pitanja.docx",
+          "materials": "Projekat/Teorijska pitanja ERS.docx"
         }
       ]
     },
     {
       "id": "oib",
-      "directory": "02 Osnove Informacione Bezbednosti",
+      "directory": "Osnove informacione bezbednosti (OIB)",
       "projects": [
         {
           "portal": "downloads/oib-projekat/OIB_Projektna_Specifikacija.pdf",
-          "materials": "01 Projekat/OIB_Projektna_Specifikacija.pdf"
+          "materials": "Projekat/SCUTUM — Projektna specifikacija.pdf"
         },
         {
           "portal": "downloads/oib-projekat/OIB_Bodovanje_Projekta.pdf",
-          "materials": "01 Projekat/OIB_Bodovanje_Projekta.pdf"
+          "materials": "Projekat/Bodovanje projekta.pdf"
         },
         {
           "portal": "downloads/oib-projekat/OIB_Pravila_Polaganja.pdf",
-          "materials": "00 Administracija/OIB_Pravila_Polaganja.pdf"
-        },
-        {
-          "portal": "downloads/oib-projekat/OIB_pravila_polaganja.md",
-          "materials": "00 Administracija/OIB_pravila_polaganja.md"
+          "materials": "Projekat/Pravila polaganja OIB.pdf"
         }
       ],
       "presentations": [
         {
           "portal": "downloads/oib-prezentacije/00_Osnovne_informacije.pdf",
-          "materials": "02 Prezentacije/PDF/00_Osnovne_informacije.pdf"
+          "materials": "Osnovne informacije.pdf"
         },
         {
           "portal": "downloads/oib-prezentacije/01_Identitet_autentikacija_i_RBAC.pdf",
-          "materials": "02 Prezentacije/PDF/01_Identitet_autentikacija_i_RBAC.pdf"
+          "materials": "Računarske vežbe/01 Identitet, autentikacija i RBAC/Identitet, autentikacija i RBAC.pdf"
         },
         {
           "portal": "downloads/oib-prezentacije/02_Autorizacija_nad_resursom_i_klasifikacija_podataka.pdf",
-          "materials": "02 Prezentacije/PDF/02_Autorizacija_nad_resursom_i_klasifikacija_podataka.pdf"
+          "materials": "Računarske vežbe/02 Autorizacija nad resursom/Autorizacija nad resursom.pdf"
         },
         {
           "portal": "downloads/oib-prezentacije/03_Politike_konfiguracija_i_vidljivost.pdf",
-          "materials": "02 Prezentacije/PDF/03_Politike_konfiguracija_i_vidljivost.pdf"
+          "materials": "Računarske vežbe/03 Politike i bezbednosna konfiguracija/Politike i bezbednosna konfiguracija.pdf"
         },
         {
           "portal": "downloads/oib-prezentacije/04_Imovina_granice_poverenja_i_threat_modeling.pdf",
-          "materials": "02 Prezentacije/PDF/04_Imovina_granice_poverenja_i_threat_modeling.pdf"
+          "materials": "Računarske vežbe/04 Imovina i modelovanje pretnji/Imovina i modelovanje pretnji.pdf"
         },
         {
           "portal": "downloads/oib-prezentacije/05_MFA_sesije_servisi_i_tajne.pdf",
-          "materials": "02 Prezentacije/PDF/05_MFA_sesije_servisi_i_tajne.pdf"
+          "materials": "Računarske vežbe/05 MFA, sesije, servisi i tajne/MFA, sesije, servisi i tajne.pdf"
         },
         {
           "portal": "downloads/oib-prezentacije/06_Detekcija_incident_i_ranjivosti.pdf",
-          "materials": "02 Prezentacije/PDF/06_Detekcija_incident_i_ranjivosti.pdf"
+          "materials": "Računarske vežbe/06 Detekcija i incident/Detekcija i incident.pdf"
         },
         {
           "portal": "downloads/oib-prezentacije/07_Atributi_rizik_i_pregled_pristupa.pdf",
-          "materials": "02 Prezentacije/PDF/07_Atributi_rizik_i_pregled_pristupa.pdf"
+          "materials": "Računarske vežbe/07 Atributi, rizik i pregled pristupa/Atributi, rizik i pregled pristupa.pdf"
         },
         {
           "portal": "downloads/oib-prezentacije/08_Korelacija_efektivnost_i_ucenje.pdf",
-          "materials": "02 Prezentacije/PDF/08_Korelacija_efektivnost_i_ucenje.pdf"
+          "materials": "Računarske vežbe/08 Korelacija i efektivnost kontrola/Korelacija i efektivnost kontrola.pdf"
+        },
+        {
+          "portal": "downloads/oib-prezentacije/00_Osnovne_informacije.pptx",
+          "materials": "Osnovne informacije.pptx"
+        },
+        {
+          "portal": "downloads/oib-prezentacije/01_Identitet_autentikacija_i_RBAC.pptx",
+          "materials": "Računarske vežbe/01 Identitet, autentikacija i RBAC/Identitet, autentikacija i RBAC.pptx"
+        },
+        {
+          "portal": "downloads/oib-prezentacije/02_Autorizacija_nad_resursom_i_klasifikacija_podataka.pptx",
+          "materials": "Računarske vežbe/02 Autorizacija nad resursom/Autorizacija nad resursom.pptx"
+        },
+        {
+          "portal": "downloads/oib-prezentacije/03_Politike_konfiguracija_i_vidljivost.pptx",
+          "materials": "Računarske vežbe/03 Politike i bezbednosna konfiguracija/Politike i bezbednosna konfiguracija.pptx"
+        },
+        {
+          "portal": "downloads/oib-prezentacije/04_Imovina_granice_poverenja_i_threat_modeling.pptx",
+          "materials": "Računarske vežbe/04 Imovina i modelovanje pretnji/Imovina i modelovanje pretnji.pptx"
+        },
+        {
+          "portal": "downloads/oib-prezentacije/05_MFA_sesije_servisi_i_tajne.pptx",
+          "materials": "Računarske vežbe/05 MFA, sesije, servisi i tajne/MFA, sesije, servisi i tajne.pptx"
+        },
+        {
+          "portal": "downloads/oib-prezentacije/06_Detekcija_incident_i_ranjivosti.pptx",
+          "materials": "Računarske vežbe/06 Detekcija i incident/Detekcija i incident.pptx"
+        },
+        {
+          "portal": "downloads/oib-prezentacije/07_Atributi_rizik_i_pregled_pristupa.pptx",
+          "materials": "Računarske vežbe/07 Atributi, rizik i pregled pristupa/Atributi, rizik i pregled pristupa.pptx"
+        },
+        {
+          "portal": "downloads/oib-prezentacije/08_Korelacija_efektivnost_i_ucenje.pptx",
+          "materials": "Računarske vežbe/08 Korelacija i efektivnost kontrola/Korelacija i efektivnost kontrola.pptx"
+        }
+      ],
+      "documents": [
+        {
+          "portal": "downloads/oib-vezba-01-identitet-rbac.zip",
+          "materials": "Računarske vežbe/01 Identitet, autentikacija i RBAC/Identitet i RBAC.zip"
+        },
+        {
+          "portal": "downloads/oib-vezba-02-resurs-klasifikacija.zip",
+          "materials": "Računarske vežbe/02 Autorizacija nad resursom/Resurs i klasifikacija.zip"
+        },
+        {
+          "portal": "downloads/oib-vezba-03-politike-konfiguracija.zip",
+          "materials": "Računarske vežbe/03 Politike i bezbednosna konfiguracija/Politike i konfiguracija.zip"
+        },
+        {
+          "portal": "downloads/oib-vezba-04-threat-modeling.zip",
+          "materials": "Računarske vežbe/04 Imovina i modelovanje pretnji/Modelovanje pretnji.zip"
+        },
+        {
+          "portal": "downloads/oib-vezba-05-mfa-sesije-tajne.zip",
+          "materials": "Računarske vežbe/05 MFA, sesije, servisi i tajne/MFA, sesije i tajne.zip"
+        },
+        {
+          "portal": "downloads/oib-vezba-06-detekcija-incident.zip",
+          "materials": "Računarske vežbe/06 Detekcija i incident/Detekcija i incident.zip"
+        },
+        {
+          "portal": "downloads/oib-vezba-07-abac-rizik-pregled.zip",
+          "materials": "Računarske vežbe/07 Atributi, rizik i pregled pristupa/ABAC i procena rizika.zip"
+        },
+        {
+          "portal": "downloads/oib-vezba-08-korelacija-efektivnost.zip",
+          "materials": "Računarske vežbe/08 Korelacija i efektivnost kontrola/Korelacija i efektivnost.zip"
+        },
+        {
+          "portal": "downloads/oib-svi-primeri.zip",
+          "materials": "Računarske vežbe/Svi primeri.zip"
+        },
+        {
+          "portal": "downloads/uputstva/Uputstvo_Tapiz_LMS.pdf",
+          "materials": "Uputstva/Tapiz LMS — Uputstvo.pdf"
+        },
+        {
+          "portal": "downloads/uputstva/Tapiz_Boards_Uputstvo.pdf",
+          "materials": "Uputstva/Tapiz Boards — Uputstvo.pdf"
+        },
+        {
+          "portal": "downloads/oib-projekat/OIB_Pravila_Polaganja.docx",
+          "materials": "Projekat/Pravila polaganja OIB.docx"
+        },
+        {
+          "portal": "downloads/praktikum/oib/Praktikum.docx",
+          "materials": "Praktikum.docx"
+        },
+        {
+          "portal": "downloads/praktikum/oib/Poglavlje_01.docx",
+          "materials": "Računarske vežbe/01 Identitet, autentikacija i RBAC/Poglavlje_01.docx"
+        },
+        {
+          "portal": "downloads/praktikum/oib/Poglavlje_02.docx",
+          "materials": "Računarske vežbe/02 Autorizacija nad resursom/Poglavlje_02.docx"
+        },
+        {
+          "portal": "downloads/praktikum/oib/Poglavlje_03.docx",
+          "materials": "Računarske vežbe/03 Politike i bezbednosna konfiguracija/Poglavlje_03.docx"
+        },
+        {
+          "portal": "downloads/praktikum/oib/Poglavlje_04.docx",
+          "materials": "Računarske vežbe/04 Imovina i modelovanje pretnji/Poglavlje_04.docx"
+        },
+        {
+          "portal": "downloads/praktikum/oib/Poglavlje_05.docx",
+          "materials": "Računarske vežbe/05 MFA, sesije, servisi i tajne/Poglavlje_05.docx"
+        },
+        {
+          "portal": "downloads/praktikum/oib/Poglavlje_06.docx",
+          "materials": "Računarske vežbe/06 Detekcija i incident/Poglavlje_06.docx"
+        },
+        {
+          "portal": "downloads/praktikum/oib/Poglavlje_07.docx",
+          "materials": "Računarske vežbe/07 Atributi, rizik i pregled pristupa/Poglavlje_07.docx"
+        },
+        {
+          "portal": "downloads/praktikum/oib/Poglavlje_08.docx",
+          "materials": "Računarske vežbe/08 Korelacija i efektivnost kontrola/Poglavlje_08.docx"
+        },
+        {
+          "portal": "downloads/praktikum/oib/Kontrolne_tacke.docx",
+          "materials": "Projekat/Kontrolne_tacke.docx"
+        },
+        {
+          "portal": "downloads/oib-projekat/OIB_Projektna_Specifikacija.docx",
+          "materials": "Projekat/SCUTUM — Projektna specifikacija.docx"
+        },
+        {
+          "portal": "downloads/uputstva/Tapiz_Boards_Uputstvo.docx",
+          "materials": "Uputstva/Tapiz Boards — Uputstvo.docx"
         }
       ]
     },
     {
       "id": "odp",
-      "directory": "03 Osnove Distribuiranog Programiranja",
+      "directory": "Osnove distribuiranog programiranja (ODP)",
       "projects": [
         {
           "portal": "downloads/odp-projekat/ODP_Projektna_Specifikacija.pdf",
-          "materials": "01 Projekat/ODP_Specifikacija.pdf"
+          "materials": "Projekat/PICTOR — Projektna specifikacija.pdf"
         }
       ],
       "presentations": [
         {
           "portal": "downloads/odp-prezentacije/01_Nacin_razmisljanja_u_distribuiranom_sistemu.pdf",
-          "materials": "02 Prezentacije/PDF/01_Nacin_razmisljanja_u_distribuiranom_sistemu.pdf"
+          "materials": "Računarske vežbe/01 Način razmišljanja u distribuiranom sistemu/Način razmišljanja u distribuiranom sistemu.pdf"
         },
         {
           "portal": "downloads/odp-prezentacije/02_Ugovori_simulatori_i_ponovljivost.pdf",
-          "materials": "02 Prezentacije/PDF/02_Ugovori_simulatori_i_ponovljivost.pdf"
+          "materials": "Računarske vežbe/02 Ugovori, simulatori i ponovljivost/Ugovori, simulatori i ponovljivost.pdf"
         },
         {
           "portal": "downloads/odp-prezentacije/03_Identitet_audit_observability_i_konfiguracija.pdf",
-          "materials": "02 Prezentacije/PDF/03_Identitet_audit_observability_i_konfiguracija.pdf"
+          "materials": "Računarske vežbe/03 Identitet, audit, observability i konfiguracija/Identitet, audit, observability i konfiguracija.pdf"
         },
         {
           "portal": "downloads/odp-prezentacije/04_Verzionisanje_i_failure_first_testiranje.pdf",
-          "materials": "02 Prezentacije/PDF/04_Verzionisanje_i_failure_first_testiranje.pdf"
+          "materials": "Računarske vežbe/04 Verzionisanje i failure-first testiranje/Verzionisanje i failure-first testiranje.pdf"
         },
         {
           "portal": "downloads/odp-prezentacije/05_Tok_podataka_i_read_modeli.pdf",
-          "materials": "02 Prezentacije/PDF/05_Tok_podataka_i_read_modeli.pdf"
+          "materials": "Računarske vežbe/05 Tok podataka i read modeli/Tok podataka i read modeli.pdf"
         },
         {
           "portal": "downloads/odp-prezentacije/06_Komande_poslovi_i_idempotentnost.pdf",
-          "materials": "02 Prezentacije/PDF/06_Komande_poslovi_i_idempotentnost.pdf"
+          "materials": "Računarske vežbe/06 Komande, poslovi i idempotentnost/Komande, poslovi i idempotentnost.pdf"
         },
         {
           "portal": "downloads/odp-prezentacije/07_Rad_bez_veze_i_pouzdana_isporuka.pdf",
-          "materials": "02 Prezentacije/PDF/07_Rad_bez_veze_i_pouzdana_isporuka.pdf"
+          "materials": "Računarske vežbe/07 Rad bez veze i pouzdana isporuka/Rad bez veze i pouzdana isporuka.pdf"
         },
         {
           "portal": "downloads/odp-prezentacije/08_Koordinacija_protok_i_eventualna_konzistentnost.pdf",
-          "materials": "02 Prezentacije/PDF/08_Koordinacija_protok_i_eventualna_konzistentnost.pdf"
+          "materials": "Računarske vežbe/08 Koordinacija, protok i eventualna konzistentnost/Koordinacija, protok i eventualna konzistentnost.pdf"
+        },
+        {
+          "portal": "downloads/odp-prezentacije/01_Nacin_razmisljanja_u_distribuiranom_sistemu.pptx",
+          "materials": "Računarske vežbe/01 Način razmišljanja u distribuiranom sistemu/Način razmišljanja u distribuiranom sistemu.pptx"
+        },
+        {
+          "portal": "downloads/odp-prezentacije/02_Ugovori_simulatori_i_ponovljivost.pptx",
+          "materials": "Računarske vežbe/02 Ugovori, simulatori i ponovljivost/Ugovori, simulatori i ponovljivost.pptx"
+        },
+        {
+          "portal": "downloads/odp-prezentacije/03_Identitet_audit_observability_i_konfiguracija.pptx",
+          "materials": "Računarske vežbe/03 Identitet, audit, observability i konfiguracija/Identitet, audit, observability i konfiguracija.pptx"
+        },
+        {
+          "portal": "downloads/odp-prezentacije/04_Verzionisanje_i_failure_first_testiranje.pptx",
+          "materials": "Računarske vežbe/04 Verzionisanje i failure-first testiranje/Verzionisanje i failure-first testiranje.pptx"
+        },
+        {
+          "portal": "downloads/odp-prezentacije/05_Tok_podataka_i_read_modeli.pptx",
+          "materials": "Računarske vežbe/05 Tok podataka i read modeli/Tok podataka i read modeli.pptx"
+        },
+        {
+          "portal": "downloads/odp-prezentacije/06_Komande_poslovi_i_idempotentnost.pptx",
+          "materials": "Računarske vežbe/06 Komande, poslovi i idempotentnost/Komande, poslovi i idempotentnost.pptx"
+        },
+        {
+          "portal": "downloads/odp-prezentacije/07_Rad_bez_veze_i_pouzdana_isporuka.pptx",
+          "materials": "Računarske vežbe/07 Rad bez veze i pouzdana isporuka/Rad bez veze i pouzdana isporuka.pptx"
+        },
+        {
+          "portal": "downloads/odp-prezentacije/08_Koordinacija_protok_i_eventualna_konzistentnost.pptx",
+          "materials": "Računarske vežbe/08 Koordinacija, protok i eventualna konzistentnost/Koordinacija, protok i eventualna konzistentnost.pptx"
+        }
+      ],
+      "documents": [
+        {
+          "portal": "downloads/odp-vezba-01-vlasnistvo-neizvesnost.zip",
+          "materials": "Računarske vežbe/01 Način razmišljanja u distribuiranom sistemu/Vlasništvo i neizvesnost.zip"
+        },
+        {
+          "portal": "downloads/odp-vezba-02-ugovori-simulator.zip",
+          "materials": "Računarske vežbe/02 Ugovori, simulatori i ponovljivost/Ugovori i simulator.zip"
+        },
+        {
+          "portal": "downloads/odp-vezba-03-identitet-audit-konfiguracija.zip",
+          "materials": "Računarske vežbe/03 Identitet, audit, observability i konfiguracija/Identitet operacije i audit.zip"
+        },
+        {
+          "portal": "downloads/odp-vezba-04-verzionisanje-failure-first.zip",
+          "materials": "Računarske vežbe/04 Verzionisanje i failure-first testiranje/Verzije i failure-first.zip"
+        },
+        {
+          "portal": "downloads/odp-vezba-05-tok-podataka-read-model.zip",
+          "materials": "Računarske vežbe/05 Tok podataka i read modeli/Tok podataka i read model.zip"
+        },
+        {
+          "portal": "downloads/odp-vezba-06-komande-idempotentnost.zip",
+          "materials": "Računarske vežbe/06 Komande, poslovi i idempotentnost/Komande i idempotentnost.zip"
+        },
+        {
+          "portal": "downloads/odp-vezba-07-rad-bez-veze-outbox.zip",
+          "materials": "Računarske vežbe/07 Rad bez veze i pouzdana isporuka/Rad bez veze i outbox.zip"
+        },
+        {
+          "portal": "downloads/odp-vezba-08-koordinacija-protok.zip",
+          "materials": "Računarske vežbe/08 Koordinacija, protok i eventualna konzistentnost/Koordinacija i protok.zip"
+        },
+        {
+          "portal": "downloads/odp-svi-primeri.zip",
+          "materials": "Računarske vežbe/Svi primeri.zip"
+        },
+        {
+          "portal": "downloads/uputstva/Uputstvo_Tapiz_LMS.pdf",
+          "materials": "Uputstva/Tapiz LMS — Uputstvo.pdf"
+        },
+        {
+          "portal": "downloads/uputstva/Tapiz_Boards_Uputstvo.pdf",
+          "materials": "Uputstva/Tapiz Boards — Uputstvo.pdf"
+        },
+        {
+          "portal": "downloads/praktikum/odp/Praktikum.docx",
+          "materials": "Praktikum.docx"
+        },
+        {
+          "portal": "downloads/praktikum/odp/Poglavlje_01.docx",
+          "materials": "Računarske vežbe/01 Način razmišljanja u distribuiranom sistemu/Poglavlje_01.docx"
+        },
+        {
+          "portal": "downloads/praktikum/odp/Poglavlje_02.docx",
+          "materials": "Računarske vežbe/02 Ugovori, simulatori i ponovljivost/Poglavlje_02.docx"
+        },
+        {
+          "portal": "downloads/praktikum/odp/Poglavlje_03.docx",
+          "materials": "Računarske vežbe/03 Identitet, audit, observability i konfiguracija/Poglavlje_03.docx"
+        },
+        {
+          "portal": "downloads/praktikum/odp/Poglavlje_04.docx",
+          "materials": "Računarske vežbe/04 Verzionisanje i failure-first testiranje/Poglavlje_04.docx"
+        },
+        {
+          "portal": "downloads/praktikum/odp/Poglavlje_05.docx",
+          "materials": "Računarske vežbe/05 Tok podataka i read modeli/Poglavlje_05.docx"
+        },
+        {
+          "portal": "downloads/praktikum/odp/Poglavlje_06.docx",
+          "materials": "Računarske vežbe/06 Komande, poslovi i idempotentnost/Poglavlje_06.docx"
+        },
+        {
+          "portal": "downloads/praktikum/odp/Poglavlje_07.docx",
+          "materials": "Računarske vežbe/07 Rad bez veze i pouzdana isporuka/Poglavlje_07.docx"
+        },
+        {
+          "portal": "downloads/praktikum/odp/Poglavlje_08.docx",
+          "materials": "Računarske vežbe/08 Koordinacija, protok i eventualna konzistentnost/Poglavlje_08.docx"
+        },
+        {
+          "portal": "downloads/praktikum/odp/Kontrolne_tacke.docx",
+          "materials": "Projekat/Kontrolne_tacke.docx"
+        },
+        {
+          "portal": "downloads/odp-projekat/ODP_Projektna_Specifikacija.docx",
+          "materials": "Projekat/PICTOR — Projektna specifikacija.docx"
+        },
+        {
+          "portal": "downloads/uputstva/Tapiz_Boards_Uputstvo.docx",
+          "materials": "Uputstva/Tapiz Boards — Uputstvo.docx"
         }
       ]
     },
     {
       "id": "ibis",
-      "directory": "04 Informaciona Bezbednost Infrastrukturnih Sistema",
+      "directory": "Informaciona bezbednost infrastrukturnih sistema (IBIS)",
       "projects": [
         {
           "portal": "downloads/ibis-projekti/SCADALattice_Tehnicka_specifikacija.pdf",
-          "materials": "02 Projekti/SCADALattice_Tehnicka_specifikacija.pdf"
+          "materials": "Projekti/SCADALattice — Tehnička specifikacija.pdf"
         },
         {
           "portal": "downloads/ibis-projekti/RackMetria_Tehnicka_specifikacija.pdf",
-          "materials": "02 Projekti/RackMetria_Tehnicka_specifikacija.pdf"
+          "materials": "Projekti/RackMetria — Tehnička specifikacija.pdf"
         },
         {
           "portal": "downloads/ibis-projekti/RouteMetria_Tehnicka_specifikacija.pdf",
-          "materials": "02 Projekti/RouteMetria_Tehnicka_specifikacija.pdf"
+          "materials": "Projekti/RouteMetria — Tehnička specifikacija.pdf"
         }
       ],
       "presentations": [
         {
           "portal": "downloads/ibis-prezentacije/01_SCADA_sistemi.pdf",
-          "materials": "01 Prezentacije/01_SCADA Sistemi — Arhitektura, procesi, prikazi, konfiguracija i bezbednost.pdf"
+          "materials": "Prezentacije/SCADA sistemi — arhitektura, procesi, prikazi, konfiguracija i bezbednost.pdf"
         },
         {
           "portal": "downloads/ibis-prezentacije/02_Javno_dostupni_podaci.pdf",
-          "materials": "01 Prezentacije/02_Javno dostupni podaci u bezbednosti SCADA sistema.pdf"
+          "materials": "Prezentacije/Javno dostupni podaci u bezbednosti SCADA sistema.pdf"
+        },
+        {
+          "portal": "downloads/ibis-prezentacije/01_SCADA_sistemi.pptx",
+          "materials": "Prezentacije/SCADA sistemi — arhitektura, procesi, prikazi, konfiguracija i bezbednost.pptx"
+        },
+        {
+          "portal": "downloads/ibis-prezentacije/02_Javno_dostupni_podaci.pptx",
+          "materials": "Prezentacije/Javno dostupni podaci u bezbednosti SCADA sistema.pptx"
+        }
+      ],
+      "documents": [
+        {
+          "portal": "downloads/uputstva/Uputstvo_Tapiz_LMS.pdf",
+          "materials": "Uputstva/Tapiz LMS — Uputstvo.pdf"
+        },
+        {
+          "portal": "downloads/uputstva/Tapiz_Boards_Uputstvo.pdf",
+          "materials": "Uputstva/Tapiz Boards — Uputstvo.pdf"
+        },
+        {
+          "portal": "downloads/uputstva/Tapiz_Boards_Uputstvo.docx",
+          "materials": "Uputstva/Tapiz Boards — Uputstvo.docx"
         }
       ]
     }
@@ -202,79 +646,79 @@
   "examples": [
     {
       "portal": "examples/oib-dotnet/vezba-01-identitet-rbac",
-      "materials": "02 Osnove Informacione Bezbednosti/04 Primeri/01 Identitet autentikacija i RBAC"
+      "materials": "Osnove informacione bezbednosti (OIB)/Računarske vežbe/01 Identitet, autentikacija i RBAC/Primeri"
     },
     {
       "portal": "examples/oib-dotnet/vezba-02-resurs-klasifikacija",
-      "materials": "02 Osnove Informacione Bezbednosti/04 Primeri/02 Resurs klasifikacija"
+      "materials": "Osnove informacione bezbednosti (OIB)/Računarske vežbe/02 Autorizacija nad resursom/Primeri"
     },
     {
       "portal": "examples/oib-dotnet/vezba-03-politike-konfiguracija",
-      "materials": "02 Osnove Informacione Bezbednosti/04 Primeri/03 Politike konfiguracija"
+      "materials": "Osnove informacione bezbednosti (OIB)/Računarske vežbe/03 Politike i bezbednosna konfiguracija/Primeri"
     },
     {
       "portal": "examples/oib-dotnet/vezba-04-threat-modeling",
-      "materials": "02 Osnove Informacione Bezbednosti/04 Primeri/04 Threat modeling"
+      "materials": "Osnove informacione bezbednosti (OIB)/Računarske vežbe/04 Imovina i modelovanje pretnji/Primeri"
     },
     {
       "portal": "examples/oib-dotnet/vezba-05-mfa-sesije-tajne",
-      "materials": "02 Osnove Informacione Bezbednosti/04 Primeri/05 MFA sesije tajne"
+      "materials": "Osnove informacione bezbednosti (OIB)/Računarske vežbe/05 MFA, sesije, servisi i tajne/Primeri"
     },
     {
       "portal": "examples/oib-dotnet/vezba-06-detekcija-incident",
-      "materials": "02 Osnove Informacione Bezbednosti/04 Primeri/06 Detekcija incident"
+      "materials": "Osnove informacione bezbednosti (OIB)/Računarske vežbe/06 Detekcija i incident/Primeri"
     },
     {
       "portal": "examples/oib-dotnet/vezba-07-abac-rizik-pregled",
-      "materials": "02 Osnove Informacione Bezbednosti/04 Primeri/07 ABAC rizik pregled"
+      "materials": "Osnove informacione bezbednosti (OIB)/Računarske vežbe/07 Atributi, rizik i pregled pristupa/Primeri"
     },
     {
       "portal": "examples/oib-dotnet/vezba-08-korelacija-efektivnost",
-      "materials": "02 Osnove Informacione Bezbednosti/04 Primeri/08 Korelacija efektivnost"
+      "materials": "Osnove informacione bezbednosti (OIB)/Računarske vežbe/08 Korelacija i efektivnost kontrola/Primeri"
     },
     {
       "portal": "examples/odp-dotnet/vezba-01-vlasnistvo-neizvesnost",
-      "materials": "03 Osnove Distribuiranog Programiranja/04 Primeri/01 Vlasnistvo neizvesnost"
+      "materials": "Osnove distribuiranog programiranja (ODP)/Računarske vežbe/01 Način razmišljanja u distribuiranom sistemu/Primeri"
     },
     {
       "portal": "examples/odp-dotnet/vezba-02-ugovori-simulator",
-      "materials": "03 Osnove Distribuiranog Programiranja/04 Primeri/02 Ugovori simulator"
+      "materials": "Osnove distribuiranog programiranja (ODP)/Računarske vežbe/02 Ugovori, simulatori i ponovljivost/Primeri"
     },
     {
       "portal": "examples/odp-dotnet/vezba-03-identitet-audit-konfiguracija",
-      "materials": "03 Osnove Distribuiranog Programiranja/04 Primeri/03 Identitet audit konfiguracija"
+      "materials": "Osnove distribuiranog programiranja (ODP)/Računarske vežbe/03 Identitet, audit, observability i konfiguracija/Primeri"
     },
     {
       "portal": "examples/odp-dotnet/vezba-04-verzionisanje-failure-first",
-      "materials": "03 Osnove Distribuiranog Programiranja/04 Primeri/04 Verzionisanje failure-first"
+      "materials": "Osnove distribuiranog programiranja (ODP)/Računarske vežbe/04 Verzionisanje i failure-first testiranje/Primeri"
     },
     {
       "portal": "examples/odp-dotnet/vezba-05-tok-podataka-read-model",
-      "materials": "03 Osnove Distribuiranog Programiranja/04 Primeri/05 Tok podataka read model"
+      "materials": "Osnove distribuiranog programiranja (ODP)/Računarske vežbe/05 Tok podataka i read modeli/Primeri"
     },
     {
       "portal": "examples/odp-dotnet/vezba-06-komande-idempotentnost",
-      "materials": "03 Osnove Distribuiranog Programiranja/04 Primeri/06 Komande idempotentnost"
+      "materials": "Osnove distribuiranog programiranja (ODP)/Računarske vežbe/06 Komande, poslovi i idempotentnost/Primeri"
     },
     {
       "portal": "examples/odp-dotnet/vezba-07-rad-bez-veze-outbox",
-      "materials": "03 Osnove Distribuiranog Programiranja/04 Primeri/07 Rad bez veze outbox"
+      "materials": "Osnove distribuiranog programiranja (ODP)/Računarske vežbe/07 Rad bez veze i pouzdana isporuka/Primeri"
     },
     {
       "portal": "examples/odp-dotnet/vezba-08-koordinacija-protok",
-      "materials": "03 Osnove Distribuiranog Programiranja/04 Primeri/08 Koordinacija protok"
+      "materials": "Osnove distribuiranog programiranja (ODP)/Računarske vežbe/08 Koordinacija, protok i eventualna konzistentnost/Primeri"
     },
     {
       "portal": "examples/ers-logger-blogger",
-      "materials": "01 Elementi Razvoja Softvera/04 Primeri/02 Logger Blogger"
+      "materials": "Elementi razvoja softvera (ERS)/Nastavni materijali/02 SOLID i Clean Architecture/Primeri"
     },
     {
       "portal": "examples/ers-ecommerce",
-      "materials": "01 Elementi Razvoja Softvera/04 Primeri/03 ECommerce"
+      "materials": "Elementi razvoja softvera (ERS)/Nastavni materijali/03 Poslovna logika i slučajevi upotrebe/Primeri"
     },
     {
       "portal": "examples/ers-ai-workflow",
-      "materials": "01 Elementi Razvoja Softvera/04 Primeri/05 Equipment Reservation"
+      "materials": "Elementi razvoja softvera (ERS)/Nastavni materijali/05 Integracija modula i ugovori/Primeri"
     }
   ]
 }

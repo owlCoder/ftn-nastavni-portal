@@ -2,7 +2,6 @@ import type { CourseGuide, CoursePresentations, ProjectDocument } from '../types
 
 export const ersPresentations: CoursePresentations = {
   kind: 'downloads',
-  bundle: { file: '/downloads/ERS_sve_prezentacije.zip', size: '40,9 MB' },
   downloads: [
     { number: '00', label: 'Uvodna prezentacija', title: 'Osnovne informacije', pages: 13, size: '339 KB', file: '/downloads/ers-prezentacije/00_Osnovne_informacije.pdf' },
     { number: '01', label: 'Vežba 1', title: 'Zahtevi, backlog i Git', pages: 37, size: '6,9 MB', file: '/downloads/ers-prezentacije/01_Zahtevi_backlog_i_Git.pdf' },
@@ -31,6 +30,7 @@ export const ersExamRules: CourseGuide = {
   name: 'Pravila polaganja ERS.pdf',
   description: 'Način polaganja i bodovanje; KT1 u terminu Vežbe 4 i KT2 u terminu Vežbe 8, po 10 poena.',
   file: '/downloads/ers-projekat/ERS_Pravila_Polaganja.pdf',
+  editableFile: '/downloads/ers-projekat/ERS_Pravila_Polaganja.docx',
   pages: 6,
-  size: '119 KB',
+  size: '205 KB',
 }

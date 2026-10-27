@@ -2,7 +2,7 @@ import type { PresentationBundle, PresentationDownload } from '../courses/types'
 import { assetUrl } from '../lib/assets'
 import { DownloadIcon, PreviewIcon } from './icons'
 
-export function PresentationDownloadsView({ downloads, bundle }: { downloads: PresentationDownload[]; bundle: PresentationBundle }) {
+export function PresentationDownloadsView({ downloads, bundle }: { downloads: PresentationDownload[]; bundle?: PresentationBundle }) {
   const totalPages = downloads.reduce((sum, item) => sum + item.pages, 0)
 
   return (
@@ -17,7 +17,7 @@ export function PresentationDownloadsView({ downloads, bundle }: { downloads: Pr
             <span><strong>{totalPages}</strong> slajdova</span>
           </div>
         </div>
-        <a className="download-all-button" href={assetUrl(bundle.file)} download>
+        {bundle && <a className="download-all-button" href={assetUrl(bundle.file)} download>
           <span className="download-all-icon"><DownloadIcon /></span>
           <span className="download-all-copy">
             <small>SVE PREZENTACIJE</small>
@@ -25,7 +25,7 @@ export function PresentationDownloadsView({ downloads, bundle }: { downloads: Pr
             <em><b>ZIP</b><span>{downloads.length} PDF fajlova</span><span>{bundle.size}</span></em>
           </span>
           <span className="download-all-arrow" aria-hidden="true">→</span>
-        </a>
+        </a>}
       </section>
 
       <section className="download-library" aria-labelledby="download-library-title">

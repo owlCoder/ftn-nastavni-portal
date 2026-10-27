@@ -1,4 +1,6 @@
-export const sharedCourseGuides = [
+import type { CourseGuide } from './types'
+
+export const sharedCourseGuides: CourseGuide[] = [
   {
     id: 'tapiz-lms',
     name: 'Tapiz LMS — Uputstvo.pdf',
@@ -12,6 +14,7 @@ export const sharedCourseGuides = [
     name: 'Tapiz Boards — Uputstvo.pdf',
     description: 'Uputstvo za korišćenje Tapiz Boards-a.',
     file: '/downloads/uputstva/Tapiz_Boards_Uputstvo.pdf',
+    editableFile: '/downloads/uputstva/Tapiz_Boards_Uputstvo.docx',
     pages: 8,
     size: '217 KB',
   },

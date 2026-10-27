@@ -3,11 +3,11 @@ import { sharedCourseGuides } from '../courses/guides'
 import { ersLessonPackages, ersProjectBundle, ersStandaloneExamples } from '../courses/ers/examples'
 import { oibExamples, oibExamplesBundle } from '../courses/oib/examples'
 import { odpExamples, odpExamplesBundle } from '../courses/odp/examples'
-import { checkpointMarkdown, practicumMarkdown, practicumAssets, type DownloadEntry } from './courseDownloads'
+import type { DownloadEntry } from './courseDownloads'
 import { prepareDocument } from './document/prepareDocument'
 import { assetUrl } from '../lib/assets'
 
-export type CourseFileKind = 'folder' | 'practicum' | 'practicum-link' | 'checkpoints' | 'pdf' | 'zip'
+export type CourseFileKind = 'folder' | 'practicum' | 'practicum-link' | 'checkpoints' | 'pdf' | 'docx' | 'pptx' | 'zip'
 export type CourseFile = {
   id: string
   parent: string
@@ -15,6 +15,7 @@ export type CourseFile = {
   kind: CourseFileKind
   description?: string
   source?: string
+  editableSource?: string
   size?: string
   pages?: number
   presentationNumber?: string
@@ -32,8 +33,8 @@ export const practicumExerciseHref = (course: Course, exercise: number) =>
 export function buildCourseFiles(course: Course): CourseFile[] {
   const files: CourseFile[] = []
   if (course.practicum.blocks.length) files.push({
-    id: 'praktikum', parent: 'root', kind: 'practicum', name: 'Praktikum',
-    description: 'Tekst vežbi sa sadržajem i navigacijom kroz poglavlja.',
+    id: 'praktikum', parent: 'root', kind: 'practicum', name: 'Praktikum.docx',
+    description: 'Word dokument za čitanje i uređivanje.', source: '/downloads/praktikum/' + course.id + '/Praktikum.docx',
   })
 
   const examples = course.id === 'ers' ? [
@@ -61,11 +62,11 @@ export function buildCourseFiles(course: Course): CourseFile[] {
       const parent = 'vezbe/' + number(exercise.number)
       const slide = slides.find(item => Number(item.number) === exercise.number)
       const example = examples.find(item => item.exercise === exercise.number)
-      files.push({ id: parent, parent: 'vezbe', kind: 'folder', name: 'Vežba ' + number(exercise.number), description: slide?.title ?? exercise.title })
+      files.push({ id: parent, parent: 'vezbe', kind: 'folder', name: number(exercise.number) + ' ' + (slide?.title ?? exercise.title), description: slide?.title ?? exercise.title })
       if (slide) files.push({
-        id: parent + '/prezentacija', parent, kind: 'pdf',
-        name: slide.title + '.pdf', description: 'Prezentacija za vežbu.', presentationNumber: slide.number,
-        source: slide.file, size: slide.size, pages: slide.pages,
+        id: parent + '/prezentacija', parent, kind: 'pptx',
+        name: slide.title + '.pptx', description: 'Prezentacija za vežbu.', presentationNumber: slide.number,
+        source: slide.file.replace(/\.pdf$/i, '.pptx'),
       })
       if (example) files.push({
         id: parent + '/primer', parent, kind: 'zip',
@@ -73,31 +74,26 @@ export function buildCourseFiles(course: Course): CourseFile[] {
       })
       files.push({
         id: parent + '/praktikum', parent, kind: 'practicum-link',
-        name: 'Vežba ' + number(exercise.number) + ' u praktikumu',
-        description: 'Otvori odgovarajuće poglavlje praktikuma.',
+        name: 'Poglavlje ' + number(exercise.number) + '.docx', source: '/downloads/praktikum/' + course.id + '/Poglavlje_' + number(exercise.number) + '.docx',
+        description: 'Poglavlje praktikuma u Word formatu.',
         exercise: exercise.number, anchor: exercise.anchor,
       })
     }
     // Introductory presentations live at the course root, outside exercise folders.
     for (const slide of slides.filter(item => !exercises.some(exercise => exercise.number === Number(item.number)))) files.push({
-      id: 'uvod/' + slide.number, parent: 'root', kind: 'pdf',
-      name: slide.title + '.pdf', description: slide.label, presentationNumber: slide.number,
-      source: slide.file, size: slide.size, pages: slide.pages,
+      id: 'uvod/' + slide.number, parent: 'root', kind: 'pptx',
+      name: slide.title + '.pptx', description: slide.label, presentationNumber: slide.number,
+      source: slide.file.replace(/\.pdf$/i, '.pptx'),
     })
   } else if (slides.length) {
-    files.push({ id: 'prezentacije', parent: 'root', kind: 'folder', name: 'Prezentacije', description: 'PDF prezentacije poređane po broju.' })
+    files.push({ id: 'prezentacije', parent: 'root', kind: 'folder', name: 'Prezentacije', description: 'PowerPoint prezentacije poređane po broju.' })
     for (const slide of slides) files.push({
-      id: 'prezentacije/' + slide.number, parent: 'prezentacije', kind: 'pdf',
-      name: slide.title + '.pdf', description: slide.label, presentationNumber: slide.number,
-      source: slide.file, size: slide.size, pages: slide.pages,
+      id: 'prezentacije/' + slide.number, parent: 'prezentacije', kind: 'pptx',
+      name: slide.title + '.pptx', description: slide.label, presentationNumber: slide.number,
+      source: slide.file.replace(/\.pdf$/i, '.pptx'),
     })
   }
 
-  if (course.presentations.kind === 'downloads') files.push({
-    id: 'paketi/prezentacije', parent: exercises.length ? 'vezbe' : 'prezentacije', kind: 'zip', name: 'Sve prezentacije.zip',
-    description: 'Komplet PDF prezentacija za preuzimanje.',
-    source: course.presentations.bundle.file, size: course.presentations.bundle.size, bundle: true,
-  })
   if (examples.length) {
     files.push({
       id: 'paketi/primeri', parent: 'vezbe', kind: 'zip', bundle: true,
@@ -115,17 +111,16 @@ export function buildCourseFiles(course: Course): CourseFile[] {
       description: course.checkpoints.length ? 'Projektna dokumentacija i kontrolne tačke.' : 'Tehničke specifikacije projekata.',
     })
     for (const project of projects) files.push({
-      id: 'projekat/' + project.code, parent: 'projekat', kind: 'pdf',
-      name: project.code + ' — ' + (course.id === 'ibis' ? 'Tehnička' : 'Projektna') + ' specifikacija.pdf',
-      description: project.title, source: project.file, size: project.size, pages: project.pages,
+      id: 'projekat/' + project.code, parent: 'projekat', kind: course.id === 'ibis' ? 'pdf' : 'docx',
+      name: project.code + ' — ' + (course.id === 'ibis' ? 'Tehnička' : 'Projektna') + (course.id === 'ibis' ? ' specifikacija.pdf' : ' specifikacija.docx'),
+      description: project.title, source: course.id === 'ibis' ? project.file : project.file.replace(/\.pdf$/i, '.docx'),
     })
     for (const guide of projectGuides) files.push({
-      id: 'projekat/' + guide.id, parent: 'projekat', kind: 'pdf',
-      name: guide.name, description: guide.description, source: guide.file,
-      size: guide.size, pages: guide.pages,
+      id: 'projekat/' + guide.id, parent: 'projekat', kind: guide.editableFile ? 'docx' : 'pdf',
+      name: guide.editableFile ? guide.name.replace(/\.pdf$/i, '.docx') : guide.name, description: guide.description, source: guide.editableFile ?? guide.file,
     })
     if (course.checkpoints.length) files.push({
-      id: 'projekat/kontrolne', parent: 'projekat', kind: 'checkpoints', name: 'Kontrolne tačke',
+      id: 'projekat/kontrolne', parent: 'projekat', kind: 'checkpoints', name: 'Kontrolne tačke.docx', source: '/downloads/praktikum/' + course.id + '/Kontrolne_tacke.docx',
       description: 'Projektne etape, obaveze i datumi predaje.',
     })
   }
@@ -134,29 +129,54 @@ export function buildCourseFiles(course: Course): CourseFile[] {
     description: 'Uputstva za Tapiz LMS i Tapiz Boards.',
   })
   for (const guide of sharedCourseGuides) files.push({
-    id: 'uputstva/' + guide.id, parent: 'uputstva', kind: 'pdf',
-    name: guide.name, description: guide.description, source: guide.file,
-    size: guide.size, pages: guide.pages,
+    id: 'uputstva/' + guide.id, parent: 'uputstva', kind: guide.editableFile ? 'docx' : 'pdf',
+    name: guide.editableFile ? guide.name.replace(/\.pdf$/i, '.docx') : guide.name, description: guide.description, source: guide.editableFile ?? guide.file,
   })
-  return files
+  if (course.id === 'ers') files.push({ id: 'projekat/teorijska-pitanja', parent: 'projekat', kind: 'docx', name: 'Teorijska pitanja ERS.docx', source: '/downloads/ers-projekat/ERS_Teorijska_Pitanja.docx' })
+  return course.id === 'ers' ? organizeErsMaterials(files) : files
 }
 
-export function courseFileContent(file: CourseFile, course: Course): DownloadEntry | null {
-  if (file.source) return { path: file.name, url: file.source }
-  if (file.kind === 'practicum-link' && file.exercise) return {
-    path: file.name + '.url',
-    text: '[InternetShortcut]\r\nURL=https://owlcoder.github.io/ftn-nastavni-portal/#' + course.id + '/praktikum/' + number(file.exercise) + '\r\n',
+/** ERS catalog organization is independent of teaching weeks and source filenames. */
+function organizeErsMaterials(files: CourseFile[]): CourseFile[] {
+  const general = (file: CourseFile) => file.parent === 'uputstva'
+    || file.id === 'projekat/ers-pravila-polaganja' || file.id.startsWith('uvod/')
+  const result: CourseFile[] = [
+    { id: 'opsti', parent: 'root', kind: 'folder', name: 'Opšti materijali', description: 'Osnovne informacije, pravila polaganja i uputstva.' },
+    { id: 'nastavni', parent: 'root', kind: 'folder', name: 'Nastavni materijali', description: 'Praktikum i materijali organizovani po temama.' },
+  ]
+  for (const file of files) {
+    if (file.id === 'vezbe' || file.id === 'uputstva') continue
+    if (general(file)) {
+      result.push({ ...file, parent: 'opsti', description: file.id === 'projekat/ers-pravila-polaganja' ? 'Način polaganja, obaveze i bodovanje.' : file.description })
+    } else if (file.id === 'praktikum') {
+      result.push({ ...file, parent: 'nastavni', description: 'Celovit praktikum za rad na temama i samostalno učenje.' })
+    } else if (file.id.startsWith('vezbe/')) {
+      const id = file.id.replace(/^vezbe\//, 'teme/')
+      const parent = file.parent === 'vezbe' ? 'nastavni' : file.parent.replace(/^vezbe\//, 'teme/')
+      result.push({ ...file, id, parent,
+        name: file.kind === 'folder' ? file.name
+          : file.kind === 'practicum-link' ? 'Poglavlje ' + number(file.exercise!) + '.docx' : file.name,
+        description: file.presentationNumber !== undefined ? 'Prezentacija uz temu.' : file.description,
+      })
+    } else if (file.bundle) {
+      result.push({ ...file, parent: 'nastavni', name: file.id === 'paketi/primeri' ? 'EquipmentReservation — teme 05–08.zip' : file.name,
+        description: file.id === 'paketi/primeri' ? 'Komplet EquipmentReservation primera za teme 05–08.' : file.description })
+    } else {
+      result.push(file)
+    }
   }
-  if (file.kind === 'practicum') return { path: 'Praktikum.md', text: practicumMarkdown(course) }
-  if (file.kind === 'checkpoints') return { path: 'Kontrolne_tacke.md', text: checkpointMarkdown(course) }
-  return null
+  return result
 }
 
-export function courseFolderEntries(course: Course, folder: string, files: CourseFile[]): DownloadEntry[] {
+export function courseFileContent(file: CourseFile, _course: Course): DownloadEntry | null {
+  return file.source ? { path: file.name, url: file.source } : null
+}
+
+export function courseFolderEntries(course: Course, folder: string, files: CourseFile[], includeBundles = false): DownloadEntry[] {
   const lookup = new Map(files.map(file => [file.id, file]))
   const entries: DownloadEntry[] = []
   for (const item of files) {
-    if (item.kind === 'folder' || item.bundle) continue
+    if (item.kind === 'folder' || (item.bundle && !includeBundles)) continue
     const parents: string[] = []
     let parent = item.parent
     while (parent !== folder && parent !== 'root') {
@@ -166,17 +186,6 @@ export function courseFolderEntries(course: Course, folder: string, files: Cours
       parent = ancestor.parent
     }
     if (parent !== folder) continue
-    if (item.kind === 'practicum-link' && item.exercise) {
-      entries.push({
-        path: [...parents, 'Vezba_' + number(item.exercise) + '.md'].join('/'),
-        text: practicumMarkdown(course, item.exercise),
-      })
-      entries.push(...practicumAssets(course, item.exercise).map(asset => ({ ...asset, path: [...parents, asset.path].join('/') })))
-    }
-    if (item.kind === 'practicum') {
-      entries.push(...practicumAssets(course).map(asset => ({ ...asset, path: [...parents, asset.path].join('/') })))
-      if (course.practicum.pdfFile) entries.push({ path: [...parents, 'Praktikum.pdf'].join('/'), url: course.practicum.pdfFile })
-    }
     const file = courseFileContent(item, course)
     if (file) entries.push({ ...file, path: [...parents, safeFileName(file.path)].join('/') })
   }

@@ -120,16 +120,12 @@ async function collectFiles(directory, prefix = '') {
   return result
 }
 
-function lessonReadme(lesson) {
-  return Buffer.from(`# Vežba ${lesson.number} — ${lesson.title}\n\nOvaj ZIP je samostalni paket za Vežbu ${lesson.number}. Sadrži ceo \`EquipmentReservation.sln\` da projekat može odmah da se otvori, builduje i testira.\n\n## Fajlovi na koje je fokus ove vežbe\n\n${lesson.focus.map((item) => `- \`${item}\``).join('\n')}\n\n## Pokretanje\n\n\`\`\`bash\ndotnet restore EquipmentReservation.sln\ndotnet build EquipmentReservation.sln --configuration Release\ndotnet test EquipmentReservation.sln --configuration Release --no-build\n\`\`\`\n`, 'utf8')
-}
-
 async function createZip(bundle, sourceFiles) {
   const files = [...sourceFiles]
   if (bundle.lesson) {
     files.push({
-      relative: 'LEKCIJA.md',
-      data: lessonReadme(bundle.lesson),
+      relative: 'Poglavlje_' + String(bundle.lesson.number).padStart(2, '0') + '.docx',
+      data: await fs.readFile(path.join(outputDir, 'praktikum/ers/Poglavlje_' + String(bundle.lesson.number).padStart(2, '0') + '.docx')),
       modified: new Date(2026, 0, 1),
     })
   }
@@ -246,22 +242,3 @@ for (const [number, slug] of odpLessons) {
 }
 
 await createZip({ fileName: 'odp-svi-primeri.zip', archiveRoot: 'odp-dotnet-primeri' }, await collectFiles(odpSourceRoot))
-
-const presentationBundles = [
-  { directory: 'ers-prezentacije', fileName: 'ERS_sve_prezentacije.zip', archiveRoot: 'ERS_prezentacije' },
-  { directory: 'oib-prezentacije', fileName: 'OIB_sve_prezentacije.zip', archiveRoot: 'OIB_prezentacije' },
-  { directory: 'odp-prezentacije', fileName: 'ODP_sve_prezentacije.zip', archiveRoot: 'ODP_prezentacije' },
-  { directory: 'ibis-prezentacije', fileName: 'IBIS_sve_prezentacije.zip', archiveRoot: 'IBIS_prezentacije' },
-]
-
-for (const presentationBundle of presentationBundles) {
-  try {
-    const presentationRoot = path.resolve('public/downloads', presentationBundle.directory)
-    const presentationFiles = (await collectFiles(presentationRoot)).filter((file) => file.relative.endsWith('.pdf'))
-    if (presentationFiles.length > 0) {
-      await createZip(presentationBundle, presentationFiles)
-    }
-  } catch (error) {
-    if (error?.code !== 'ENOENT') throw error
-  }
-}

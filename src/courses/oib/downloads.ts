@@ -2,7 +2,6 @@ import type { CourseGuide, CoursePresentations, ProjectDocument } from '../types
 
 export const oibPresentations: CoursePresentations = {
   kind: 'downloads',
-  bundle: { file: '/downloads/OIB_sve_prezentacije.zip', size: '10,3 MB' },
   downloads: [
     { number: '00', label: 'Uvodna prezentacija', title: 'Osnovne informacije', pages: 28, size: '510 KB', file: '/downloads/oib-prezentacije/00_Osnovne_informacije.pdf' },
     { number: '01', label: 'Vežba 1', title: 'Identitet, autentikacija i RBAC', pages: 33, size: '2,1 MB', file: '/downloads/oib-prezentacije/01_Identitet_autentikacija_i_RBAC.pdf' },
@@ -40,6 +39,7 @@ export const oibExamRules: CourseGuide = {
   name: 'Pravila polaganja OIB.pdf',
   description: 'Način polaganja i bodovanje. KT1 u terminu Vežbe 4 i KT2 u terminu Vežbe 8.',
   file: '/downloads/oib-projekat/OIB_Pravila_Polaganja.pdf',
+  editableFile: '/downloads/oib-projekat/OIB_Pravila_Polaganja.docx',
   pages: 3,
-  size: '292 KB',
+  size: '153 KB',
 }

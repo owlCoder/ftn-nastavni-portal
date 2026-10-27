@@ -3,7 +3,7 @@ import type { CourseFileKind } from './courseFileTree'
 export function CourseFileIcon({ kind }: { kind: CourseFileKind }) {
   const color = {
     folder: '#5a83aa', practicum: '#497c71', 'practicum-link': '#6982a1',
-    checkpoints: '#6b8255', pdf: '#b96561', zip: '#747c91',
+    checkpoints: '#6b8255', pdf: '#b96561', docx: '#5a83aa', pptx: '#9a6854', zip: '#747c91',
   }[kind]
   return <svg aria-hidden="true" viewBox="0 0 36 36" fill="none" className={'ers-entry-icon ers-entry-' + kind}>
     <g transform="translate(-3 -3) scale(1.17)" stroke={color} strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round">

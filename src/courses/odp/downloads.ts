@@ -2,7 +2,6 @@ import type { CoursePresentations, ProjectDocument } from '../types'
 
 export const odpPresentations: CoursePresentations = {
   kind: 'downloads',
-  bundle: { file: '/downloads/ODP_sve_prezentacije.zip', size: '2,4 MB' },
   downloads: [
     { number: '01', label: 'Vežba 1', title: 'Način razmišljanja u distribuiranom sistemu', pages: 28, size: '303 KB', file: '/downloads/odp-prezentacije/01_Nacin_razmisljanja_u_distribuiranom_sistemu.pdf' },
     { number: '02', label: 'Vežba 2', title: 'Ugovori, simulatori i ponovljivost', pages: 26, size: '281 KB', file: '/downloads/odp-prezentacije/02_Ugovori_simulatori_i_ponovljivost.pdf' },

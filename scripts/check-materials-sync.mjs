@@ -39,11 +39,7 @@ for (const example of manifest.examples) {
   sourceFiles += await compare(path.join(portalRoot, example.portal), path.join(materialsRoot, example.materials), example.portal)
 }
 for (const course of manifest.courses) {
-  if (course.id !== 'ibis') await compare(
-    path.join(portalRoot, 'public/downloads/praktikum', course.id),
-    path.join(materialsRoot, course.directory, '03 Racunarske vezbe'), course.id + ': exercise documents',
-  )
-  for (const project of [...course.projects, ...(course.presentations ?? [])]) {
+  for (const project of [...course.projects, ...(course.presentations ?? []), ...(course.documents ?? [])]) {
     assert.ok((await fs.readFile(path.join(portalRoot, 'public', project.portal))).equals(
       await fs.readFile(path.join(materialsRoot, course.directory, project.materials)),
     ), course.id + ': teaching document ' + project.materials)
@@ -55,5 +51,6 @@ for (const document of manifest.sharedDocuments) {
   ), 'Shared document: ' + document.materials)
 }
 const presentationDocuments = manifest.courses.reduce((total, course) => total + (course.presentations?.length ?? 0), 0)
+const supplementaryDocuments = manifest.courses.reduce((total, course) => total + (course.documents?.length ?? 0), 0)
 const projectDocuments = manifest.courses.reduce((total, course) => total + course.projects.length, 0)
-console.log(`Synchronized: ${manifest.examples.length} examples (${sourceFiles} files), 24 exercises, three practicums, ${presentationDocuments} presentations, ${projectDocuments} project documents and ${manifest.sharedDocuments.length} shared guides.`)
+console.log(`Synchronized: ${manifest.examples.length} examples (${sourceFiles} files), ${supplementaryDocuments} supplementary downloads, ${presentationDocuments} presentations, ${projectDocuments} project documents and ${manifest.sharedDocuments.length} shared guides.`)

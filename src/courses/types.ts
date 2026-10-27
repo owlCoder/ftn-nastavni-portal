@@ -51,7 +51,7 @@ export type PresentationDeck = {
 }
 
 export type CoursePresentations =
-  | { kind: 'downloads'; downloads: PresentationDownload[]; bundle: PresentationBundle }
+  | { kind: 'downloads'; downloads: PresentationDownload[]; bundle?: PresentationBundle }
   | { kind: 'decks'; decks: PresentationDeck[] }
 
 export type ProjectDocument = {
@@ -65,6 +65,7 @@ export type ProjectDocument = {
 }
 
 export type CourseGuide = {
+  editableFile?: string
   id: string
   name: string
   description: string
