@@ -1,10 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { Course } from '../courses/types'
-import { PdfViewer } from './PdfViewer'
 import { assetUrl } from '../lib/assets'
-import { PracticumDocument } from './document/PracticumDocument'
 import { CheckpointsView } from './CheckpointsView'
-import { ZipFileViewer } from './ZipFileViewer'
 import type {CodeProject} from '../lib/codeProjects'
 import { CourseBrowserIcon, CourseFileIcon } from './CourseFileIcon'
 import { downloadFolderZip, downloadText } from './courseDownloads'
@@ -23,7 +20,7 @@ function PresentationBadge({item}:{item:Item}){
 }
 type Preview={kind:FileKind;item:Item}
 
-export function CourseFiles({course,onOpenEditor}:{course:Course;onOpenEditor?:(project:CodeProject)=>void}){
+export function CourseFiles({course}:{course:Course;onOpenEditor?:(project:CodeProject)=>void}){
   const files=useMemo(()=>buildCourseFiles(course),[course])
   const lookup=useMemo(()=>new Map(files.map(item=>[item.id,item])),[files])
   const children=(id:string)=>files.filter(item=>item.parent===id)
@@ -159,12 +156,10 @@ export function CourseFiles({course,onOpenEditor}:{course:Course;onOpenEditor?:(
       <main className={'ers-explorer-main'+(preview?' is-preview':'')}>
         {preview&&viewing ? <div className="ers-file-preview">
           {viewing.kind==='practicum' || viewing.kind==='practicum-link' ?
-            <div className="ers-continuous-document">
-              <PracticumDocument key={viewing.id} practicum={course.practicum} initialSection={viewing.anchor}/>
-            </div> :
+            <p>Praktikum je dostupan u materijalima predmeta.</p> :
             viewing.kind==='checkpoints'?<div className="ers-checkpoint-document"><CheckpointsView checkpoints={course.checkpoints}/></div>:
-            pdfViewing?<PdfViewer file={viewing.source!} name={viewing.name}/>:
-            viewing.kind==='zip'&&viewing.source?<ZipFileViewer file={viewing.source} title={viewing.name} onOpenEditor={onOpenEditor}/>:
+            pdfViewing?<a href={assetUrl(viewing.source!)} target="_blank" rel="noopener noreferrer">Otvori PDF</a>:
+            viewing.kind==='zip'&&viewing.source?<a href={assetUrl(viewing.source)} download>Preuzmi ZIP</a>:
             <p>Fajl nije dostupan za prikaz.</p>}
         </div> : <div className="ers-directory">
           <div className="ers-directory-heading">

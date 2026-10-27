@@ -285,7 +285,6 @@ export function GnomeDesktop({onLogout}:{onLogout:()=>void}) {
     try{
       if(document.fullscreenElement===element)await document.exitFullscreen()
       else await element.requestFullscreen()
-      element.querySelector<HTMLElement>('.ftn-pdf-scroll')?.focus({preventScroll:true})
     }catch{/* Browser can deny fullscreen. */}
   }
   // Fullscreen only displays descendants of its host, including the action menu.

@@ -168,11 +168,11 @@ function organizeErsMaterials(files: CourseFile[]): CourseFile[] {
   return result
 }
 
-export function courseFileContent(file: CourseFile, _course: Course): DownloadEntry | null {
+export function courseFileContent(file: CourseFile, _course: Pick<Course, 'id' | 'name' | 'code'>): DownloadEntry | null {
   return file.source ? { path: file.name, url: file.source } : null
 }
 
-export function courseFolderEntries(course: Course, folder: string, files: CourseFile[], includeBundles = false): DownloadEntry[] {
+export function courseFolderEntries(course: Pick<Course, 'id' | 'name' | 'code'>, folder: string, files: CourseFile[], includeBundles = false): DownloadEntry[] {
   const lookup = new Map(files.map(file => [file.id, file]))
   const entries: DownloadEntry[] = []
   for (const item of files) {

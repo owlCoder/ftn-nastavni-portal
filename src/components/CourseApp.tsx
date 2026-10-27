@@ -1,7 +1,6 @@
 import { useEffect, useState, type ComponentType, type CSSProperties, type ReactElement } from 'react'
 import type { Course, CourseId } from '../courses/types'
 import { CheckpointsView } from './CheckpointsView'
-import { PracticumDocument } from './document/PracticumDocument'
 import { ErsExamplesView } from './examples/ErsExamplesView'
 import { OibExamplesView } from './examples/OibExamplesView'
 import { OdpExamplesView } from './examples/OdpExamplesView'
@@ -117,7 +116,7 @@ function TabPanel({ course, tab }: { course: Course; tab: TabKey }) {
       ? <PresentationDownloadsView downloads={course.presentations.downloads} bundle={course.presentations.bundle} />
       : <PresentationDecksView decks={course.presentations.decks} />
   }
-  return <PracticumDocument practicum={course.practicum} />
+  return <a href={"#" + course.id}>Otvori materijale predmeta</a>
 }
 
 export function CourseApp({ course, onBack, embedded = false }: { course: Course; onBack: () => void; embedded?: boolean }) {

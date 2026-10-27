@@ -1,6 +1,6 @@
-import type { Course, CourseId } from '../courses/types'
+import type { CourseId } from '../courses/types'
 import { visibleMaterials, type CourseFile, type CourseFileKind } from '../components/courseFileTree'
-import type { Catalog } from '../components/directoryModel'
+import type { Catalog, CourseSummary } from '../components/directoryModel'
 
 const repository = 'owlCoder/ftn-nastavni-materijali'
 const api = `https://api.github.com/repos/${repository}`
@@ -48,7 +48,7 @@ function sizeLabel(size?: number) {
   return `${(size / (1024 * 1024)).toFixed(1).replace('.', ',')} MB`
 }
 
-export function catalogsFromTree(courses: Course[], tree: TreeEntry[], revision: string): Catalog[] {
+export function catalogsFromTree(courses: CourseSummary[], tree: TreeEntry[], revision: string): Catalog[] {
   const catalogs = courses.map(course => ({ course, files: [] as CourseFile[] }))
   for (const catalog of catalogs) {
     const expected = normalized(courseRoots[catalog.course.id])
@@ -87,7 +87,7 @@ async function getJson(url: string, signal?: AbortSignal): Promise<unknown> {
   return response.json()
 }
 
-export async function loadGithubMaterials(courses: Course[], signal?: AbortSignal): Promise<MaterialsSnapshot> {
+export async function loadGithubMaterials(courses: CourseSummary[], signal?: AbortSignal): Promise<MaterialsSnapshot> {
   // The public raw index avoids GitHub's low anonymous REST API rate limit.
   // If the index is not available yet, the REST API supplies a temporary fallback.
   try {

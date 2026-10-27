@@ -3,8 +3,6 @@ import type { CourseFile } from './courseFileTree'
 import { downloadFolderZip } from './courseDownloads'
 import { directoryArchive, directoryHref, type Catalog, type DirectoryTarget } from './directoryModel'
 import { assetUrl } from '../lib/assets'
-import { PdfViewer } from './PdfViewer'
-import '../styles/course-viewers.css'
 import '../styles/directory.css'
 
 function FileIcon({ folder = false }: { folder?: boolean }) {
@@ -22,7 +20,6 @@ export function MaterialDirectory({ catalogs, courseId, folder = 'root', sourceS
   const [progress, setProgress] = useState('')
   const [error, setError] = useState('')
   const [search, setSearch] = useState('')
-  const [preview, setPreview] = useState<CourseFile | null>(null)
   const allFolders = () => new Set(catalogs.flatMap(item => [item.course.id + '/root', ...item.files.filter(file => file.kind === 'folder').map(file => item.course.id + '/' + file.id)]))
   const [collapsed, setCollapsed] = useState<Set<string>>(allFolders)
   useEffect(() => { setCollapsed(new Set(catalogs.flatMap(item => [item.course.id + '/root', ...item.files.filter(file => file.kind === 'folder').map(file => item.course.id + '/' + file.id)]))) }, [catalogs])
@@ -78,6 +75,23 @@ export function MaterialDirectory({ catalogs, courseId, folder = 'root', sourceS
       setError(cause instanceof Error ? cause.message : 'Preuzimanje nije uspelo. Pokušajte ponovo.')
     } finally { setProgress('') }
   }
+  const openPdf = async (source: string) => {
+    setError('')
+    const tab = window.open('', '_blank')
+    if (!tab) { setError('Dozvoli otvaranje nove kartice za prikaz PDF-a.'); return }
+    tab.opener = null
+    try {
+      const response = await fetch(assetUrl(source))
+      if (!response.ok) throw new Error(`PDF nije dostupan (HTTP ${response.status}).`)
+      const blob = new Blob([await response.arrayBuffer()], { type: 'application/pdf' })
+      const url = URL.createObjectURL(blob)
+      tab.location.replace(url)
+      window.setTimeout(() => URL.revokeObjectURL(url), 60 * 60 * 1000)
+    } catch (cause) {
+      tab.close()
+      setError(cause instanceof Error ? cause.message : 'PDF nije moguće otvoriti.')
+    }
+  }
   const zipButton = (destination: DirectoryTarget, label: string) => <button type="button" className="directory-download" disabled={!!progress} onClick={() => void save(destination)} aria-label={'Preuzmi ' + label + ' kao ZIP'} title={'Preuzmi ' + label + ' kao ZIP'}>ZIP ↓</button>
   const hrefFor = (file: CourseFile, item: Catalog) => {
     const courseId = item.course.id
@@ -87,14 +101,8 @@ export function MaterialDirectory({ catalogs, courseId, folder = 'root', sourceS
     if (file.kind === 'practicum-link') return '#' + courseId + '/praktikum/' + String(file.exercise).padStart(2, '0')
     return '#' + courseId + '/kontrolne'
   }
-  if (preview?.source) return <div className="material-directory pdf-preview-page">
-    <button className="pdf-back" type="button" onClick={() => setPreview(null)}>← Nazad na materijale</button>
-    <div className="pdf-preview-shell"><PdfViewer file={preview.source} name={preview.name}/></div>
-  </div>
   return <div className="material-directory">
-    <header className="directory-heading"><div><span className="directory-kicker">NASTAVNI MATERIJALI {catalog ? ' / ' + catalog.course.code : ''}</span>
-      <h1>{catalog ? catalog.course.name : 'Materijali za tvoje vežbe'}</h1>
-      <p>Prezentacije, dokumenti i primeri na jednom mestu.</p></div>
+    <header className="directory-heading"><div><h1>{catalog ? catalog.course.name : 'Nastavni materijali'}</h1></div>
       {valid && <button type="button" className="directory-download directory-primary" disabled={!!progress} onClick={() => void save(target)}>↓ &nbsp; Preuzmi {catalog ? 'folder' : 'sve'} kao ZIP</button>}
     </header>
     {catalog && <nav className="directory-path" aria-label="Putanja foldera">{breadcrumbs.map((crumb, index) => <span key={crumb.target.folder}>
@@ -118,7 +126,7 @@ export function MaterialDirectory({ catalogs, courseId, folder = 'root', sourceS
             <td><div className="directory-name directory-tree-name" style={{ '--directory-depth': depth } as CSSProperties}>
               {isFolder ? <button type="button" className="directory-toggle" aria-label={(expanded ? 'Sažmi ' : 'Proširi ') + (file?.name ?? item.course.code)} aria-expanded={expanded} disabled={Boolean(query)} onClick={() => toggle(key)}>{expanded ? '▾' : '▸'}</button> : <span className="directory-tree-spacer"/>}
               {isFolder ? <button type="button" className="directory-entry-link directory-folder-toggle" aria-expanded={expanded} disabled={Boolean(query)} onClick={() => toggle(key)}><FileIcon folder/><span>{label}</span></button> :
-                <a className="directory-entry-link" href={hrefFor(file!, item)} onClick={event => { if (file?.kind === 'pdf' && file.source) { event.preventDefault(); setPreview(file) } }} download={file?.source && file.kind !== 'pdf' ? '' : undefined}>
+                <a className="directory-entry-link" href={hrefFor(file!, item)} target={file?.kind === 'pdf' ? '_blank' : undefined} rel={file?.kind === 'pdf' ? 'noopener noreferrer' : undefined} onClick={event => { if (file?.kind === 'pdf' && file.source) { event.preventDefault(); void openPdf(file.source) } }} download={file?.source && file.kind !== 'pdf' ? '' : undefined}>
                   <FileIcon/><span>{label}</span>
                 </a>}
 

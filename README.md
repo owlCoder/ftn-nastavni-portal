@@ -13,7 +13,7 @@ Za **Elemente razvoja softvera (ERS)** i **Osnove informacione bezbednosti (OIB)
 
 Portal prikazuje samo PDF dokumente i ZIP arhive; Word izvori ostaju u repozitorijumu materijala. Spisak foldera i fajlova portal učitava iz javnog repozitorijuma [ftn-nastavni-materijali](https://github.com/owlCoder/ftn-nastavni-materijali), sa grane `main`. Kada izmene materijala budu commitovane i poslate na tu granu, GitHub Actions osvežava indeks u repozitorijumu materijala; posetioci zatim vide izmene pri otvaranju ili klikom na **Osveži**. Osvežavanje indeksa i GitHub keša može potrajati nekoliko minuta. Nije potrebno menjati ili ponovo objavljivati portal samo zbog izmene materijala. Fajlovi se preuzimaju sa istog commita kao spisak, da se verzije ne pomešaju.
 
-Ako GitHub nije dostupan ili ograniči broj zahteva, portal prikazuje obaveštenje i prethodno učitani spisak, odnosno ugrađenu rezervnu verziju. Stari online prikazi praktikuma i kontrolnih tačaka ostaju ugrađeni u portal i ne ažuriraju se automatski; aktuelne dokumente treba otvoriti iz spiska materijala. Prikaz uključuje fajlove iz javnog repozitorijuma; tajne i privatni podaci ne pripadaju tamo. Provera povezivanja pokreće se komandom `npm run check:github-materials`.
+Ako GitHub nije dostupan ili ograniči broj zahteva, portal prikazuje obaveštenje i prethodno učitani spisak, odnosno mogućnost ponovnog pokušaja. PDF dokumenti otvaraju se u novoj kartici preglednika, a ZIP arhive preuzimaju direktno. Prikaz uključuje fajlove iz javnog repozitorijuma; tajne i privatni podaci ne pripadaju tamo. Provera povezivanja pokreće se komandom `npm run check:github-materials`.
 
 ## Direktorijum materijala
 

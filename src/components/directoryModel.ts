@@ -2,7 +2,8 @@ import type { Course, CourseId } from '../courses/types'
 import { courseFolderEntries, safeFileName, type CourseFile } from './courseFileTree'
 import type { DownloadEntry } from './courseDownloads'
 
-export type Catalog = { course: Course; files: CourseFile[] }
+export type CourseSummary = Pick<Course, 'id' | 'name' | 'code'>
+export type Catalog = { course: CourseSummary; files: CourseFile[] }
 export type DirectoryTarget = { courseId?: CourseId; folder: string }
 
 export function directoryHref(target: DirectoryTarget) {
