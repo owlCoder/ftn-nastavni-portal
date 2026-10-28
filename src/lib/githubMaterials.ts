@@ -82,7 +82,7 @@ export function catalogsFromTree(courses: CourseSummary[], tree: TreeEntry[], re
 }
 
 async function getJson(url: string, signal?: AbortSignal): Promise<unknown> {
-  const response = await fetch(url, { signal, headers: { Accept: 'application/vnd.github+json' } })
+  const response = await fetch(url, { signal, cache: 'no-store', headers: { Accept: 'application/vnd.github+json' } })
   if (!response.ok) throw new Error(`GitHub nije dostupan (HTTP ${response.status}).`)
   return response.json()
 }
@@ -91,7 +91,7 @@ export async function loadGithubMaterials(courses: CourseSummary[], signal?: Abo
   // The public raw index avoids GitHub's low anonymous REST API rate limit.
   // If the index is not available yet, the REST API supplies a temporary fallback.
   try {
-    const index = await getJson(`${raw}/main/.github/materials-index.json`, signal) as { revision?: unknown; tree?: TreeEntry[] }
+    const index = await getJson(`${raw}/main/.github/materials-index.json?refresh=${Date.now()}`, signal) as { revision?: unknown; tree?: TreeEntry[] }
     if (typeof index.revision === 'string' && /^[a-f0-9]{40}$/.test(index.revision) && Array.isArray(index.tree))
       return { revision: index.revision, catalogs: catalogsFromTree(courses, index.tree, index.revision) }
   } catch (error) {
