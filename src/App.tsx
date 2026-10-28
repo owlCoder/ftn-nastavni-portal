@@ -54,6 +54,18 @@ export default function App() {
       })
     return () => controller.abort()
   }, [refresh])
+
+  useEffect(() => {
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === 'visible') setRefresh(n => n + 1)
+    }
+    const timer = window.setInterval(refreshWhenVisible, 60_000)
+    document.addEventListener('visibilitychange', refreshWhenVisible)
+    return () => {
+      window.clearInterval(timer)
+      document.removeEventListener('visibilitychange', refreshWhenVisible)
+    }
+  }, [])
   const [route, setRoute] = useState<Route>(readRoute)
 
   useEffect(() => {
