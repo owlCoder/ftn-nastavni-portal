@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties, type ReactNode } from 'react'
+import { useState, type CSSProperties, type ReactNode } from 'react'
 import type { CourseFile } from './courseFileTree'
 import { downloadFolderZip } from './courseDownloads'
 import { directoryArchive, directoryHref, type Catalog, type DirectoryTarget } from './directoryModel'
@@ -21,8 +21,9 @@ export function MaterialDirectory({ catalogs, courseId, folder = 'root', sourceS
   const [error, setError] = useState('')
   const [search, setSearch] = useState('')
   const allFolders = () => new Set(catalogs.flatMap(item => [item.course.id + '/root', ...item.files.filter(file => file.kind === 'folder').map(file => item.course.id + '/' + file.id)]))
-  const [collapsed, setCollapsed] = useState<Set<string>>(allFolders)
-  useEffect(() => { setCollapsed(new Set(catalogs.flatMap(item => [item.course.id + '/root', ...item.files.filter(file => file.kind === 'folder').map(file => item.course.id + '/' + file.id)]))) }, [catalogs])
+  // Folder state belongs to the reader, independently of refreshed file data.
+  // Unseen folders start closed without resetting folders already opened.
+  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(() => new Set())
   const catalog = catalogs.find(item => item.course.id === courseId)
   const current = catalog?.files.find(file => file.kind === 'folder' && file.id === folder)
   const target: DirectoryTarget = { courseId, folder }
@@ -36,7 +37,7 @@ export function MaterialDirectory({ catalogs, courseId, folder = 'root', sourceS
     for (const file of item.files.filter(file => file.parent === parentId && (!query || matches(item, file)))) {
       const key = item.course.id + '/' + file.id
       rows.push({ catalog: item, file, depth, key })
-      if (file.kind === 'folder' && (Boolean(query) || !collapsed.has(key))) appendFiles(item, file.id, depth + 1)
+      if (file.kind === 'folder' && (Boolean(query) || expandedFolders.has(key))) appendFiles(item, file.id, depth + 1)
     }
   }
   if (catalog && valid) appendFiles(catalog, folder, 0)
@@ -44,15 +45,15 @@ export function MaterialDirectory({ catalogs, courseId, folder = 'root', sourceS
     const key = item.course.id + '/root'
     if (query && !item.course.name.toLocaleLowerCase('sr').includes(query) && !item.course.code.toLocaleLowerCase('sr').includes(query) && !item.files.some(file => file.name.toLocaleLowerCase('sr').includes(query))) continue
     rows.push({ catalog: item, depth: 0, key })
-    if (query || !collapsed.has(key)) appendFiles(item, 'root', 1)
+    if (query || expandedFolders.has(key)) appendFiles(item, 'root', 1)
   }
-  const toggle = (key: string) => setCollapsed(previous => {
+  const toggle = (key: string) => setExpandedFolders(previous => {
     const next = new Set(previous)
     if (next.has(key)) next.delete(key)
     else next.add(key)
     return next
   })
-  const collapseAll = () => setCollapsed(allFolders())
+  const collapseAll = () => setExpandedFolders(new Set())
   const breadcrumbs: { label: string; target: DirectoryTarget }[] = [{ label: '/', target: { folder: 'root' } }]
   if (catalog) {
     breadcrumbs.push({ label: catalog.course.code, target: { courseId, folder: 'root' } })
@@ -110,7 +111,7 @@ export function MaterialDirectory({ catalogs, courseId, folder = 'root', sourceS
       {index === breadcrumbs.length - 1 ? <span aria-current="page">{crumb.label}</span> : <a href={directoryHref(crumb.target)}>{crumb.label}</a>}
     </span>)}</nav>}
     <div className="directory-toolbar"><label className="directory-search"><span aria-hidden="true">⌕</span><span className="sr-only">Pretraži materijale</span><input value={search} onChange={event => setSearch(event.target.value)} placeholder="Pretraži materijale…" type="search" /></label>
-    <div className="directory-tree-controls"><button type="button" onClick={() => setCollapsed(new Set())}>Proširi sve</button><button type="button" onClick={collapseAll}>Sažmi sve</button></div></div>
+    <div className="directory-tree-controls"><button type="button" onClick={() => setExpandedFolders(allFolders())}>Proširi sve</button><button type="button" onClick={collapseAll}>Sažmi sve</button></div></div>
     {progress && <p className="directory-status" role="status">{progress}</p>}
     {error && <p className="directory-error" role="alert">{error}</p>}
     <table className="directory-table">
@@ -121,7 +122,7 @@ export function MaterialDirectory({ catalogs, courseId, folder = 'root', sourceS
           const isFolder = !file || file.kind === 'folder'
           const label = file ? fileName(file) : item.course.name + ' (' + item.course.code + ')/'
           const destination = { courseId: item.course.id, folder: file?.id ?? 'root' }
-          const expanded = Boolean(query) || !collapsed.has(key)
+          const expanded = Boolean(query) || expandedFolders.has(key)
           return <tr key={key} className={isFolder ? 'directory-folder-row' : undefined}>
             <td><div className="directory-name directory-tree-name" style={{ '--directory-depth': depth } as CSSProperties}>
               {isFolder ? <button type="button" className="directory-toggle" aria-label={(expanded ? 'Sažmi ' : 'Proširi ') + (file?.name ?? item.course.code)} aria-expanded={expanded} disabled={Boolean(query)} onClick={() => toggle(key)}>{expanded ? '▾' : '▸'}</button> : <span className="directory-tree-spacer"/>}

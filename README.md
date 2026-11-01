@@ -17,7 +17,7 @@ Ako GitHub nije dostupan ili ograniči broj zahteva, portal prikazuje obavešten
 
 ## Direktorijum materijala
 
-Početna prikazuje stablo sa svim folderima podrazumevano skupljenim. Klik na naziv foldera ili njegovu strelicu proširuje i sažima sadržaj na istoj strani, a komande „Proširi sve“ i „Sažmi sve“ upravljaju celim prikazom. Svaki predmet koristi tabelu fajlova, putanju foldera i povratak preko `..`. Dugme **ZIP ↓** uz folder ili roditeljski direktorijum preuzima ceo taj direktorijum, sa svim podfolderima. **Preuzmi folder .zip** preuzima trenutni direktorijum, a **Preuzmi sve .zip** na početnoj sve predmete, razdvojene po direktorijumima. Arhive sadrže PDF-ove, ZIP primere, zbirne pakete, tekstove praktikuma i prateće slike. Tok i greške preuzimanja prikazuju se iznad tabele.
+Početna prikazuje stablo sa svim folderima podrazumevano skupljenim. Klik na naziv foldera ili njegovu strelicu proširuje i sažima sadržaj na istoj strani, a komande „Proširi sve“ i „Sažmi sve“ upravljaju celim prikazom. Spisak se osvežava u pozadini svakog minuta, pri povratku na karticu i klikom na **Osveži**. Otvoreni folderi, pretraga i položaj stranice ostaju sačuvani; novi folderi se pojavljuju skupljeni. Svaki predmet koristi tabelu fajlova, putanju foldera i povratak preko `..`. Dugme **ZIP ↓** uz folder ili roditeljski direktorijum preuzima ceo taj direktorijum, sa svim podfolderima. **Preuzmi folder .zip** preuzima trenutni direktorijum, a **Preuzmi sve .zip** na početnoj sve predmete, razdvojene po direktorijumima. Arhive sadrže PDF-ove, ZIP primere, zbirne pakete, tekstove praktikuma i prateće slike. Tok i greške preuzimanja prikazuju se iznad tabele.
 
 ERS je dodatno organizovan u tri korenska foldera:
 

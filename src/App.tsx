@@ -48,7 +48,7 @@ export default function App() {
     const controller = new AbortController()
     setMaterialsError('')
     loadGithubMaterials(courses, controller.signal)
-      .then(setSnapshot)
+      .then(next => setSnapshot(previous => previous?.revision === next.revision ? previous : next))
       .catch(error => {
         if (!controller.signal.aborted) setMaterialsError(error instanceof Error ? error.message : 'Preuzimanje materijala nije uspelo.')
       })
