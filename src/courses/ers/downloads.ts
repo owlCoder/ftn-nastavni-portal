@@ -4,25 +4,25 @@ export const ersPresentations: CoursePresentations = {
   kind: 'downloads',
   downloads: [
     { number: '00', label: 'Uvodna prezentacija', title: 'Osnovne informacije', pages: 13, size: '339 KB', file: '/downloads/ers-prezentacije/00_Osnovne_informacije.pdf' },
-    { number: '01', label: 'Vežba 1', title: 'Zahtevi, backlog i Git', pages: 37, size: '6,9 MB', file: '/downloads/ers-prezentacije/01_Zahtevi_backlog_i_Git.pdf' },
+    { number: '01', label: 'Vežba 1', title: 'Zahtevi, backlog i Git', pages: 59, size: '1,6 MB', file: '/downloads/ers-prezentacije/01_Zahtevi_backlog_i_Git.pdf' },
     { number: '02', label: 'Vežba 2', title: 'SOLID i Clean Architecture', pages: 32, size: '6,2 MB', file: '/downloads/ers-prezentacije/02_SOLID_i_Clean_Architecture.pdf' },
-    { number: '03', label: 'Vežba 3', title: 'Poslovna logika i slučajevi upotrebe', pages: 27, size: '4,2 MB', file: '/downloads/ers-prezentacije/03_Poslovna_logika_i_use_case.pdf' },
-    { number: '04', label: 'Vežba 4', title: 'Testabilni dizajn, NUnit i Moq', pages: 28, size: '4,4 MB', file: '/downloads/ers-prezentacije/04_Testabilni_dizajn_NUnit_i_Moq.pdf' },
+    { number: '03', label: 'Vežba 3', title: 'Poslovna logika i slučajevi upotrebe', pages: 27, size: '506 KB', file: '/downloads/ers-prezentacije/03_Poslovna_logika_i_use_case.pdf' },
+    { number: '04', label: 'Vežba 4', title: 'Testabilni dizajn, NUnit i Moq', pages: 28, size: '501 KB', file: '/downloads/ers-prezentacije/04_Testabilni_dizajn_NUnit_i_Moq.pdf' },
     { number: '05', label: 'Vežba 5', title: 'Integracija modula i ugovori', pages: 27, size: '5,1 MB', file: '/downloads/ers-prezentacije/05_Integracija_modula_ugovori.pdf' },
     { number: '06', label: 'Vežba 6', title: 'Razvoj uz podršku AI alata', pages: 26, size: '4,5 MB', file: '/downloads/ers-prezentacije/06_Kontrolisan_AI_workflow.pdf' },
     { number: '07', label: 'Vežba 7', title: 'Model Context Protocol (MCP)', pages: 26, size: '4,8 MB', file: '/downloads/ers-prezentacije/07_MCP.pdf' },
-    { number: '08', label: 'Vežba 8', title: 'Zaštitni mehanizmi i evaluacija', pages: 26, size: '4,6 MB', file: '/downloads/ers-prezentacije/08_Guardrails_evaluacije_i_QA.pdf' },
+    { number: '08', label: 'Vežba 8', title: 'Zaštitni mehanizmi i evaluacija', pages: 26, size: '448 KB', file: '/downloads/ers-prezentacije/08_Guardrails_evaluacije_i_QA.pdf' },
   ],
 }
 
 export const ersProject: ProjectDocument = {
-  code: 'PYXIS',
-  title: 'Informacioni sistem za upravljanje Data centrom',
+  code: 'STUDIUM',
+  title: 'Informacioni sistem za podršku nastavi i studentskom radu',
   description: 'Projektna specifikacija zajedničkog modularnog sistema za predmet Elementi razvoja softvera.',
   file: '/downloads/ers-projekat/ERS_Projektna_Specifikacija.pdf',
-  pages: 92,
-  size: '2,6 MB',
-  highlights: ['90 projektnih celina', 'R1, R2 i R3 razvojni nivoi', 'Timovi od 6 do 10 studenata'],
+  pages: 50,
+  size: '1,8 MB',
+  highlights: ['ST-001–ST-100', 'Predmeti, izvođenja, aktivnosti i rezultati', 'Doprinos dodeljenoj celini'],
 }
 
 export const ersExamRules: CourseGuide = {
@@ -31,6 +31,6 @@ export const ersExamRules: CourseGuide = {
   description: 'Način polaganja i bodovanje; KT1 u terminu Vežbe 4 i KT2 u terminu Vežbe 8, po 10 poena.',
   file: '/downloads/ers-projekat/ERS_Pravila_Polaganja.pdf',
   editableFile: '/downloads/ers-projekat/ERS_Pravila_Polaganja.docx',
-  pages: 6,
-  size: '205 KB',
+  pages: 7,
+  size: '361 KB',
 }

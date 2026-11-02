@@ -3,8 +3,8 @@ import type { CourseGuide, CoursePresentations, ProjectDocument } from '../types
 export const oibPresentations: CoursePresentations = {
   kind: 'downloads',
   downloads: [
-    { number: '00', label: 'Uvodna prezentacija', title: 'Osnovne informacije', pages: 28, size: '510 KB', file: '/downloads/oib-prezentacije/00_Osnovne_informacije.pdf' },
-    { number: '01', label: 'Vežba 1', title: 'Identitet, autentikacija i RBAC', pages: 33, size: '2,1 MB', file: '/downloads/oib-prezentacije/01_Identitet_autentikacija_i_RBAC.pdf' },
+    { number: '00', label: 'Uvodna prezentacija', title: 'Osnovne informacije', pages: 28, size: '431 KB', file: '/downloads/oib-prezentacije/00_Osnovne_informacije.pdf' },
+    { number: '01', label: 'Vežba 1', title: 'Identitet, autentikacija i RBAC', pages: 33, size: '516 KB', file: '/downloads/oib-prezentacije/01_Identitet_autentikacija_i_RBAC.pdf' },
     { number: '02', label: 'Vežba 2', title: 'Autorizacija nad resursom', pages: 31, size: '1,2 MB', file: '/downloads/oib-prezentacije/02_Autorizacija_nad_resursom_i_klasifikacija_podataka.pdf' },
     { number: '03', label: 'Vežba 3', title: 'Politike i bezbednosna konfiguracija', pages: 31, size: '1,2 MB', file: '/downloads/oib-prezentacije/03_Politike_konfiguracija_i_vidljivost.pdf' },
     { number: '04', label: 'Vežba 4', title: 'Imovina i modelovanje pretnji', pages: 30, size: '1,4 MB', file: '/downloads/oib-prezentacije/04_Imovina_granice_poverenja_i_threat_modeling.pdf' },
@@ -16,13 +16,13 @@ export const oibPresentations: CoursePresentations = {
 }
 
 export const oibProject: ProjectDocument = {
-  code: 'SCUTUM',
-  title: 'Platforma za upravljanje informacionom bezbednošću i digitalnim poverenjem',
+  code: 'OIB',
+  title: 'Platforma za interaktivne laboratorijske vežbe',
   description: 'Projektna specifikacija zajedničkog informacionog sistema za predmet Osnove informacione bezbednosti.',
   file: '/downloads/oib-projekat/OIB_Projektna_Specifikacija.pdf',
-  pages: 95,
-  size: '2,5 MB',
-  highlights: ['90 projektnih celina', 'R1, R2 i R3 razvojni nivoi', 'Timovi od 6 do 10 studenata'],
+  pages: 23,
+  size: '1,5 MB',
+  highlights: ['Modularni monolit', 'Jasne granice modula', 'Dodela preko ID oznaka celina'],
 }
 
 export const oibGradingGuide: CourseGuide = {
@@ -40,6 +40,6 @@ export const oibExamRules: CourseGuide = {
   description: 'Način polaganja i bodovanje. KT1 u terminu Vežbe 4 i KT2 u terminu Vežbe 8.',
   file: '/downloads/oib-projekat/OIB_Pravila_Polaganja.pdf',
   editableFile: '/downloads/oib-projekat/OIB_Pravila_Polaganja.docx',
-  pages: 3,
-  size: '153 KB',
+  pages: 6,
+  size: '272 KB',
 }

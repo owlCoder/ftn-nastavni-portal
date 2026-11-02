@@ -16,17 +16,17 @@
       "projects": [
         {
           "portal": "downloads/ers-projekat/ERS_Projektna_Specifikacija.pdf",
-          "materials": "Projekat/PYXIS — Projektna specifikacija.pdf"
+          "materials": "Projekat/STUDIUM_Projektna_Specifikacija.pdf"
         },
         {
           "portal": "downloads/ers-projekat/ERS_Pravila_Polaganja.pdf",
-          "materials": "Opšti materijali/Pravila polaganja ERS.pdf"
+          "materials": "Opšte informacije/ERS_Pravila_Polaganja.pdf"
         }
       ],
       "presentations": [
         {
           "portal": "downloads/ers-prezentacije/00_Osnovne_informacije.pdf",
-          "materials": "Opšti materijali/Osnovne informacije.pdf"
+          "materials": "Opšte informacije/Osnovne informacije o predmetu.pdf"
         },
         {
           "portal": "downloads/ers-prezentacije/01_Zahtevi_backlog_i_Git.pdf",
@@ -62,7 +62,7 @@
         },
         {
           "portal": "downloads/ers-prezentacije/00_Osnovne_informacije.pptx",
-          "materials": "Opšti materijali/Osnovne informacije.pptx"
+          "materials": "Opšte informacije/Osnovne informacije o predmetu.pptx"
         },
         {
           "portal": "downloads/ers-prezentacije/01_Zahtevi_backlog_i_Git.pptx",
@@ -176,7 +176,7 @@
         },
         {
           "portal": "downloads/ers-projekat/ERS_Pravila_Polaganja.docx",
-          "materials": "Opšti materijali/Pravila polaganja ERS.docx"
+          "materials": "Opšte informacije/ERS_Pravila_Polaganja.docx"
         },
         {
           "portal": "downloads/praktikum/ers/Praktikum.docx",
@@ -224,11 +224,15 @@
         },
         {
           "portal": "downloads/ers-projekat/ERS_Projektna_Specifikacija.docx",
-          "materials": "Projekat/PYXIS — Projektna specifikacija.docx"
+          "materials": "Projekat/STUDIUM_Projektna_Specifikacija.docx"
         },
         {
           "portal": "downloads/ers-projekat/ERS_Teorijska_Pitanja.docx",
           "materials": "Projekat/Teorijska pitanja ERS.docx"
+        },
+        {
+          "portal": "downloads/praktikum/ers/Kontrolne_tacke.pdf",
+          "materials": "Projekat/Kontrolne_tacke.pdf"
         }
       ]
     },
@@ -238,7 +242,7 @@
       "projects": [
         {
           "portal": "downloads/oib-projekat/OIB_Projektna_Specifikacija.pdf",
-          "materials": "Projekat/SCUTUM — Projektna specifikacija.pdf"
+          "materials": "Projekat/Projektna_Specifikacija_OIB.pdf"
         },
         {
           "portal": "downloads/oib-projekat/OIB_Bodovanje_Projekta.pdf",
@@ -246,17 +250,17 @@
         },
         {
           "portal": "downloads/oib-projekat/OIB_Pravila_Polaganja.pdf",
-          "materials": "Projekat/Pravila polaganja OIB.pdf"
+          "materials": "Opšti Materijali/Pravila_Polaganja_OIB.pdf"
         }
       ],
       "presentations": [
         {
           "portal": "downloads/oib-prezentacije/00_Osnovne_informacije.pdf",
-          "materials": "Osnovne informacije.pdf"
+          "materials": "Opšti Materijali/Osnovne informacije o predmetu.pdf"
         },
         {
           "portal": "downloads/oib-prezentacije/01_Identitet_autentikacija_i_RBAC.pdf",
-          "materials": "Računarske vežbe/01 Identitet, autentikacija i RBAC/Identitet, autentikacija i RBAC.pdf"
+          "materials": "Nastavni Materijali/01 Identitet, autentikacija i RBAC/Identitet, autentikacija i RBAC.pdf"
         },
         {
           "portal": "downloads/oib-prezentacije/02_Autorizacija_nad_resursom_i_klasifikacija_podataka.pdf",
@@ -288,11 +292,11 @@
         },
         {
           "portal": "downloads/oib-prezentacije/00_Osnovne_informacije.pptx",
-          "materials": "Osnovne informacije.pptx"
+          "materials": "Opšti Materijali/Osnovne informacije o predmetu.pptx"
         },
         {
           "portal": "downloads/oib-prezentacije/01_Identitet_autentikacija_i_RBAC.pptx",
-          "materials": "Računarske vežbe/01 Identitet, autentikacija i RBAC/Identitet, autentikacija i RBAC.pptx"
+          "materials": "Nastavni Materijali/01 Identitet, autentikacija i RBAC/Identitet, autentikacija i RBAC.pptx"
         },
         {
           "portal": "downloads/oib-prezentacije/02_Autorizacija_nad_resursom_i_klasifikacija_podataka.pptx",
@@ -370,7 +374,7 @@
         },
         {
           "portal": "downloads/oib-projekat/OIB_Pravila_Polaganja.docx",
-          "materials": "Projekat/Pravila polaganja OIB.docx"
+          "materials": "Opšti Materijali/Pravila_Polaganja_OIB.docx"
         },
         {
           "portal": "downloads/praktikum/oib/Praktikum.docx",
@@ -414,11 +418,15 @@
         },
         {
           "portal": "downloads/oib-projekat/OIB_Projektna_Specifikacija.docx",
-          "materials": "Projekat/SCUTUM — Projektna specifikacija.docx"
+          "materials": "Projekat/Projektna_Specifikacija_OIB.docx"
         },
         {
           "portal": "downloads/uputstva/Tapiz_Boards_Uputstvo.docx",
           "materials": "Uputstva/Tapiz Boards — Uputstvo.docx"
+        },
+        {
+          "portal": "downloads/praktikum/oib/Kontrolne_tacke.pdf",
+          "materials": "Projekat/Kontrolne_tacke.pdf"
         }
       ]
     },
