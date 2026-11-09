@@ -49,9 +49,7 @@
 .exam-warning { margin-top:18px; border:1px solid #f1dfc4; background:#fffbf3; color:#825b24; }
 .exam-success { border:1px solid #d5ead8; background:#f3faf4; color:#326d40; }
 .exam-muted { color:#748693; }
-.exam-save { display:flex; justify-content:space-between; align-items:center; gap:18px; border-top:1px solid #e6edf1; margin-top:26px; padding-top:22px; }
-.exam-save span { color:#748594; font-size:12px; }
-.exam-disclaimer { margin-top:24px; color:#768693; font-size:12px; }
+.exam-save { display:flex; justify-content:flex-end; align-items:center; gap:18px; border-top:1px solid #e6edf1; margin-top:26px; padding-top:22px; }
 .exam-sr-only { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; }
 .exam-banner { padding:11px 20px; background:#f5f9fc; color:#315e78; text-align:center; font:600 13px system-ui,sans-serif; border-bottom:1px solid #e1e9ef; }
 .exam-loading { margin:80px auto; max-width:600px; padding:0 25px; text-align:center; font:14px/1.6 system-ui,sans-serif; color:#6f8493; }

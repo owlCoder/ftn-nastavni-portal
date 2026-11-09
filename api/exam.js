@@ -2,6 +2,7 @@ import { createHash, createHmac, timingSafeEqual } from 'node:crypto'
 
 // Server-side only. Never expose these environment variables to Vite.
 const POLICY_API = 'https://api.github.com/repos/owlCoder/ftn-nastavni-portal/contents/exam-policy.json'
+const PUBLIC_POLICY_URL = 'https://raw.githubusercontent.com/owlCoder/ftn-nastavni-portal/exam-config/exam-policy.json'
 const POLICY_BRANCH = 'exam-config'
 const COOKIE = 'ftn_exam_session'
 const SESSION_SECONDS = 8 * 60 * 60
@@ -13,7 +14,7 @@ let cachedUntil = 0
 const password = () => process.env.EXAM_ADMIN_PASSWORD || ''
 const secret = () => process.env.EXAM_SESSION_SECRET || ''
 const githubToken = () => process.env.EXAM_GITHUB_TOKEN || ''
-const isConfigured = () => Boolean(password() && githubToken() && secret().length >= 32)
+const isConfigured = () => Boolean(password() && secret().length >= 32)
 
 function reply(res, status, body) {
   res.status(status).json(body)
@@ -81,26 +82,41 @@ function githubHeaders() {
   }
 }
 
-async function readPolicyRecord(fresh = false) {
-  if (!fresh && cachedRecord && Date.now() < cachedUntil) return cachedRecord
+// Public reads use GitHub's raw content CDN rather than the REST API
+// (anonymous GitHub REST reads have a much smaller request quota).
+async function readPolicy() {
+  if (cachedRecord && Date.now() < cachedUntil) return cachedRecord.policy
+  const response = await fetch(PUBLIC_POLICY_URL + '?v=' + Math.floor(Date.now() / 6000), {
+    cache: 'no-store',
+    signal: AbortSignal.timeout(8000),
+  })
+  if (!response.ok) throw new Error('GitHub podešavanja nisu dostupna.')
+  const raw = await response.text()
+  if (raw.length > 100_000) throw new Error('Neispravna konfiguracija ispitnog režima.')
+  const policy = normalizePolicy(JSON.parse(raw))
+  cachedRecord = { policy }
+  cachedUntil = Date.now() + 6000
+  return policy
+}
+
+// On writes, fetch the latest file SHA via the authenticated Contents API.
+async function readPolicyRecordForWrite() {
   const response = await fetch(POLICY_API + '?ref=' + POLICY_BRANCH, {
     headers: githubHeaders(), cache: 'no-store', signal: AbortSignal.timeout(8000),
   })
-  if (!response.ok) throw new Error('GitHub podešavanja nisu dostupna.')
+  if (!response.ok) throw new Error('GitHub nije dozvolio čitanje konfiguracije.')
   const file = await response.json()
   if (file.type !== 'file' || file.encoding !== 'base64' ||
     typeof file.content !== 'string' || typeof file.sha !== 'string' || file.size > 100_000) {
     throw new Error('Neispravan odgovor GitHub-a.')
   }
   const raw = Buffer.from(file.content.replace(/\s/g, ''), 'base64').toString('utf8')
-  const record = { policy: normalizePolicy(JSON.parse(raw)), sha: file.sha }
-  cachedRecord = record
-  cachedUntil = Date.now() + 6000
-  return record
+  return { policy: normalizePolicy(JSON.parse(raw)), sha: file.sha }
 }
 
 async function savePolicy(policy) {
-  const { sha } = await readPolicyRecord(true)
+  if (!githubToken()) throw new Error('Nedostaje EXAM_GITHUB_TOKEN. Dodaj ga u Vercel Environment Variables.')
+  const { sha } = await readPolicyRecordForWrite()
   const content = Buffer.from(JSON.stringify(policy, null, 2) + '\n').toString('base64')
   const response = await fetch(POLICY_API, {
     method: 'PUT',
@@ -115,8 +131,9 @@ async function savePolicy(policy) {
     throw new Error('Podešavanja su se promenila. Osveži stranicu i pokušaj ponovo.')
   }
   if (!response.ok) throw new Error('GitHub nije prihvatio promene. Proveri dozvole EXAM_GITHUB_TOKEN.')
-  const saved = await response.json()
-  cachedRecord = { policy, sha: saved?.content?.sha || '' }
+  await response.json()
+  cachedRecord = { policy }
+  // The new blob has been committed; next read will refresh the public file.
   cachedUntil = Date.now() + 6000
 }
 
@@ -129,10 +146,6 @@ function normalizePolicy(value) {
     throw new Error('Neispravan spisak fajlova.')
   }
   return { enabled: value.enabled, allowedFiles: [...new Set(value.allowedFiles)].sort() }
-}
-
-async function readPolicy() {
-  return (await readPolicyRecord()).policy
 }
 
 function checkLoginRate(req) {
@@ -161,7 +174,7 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     const admin = req.query?.admin === '1'
     if (admin && !isConfigured()) {
-      return reply(res, 503, { error: 'Podesi EXAM_GITHUB_TOKEN i administratorske promenljive na Vercel-u.' })
+      return reply(res, 503, { error: 'Nedostaju administratorska šifra ili tajni ključ na Vercel-u.' })
     }
     if (admin && !sessionValid(req)) return reply(res, 401, { error: 'Potrebna je prijava.' })
     try {
@@ -178,7 +191,7 @@ export default async function handler(req, res) {
   if (!String(req.headers['content-type'] || '').startsWith('application/json')) {
     return reply(res, 415, { error: 'Očekuje se JSON.' })
   }
-  if (!isConfigured()) return reply(res, 503, { error: 'Nedostaju administratorska šifra, tajni ključ ili GitHub token.' })
+  if (!isConfigured()) return reply(res, 503, { error: 'Nedostaju administratorska šifra ili tajni ključ.' })
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
     if (!body || typeof body !== 'object' || JSON.stringify(body).length > 100_000) {

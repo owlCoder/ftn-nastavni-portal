@@ -185,9 +185,8 @@ export function ExamAdmin({ catalogs, materialsError }: { catalogs: Catalog[]; m
           })}
         </div>
         {policy.enabled && selected.size === 0 && <p className="exam-warning">Uključen režim bez izabranih fajlova: studenti neće videti nijedan fajl.</p>}
-        <div className="exam-save"><span>Promene postaju aktivne nakon čuvanja (kod posetilaca pri sledećem osvežavanju).</span>
+        <div className="exam-save">
           <button type="submit" disabled={busy}>{busy ? 'Čuvanje…' : 'Sačuvaj podešavanja'}</button></div>
       </form>}
-    <p className="exam-disclaimer">Napomena: Režim ograničava prikaz na Vercel portalu. Fajlovi u javnom GitHub repozitorijumu ostaju dostupni putem direktnog linka.</p>
   </section>
 }
