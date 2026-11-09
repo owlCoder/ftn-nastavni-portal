@@ -107,39 +107,30 @@ async function githubFailure(response, context) {
   const code = response.status
   console.error('[exam] GitHub API failure', { context, status: code, message: raw })
   if (code === 401) return new Error('GitHub token je nevažeći ili istekao (401).' + reason)
-  if (code === 403) return new Error('GitHub je odbio pristup (403). Proveri Contents: Read and write za ovaj repozitorijum.' + reason)
+  if (code === 403) return new Error('GitHub je odbio upis (403). Token mora da ima Repository permissions → Contents → Read and write (nije isto što i Actions ili Administration).' + reason)
   if (code === 404) return new Error('GitHub nije pronašao repozitorijum ili exam-config granu (404). Proveri pristup tokena repozitorijumu.' + reason)
   if (code === 409 || code === 422) return new Error('GitHub nije prihvatio izmenu (' + code + '). Proveri zaštitu grane.' + reason)
   return new Error('GitHub greška (' + code + ') pri ' + context + '.' + reason)
 }
 
 async function checkGithubAccess() {
-  if (!githubToken()) return { configured: false, repositoryReadable: false, policyReadable: false, writePermission: 'unknown', message: 'EXAM_GITHUB_TOKEN nije dodat na Vercel.' }
-  const repoResponse = await fetch('https://api.github.com/repos/owlCoder/ftn-nastavni-portal', {
-    headers: githubHeaders(), cache: 'no-store', signal: AbortSignal.timeout(8000),
-  })
-  if (!repoResponse.ok) {
-    const failure = await githubFailure(repoResponse, 'provera repozitorijuma')
-    return { configured: true, repositoryReadable: false, policyReadable: false, writePermission: 'unknown', message: failure.message }
+  if (!githubToken()) return {
+    configured: false, repositoryReadable: false, policyReadable: false, writePermission: 'unknown',
+    message: 'EXAM_GITHUB_TOKEN nije dodat na Vercel.',
   }
-  const repository = await repoResponse.json()
-  const permissions = repository?.permissions
-  const writePermission = typeof permissions?.push === 'boolean'
-    ? permissions.push ? 'yes' : 'no' : 'unknown'
-  const fileResponse = await fetch(POLICY_API + '?ref=' + POLICY_BRANCH, {
+  const response = await fetch(POLICY_API + '?ref=' + POLICY_BRANCH, {
     headers: githubHeaders(), cache: 'no-store', signal: AbortSignal.timeout(8000),
   })
-  if (!fileResponse.ok) {
-    const failure = await githubFailure(fileResponse, 'provera exam-config fajla')
-    return { configured: true, repositoryReadable: true, policyReadable: false, writePermission, message: failure.message }
+  if (!response.ok) {
+    const failure = await githubFailure(response, 'provera exam-config fajla')
+    return {
+      configured: true, repositoryReadable: false, policyReadable: false, writePermission: 'unknown',
+      message: failure.message,
+    }
   }
   return {
-    configured: true, repositoryReadable: true, policyReadable: true, writePermission,
-    message: writePermission === 'no'
-      ? 'GitHub javlja da token nema dozvolu za upis. U fine-grained token podešavanjima izaberi Contents: Read and write.'
-      : writePermission === 'yes'
-        ? 'GitHub potvrđuje pristup repozitorijumu, fajlu i pravo upisa. Ako čuvanje ne radi, pogledaj konkretnu grešku pri čuvanju.'
-        : 'GitHub potvrđuje pristup repozitorijumu i fajlu, ali ne otkriva pravo upisa. Probaj Sačuvaj podešavanja.',
+    configured: true, repositoryReadable: true, policyReadable: true, writePermission: 'unknown',
+    message: 'Token može da čita podešavanja. Upis NIJE potvrđen ovom proverom. Za čuvanje GitHub zahteva Repository permissions → Contents → Read and write. Proveri da li se Contents vidi na listi dozvola tokena; zatim sačuvaj podešavanja.',
   }
 }
 

@@ -210,7 +210,7 @@ export function ExamAdmin({ catalogs, materialsError }: { catalogs: Catalog[]; m
         {policy.enabled && selected.size === 0 && <p className="exam-warning">Uključen režim bez izabranih fajlova: studenti neće videti nijedan fajl.</p>}
         <div className="exam-access-check">
           <button type="button" className="exam-outline" disabled={busy}
-            onClick={() => void checkGithub()}>Proveri GitHub dozvole</button>
+            onClick={() => void checkGithub()}>Proveri GitHub čitanje</button>
           {githubCheck && <p role="status">{githubCheck}</p>}
         </div>
         <div className="exam-save">
