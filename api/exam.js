@@ -2,7 +2,6 @@ import { createHash, createHmac, timingSafeEqual } from 'node:crypto'
 
 // Server-side only. Never expose these environment variables to Vite.
 const POLICY_API = 'https://api.github.com/repos/owlCoder/ftn-nastavni-portal/contents/exam-policy.json'
-const PUBLIC_POLICY_URL = 'https://raw.githubusercontent.com/owlCoder/ftn-nastavni-portal/exam-config/exam-policy.json'
 const POLICY_BRANCH = 'exam-config'
 const COOKIE = 'ftn_exam_session'
 const SESSION_SECONDS = 8 * 60 * 60
@@ -82,21 +81,15 @@ function githubHeaders() {
   }
 }
 
-// Public reads use GitHub's raw content CDN rather than the REST API
-// (anonymous GitHub REST reads have a much smaller request quota).
+// Always read the current branch content through GitHub's authenticated Contents
+// API. raw.githubusercontent.com can serve stale branch content after a write.
 async function readPolicy() {
   if (cachedRecord && Date.now() < cachedUntil) return cachedRecord.policy
-  const response = await fetch(PUBLIC_POLICY_URL + '?v=' + Math.floor(Date.now() / 6000), {
-    cache: 'no-store',
-    signal: AbortSignal.timeout(8000),
-  })
-  if (!response.ok) throw new Error('GitHub podešavanja nisu dostupna.')
-  const raw = await response.text()
-  if (raw.length > 100_000) throw new Error('Neispravna konfiguracija ispitnog režima.')
-  const policy = normalizePolicy(JSON.parse(raw))
-  cachedRecord = { policy }
-  cachedUntil = Date.now() + 6000
-  return policy
+  if (!githubToken()) throw new Error('EXAM_GITHUB_TOKEN nije podešen.')
+  const record = await readPolicyRecordForWrite()
+  cachedRecord = record
+  cachedUntil = Date.now() + 4000
+  return record.policy
 }
 
 // On writes, fetch the latest file SHA via the authenticated Contents API.
@@ -164,8 +157,7 @@ async function savePolicy(policy) {
   if (!response.ok) throw await githubFailure(response, 'čuvanje podešavanja')
   await response.json()
   cachedRecord = { policy }
-  // The new blob has been committed; next read will refresh the public file.
-  cachedUntil = Date.now() + 6000
+  cachedUntil = Date.now() + 4000
 }
 
 function normalizePolicy(value) {
@@ -210,7 +202,7 @@ export default async function handler(req, res) {
     if (admin && !sessionValid(req)) return reply(res, 401, { error: 'Potrebna je prijava.' })
     try {
       const policy = await readPolicy()
-      if (!admin) res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=8, stale-while-revalidate=4')
+      if (!admin) res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=5, must-revalidate')
       return reply(res, 200, admin ? { ...policy, writable: Boolean(githubToken()) } : policy)
     } catch {
       return reply(res, 503, { error: 'Trenutno nije moguće proveriti ispitni režim.' })
