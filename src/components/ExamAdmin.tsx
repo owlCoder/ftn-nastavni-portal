@@ -3,7 +3,7 @@ import type { Catalog } from './directoryModel'
 import { defaultExamPolicy, examFileKey, type ExamPolicy } from '../lib/examMode'
 import '../styles/exam-admin.css'
 
-type AdminResponse = ExamPolicy & { error?: string; success?: boolean }
+type AdminResponse = ExamPolicy & { error?: string; success?: boolean; writable?: boolean }
 const options = { credentials: 'same-origin' as const, cache: 'no-store' as const }
 
 async function adminRequest(action: 'login' | 'logout' | 'save', data: Record<string, unknown> = {}): Promise<AdminResponse> {
@@ -23,6 +23,8 @@ export function ExamAdmin({ catalogs, materialsError }: { catalogs: Catalog[]; m
   const [busy, setBusy] = useState(false)
   const [password, setPassword] = useState('')
   const [policy, setPolicy] = useState<ExamPolicy>(defaultExamPolicy)
+  const [savedPolicy, setSavedPolicy] = useState<ExamPolicy | null>(null)
+  const [writeReady, setWriteReady] = useState(false)
   const [search, setSearch] = useState('')
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
@@ -33,6 +35,9 @@ export function ExamAdmin({ catalogs, materialsError }: { catalogs: Catalog[]; m
   })), [catalogs])
   const selected = useMemo(() => new Set(policy.allowedFiles), [policy.allowedFiles])
   const total = groups.reduce((sum, group) => sum + group.files.length, 0)
+  const unsaved = savedPolicy !== null && (policy.enabled !== savedPolicy.enabled ||
+    policy.allowedFiles.length !== savedPolicy.allowedFiles.length ||
+    policy.allowedFiles.some(file => !savedPolicy.allowedFiles.includes(file)))
 
   const reload = async () => {
     const response = await fetch('/api/exam?admin=1', options)
@@ -44,6 +49,8 @@ export function ExamAdmin({ catalogs, materialsError }: { catalogs: Catalog[]; m
     if (!response.ok) throw new Error(data.error || 'Administracija nije dostupna.')
     setAuthorized(true)
     setPolicy({ enabled: data.enabled, allowedFiles: data.allowedFiles })
+    setSavedPolicy({ enabled: data.enabled, allowedFiles: data.allowedFiles })
+    setWriteReady(data.writable === true)
   }
 
   useEffect(() => {
@@ -57,6 +64,8 @@ export function ExamAdmin({ catalogs, materialsError }: { catalogs: Catalog[]; m
         if (!response.ok) throw new Error(data.error || 'Administracija nije dostupna.')
         if (!mounted) return
         setPolicy({ enabled: data.enabled, allowedFiles: data.allowedFiles })
+        setSavedPolicy({ enabled: data.enabled, allowedFiles: data.allowedFiles })
+        setWriteReady(data.writable === true)
         setAuthorized(true)
       } catch (cause) {
         if (mounted) setError(cause instanceof Error ? cause.message : 'Povezivanje nije uspelo.')
@@ -106,11 +115,12 @@ export function ExamAdmin({ catalogs, materialsError }: { catalogs: Catalog[]; m
 
   const save = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if (busy) return
+    if (busy || !writeReady) return
     setBusy(true); setError(''); setNotice('')
     try {
       const updated = await adminRequest('save', { policy })
       setPolicy({ enabled: updated.enabled, allowedFiles: updated.allowedFiles })
+      setSavedPolicy({ enabled: updated.enabled, allowedFiles: updated.allowedFiles })
       setNotice('Podešavanja su sačuvana i važe za sve posetioce portala.')
     } catch (cause) {
       if (cause instanceof Error && cause.message.includes('Sesija je istekla')) setAuthorized(false)
@@ -136,6 +146,7 @@ export function ExamAdmin({ catalogs, materialsError }: { catalogs: Catalog[]; m
     </header>
     {error && <p className="exam-alert" role="alert">{error}</p>}
     {notice && <p className="exam-success" role="status">{notice}</p>}
+    {authorized && !writeReady && <p className="exam-alert" role="alert">Za čuvanje podešavanja nedostaje EXAM_GITHUB_TOKEN na Vercel-u. Dodaj ga za Production i uradi Redeploy.</p>}
     {loading ? <p className="exam-muted">Provera administratorske sesije…</p> : !authorized ?
       <form className="exam-login" onSubmit={event => void signIn(event)}>
         <h2>Administratorska prijava</h2>
@@ -147,7 +158,7 @@ export function ExamAdmin({ catalogs, materialsError }: { catalogs: Catalog[]; m
       </form> :
       <form className="exam-panel" onSubmit={event => void save(event)}>
         <div className="exam-section-title"><div><h2>Status režima</h2><p>Kada je uključen, u direktorijumu ostaju samo izabrani fajlovi.</p></div>
-          <span className={'exam-state ' + (policy.enabled ? 'is-on' : '')}>{policy.enabled ? 'ON · Uključen' : 'OFF · Isključen'}</span></div>
+          <span className={'exam-state ' + (unsaved ? 'is-pending' : policy.enabled ? 'is-on' : '')}>{unsaved ? (policy.enabled ? 'ON' : 'OFF') + ' · Nesačuvano' : policy.enabled ? 'ON · Uključen' : 'OFF · Isključen'}</span></div>
         <fieldset className="exam-switch"><legend className="exam-sr-only">Status ispitnog režima</legend>
           <label><input type="radio" name="exam-enabled" checked={!policy.enabled}
             onChange={() => { setPolicy(previous => ({ ...previous, enabled: false })); setNotice('') }}/> OFF · Svi materijali</label>
@@ -186,7 +197,7 @@ export function ExamAdmin({ catalogs, materialsError }: { catalogs: Catalog[]; m
         </div>
         {policy.enabled && selected.size === 0 && <p className="exam-warning">Uključen režim bez izabranih fajlova: studenti neće videti nijedan fajl.</p>}
         <div className="exam-save">
-          <button type="submit" disabled={busy}>{busy ? 'Čuvanje…' : 'Sačuvaj podešavanja'}</button></div>
+          <button type="submit" disabled={busy || !writeReady}>{busy ? 'Čuvanje…' : 'Sačuvaj podešavanja'}</button></div>
       </form>}
   </section>
 }

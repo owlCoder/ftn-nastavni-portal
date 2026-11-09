@@ -142,7 +142,7 @@ function normalizePolicy(value) {
     throw new Error('Neispravna konfiguracija ispitnog režima.')
   }
   if (value.allowedFiles.length > 3000 || !value.allowedFiles.every(key =>
-    typeof key === 'string' && /^(ers|oib|odp|ibis):[^\s]{1,900}$/.test(key))) {
+    typeof key === 'string' && /^(ers|oib|odp|ibis):github-file\/[^\u0000-\u001f\u007f]{1,900}$/.test(key))) {
     throw new Error('Neispravan spisak fajlova.')
   }
   return { enabled: value.enabled, allowedFiles: [...new Set(value.allowedFiles)].sort() }
@@ -180,7 +180,7 @@ export default async function handler(req, res) {
     try {
       const policy = await readPolicy()
       if (!admin) res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=8, stale-while-revalidate=4')
-      return reply(res, 200, policy)
+      return reply(res, 200, admin ? { ...policy, writable: Boolean(githubToken()) } : policy)
     } catch {
       return reply(res, 503, { error: 'Trenutno nije moguće proveriti ispitni režim.' })
     }
