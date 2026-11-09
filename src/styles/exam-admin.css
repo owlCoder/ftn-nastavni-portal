@@ -55,3 +55,7 @@
 .exam-banner { padding:11px 20px; background:#f5f9fc; color:#315e78; text-align:center; font:600 13px system-ui,sans-serif; border-bottom:1px solid #e1e9ef; }
 .exam-loading { margin:80px auto; max-width:600px; padding:0 25px; text-align:center; font:14px/1.6 system-ui,sans-serif; color:#6f8493; }
 @media(max-width:640px) { .exam-admin { width:calc(100% - 26px); padding:26px 0 50px; } .exam-header { align-items:flex-start; } .exam-outline { align-self:flex-end; } .exam-header,.exam-section-title,.exam-group-header,.exam-save { align-items:stretch; flex-direction:column; } .exam-panel { padding:16px; } .exam-login { padding:20px; } .exam-switch label { width:100%; } }
+
+.exam-access-check { display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-top:24px; }
+.exam-access-check p { margin:0; color:#516779; font-size:13px; overflow-wrap:anywhere; }
+.exam-access-check .exam-outline { flex-shrink:0; }

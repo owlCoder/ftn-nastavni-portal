@@ -3,10 +3,10 @@ import type { Catalog } from './directoryModel'
 import { defaultExamPolicy, examFileKey, type ExamPolicy } from '../lib/examMode'
 import '../styles/exam-admin.css'
 
-type AdminResponse = ExamPolicy & { error?: string; success?: boolean; writable?: boolean }
+type AdminResponse = ExamPolicy & { error?: string; success?: boolean; writable?: boolean; message?: string }
 const options = { credentials: 'same-origin' as const, cache: 'no-store' as const }
 
-async function adminRequest(action: 'login' | 'logout' | 'save', data: Record<string, unknown> = {}): Promise<AdminResponse> {
+async function adminRequest(action: 'login' | 'logout' | 'save' | 'checkGithub', data: Record<string, unknown> = {}): Promise<AdminResponse> {
   const response = await fetch('/api/exam', {
     method: 'POST', ...options,
     headers: { 'Content-Type': 'application/json' },
@@ -25,6 +25,7 @@ export function ExamAdmin({ catalogs, materialsError }: { catalogs: Catalog[]; m
   const [policy, setPolicy] = useState<ExamPolicy>(defaultExamPolicy)
   const [savedPolicy, setSavedPolicy] = useState<ExamPolicy | null>(null)
   const [writeReady, setWriteReady] = useState(false)
+  const [githubCheck, setGithubCheck] = useState('')
   const [search, setSearch] = useState('')
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
@@ -87,6 +88,17 @@ export function ExamAdmin({ catalogs, materialsError }: { catalogs: Catalog[]; m
       await reload()
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Prijava nije uspela.')
+    } finally { setBusy(false) }
+  }
+
+  const checkGithub = async () => {
+    if (busy) return
+    setBusy(true); setError(''); setGithubCheck('')
+    try {
+      const result = await adminRequest('checkGithub')
+      setGithubCheck(result.message || 'GitHub nije vratio podatke o dozvolama.')
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Provera GitHub dozvola nije uspela.')
     } finally { setBusy(false) }
   }
 
@@ -196,6 +208,11 @@ export function ExamAdmin({ catalogs, materialsError }: { catalogs: Catalog[]; m
           })}
         </div>
         {policy.enabled && selected.size === 0 && <p className="exam-warning">Uključen režim bez izabranih fajlova: studenti neće videti nijedan fajl.</p>}
+        <div className="exam-access-check">
+          <button type="button" className="exam-outline" disabled={busy}
+            onClick={() => void checkGithub()}>Proveri GitHub dozvole</button>
+          {githubCheck && <p role="status">{githubCheck}</p>}
+        </div>
         <div className="exam-save">
           <button type="submit" disabled={busy || !writeReady}>{busy ? 'Čuvanje…' : 'Sačuvaj podešavanja'}</button></div>
       </form>}

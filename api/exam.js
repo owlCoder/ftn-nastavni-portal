@@ -100,11 +100,54 @@ async function readPolicy() {
 }
 
 // On writes, fetch the latest file SHA via the authenticated Contents API.
+async function githubFailure(response, context) {
+  const details = await response.json().catch(() => null)
+  const raw = typeof details?.message === 'string' ? details.message.slice(0, 180) : ''
+  const reason = raw ? ' GitHub: ' + raw : ''
+  const code = response.status
+  console.error('[exam] GitHub API failure', { context, status: code, message: raw })
+  if (code === 401) return new Error('GitHub token je nevažeći ili istekao (401).' + reason)
+  if (code === 403) return new Error('GitHub je odbio pristup (403). Proveri Contents: Read and write za ovaj repozitorijum.' + reason)
+  if (code === 404) return new Error('GitHub nije pronašao repozitorijum ili exam-config granu (404). Proveri pristup tokena repozitorijumu.' + reason)
+  if (code === 409 || code === 422) return new Error('GitHub nije prihvatio izmenu (' + code + '). Proveri zaštitu grane.' + reason)
+  return new Error('GitHub greška (' + code + ') pri ' + context + '.' + reason)
+}
+
+async function checkGithubAccess() {
+  if (!githubToken()) return { configured: false, repositoryReadable: false, policyReadable: false, writePermission: 'unknown', message: 'EXAM_GITHUB_TOKEN nije dodat na Vercel.' }
+  const repoResponse = await fetch('https://api.github.com/repos/owlCoder/ftn-nastavni-portal', {
+    headers: githubHeaders(), cache: 'no-store', signal: AbortSignal.timeout(8000),
+  })
+  if (!repoResponse.ok) {
+    const failure = await githubFailure(repoResponse, 'provera repozitorijuma')
+    return { configured: true, repositoryReadable: false, policyReadable: false, writePermission: 'unknown', message: failure.message }
+  }
+  const repository = await repoResponse.json()
+  const permissions = repository?.permissions
+  const writePermission = typeof permissions?.push === 'boolean'
+    ? permissions.push ? 'yes' : 'no' : 'unknown'
+  const fileResponse = await fetch(POLICY_API + '?ref=' + POLICY_BRANCH, {
+    headers: githubHeaders(), cache: 'no-store', signal: AbortSignal.timeout(8000),
+  })
+  if (!fileResponse.ok) {
+    const failure = await githubFailure(fileResponse, 'provera exam-config fajla')
+    return { configured: true, repositoryReadable: true, policyReadable: false, writePermission, message: failure.message }
+  }
+  return {
+    configured: true, repositoryReadable: true, policyReadable: true, writePermission,
+    message: writePermission === 'no'
+      ? 'GitHub javlja da token nema dozvolu za upis. U fine-grained token podešavanjima izaberi Contents: Read and write.'
+      : writePermission === 'yes'
+        ? 'GitHub potvrđuje pristup repozitorijumu, fajlu i pravo upisa. Ako čuvanje ne radi, pogledaj konkretnu grešku pri čuvanju.'
+        : 'GitHub potvrđuje pristup repozitorijumu i fajlu, ali ne otkriva pravo upisa. Probaj Sačuvaj podešavanja.',
+  }
+}
+
 async function readPolicyRecordForWrite() {
   const response = await fetch(POLICY_API + '?ref=' + POLICY_BRANCH, {
     headers: githubHeaders(), cache: 'no-store', signal: AbortSignal.timeout(8000),
   })
-  if (!response.ok) throw new Error('GitHub nije dozvolio čitanje konfiguracije.')
+  if (!response.ok) throw await githubFailure(response, 'čitanje podešavanja')
   const file = await response.json()
   if (file.type !== 'file' || file.encoding !== 'base64' ||
     typeof file.content !== 'string' || typeof file.sha !== 'string' || file.size > 100_000) {
@@ -127,10 +170,7 @@ async function savePolicy(policy) {
     }),
     cache: 'no-store', signal: AbortSignal.timeout(10000),
   })
-  if (response.status === 409 || response.status === 422) {
-    throw new Error('Podešavanja su se promenila. Osveži stranicu i pokušaj ponovo.')
-  }
-  if (!response.ok) throw new Error('GitHub nije prihvatio promene. Proveri dozvole EXAM_GITHUB_TOKEN.')
+  if (!response.ok) throw await githubFailure(response, 'čuvanje podešavanja')
   await response.json()
   cachedRecord = { policy }
   // The new blob has been committed; next read will refresh the public file.
@@ -210,6 +250,7 @@ export default async function handler(req, res) {
       clearSession(res)
       return reply(res, 200, { success: true })
     }
+    if (body.action === 'checkGithub') return reply(res, 200, await checkGithubAccess())
     if (body.action === 'save') {
       let policy
       try { policy = normalizePolicy(body.policy) }
