@@ -1,5 +1,5 @@
 {
-  "enabled": false,
+  "enabled": true,
   "allowedFiles": [
     "ers:github-file/Nastavni materijali/01 Zahtevi, backlog i Git/Zahtevi, backlog i Git.pdf",
     "ers:github-file/Nastavni materijali/02 SOLID i Clean Architecture/Logger–Blogger — Postavka zadatka.pdf",
