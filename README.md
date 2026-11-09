@@ -9,20 +9,21 @@ Za **Elemente razvoja softvera (ERS)** i **Osnove informacione bezbednosti (OIB)
 [![Build](https://github.com/owlCoder/ftn-nastavni-portal/actions/workflows/build.yml/badge.svg)](https://github.com/owlCoder/ftn-nastavni-portal/actions/workflows/build.yml)
 [![GitHub Pages](https://github.com/owlCoder/ftn-nastavni-portal/actions/workflows/pages.yml/badge.svg)](https://github.com/owlCoder/ftn-nastavni-portal/actions/workflows/pages.yml)
 
-## Ispitni režim (Vercel)
+## Ispitni režim (Vercel, bez baze)
 
-Na Vercel verziji portala otvori **`/ir`** za administratorsku prijavu. Nakon prijave možeš da uključiš ili isključiš režim (**ON/OFF**), označiš pojedinačne PDF/ZIP fajlove po predmetima i klikneš **Sačuvaj podešavanja**. Kada je ON, u direktorijumu portala prikazuju se i preuzimaju samo označeni fajlovi i njihovi roditeljski folderi. OFF vraća redovan katalog, ali pamti izbor fajlova. Posetioci dobijaju izmenjeno stanje najkasnije pri sledećoj proveri (oko 15 sekundi) ili osvežavanju stranice.
+Na Vercel verziji portala otvori **/ir** za administratorsku prijavu. Nakon prijave možeš da uključiš ili isključiš režim (**ON/OFF**), označiš pojedinačne PDF/ZIP fajlove i klikneš **Sačuvaj podešavanja**. Kada je ON, u direktorijumu portala prikazuju se samo označeni fajlovi i njihovi roditeljski folderi. OFF vraća redovan katalog, ali pamti izbor. Posetioci dobijaju novo stanje pri sledećoj proveri (oko 15 sekundi) ili osvežavanju.
 
-**Konfiguracija u Vercel-u:** U projektu otvori *Settings → Environment Variables* i postavi sledeće serverske promenljive, bez prefiksa `VITE_`:
+**Bez Redisa i bez novih npm paketa:** stanje se čuva u javnom fajlu **exam-policy.json** na posebnoj grani [exam-config](https://github.com/owlCoder/ftn-nastavni-portal/tree/exam-config). Čitanje i upis koriste standardni GitHub REST API iz Vercel funkcije. Grana je odvojena od main, pa promene ne pokreću novi produkcioni deployment. Fajl sadrži samo status i identifikatore dozvoljenih materijala, bez tajni.
 
-- `EXAM_ADMIN_PASSWORD` — jedinstvena jaka šifra za pristup stranici `/ir`.
-- `EXAM_SESSION_SECRET` — nezavisan nasumičan niz od najmanje 32 znaka za potpisivanje HttpOnly sesija.
-- `UPSTASH_REDIS_REST_URL` — HTTPS REST adresa Upstash Redis baze.
-- `UPSTASH_REDIS_REST_TOKEN` — privatni REST token iste Redis baze.
+**Vercel → Project → Settings → Environment Variables**: postavi sledeće serverske promenljive za **Production**, bez prefiksa VITE_:
 
-Podržani su i postojeći Vercel KV nazivi `KV_REST_API_URL` i `KV_REST_API_TOKEN`. Potreban je Redeploy nakon dodavanja promenljivih. Redis čuva zajedničko stanje i spisak fajlova kroz više Vercel instanci i redeploy-ova. Bez Redis podešavanja portal je u redovnom (OFF) režimu, a administracija neće biti dostupna. Ako je skladište nakon konfiguracije privremeno nedostupno, portal neće prikazivati materijale dok ne uspe provera.
+- **EXAM_ADMIN_PASSWORD** — jedinstvena jaka šifra za /ir.
+- **EXAM_SESSION_SECRET** — nezavisan nasumičan niz od najmanje 32 znaka za potpisivanje HttpOnly sesija.
+- **EXAM_GITHUB_TOKEN** — GitHub fine-grained personal access token sa pristupom **samo** repozitorijumu owlCoder/ftn-nastavni-portal i dozvolom **Contents → Read and write**. Nijedna druga privilegija nije potrebna.
 
-**Bezbednosna granica:** Šifra nikada nije deo klijentskog JavaScript koda i mora ostati samo u Vercel server env varijablama. /ir koristi serversku proveru, ograničenje broja prijava i potpisanu HttpOnly sesiju. Ovo je ograničenje prikaza u **Vercel portalu**, a ne zaštita samih fajlova: izvorni materijali i dalje se nalaze u **javnom** GitHub repozitorijumu i mogu se otvoriti direktno, kao i preko GitHub Pages kopije. Za stvarnu zabranu preuzimanja dokumenti moraju da se prebace u privatno skladište i serviraju kroz autentifikovani backend.
+Kreiranje tokena: GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token. Izaberi samo navedeni repozitorijum i minimalne dozvole. Sačuvaj token kao **Sensitive** promenljivu na Vercel-u. Nikada ga ne stavljaj u kod, GitHub repozitorijum ili browser. Nakon prvog dodavanja promenljivih pokreni **Redeploy**. Ako GitHub API privremeno nije dostupan, portal neće prikazivati materijale dok ne uspe provera.
+
+**Bezbednosna granica:** Šifra i token nisu deo klijentskog JavaScript koda. /ir koristi serversku proveru i potpisanu HttpOnly sesiju. Bez Redisa ograničenje prijava je lokalno po Vercel instanci (za centralizovanu zaštitu moguće je koristiti Vercel WAF), pa koristi dugu i jedinstvenu šifru. Ovo je ograničenje prikaza u **Vercel portalu**, a ne zaštita samih fajlova: izvorni materijali su u **javnom** GitHub repozitorijumu i mogu se otvoriti direktno, kao i preko GitHub Pages kopije.
 
 ## Materijali sa GitHub-a
 

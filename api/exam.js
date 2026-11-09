@@ -1,17 +1,19 @@
 import { createHash, createHmac, timingSafeEqual } from 'node:crypto'
 
 // Server-side only. Never expose these environment variables to Vite.
-const STORE_KEY = 'ftn-nastavni-portal:exam-policy:v1'
+const POLICY_API = 'https://api.github.com/repos/owlCoder/ftn-nastavni-portal/contents/exam-policy.json'
+const POLICY_BRANCH = 'exam-config'
 const COOKIE = 'ftn_exam_session'
 const SESSION_SECONDS = 8 * 60 * 60
-const DEFAULT_POLICY = { enabled: false, allowedFiles: [] }
+const LOGIN_WINDOW_MS = 15 * 60 * 1000
+const loginAttempts = new Map()
+let cachedRecord = null
+let cachedUntil = 0
 
 const password = () => process.env.EXAM_ADMIN_PASSWORD || ''
 const secret = () => process.env.EXAM_SESSION_SECRET || ''
-const redisUrl = () => process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL || ''
-const redisToken = () => process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || ''
-const hasStore = () => Boolean(redisUrl() && redisToken())
-const isConfigured = () => hasStore() && Boolean(password()) && secret().length >= 32
+const githubToken = () => process.env.EXAM_GITHUB_TOKEN || ''
+const isConfigured = () => Boolean(password() && githubToken() && secret().length >= 32)
 
 function reply(res, status, body) {
   res.status(status).json(body)
@@ -70,18 +72,52 @@ function validOrigin(req) {
   }
 }
 
-async function redis(command) {
-  const response = await fetch(redisUrl(), {
-    method: 'POST',
-    headers: { Authorization: 'Bearer ' + redisToken(), 'Content-Type': 'application/json' },
-    body: JSON.stringify(command),
-    cache: 'no-store',
-    signal: AbortSignal.timeout(8000),
+function githubHeaders() {
+  return {
+    Accept: 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+    'User-Agent': 'ftn-nastavni-portal-exam',
+    ...(githubToken() ? { Authorization: 'Bearer ' + githubToken() } : {}),
+  }
+}
+
+async function readPolicyRecord(fresh = false) {
+  if (!fresh && cachedRecord && Date.now() < cachedUntil) return cachedRecord
+  const response = await fetch(POLICY_API + '?ref=' + POLICY_BRANCH, {
+    headers: githubHeaders(), cache: 'no-store', signal: AbortSignal.timeout(8000),
   })
-  if (!response.ok) throw new Error('Skladište nije dostupno.')
-  const data = await response.json()
-  if (data.error) throw new Error('Skladište je vratilo grešku.')
-  return data.result
+  if (!response.ok) throw new Error('GitHub podešavanja nisu dostupna.')
+  const file = await response.json()
+  if (file.type !== 'file' || file.encoding !== 'base64' ||
+    typeof file.content !== 'string' || typeof file.sha !== 'string' || file.size > 100_000) {
+    throw new Error('Neispravan odgovor GitHub-a.')
+  }
+  const raw = Buffer.from(file.content.replace(/\s/g, ''), 'base64').toString('utf8')
+  const record = { policy: normalizePolicy(JSON.parse(raw)), sha: file.sha }
+  cachedRecord = record
+  cachedUntil = Date.now() + 6000
+  return record
+}
+
+async function savePolicy(policy) {
+  const { sha } = await readPolicyRecord(true)
+  const content = Buffer.from(JSON.stringify(policy, null, 2) + '\n').toString('base64')
+  const response = await fetch(POLICY_API, {
+    method: 'PUT',
+    headers: { ...githubHeaders(), 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      message: 'chore: update exam mode configuration',
+      content, sha, branch: POLICY_BRANCH,
+    }),
+    cache: 'no-store', signal: AbortSignal.timeout(10000),
+  })
+  if (response.status === 409 || response.status === 422) {
+    throw new Error('Podešavanja su se promenila. Osveži stranicu i pokušaj ponovo.')
+  }
+  if (!response.ok) throw new Error('GitHub nije prihvatio promene. Proveri dozvole EXAM_GITHUB_TOKEN.')
+  const saved = await response.json()
+  cachedRecord = { policy, sha: saved?.content?.sha || '' }
+  cachedUntil = Date.now() + 6000
 }
 
 function normalizePolicy(value) {
@@ -96,17 +132,25 @@ function normalizePolicy(value) {
 }
 
 async function readPolicy() {
-  const saved = await redis(['GET', STORE_KEY])
-  return saved === null ? DEFAULT_POLICY : normalizePolicy(JSON.parse(saved))
+  return (await readPolicyRecord()).policy
 }
 
-async function checkLoginRate(req) {
-  // An expiring server-side counter prevents unlimited password guessing.
-  const ip = String(req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown').split(',')[0]
-  const key = STORE_KEY + ':login:' + digest(ip).toString('hex')
-  const count = Number(await redis(['INCR', key]))
-  if (count === 1) await redis(['EXPIRE', key, '900'])
-  return count <= 8
+function checkLoginRate(req) {
+  // In-memory, best-effort per-instance limit. Use a strong admin password.
+  const ip = String(req.headers['x-real-ip'] || req.headers['x-forwarded-for'] ||
+    req.socket?.remoteAddress || 'unknown').split(',')[0]
+  const key = digest(ip).toString('hex')
+  const now = Date.now()
+  const prior = loginAttempts.get(key)
+  const attempt = !prior || prior.until <= now
+    ? { count: 0, until: now + LOGIN_WINDOW_MS } : prior
+  attempt.count++
+  loginAttempts.set(key, attempt)
+  if (loginAttempts.size > 1024) {
+    for (const [id, item] of loginAttempts) if (item.until <= now) loginAttempts.delete(id)
+    if (loginAttempts.size > 1024) loginAttempts.delete(loginAttempts.keys().next().value)
+  }
+  return attempt.count <= 8
 }
 
 export default async function handler(req, res) {
@@ -115,13 +159,15 @@ export default async function handler(req, res) {
   res.setHeader('Allow', 'GET, POST')
 
   if (req.method === 'GET') {
-    if (!hasStore()) {
-      if (req.query?.admin === '1') return reply(res, 503, { error: 'Podesi Redis i administratorske promenljive na Vercel-u.' })
-      return reply(res, 200, DEFAULT_POLICY) // Preserve existing portal behavior until initial setup.
+    const admin = req.query?.admin === '1'
+    if (admin && !isConfigured()) {
+      return reply(res, 503, { error: 'Podesi EXAM_GITHUB_TOKEN i administratorske promenljive na Vercel-u.' })
     }
+    if (admin && !sessionValid(req)) return reply(res, 401, { error: 'Potrebna je prijava.' })
     try {
-      if (req.query?.admin === '1' && !sessionValid(req)) return reply(res, 401, { error: 'Potrebna je prijava.' })
-      return reply(res, 200, await readPolicy())
+      const policy = await readPolicy()
+      if (!admin) res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=8, stale-while-revalidate=4')
+      return reply(res, 200, policy)
     } catch {
       return reply(res, 503, { error: 'Trenutno nije moguće proveriti ispitni režim.' })
     }
@@ -132,7 +178,7 @@ export default async function handler(req, res) {
   if (!String(req.headers['content-type'] || '').startsWith('application/json')) {
     return reply(res, 415, { error: 'Očekuje se JSON.' })
   }
-  if (!isConfigured()) return reply(res, 503, { error: 'Nedostaju administratorska šifra, tajni ključ ili Redis podešavanja.' })
+  if (!isConfigured()) return reply(res, 503, { error: 'Nedostaju administratorska šifra, tajni ključ ili GitHub token.' })
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
     if (!body || typeof body !== 'object' || JSON.stringify(body).length > 100_000) {
@@ -155,11 +201,11 @@ export default async function handler(req, res) {
       let policy
       try { policy = normalizePolicy(body.policy) }
       catch { return reply(res, 400, { error: 'Neispravno podešavanje fajlova.' }) }
-      await redis(['SET', STORE_KEY, JSON.stringify(policy)])
+      await savePolicy(policy)
       return reply(res, 200, policy)
     }
     return reply(res, 400, { error: 'Nepoznata akcija.' })
-  } catch {
-    return reply(res, 503, { error: 'Zahtev trenutno nije moguće obraditi.' })
+  } catch (error) {
+    return reply(res, 503, { error: error instanceof Error ? error.message : 'Zahtev trenutno nije moguće obraditi.' })
   }
 }
