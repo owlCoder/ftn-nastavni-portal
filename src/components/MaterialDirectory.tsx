@@ -138,6 +138,7 @@ export function MaterialDirectory({ catalogs, courseId, folder = 'root', sourceS
         })}
       </tbody>
     </table>
+    {!courseId && catalogs.length === 0 && <p className="directory-empty">Trenutno nema dostupnih fajlova u ispitnom režimu.</p>}
     {valid && query && rows.length === 0 && <p className="directory-empty">Nema rezultata za „{search}”. Pokušaj sa drugim pojmom.</p>}
     {!valid && <p className="directory-note">Folder nije pronađen. <a href={directoryHref({ courseId, folder: 'root' })}>Nazad na predmet</a></p>}
     <footer className="directory-footer"><span>{rows.length} prikazanih stavki</span><span className="materials-source" role="status">{sourceStatus}</span></footer>

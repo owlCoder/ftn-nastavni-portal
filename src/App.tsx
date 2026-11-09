@@ -3,6 +3,8 @@ import type { CourseId } from './courses/types'
 import type { Catalog, CourseSummary } from './components/directoryModel'
 import { MaterialDirectory } from './components/MaterialDirectory'
 import { loadGithubMaterials, type MaterialsSnapshot } from './lib/githubMaterials'
+import { ExamAdmin } from './components/ExamAdmin'
+import { filterCatalogsForExam, loadExamPolicy, type ExamPolicy } from './lib/examMode'
 
 type Section = 'vezbe' | 'prezentacije' | 'primeri' | 'projekat' | 'uputstva'
 type Reader = 'praktikum' | 'kontrolne'
@@ -43,6 +45,43 @@ export default function App() {
   const [materialsError, setMaterialsError] = useState('')
   const [refresh, setRefresh] = useState(0)
   const catalogs = snapshot?.catalogs ?? emptyCatalogs
+  const [examPolicy, setExamPolicy] = useState<ExamPolicy | null>(null)
+  const [examError, setExamError] = useState('')
+  const isAdminPage = window.location.pathname.replace(/\/+$/, '') === '/ir'
+
+  useEffect(() => {
+    let active = true
+    let requestNumber = 0
+    const controller = new AbortController()
+    const check = () => {
+      const currentRequest = ++requestNumber
+      loadExamPolicy(controller.signal)
+        .then(policy => {
+          if (!active || currentRequest !== requestNumber) return
+          setExamPolicy(policy)
+          setExamError('')
+        })
+        .catch(error => {
+          if (!active || currentRequest !== requestNumber) return
+          setExamPolicy(null) // Fail closed if the deployed configuration cannot be verified.
+          setExamError(error instanceof Error ? error.message : 'Ispitni režim nije dostupan.')
+        })
+    }
+    check()
+    const timer = window.setInterval(check, 15_000)
+    const whenVisible = () => { if (document.visibilityState === 'visible') check() }
+    document.addEventListener('visibilitychange', whenVisible)
+    return () => {
+      active = false
+      controller.abort()
+      window.clearInterval(timer)
+      document.removeEventListener('visibilitychange', whenVisible)
+    }
+  }, [])
+  const displayedCatalogs = useMemo(
+    () => examPolicy ? filterCatalogsForExam(catalogs, examPolicy) : [],
+    [catalogs, examPolicy],
+  )
 
   useEffect(() => {
     const controller = new AbortController()
@@ -78,7 +117,7 @@ export default function App() {
     return () => window.removeEventListener('hashchange', update)
   }, [])
 
-  const current = catalogs.find(catalog => catalog.course.id === route.courseId)
+  const current = displayedCatalogs.find(catalog => catalog.course.id === route.courseId)
   const sourceStatus = materialsError ? <>GitHub nije dostupan · {snapshot ? 'prethodna verzija' : 'materijali nisu učitani'} <button type="button" onClick={() => setRefresh(n => n + 1)}>Pokušaj ponovo</button></>
     : snapshot ? <>GitHub · {snapshot.revision.slice(0, 7)} <button type="button" onClick={() => setRefresh(n => n + 1)}>Osveži</button></>
     : <>Učitavanje sa GitHub-a…</>
@@ -88,8 +127,13 @@ export default function App() {
       document.getElementById('content')?.focus()
     }}>Preskoči na sadržaj</a>
     <main id="content" tabIndex={-1} className="site-content">
-      {current ? <MaterialDirectory catalogs={catalogs} courseId={current.course.id} folder={route.folder ?? 'root'} sourceStatus={sourceStatus}/> :
-          <MaterialDirectory catalogs={catalogs} sourceStatus={sourceStatus}/>}
+      {isAdminPage ? <ExamAdmin catalogs={catalogs} materialsError={materialsError}/> :
+        !examPolicy ? <p className="exam-loading" role="status">{examError || 'Provera dostupnosti materijala…'}</p> :
+        <>
+          {examPolicy.enabled && <div className="exam-banner" role="status">Ispitni režim je uključen · Dostupni su samo odabrani materijali.</div>}
+          {current ? <MaterialDirectory catalogs={displayedCatalogs} courseId={current.course.id} folder={route.folder ?? 'root'} sourceStatus={sourceStatus}/> :
+            <MaterialDirectory catalogs={displayedCatalogs} sourceStatus={sourceStatus}/>}
+        </>}
     </main>
 
   </div>

@@ -22,5 +22,15 @@
         }
       ]
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/ir",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/ir/",
+      "destination": "/index.html"
+    }
   ]
 }
