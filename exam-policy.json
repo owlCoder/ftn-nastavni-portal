@@ -1,4 +1,6 @@
 {
-  "enabled": false,
-  "allowedFiles": []
+  "enabled": true,
+  "allowedFiles": [
+    "ers:github-file/Nastavni materijali/ERS_Praktikum.pdf"
+  ]
 }
